@@ -1,0 +1,30 @@
+SITE AND ENVELOPE CHECK
+Plot 5130272, Saih Shuaib 1, Jebel Ali Hills
+Authority: Dubai Development Authority (DDA)
+
+Official plot area                   1019.98 m2    10978.97 sq ft
+Computed from site.yaml vertices     1020.27 m2    10982.13 sq ft
+Deviation                               0.29 m2      0.029 %
+
+Setback, all sides                      3.00 m
+Buildable envelope                    672.31 m2     7236.69 sq ft
+Envelope as share of plot               65.9 %
+Envelope split into parts              False
+
+Max GFA (DDA)                         662.99 m2     7136.36 sq ft
+Geometric capacity, G+1              1344.62 m2    14473.38 sq ft
+GFA as share of capacity                49.3 %
+Binding constraint                       GFA
+
+SIDE LENGTHS: stated on the DDA plan vs computed from the vertices
+Side     Stated  Computed     Dev   Dev %  Orientation Adjacency
+1         33.80     33.81    0.01    0.04  northwest   Road, 18.30 m wide  MAIN ACCESS
+2         30.56     30.51   -0.05   -0.16  southwest   Neighbour plot 5130123
+3         33.13     33.21    0.08    0.23  east        Landscape plot 5130274
+4         30.53     30.48   -0.05   -0.16  northeast   Neighbour plot 5130271
+
+TO VERIFY: boundary coordinates are scaled from the DDA plan, which is
+for illustration only. Replace with the Demarcation Certificate.
+TO VERIFY: plan-up assumed to be true north. See brief/site.yaml.
+
+CONCEPT DESIGN, NOT FOR CONSTRUCTION

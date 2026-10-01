@@ -1,0 +1,51 @@
+GFA CHECK
+Plot 5130272, Saih Shuaib 1, Jebel Ali Hills
+Strategy: maximise_to_cap
+
+DDA maximum GFA                            662.99 m2    7136.36 sq ft
+Design target (margin held back)           653.00 m2    7028.83 sq ft
+Margin held back                             9.99 m2
+Net to gross factor (assumption)             1.18
+
+NET ROOM AREA BY FLOOR, confirmed GFA areas only
+Floor              Low      High
+ground          298.00    298.00
+first           221.00    246.00
+TOTAL NET       519.00    544.00
+
+Tracked separately: garage 55.00 m2, roof enclosure 20.00 m2 (both TO VERIFY)
+Double-height voids, excluded from upper floor area: 65.00 m2
+
+GROSS FLOOR AREA BY SCENARIO, against the 662.99 m2 cap
+Scenario                                Low     High  Head low Head high  Verdict
+House only, confirmed GFA areas      612.42   641.92     50.57     21.07  fits
+House + garage                       667.42   696.92     -4.43    -33.93  RISK, unverified areas, at both ends
+House + roof enclosure               632.42   661.92     30.57      1.07  fits
+House + garage + roof enclosure      687.42   716.92    -24.43    -53.93  RISK, unverified areas, at both ends
+
+HEADROOM AGAINST THE DESIGN TARGET OF 653.00 m2
+House only, confirmed GFA areas       40.58    11.08
+House + garage                       -14.42   -43.92
+House + roof enclosure                20.58    -8.92
+House + garage + roof enclosure      -34.42   -63.92
+
+Positive means area still available to distribute. Negative means trims
+are needed. Trims are never made without the owner's approval.
+
+PLAN EFFICIENCY SENSITIVITY
+Lower net to gross means more room area for the same GFA.
+Factor     House low House high  +garage low  +garage high
+1.12          581.28     609.28       636.28        664.28
+1.14          591.66     620.16       646.66        675.16
+1.16          602.04     631.04       657.04        686.04
+1.18          612.42     641.92       667.42        696.92
+1.20          622.80     652.80       677.80        707.80
+1.22          633.18     663.68       688.18        718.68
+
+ADDED BY CLAUDE, needs owner review
+  Staircase + Home Elevator (first), 20 m2
+
+VERDICT: PASS with RISK. The house alone fits. One or more unverified
+areas push the total over the cap if they are ruled to count.
+
+CONCEPT DESIGN, NOT FOR CONSTRUCTION

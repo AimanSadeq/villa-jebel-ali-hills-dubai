@@ -1,0 +1,31 @@
+# palettes.yaml: Three switchable interior palettes for the walkthrough.
+# Filled in Phase 4 (CLAUDE.md section 5). Slots reserved now so the viewer and
+# render scripts can read a stable structure from the start.
+
+meta:
+  stamp: "CONCEPT DESIGN, NOT FOR CONSTRUCTION"
+  status: "Reserved in Phase 0. Proposed to owner in Phase 4."
+  count: 3
+
+palettes:
+  - key: palette_1
+    name: null
+    status: pending
+    flooring: null
+    walls: null
+    accents: null
+    fixtures: null
+  - key: palette_2
+    name: null
+    status: pending
+    flooring: null
+    walls: null
+    accents: null
+    fixtures: null
+  - key: palette_3
+    name: null
+    status: pending
+    flooring: null
+    walls: null
+    accents: null
+    fixtures: null

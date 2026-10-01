@@ -1,0 +1,109 @@
+# site.yaml: Single source of truth for plot and site data.
+# Source: reference/5130272_-_Plot_Details.pdf (DDA Plot Details).
+# Scripts read this file. Never hard-code site values in scripts.
+#
+# Every value carrying "to_verify: true" is provisional. The DDA plan states it
+# is for illustration only. Authoritative data comes from the Site Plan and the
+# Demarcation Certificate. Replace provisional values here, in one place.
+
+meta:
+  stamp: "CONCEPT DESIGN, NOT FOR CONSTRUCTION"
+  source_document: "reference/5130272_-_Plot_Details.pdf"
+  units: metres
+  area_units: m2
+
+plot:
+  number: "5130272"
+  community: "Saih Shuaib 1, Jebel Ali Hills"
+  master_developer: "Meraas Estates (L.L.C)"
+  authority: "Dubai Development Authority (DDA)"
+  land_use: "Residential: villa"
+  area_m2: 1019.98
+  area_sqft: 10978.97
+
+regulations:
+  max_gfa_m2: 662.99
+  max_gfa_sqft: 7136.36
+  max_coverage: null            # DDA plot details state N/A, not specified
+  max_coverage_note: "Not specified by DDA. Footprint is limited by setbacks and GFA only."
+  max_height: "G+1"
+  setback_m: 3.0                # all sides, sides 1 to 4
+  parking_spaces_min: 1
+  design_guidelines: "Open design. No Meraas style rules beyond plot requirements and GFA."
+
+# Owner directive, 2026-10-01: maximise built-up area to the GFA cap rather
+# than the earlier 650 m2 target. See docs/decisions.md.
+targets:
+  strategy: maximise_to_cap
+  design_target_gfa_m2: 653.00   # holds ~10 m2 back from the 662.99 cap
+  design_margin_m2: 9.99
+  design_margin_reason: >
+    GFA on stamped drawings is measured to the outside face of external walls by
+    the consultant. A concept-stage figure can drift by several square metres on
+    wall thicknesses alone, and exceeding the cap at submission means redesign.
+    Release this margin only once the consultant confirms the measurement basis.
+  net_to_gross_factor: 1.18
+  net_to_gross_note: >
+    Assumption, not a regulation. Covers external and internal walls, structure,
+    and circulation not itemised in the room program. Each 0.01 reduction frees
+    roughly 5 m2 of net room area. Tune as plans develop and report on every build.
+
+# Plot boundary. Five sided. Coordinates in metres, x = east, y = north,
+# origin at the west vertex. Scaled from the DDA plan drawing.
+# Shoelace area of this polygon is 1020.27 m2, within 0.03% of the official figure.
+boundary:
+  to_verify: true
+  to_verify_note: "Replace with Demarcation Certificate coordinates when issued."
+  vertices:
+    - { id: E, name: "west",      x:  0.00, y:   0.00 }
+    - { id: A, name: "north",     x: 17.10, y:  29.17 }
+    - { id: B, name: "east",      x: 43.34, y:  13.66 }
+    - { id: C, name: "east bend", x: 39.31, y:   6.96 }
+    - { id: D, name: "south",     x: 26.57, y: -15.00 }
+
+# Sides as described on the DDA plan, mapped to the vertex pairs above.
+sides:
+  - id: 1
+    from: E
+    to: A
+    length_m: 33.80
+    orientation: northwest
+    adjacency: "Road, 18.30 m wide"
+    is_main_access: true
+  - id: 4
+    from: A
+    to: B
+    length_m: 30.53
+    orientation: northeast
+    adjacency: "Neighbour plot 5130271"
+    is_main_access: false
+  - id: 3
+    from: B
+    to: D
+    via: C
+    length_m: 33.13          # two segments, 7.72 m and 25.41 m
+    segments_m: [7.72, 25.41]
+    orientation: east
+    adjacency: "Landscape plot 5130274"
+    is_main_access: false
+  - id: 2
+    from: D
+    to: E
+    length_m: 30.56
+    orientation: southwest
+    adjacency: "Neighbour plot 5130123"
+    is_main_access: false
+
+orientation:
+  plan_up_is_true_north: true
+  to_verify: true
+  to_verify_note: "Assumed from the north arrow on the DDA plan. Confirm with the Site Plan."
+
+# Location for sun and shading studies.
+location:
+  name: "Jebel Ali Hills, Dubai"
+  latitude: 25.0
+  longitude: 55.1
+  timezone: "Asia/Dubai"
+  to_verify: true
+  to_verify_note: "Approximate. Refine from the Demarcation Certificate coordinates."

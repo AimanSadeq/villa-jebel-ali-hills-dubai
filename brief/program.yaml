@@ -1,0 +1,203 @@
+# program.yaml: Single source of truth for the room program.
+# Source: CLAUDE.md section 4. Scripts read this file.
+# Never hard-code room sizes in scripts.
+#
+# Areas are NET and indicative. Gross floor area is derived by applying
+# targets.net_to_gross_factor from site.yaml. See src/analysis/gfa_check.py.
+#
+# gfa field values:
+#   counts    the area counts toward the DDA GFA limit
+#   unverified  whether it counts is not confirmed. TO VERIFY. See docs/open-items.md
+#   excluded  does not count (voids only, per CLAUDE.md section 3)
+
+meta:
+  stamp: "CONCEPT DESIGN, NOT FOR CONSTRUCTION"
+  source: "CLAUDE.md section 4"
+  area_units: m2
+
+ground:
+  - key: entrance_foyer
+    name: "Entrance Foyer"
+    target_m2: 20
+    gfa: counts
+    double_height: true
+    notes: "Double height."
+  - key: living
+    name: "Living Room"
+    target_m2: 45
+    gfa: counts
+    double_height: true
+    notes: "Double height. Connects to garden and pool."
+  - key: majlis
+    name: "Majlis (Salon)"
+    target_m2: 35
+    gfa: counts
+    notes: >
+      Formal reception, close to entrance, with its own guest powder room.
+      Owner confirmed 2026-10-01 that majlis and salon are the same room.
+  - key: guest_powder
+    name: "Guest Powder Room"
+    target_m2: 4
+    gfa: counts
+    notes: "Next to the majlis."
+  - key: guest_bedroom
+    name: "Guest Bedroom, En-suite"
+    target_m2: 32
+    gfa: counts
+    notes: "Only bedroom on the ground floor."
+  - key: dining
+    name: "Dining"
+    target_m2: 22
+    gfa: counts
+    notes: >
+      Owner confirmed 2026-10-01 that dining is on the ground floor.
+      Size still indicative. Placement to be proposed at checkpoint 2.
+  - key: show_kitchen
+    name: "Show Kitchen"
+    target_m2: 25
+    gfa: counts
+    notes: "Open to dining or living."
+  - key: arabic_kitchen
+    name: "Arabic (Dirty) Kitchen"
+    target_m2: 15
+    gfa: counts
+    notes: "Behind the show kitchen, service access."
+  - key: pantry
+    name: "Pantry / Storage"
+    target_m2: 6
+    gfa: counts
+  - key: laundry
+    name: "Laundry"
+    target_m2: 8
+    gfa: counts
+    notes: "Near the staff and service zone."
+  - key: sunroom
+    name: "Sunroom"
+    target_m2: 20
+    gfa: counts
+    notes: "Glazed, garden facing, sun controlled."
+  - key: home_office
+    name: "Home Office"
+    target_m2: 14
+    gfa: counts
+    notes: "Quiet, near entrance."
+  - key: maids_room
+    name: "Maid's Room with Bathroom"
+    target_m2: 12
+    gfa: counts
+    notes: "In the staff zone with a separate entrance."
+  - key: drivers_room
+    name: "Driver's Room with Bathroom"
+    target_m2: 12
+    gfa: counts
+    notes: "In the staff zone, can open to outside or garage."
+  - key: plant_room
+    name: "MEP Plant Room"
+    target_m2: 8
+    gfa: counts
+    notes: "Water tanks, filtration, controls, low-current rack."
+  - key: stair_lift_ground
+    name: "Staircase + Home Elevator"
+    target_m2: 20
+    gfa: counts
+    notes: "Elevator serves ground, first, and roof."
+  - key: garage
+    name: "Garage, Enclosed, 3 Cars"
+    target_m2: 55
+    gfa: unverified
+    track_separately: true
+    notes: >
+      TO VERIFY whether an enclosed garage counts toward GFA under DDA rules.
+      Worth 55 m2. Decides whether the program has roughly 50 m2 of headroom
+      or none. Report GFA both with and without it.
+
+first:
+  - key: master_suite
+    name: "Master Suite"
+    target_min_m2: 70
+    target_max_m2: 80
+    gfa: counts
+    notes: >
+      Excludes balcony. Must be 2.2 to 2.5 times the other bedrooms. Contains
+      bedroom, private sitting area, his and hers walk-in wardrobes, large
+      bathroom with bathtub and separate shower, coffee / kitchenette station,
+      private balcony. Best upstairs orientation, ideally toward the east
+      landscape plot if the sun study supports it.
+  - key: bedroom_2
+    name: "Bedroom 2, En-suite"
+    target_min_m2: 30
+    target_max_m2: 35
+    gfa: counts
+  - key: bedroom_3
+    name: "Bedroom 3, En-suite"
+    target_min_m2: 30
+    target_max_m2: 35
+    gfa: counts
+  - key: bedroom_4
+    name: "Bedroom 4, En-suite"
+    target_min_m2: 30
+    target_max_m2: 35
+    gfa: counts
+  - key: family_living
+    name: "Family Living Room"
+    target_m2: 35
+    gfa: counts
+    notes: "Acoustically separated from the master suite."
+  - key: linen_storage
+    name: "Linen and General Storage"
+    target_m2: 6
+    gfa: counts
+  - key: stair_lift_first
+    name: "Staircase + Home Elevator"
+    target_m2: 20
+    gfa: counts
+    notes: >
+      Not itemised in CLAUDE.md section 4 but required: the stair and elevator
+      must land on the first floor. Added by Claude, flagged for owner review.
+    added_by_claude: true
+
+roof:
+  - key: roof_enclosure
+    name: "Roof Stair and Elevator Enclosure"
+    target_m2: 20
+    gfa: unverified
+    track_separately: true
+    notes: >
+      TO VERIFY whether the roof enclosure counts toward GFA, and the parapet
+      and enclosure rules, against the Dubai Building Code.
+  - key: roof_terrace
+    name: "Roof Terrace"
+    target_m2: null
+    gfa: excluded
+    notes: "Open terrace. Area follows from the plan. Space for screened VRF outdoor units."
+
+# Double-height voids. Per CLAUDE.md section 3 these do not add upper-floor
+# area. Listed so they appear in reports and are never double counted.
+voids:
+  - key: void_over_foyer
+    name: "Void over Entrance Foyer"
+    over: entrance_foyer
+    target_m2: 20
+    gfa: excluded
+  - key: void_over_living
+    name: "Void over Living Room"
+    over: living
+    target_m2: 45
+    gfa: excluded
+
+# Outdoor scope. Not GFA. Sized and positioned in Phase 1 and Phase 4.
+outdoor:
+  - key: pool
+    name: "Swimming Pool"
+    size_m: [10, 4]
+    target_m2: 40
+    notes: "With deck. Position NOT decided. Test east and south/southwest in Phase 1."
+  - key: bbq_pergola
+    name: "BBQ Area with Pergola"
+    notes: "By the pool."
+  - key: landscape
+    name: "Landscape and Softscape"
+    notes: "Trees, palms, lawn, planting beds, hardscape paving, driveway."
+  - key: boundary_walls
+    name: "Boundary Walls and Gates"
+    notes: "Design to be proposed at checkpoint 1."
