@@ -42,6 +42,7 @@ pip install -r requirements.txt
 | `python src/model/site.py` | Plot area and side length check against the DDA figures |
 | `python src/analysis/gfa_check.py` | GFA against the 662.99 m² cap, by scenario |
 | `python src/analysis/gfa_check.py --strict` | Same, failing when unverified areas breach the cap |
+| `python src/analysis/plan_feasibility.py` | Can the program be laid out inside the massing |
 | `python src/drawings/site_plan.py` | Site plan DXF and PDF |
 | `python src/analysis/sun_study.py` | Sun paths and facade solar exposure |
 | `python src/model/massing.py` | Validates the options, shade scores, wall to boundary |
@@ -78,7 +79,7 @@ and regenerate: nothing else needs touching.
 |---|---|---|
 | 0 | Repo setup, brief files, plot and area verification | Complete, awaiting review |
 | 1 | Sun study, massing options, pool and garden position | Complete, awaiting review |
-| 2 | Room layouts, two plan options, GFA check | Blocked by OI-01 |
+| 2 | Room layouts, two plan options, GFA check | Started, blocked by OI-20 |
 | 3 | Full IFC architectural model | Not started |
 | 4 | Walkthrough, furniture, landscape, three palettes | Not started |
 | 5 | MEP design, calculations, clash detection | Not started |
