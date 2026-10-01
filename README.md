@@ -47,6 +47,7 @@ pip install -r requirements.txt
 | `python src/model/massing.py` | Validates the options, shade scores, wall to boundary |
 | `python src/analysis/massing_study.py` | Massing comparison and recommendation |
 | `python src/drawings/massing_sheets.py` | Massing and sun study PDF sheets |
+| `python src/drawings/option_c_wing.py` | Option C wing, indicative plan |
 | `python src/model/export_massing.py` | Writes the viewer's data file |
 | `npm run dev --prefix viewer` | Massing viewer at http://localhost:5173 |
 | `python -m pytest -q` | Setback, GFA, shading and orientation guards, 50 checks |
@@ -99,3 +100,4 @@ Each phase stops for the owner's approval before the next begins.
 | `output/pdf/VJH-SS-001_Sun_Study.pdf` | Sun paths and solar exposure rose |
 | `output/reports/VJH-RPT-003_Sun_Study.txt` | Facade solar exposure, am and pm split |
 | `output/reports/VJH-RPT-004_Massing_Options.txt` | Option comparison and recommendation |
+| `output/pdf/VJH-MA-002_Option_C_Wing.pdf` | Option C single storey wing, indicative layout, true 1:75 |

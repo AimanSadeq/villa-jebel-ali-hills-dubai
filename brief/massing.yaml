@@ -153,3 +153,50 @@ boundary_wall:
       The lowest wall on the plot, since 5130274 is a landscape plot with no
       building and no overlooking. Solid to 1.20 m with open screen above, to
       keep the view out toward the landscape while still enclosing the garden.
+
+# INDICATIVE room layout, Phase 1 preview only.
+#
+# Room names and target areas are NOT repeated here: they are read from
+# brief/program.yaml by key. Only the geometry lives here. The drawing script
+# reports the achieved area against the target so any drift is visible.
+#
+# This is a preview of Phase 2 work, produced at the owner's request to show
+# what option C's single storey wing would hold. Nothing here is approved, and
+# it does not unblock OI-01.
+indicative_layouts:
+
+  C:
+    status: "INDICATIVE, Phase 1 preview. Not a designed layout."
+    wall_external_m: 0.25
+    wall_internal_m: 0.15
+    # The single storey SSW wing: grid u 14.00 to 27.35, v 3.40 to 11.70.
+    # Its long face looks NNE across the courtyard at the pool. Its back is the
+    # SSW neighbour face, which takes 141 kWh/m2 of summer afternoon sun, so the
+    # glazing goes on the courtyard side and the back stays nearly solid.
+    wing:
+      key: ssw_wing
+      name: "Single storey wing"
+      u: [14.00, 27.35]
+      v: [3.40, 11.70]
+      rooms:
+        # Against the road wing, so it backs onto the Arabic kitchen and pantry
+        # for the service connection CLAUDE.md section 4 asks for.
+        - program_key: show_kitchen
+          u: [14.25, 21.05]
+          v: [3.65, 7.60]
+          face: "back, SSW"
+        # Opens to the courtyard and the pool.
+        - program_key: dining
+          u: [14.25, 21.05]
+          v: [7.75, 11.45]
+          face: "courtyard, NNE"
+        # Full depth at the ESE end, two open faces, double height.
+        - program_key: living
+          u: [21.20, 27.10]
+          v: [3.65, 11.45]
+          face: "courtyard NNE and ESE"
+          double_height: true
+      # Faces carrying the main glazing, as grid line segments.
+      glazing:
+        - { u: [14.25, 27.10], v: [11.70, 11.70], note: "Courtyard face, pool view" }
+        - { u: [27.35, 27.35], v: [3.65, 11.45], note: "ESE face, landscape plot" }
