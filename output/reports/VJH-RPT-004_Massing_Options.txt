@@ -1,0 +1,135 @@
+MASSING OPTIONS AND RECOMMENDATION
+Plot 5130272, Saih Shuaib 1, Jebel Ali Hills
+Phase 1. For owner decision. No option is approved.
+
+All options validate: every block, and the pool, sit inside the 3 m
+buildable envelope. No option relies on building in a setback.
+
+THE PLOT'S FACES, from the sun study
+Side  Faces    Summer am  Summer pm  Adjacency
+1     WNW            102        233  Road, 18.30 m wide
+2     SSW            110        141  Neighbour plot 5130123
+3     ESE            368         51  Landscape plot 5130274
+4     NNE            244         51  Neighbour plot 5130271
+
+Two facts drive the whole decision:
+  1. The ESE face, toward landscape plot 5130274, takes its heat in the
+     morning and almost none after 15:00. It is the cheap face to glaze.
+  2. That same face has no building on the far side and never will, so it
+     is also the only face with a permanent open view and no overlooking.
+
+OPTIONS
+
+OPTION A: GARDEN EAST
+  A single bar along the road edge, with the whole garden and pool held on
+  the ESE side facing landscape plot 5130274. The upper floor is pushed to
+  the ESE edge of the bar so the master suite takes the view and the mass
+  throws its afternoon shadow across the pool.
+  Ground floor 407 m2, first floor 290 m2, open ground 613 m2
+  Pool and deck 112 m2, nearest side 3 at 6.0 m: Landscape plot 5130274
+
+OPTION B: GARDEN SOUTHWEST
+  The bar runs along the NNE edge against neighbour 5130271, with the garden
+  and pool on the SSW side toward neighbour 5130123. This is the option
+  CLAUDE.md asks to be tested against option A.
+  Ground floor 407 m2, first floor 290 m2, open ground 613 m2
+  Pool and deck 112 m2, nearest side 2 at 6.3 m: Neighbour plot 5130123
+
+OPTION C: COURTYARD
+  An L wrapping the two hot faces. One wing shields the WNW road face, the
+  other the SSW neighbour face, leaving a sheltered courtyard open to the
+  ESE landscape plot and the NNE neighbour, which are the two coolest
+  afternoon orientations. The pool sits in the courtyard.
+  Ground floor 406 m2, first floor 290 m2, open ground 614 m2
+  Pool and deck 112 m2, nearest side 3 at 8.0 m: Landscape plot 5130274
+
+POOL AND DECK IN SHADE, cooling season afternoons
+Computed from the villa's real shadow at each hour on 21 May, Jun, Jul,
+Aug and Sep. 1.00 means the whole deck is shaded.
+Option                   15:00   16:00   17:00   18:00   19:00    Mean   Worst
+A Garden East             0.65    0.99    1.00    1.00    1.00    0.93    0.61
+B Garden Southwest        0.00    0.00    0.00    0.00    0.60    0.12    0.00
+C Courtyard               0.43    0.92    1.00    1.00    1.00    0.87    0.38
+
+WINTER MIDDAY SUN ON THE POOL, 21 Dec and 21 Jan, 10:00 to 14:00
+Here you want the opposite: sun on the water when the air is cool.
+Option                  Sun fraction
+A Garden East                   1.00
+B Garden Southwest              1.00
+C Courtyard                     0.78
+
+WHAT THE NUMBERS SAY
+
+Option A, Garden East:
+  The villa stands west of the pool, so its shadow falls across the water
+  through the afternoon: 65% shaded at 15:00, 99% by 16:00 and complete from
+  17:00 to sunset. Mean 93% across the cooling season. In winter the sun
+  swings far enough south to pass the mass entirely, leaving 100% sun on the
+  water at midday. Garden and pool face the landscape plot, so no neighbour
+  overlooks them.
+
+Option B, Garden Southwest:
+  The villa sits north-east of the pool. Afternoon shadows run east-south-
+  east, along the pool rather than across it, so the deck gets no shade at
+  all from 15:00 to 18:00. The only shaded hour is 19:00, at 60%, by which
+  point the sun is nearly down and the shade is worth little. Mean 12%. The
+  pool also sits against neighbour plot 5130123 rather than the open
+  landscape plot, so it is the least private of the three. Tested because
+  CLAUDE.md asks for it. It is clearly the weakest.
+
+Option C, Courtyard:
+  The L wraps the two hot faces and shades well, 87% mean, within six points
+  of option A. The cost shows up in two places. In winter the same wing that
+  blocks the summer afternoon sun also blocks the low winter sun, leaving
+  78% sun on the water at midday against 100% for option A. And at 15:00,
+  the hour the deck is most likely to be in use before evening, it manages
+  43% against 65% for option A. It also turns the garden inward and gives up
+  the view east. Worth keeping if privacy from the road ever matters more
+  than the view.
+
+RECOMMENDATION
+
+Option A, Garden East. It holds 93% of the pool deck in shade through
+cooling season afternoons, never dropping below 61%, while still giving
+100% sun on the water at winter midday. It is the only option that wins on
+both, because the villa stands between the pool and the afternoon sun
+without standing between the pool and the winter sun.
+
+It also puts the garden and the main glazing on the ESE face toward
+landscape plot 5130274, which the sun study shows is the cheapest face to
+glaze and which carries the plot's only permanent open view. The master
+suite can take that orientation, as CLAUDE.md section 4 hoped it would.
+The hot WNW road face and the SSW neighbour face are given the service
+rooms, the garage and deep overhangs rather than glass.
+
+Option B, Garden Southwest, is the option CLAUDE.md asked to be tested
+against it, and it fails on the single measure that matters most here: 12%
+afternoon shade. The villa sits north-east of the pool, so its shadow
+travels east-south-east away from the water rather than across it. The
+deck would be in full sun every summer afternoon, and the pool is also the
+side overlooked by neighbour plot 5130123.
+
+BOUNDARY WALL CONCEPT
+  Overall height 2.40 m. TO VERIFY against DDA rules.
+  Side 1, road:
+    Solid white rendered wall to 1.20 m with a lighter screen above to
+    2.40 m, so the street reads as enclosed without presenting a blank 2.4
+    m face. Vehicle gate and a separate pedestrian gate, both recessed to
+    let a car pull clear of the 18.30 m road while the gate opens.
+  Sides 2 and 4, neighbours:
+    Solid white rendered wall to 2.40 m for privacy.
+  Side 3, landscape plot 5130274:
+    The lowest wall on the plot, since 5130274 is a landscape plot with no
+    building and no overlooking. Solid to 1.20 m with open screen above,
+    to keep the view out toward the landscape while still enclosing the
+    garden.
+
+WHAT THIS DOES NOT SETTLE
+  Room layouts. That is Phase 2, and it is blocked by OI-01, whether the
+  enclosed garage counts toward GFA.
+  Overall height in metres, TO VERIFY against the Dubai Building Code.
+  Whether a pool may sit within the 3 m setback. All three options keep
+  the pool inside the envelope, so none of them depends on the answer,
+  but a yes would free more garden. Raised as an open item.
+
+CONCEPT DESIGN, NOT FOR CONSTRUCTION

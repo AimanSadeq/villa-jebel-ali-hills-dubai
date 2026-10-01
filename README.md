@@ -16,7 +16,7 @@ licensed structural engineer must review, complete, and stamp all final drawings
 | Maximum GFA | 662.99 m² (7,136.36 sq ft) |
 | Maximum height | G+1 |
 | Setbacks | 3 m on all sides |
-| Current phase | Phase 0 complete, awaiting owner review |
+| Current phase | Phase 1 complete, awaiting owner review |
 
 ## Start here
 
@@ -43,7 +43,13 @@ pip install -r requirements.txt
 | `python src/analysis/gfa_check.py` | GFA against the 662.99 m² cap, by scenario |
 | `python src/analysis/gfa_check.py --strict` | Same, failing when unverified areas breach the cap |
 | `python src/drawings/site_plan.py` | Site plan DXF and PDF |
-| `python -m pytest -q` | Setback and GFA guards, 19 checks |
+| `python src/analysis/sun_study.py` | Sun paths and facade solar exposure |
+| `python src/model/massing.py` | Validates the options, shade scores, wall to boundary |
+| `python src/analysis/massing_study.py` | Massing comparison and recommendation |
+| `python src/drawings/massing_sheets.py` | Massing and sun study PDF sheets |
+| `python src/model/export_massing.py` | Writes the viewer's data file |
+| `npm run dev --prefix viewer` | Massing viewer at http://localhost:5173 |
+| `python -m pytest -q` | Setback, GFA, shading and orientation guards, 50 checks |
 
 ## Where things live
 
@@ -70,7 +76,7 @@ and regenerate: nothing else needs touching.
 | Phase | Work | Status |
 |---|---|---|
 | 0 | Repo setup, brief files, plot and area verification | Complete, awaiting review |
-| 1 | Sun study, massing options, pool and garden position | Not started |
+| 1 | Sun study, massing options, pool and garden position | Complete, awaiting review |
 | 2 | Room layouts, two plan options, GFA check | Blocked by OI-01 |
 | 3 | Full IFC architectural model | Not started |
 | 4 | Walkthrough, furniture, landscape, three palettes | Not started |
@@ -89,3 +95,7 @@ Each phase stops for the owner's approval before the next begins.
 | `output/dxf/VJH-SP-001_Site_Plan.dxf` | Same, for AutoCAD |
 | `output/reports/VJH-RPT-001_GFA_Check.txt` | GFA by scenario against the cap |
 | `output/reports/VJH-RPT-002_Site_Check.txt` | Plot area and side lengths vs the DDA plan |
+| `output/pdf/VJH-MA-001_Massing_Options.pdf` | Three massing options with cast shadows, plot up |
+| `output/pdf/VJH-SS-001_Sun_Study.pdf` | Sun paths and solar exposure rose |
+| `output/reports/VJH-RPT-003_Sun_Study.txt` | Facade solar exposure, am and pm split |
+| `output/reports/VJH-RPT-004_Massing_Options.txt` | Option comparison and recommendation |

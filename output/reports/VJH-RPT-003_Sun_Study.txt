@@ -1,0 +1,59 @@
+SUN STUDY
+Plot 5130272, Saih Shuaib 1, Jebel Ali Hills
+Site 24.897528 N, 54.964976 E, Asia/Dubai
+Orientation: plan-up is true north, VERIFIED, mean bearing error -0.02 deg
+
+Method: NREL SPA solar position. Ineichen clear-sky irradiance with the
+pvlib Linke turbidity climatology. Perez-Driesse transposition to vertical
+surfaces. 15min timesteps through a full year.
+Clear-sky, not typical-year: the design case in Dubai is the cloudless day.
+Modelled figures for design comparison, not measured site data.
+
+SUN GEOMETRY ON KEY DATES
+Date                     Sunrise  Sunset  Daylight  Noon alt  Rise azi  Set azi
+21 Jun, summer solstice    05:31   19:12     13.7h     88.5d     64.5d   296.2d
+21 Aug, peak cooling       05:56   18:49     12.9h     77.1d     76.5d   282.6d
+21 Mar, equinox            06:23   18:31     12.1h     65.4d     90.1d   270.6d
+21 Dec, winter solstice    07:00   17:35     10.6h     41.7d    116.6d   243.8d
+
+At 24.9 N the summer sun passes nearly overhead, so at noon it is roofs and
+not walls that take the load. The problem is the low afternoon sun in the
+west, which strikes glass almost head on while the air is at its hottest.
+
+SOLAR EXPOSURE BY ORIENTATION, vertical surface, kWh/m2
+Facing    Azimuth    Annual    Summer  Summer pm  Peak W/m2
+SSE          150d      1344       415         51        814
+SSW          210d      1344       415        142        814
+SSE          160d      1341       377         51        812
+SSW          200d      1341       378        109        812
+SW           220d      1340       450        172        809
+SE           140d      1340       450         51        809
+   ...
+N            350d       540       287        101        309
+N             10d       540       287         55        310
+N              0d       522       273         74        224
+
+Worst orientation: SSE at 1344 kWh/m2 annual, 415 in summer.
+Best orientation:  N at 522 kWh/m2 annual, 273 in summer.
+Ratio worst to best: 2.57 to 1.
+
+THIS PLOT'S FACADES
+Side  Faces     Azi    Len  Annual  Summer  Sum am  Sum pm  Adjacency
+1     WNW      300d  33.8m     902     474     102     233  Road, 18.30 m wide
+2     SSW      210d  30.6m    1344     414     110     141  Neighbour plot 5130123
+3     ESE      120d  33.1m    1306     503     368      51  Landscape plot 5130274
+4     NNE       31d  30.5m     654     368     244      51  Neighbour plot 5130271
+
+Totals alone are misleading. Peak cooling demand in Dubai is late
+afternoon, when ambient air is at its hottest, so a kWh arriving at 17:00
+costs the plant far more than the same kWh at 08:00. Read the am and pm
+columns, not the summer total.
+
+Side 3, the landscape plot face, takes 368 kWh/m2 in summer mornings against only 51 in the afternoons.
+Side 1, the road face, takes 233 kWh/m2 in summer afternoons, 4.6 times side 3.
+
+So the east face, which is also the face with the permanent open view and
+no overlooking neighbour, is the cheap one to glaze. The west and
+south-west faces are the expensive ones and need deep shading.
+
+CONCEPT DESIGN, NOT FOR CONSTRUCTION

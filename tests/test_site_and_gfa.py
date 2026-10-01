@@ -206,3 +206,59 @@ def test_stair_and_lift_land_on_every_level_they_serve():
     """The elevator serves ground, first, and roof, so each needs a landing."""
     keys = {r.key for r in rooms()}
     assert {"stair_lift_ground", "stair_lift_first", "roof_enclosure"} <= keys
+
+
+# Facade orientation
+#
+# The plot polygon is normalised counter-clockwise, which reverses the vertex
+# order given in site.yaml. Any facade normal derived from the traversal order
+# is therefore misassigned. These tests pin the orientations to the words
+# printed on the DDA plot plan, which is the one source that cannot drift.
+
+_STATED_AZIMUTH = {
+    "northwest": 315.0,
+    "southwest": 225.0,
+    "east": 90.0,
+    "northeast": 45.0,
+}
+
+
+def test_facade_normals_point_away_from_the_plot():
+    from shapely.geometry import Point
+
+    from analysis.sun_study import facades  # noqa: PLC0415
+
+    poly = plot_polygon()
+    for f in facades():
+        rad = __import__("math").radians(f.azimuth)
+        nx, ny = __import__("math").sin(rad), __import__("math").cos(rad)
+        centre = poly.centroid
+        probe = Point(centre.x + nx * 1000, centre.y + ny * 1000)
+        assert not poly.contains(probe)
+
+
+def test_facade_azimuths_match_the_orientations_stated_on_the_dda_plan():
+    """Side 1 is the road on the north-west face, and so on for all four."""
+    from analysis.sun_study import facades  # noqa: PLC0415
+
+    stated = {s["id"]: s["orientation"] for s in load_site()["sides"]}
+    for f in facades():
+        want = _STATED_AZIMUTH[stated[f.side_id]]
+        diff = abs((f.azimuth - want + 180) % 360 - 180)
+        assert diff < 45.0, (
+            f"Side {f.side_id} ({f.adjacency}) computes as facing {f.azimuth:.0f} "
+            f"degrees ({f.compass}), but the DDA plan calls it "
+            f"{stated[f.side_id]}, about {want:.0f} degrees"
+        )
+
+
+def test_the_landscape_plot_side_faces_east():
+    """Side 3 fronts landscape plot 5130274. The master suite orientation and
+    the pool recommendation both depend on this being the east side."""
+    from analysis.sun_study import facades  # noqa: PLC0415
+
+    side3 = next(f for f in facades() if f.side_id == 3)
+    assert "5130274" in side3.adjacency
+    assert 67.5 <= side3.azimuth <= 157.5, (
+        f"Side 3 faces {side3.azimuth:.0f} degrees, which is not easterly"
+    )

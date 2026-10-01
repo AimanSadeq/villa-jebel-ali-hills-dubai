@@ -1,0 +1,169 @@
+/* Villa 5130272 viewer. CONCEPT DESIGN, NOT FOR CONSTRUCTION. */
+
+:root {
+  --ink: #1a1a1a;
+  --muted: #6b6b6b;
+  --faint: #d8d4cd;
+  --paper: #f7f5f1;
+  --panel: #fffefb;
+  --line: #e3dfd8;
+  --accent: #2e7d4f;
+  --warn: #b3261e;
+  --hot: #b3261e;
+  --cool: #2a7fb8;
+  --panel-w: 352px;
+
+  color-scheme: light;
+  font-family: ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  color: var(--ink);
+}
+
+* { box-sizing: border-box; }
+
+html, body, #app { height: 100%; margin: 0; }
+body { background: var(--paper); overflow: hidden; }
+
+#app { display: grid; grid-template-columns: 1fr var(--panel-w); }
+
+#stage { position: relative; min-width: 0; }
+#stage canvas { display: block; width: 100%; height: 100%; }
+
+#stamp {
+  position: fixed; left: 18px; bottom: 14px;
+  font-size: 11px; letter-spacing: 0.09em; color: var(--warn);
+  pointer-events: none;
+}
+
+#hint {
+  position: fixed; left: 18px; top: 14px;
+  font-size: 11.5px; color: var(--muted);
+  background: rgba(255, 255, 255, 0.78);
+  padding: 5px 10px; border-radius: 999px;
+  pointer-events: none;
+}
+
+/* Panel */
+
+#panel {
+  background: var(--panel);
+  border-left: 1px solid var(--line);
+  overflow-y: auto;
+  padding: 20px 20px 36px;
+}
+
+#panel header { padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+#panel h1 { margin: 0; font-size: 21px; font-weight: 600; letter-spacing: -0.01em; }
+#panel .sub { margin: 3px 0 0; font-size: 12.5px; color: var(--muted); }
+#panel .phase { margin: 8px 0 0; font-size: 11.5px; color: var(--accent); letter-spacing: 0.04em; }
+
+#panel section { padding: 16px 0; border-bottom: 1px solid var(--line); }
+
+#panel h2 {
+  display: flex; align-items: center; gap: 8px;
+  margin: 0 0 11px; font-size: 12px; font-weight: 600;
+  letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted);
+}
+
+.icon { width: 16px; height: 16px; flex: 0 0 auto; }
+.icon.tiny { width: 12px; height: 12px; }
+
+/* Option buttons */
+
+.opts { display: grid; gap: 7px; }
+
+.opt {
+  display: grid; grid-template-columns: 22px 1fr auto; align-items: center; gap: 9px;
+  padding: 9px 11px; text-align: left; cursor: pointer;
+  background: #fff; border: 1px solid var(--line); border-radius: 8px;
+  font: inherit; font-size: 13.5px; color: var(--ink);
+  transition: border-color .14s, background .14s;
+}
+.opt:hover { border-color: #b9b3a8; }
+.opt.on { border-color: var(--accent); background: #f2f8f4; }
+.opt strong { font-size: 14px; color: var(--muted); }
+.opt.on strong { color: var(--accent); }
+.opt em {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-style: normal; font-size: 10.5px; color: var(--accent);
+}
+
+.summary { margin: 11px 0 0; font-size: 12px; line-height: 1.55; color: var(--muted); }
+
+/* Sliders */
+
+.row { display: grid; grid-template-columns: 112px 1fr; align-items: center; gap: 10px; margin-bottom: 9px; }
+.row label { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--muted); }
+.row input[type="range"] { width: 100%; accent-color: var(--accent); }
+
+.readout { margin: 4px 0 11px; font-size: 12.5px; color: var(--ink); }
+.readout b { font-variant-numeric: tabular-nums; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  padding: 5px 10px; font: inherit; font-size: 11.5px; cursor: pointer;
+  background: #fff; border: 1px solid var(--line); border-radius: 999px; color: var(--muted);
+}
+.chip:hover { border-color: var(--accent); color: var(--accent); }
+.chip.on { border-color: var(--accent); background: #f2f8f4; color: var(--accent); font-weight: 600; }
+
+.inline-toggle { display: flex; align-items: center; gap: 9px; margin-top: 11px;
+                 font-size: 12.5px; color: var(--muted); }
+.inline-toggle input { accent-color: var(--accent); }
+
+/* Tables */
+
+table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+table th { text-align: left; font-weight: 400; color: var(--muted); padding: 4px 0; }
+table td { text-align: right; padding: 4px 0; font-variant-numeric: tabular-nums; }
+
+.metrics td.good { color: var(--accent); font-weight: 600; }
+.metrics td.bad { color: var(--warn); font-weight: 600; }
+.metrics td.adj { font-size: 11px; color: var(--muted); }
+
+.facades tr:first-child th { font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; }
+.facades td { text-align: right; }
+.facades td.hot { color: var(--hot); font-weight: 600; }
+.facades td.cool { color: var(--cool); }
+.facades td.adj { text-align: left; font-size: 10.5px; color: var(--muted); padding-left: 9px; }
+.facades th:first-child, .facades td:first-child { text-align: left; }
+
+.note { margin: 9px 0 0; display: flex; align-items: flex-start; gap: 6px;
+        font-size: 11px; line-height: 1.5; color: var(--muted); }
+
+/* Shade sparkline */
+
+.spark td { display: flex; gap: 4px; align-items: flex-end; justify-content: flex-end; padding-top: 8px; }
+.bar { position: relative; width: 22px; height: 42px; background: #efece6;
+       border-radius: 3px; display: flex; align-items: flex-end; }
+.bar i { display: block; width: 100%; background: var(--accent); border-radius: 3px; }
+.bar u { position: absolute; left: 0; right: 0; bottom: -14px; text-align: center;
+         font-size: 9px; color: var(--muted); text-decoration: none; }
+.spark { height: 64px; }
+
+/* Toggles */
+
+.toggles { display: grid; gap: 8px; }
+.toggles label { display: flex; align-items: center; gap: 9px; font-size: 12.5px; color: var(--muted); }
+.toggles input { accent-color: var(--accent); }
+
+/* Footer */
+
+#panel footer { padding-top: 16px; }
+#panel footer h3 {
+  display: flex; align-items: center; gap: 7px; margin: 0 0 8px;
+  font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--accent);
+}
+#panel footer p { margin: 0 0 8px; font-size: 12.5px; line-height: 1.6; }
+#panel footer .small { font-size: 11px; color: var(--muted); }
+
+.fatal { padding: 48px; font-size: 14px; }
+.fatal pre { background: #f1efe9; padding: 12px; overflow-x: auto; font-size: 12px; }
+
+@media (max-width: 960px) {
+  #app { grid-template-columns: 1fr; grid-template-rows: 1fr auto; }
+  #panel { border-left: none; border-top: 1px solid var(--line); max-height: 52vh; }
+  /* The stamp is pinned to the window, so in the stacked layout it would sit on
+     top of the panel. Move it into the 3D area instead. */
+  #stamp { bottom: auto; top: 52px; }
+}

@@ -5,7 +5,7 @@ document. Each one states where it came from, what it affects, and how to change
 it. No regulatory value appears here: those are in `docs/open-items.md` marked
 `TO VERIFY` until a document and clause can be cited.
 
-Last updated: 2026-10-01 (A-03, A-04 and A-05 retired, verified against the DDA GIS)
+Last updated: 2026-10-01 (end of Phase 1)
 
 ## A-01 Net-to-gross factor, 1.18
 
@@ -109,6 +109,52 @@ consultant confirms the measurement basis.
   "3048.11". Worth knowing before adding any further drawing script.
 - Areas are shown in both m² and sq ft, at 1 m² = 10.763910416709722 sq ft.
 - Every sheet carries `CONCEPT DESIGN, NOT FOR CONSTRUCTION`.
+
+## A-10 Building heights for the massing study
+
+| | |
+|---|---|
+| Set in | `brief/massing.yaml`, `heights` |
+| Type | Engineering assumption, not a regulation |
+| Tracked as | OI-13 |
+
+4.00 m ground, 3.80 m first, 1.10 m parapet, 8.90 m overall. Typical for a Dubai
+villa of this size, but not taken from any code. Every shadow figure in the
+Phase 1 study scales with it: a taller mass shades more of the pool, a shorter
+one less. The ranking of the options is unlikely to change, since it comes from
+where the mass sits relative to the pool rather than from how tall it is, but the
+percentages would move.
+
+## A-11 Clear-sky irradiance as the design basis
+
+| | |
+|---|---|
+| Set in | `src/analysis/sun_study.py` |
+| Type | Modelling choice |
+
+Ineichen clear-sky with the pvlib Linke turbidity climatology, Perez-Driesse
+transposition to vertical surfaces, 15 minute steps through a full year. These
+are modelled figures for comparing options, not measured site data, and they
+describe the cloudless day rather than the average one. Measured or typical-year
+data would change the absolute kWh/m2 but not the relative standing of the four
+facades, which is what the design decisions rest on.
+
+## A-12 The plot's building grid, bearing 30.18 degrees
+
+| | |
+|---|---|
+| Set in | `brief/massing.yaml`, `grid.bearing_deg` |
+| Type | Derived from the boundary |
+
+The bearing of plot sides 1 and 3. The buildable envelope fills 98.7% of its own
+bounding box in this frame, so the plot is very nearly a rectangle of
+24.5 x 27.7 m once squared to it. All massing geometry is authored in this grid,
+and plans are drawn in it, so the entrance and backyard read as front and back.
+
+The largest rectangle that actually fits inside the envelope is 661.48 m2, a
+little smaller than the 680.55 m2 bounding box. Laying blocks out against the
+bounding box pushes them past the setback line, which `src/model/massing.py`
+rejects.
 
 ## A-09 Room areas are indicative
 

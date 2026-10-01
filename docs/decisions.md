@@ -6,6 +6,93 @@ Columns: date, decision, reason, approved by Aiman.
 
 ---
 
+## 2026-10-01, Phase 1
+
+### D-013 Plans are drawn plot up, not north up
+
+**Decision.** The massing sheet and the viewer draw the plot squared to its own
+building grid, bearing 30.18 degrees, rather than north up. The north arrow is
+rotated to match and the sheet says "Plot up, not north up".
+
+**Reason.** Owner request. North up renders this plot as a rotated diamond, which
+makes it hard to see which face is the entrance and which is the backyard. Plot
+up renders it as a rectangle: side 1 and the entrance on the left, side 3 and the
+backyard on the right, neighbours top and bottom. The true orientation is still
+on the sheet, so nothing is lost.
+
+The formal site plan VJH-SP-001 stays north up, which is the convention a
+consultant expects.
+
+**Approved by Aiman: yes.** Requested directly.
+
+### D-012 Side numbers and wall to boundary dimensions shown on every plan
+
+**Decision.** Every massing plan and the viewer label all four sides with their
+number and role (ENTRANCE, BACKYARD, NEIGHBOUR), and dimension the shortest
+distance from the villa wall to each boundary.
+
+**Reason.** Owner request. The distances are measured as the true nearest
+approach between the ground floor footprint and each side, not as a bounding box
+offset, so they stay correct for the L-shaped option C and for a plot that is not
+an exact rectangle. A pytest check asserts every one of them clears the 3 m
+setback.
+
+**Approved by Aiman: yes.** Requested directly.
+
+### D-011 Boundary wall concept
+
+**Decision.** 2.40 m overall. Solid to 1.20 m with a lighter screen above on the
+road side and on the landscape plot side; solid full height against both
+neighbours.
+
+**Reason.** The road face should not present a blank 2.4 m wall to the street,
+and the landscape plot side has no building and no overlooking on the far side,
+so there is a view worth keeping. Both neighbour sides are about privacy only.
+Gates are recessed so a car can pull clear of the 18.30 m road while the gate
+opens. Heights are TO VERIFY against DDA rules.
+
+**Approved by Aiman: not yet.** Proposed at the Phase 1 checkpoint.
+
+### D-010 Massing option A, Garden East, recommended
+
+**Decision.** Recommend option A: a single bar along the road edge with the
+garden and pool on the ESE side facing landscape plot 5130274, and the upper
+floor pushed to the ESE edge of the bar.
+
+**Reason.** Computed, not asserted. The villa stands west of the pool, so its
+shadow crosses the water through the afternoon: 65% of the pool deck shaded at
+15:00, 99% by 16:00, complete from 17:00, a 93% mean across the cooling season
+and never below 61% at any hour tested. In winter the sun swings far enough south
+to pass the mass entirely, leaving 100% sun on the water at midday. It is the
+only option that wins on both.
+
+Option B, the alternative CLAUDE.md asks to be tested, gets no shade at all from
+15:00 to 18:00, because the villa sits north-east of the pool and the afternoon
+shadow runs along the water rather than across it. Option C shades well, 87%, but
+the wing that blocks the summer afternoon sun also blocks the low winter sun,
+leaving 78% winter midday sun, and it gives up the view east.
+
+Option A also puts the garden and the main glazing on the face the sun study
+shows is cheapest to glaze: side 3 takes 368 kWh/m2 in summer mornings but only
+51 in the afternoons, against 233 for the road face. That same face has no
+building on the far side and never will.
+
+**Approved by Aiman: not yet.** Presented at the Phase 1 checkpoint.
+
+### D-009b Clear-sky irradiance, not a typical year
+
+**Decision.** The sun study uses Ineichen clear-sky irradiance with the pvlib
+Linke turbidity climatology, and Perez-Driesse transposition to vertical
+surfaces, at 15 minute steps through a full year.
+
+**Reason.** The design case in Dubai is the cloudless day, not the average day.
+Shading and glazing decisions have to hold on the worst day, not the mean one.
+Figures are modelled for comparison between options, not measured site data.
+
+**Approved by Aiman: not yet.** Technical, reported at the Phase 1 checkpoint.
+
+---
+
 ## 2026-10-01
 
 ### D-009 Boundary taken from the DDA GIS, and true north confirmed

@@ -6,7 +6,7 @@ names the document that must answer it.
 
 Status key: OPEN, ASKED (sent to a third party), CLOSED.
 
-Last updated: 2026-10-01 (north and location verified against the DDA GIS)
+Last updated: 2026-10-01 (end of Phase 1)
 
 ## Critical. Blocks Phase 2 room layouts
 
@@ -146,18 +146,54 @@ below the uncertainty that OI-04 carried before it closed.
 
 Corrected anyway, because the exact figure was available at no cost.
 
+### OI-12 May a swimming pool sit within the 3 m setback?
+
+| | |
+|---|---|
+| Status | OPEN |
+| Raised | 2026-10-01, Phase 1 |
+| Answered by | DDA regulations |
+| Source needed | Document reference and clause number |
+
+All three massing options keep the pool entirely inside the buildable envelope,
+so **no option depends on the answer**. A yes would free roughly 90 to 100 m2 of
+additional garden on the chosen side and would let the pool sit further from the
+villa, which would change the shading balance. Worth asking, not blocking.
+
+### OI-13 Overall building height in metres
+
+| | |
+|---|---|
+| Status | OPEN |
+| Raised | 2026-10-01, Phase 1 |
+| Answered by | Dubai Building Code and DDA regulations |
+
+The DDA plot details cap the villa at G+1 but give no height in metres.
+`brief/massing.yaml` assumes 4.00 m ground, 3.80 m first, 1.10 m parapet,
+8.90 m overall. Every shadow figure in the Phase 1 study depends on it: a taller
+mass shades more, a shorter one less. Needed before Phase 3.
+
 ## Owner decisions outstanding
 
 ### OI-07 Pool and main garden position
 
 | | |
 |---|---|
-| Status | OPEN, scheduled |
+| Status | OPEN, awaiting owner decision |
 | Decided by | Aiman, at the Phase 1 checkpoint |
+| Updated | 2026-10-01 |
 
-Not decided. At least two options to be tested with sun-path and shading
-studies: east toward the landscape plot 5130274, and south or southwest. A
-recommendation with reasons follows in Phase 1.
+Three options tested with real cast-shadow geometry, not estimates. See
+`output/reports/VJH-RPT-004_Massing_Options.txt` and
+`output/pdf/VJH-MA-001_Massing_Options.pdf`.
+
+| Option | Summer afternoon shade on pool | Winter midday sun |
+|---|---|---|
+| A, Garden East | **93%**, never below 61% | **100%** |
+| B, Garden Southwest | 12%, none at all 15:00 to 18:00 | 100% |
+| C, Courtyard | 87% | 78% |
+
+**Recommended: option A.** Awaiting the owner's decision.
 
 ### OI-08 Dining room size
 

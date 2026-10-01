@@ -1,0 +1,155 @@
+# massing.yaml: Phase 1 massing options. Single source of truth for the option
+# geometry. Scripts read this file. Never hard-code massing geometry.
+#
+# COORDINATE FRAME
+# Geometry is given in the plot's own building grid, not in site x/y, because
+# the plot is very nearly a parallelogram whose long edges run on one bearing.
+# In this grid the buildable envelope is an almost perfect rectangle: it fills
+# 98.7% of its own bounding box.
+#
+#   grid u  runs on bearing 120.18 deg (ESE), from the road edge toward the
+#           landscape plot. Envelope spans u 3.00 to 27.54 m.
+#   grid v  runs on bearing  30.18 deg (NNE), from the south-west neighbour
+#           toward the north-east neighbour. Envelope spans v 3.03 to 30.77 m.
+#
+# Grid edges map to plot sides as follows:
+#   u = 0     side 1, road 18.30 m, WNW face, main access
+#   u = 30.5  side 3, landscape plot 5130274, ESE face
+#   v = 0     side 2, neighbour plot 5130123, SSW face
+#   v = 33.6  side 4, neighbour plot 5130271, NNE face
+#
+# src/model/massing.py converts to site coordinates and FAILS if any block
+# escapes the buildable envelope.
+
+meta:
+  stamp: "CONCEPT DESIGN, NOT FOR CONSTRUCTION"
+  phase: 1
+  status: "Options for owner decision at the Phase 1 checkpoint. None approved."
+
+grid:
+  bearing_deg: 30.18
+  bearing_note: >
+    Bearing of plot sides 1 and 3, the plot's long axes. Building grid is set
+    parallel to them so the villa sits square to its own boundaries.
+  # Bounding box of the buildable envelope in this frame.
+  envelope_bbox_u: [3.00, 27.54]
+  envelope_bbox_v: [3.03, 30.77]
+  # The envelope is not quite that rectangle: it fills 98.7% of its own bounding
+  # box, with the corners clipped by the bend at vertex C and by the plot not
+  # being an exact parallelogram. Blocks are laid out against the largest
+  # rectangle that actually fits inside, which is 661.48 m2. Using the bounding
+  # box instead pushes every option a few square metres past the setback line,
+  # which src/model/massing.py rejects.
+  usable_u: [3.05, 27.35]
+  usable_v: [3.40, 30.40]
+
+# Indicative heights. Not a design decision, and not a regulatory value.
+# The DDA cap is G+1; overall height limits in metres are TO VERIFY against the
+# Dubai Building Code. See docs/open-items.md.
+heights:
+  ground_floor_m: 4.00
+  first_floor_m: 3.80
+  parapet_m: 1.10
+  roof_slab_m: 7.80        # ground + first, top of the first floor slab
+  overall_m: 8.90          # including parapet, the shadow-casting height
+  to_verify: true
+  to_verify_note: "Overall height limit in metres TO VERIFY against the Dubai Building Code."
+
+# Ground floor footprint target, from src/analysis/gfa_check.py:
+#   house gross 351.64 m2 (298 net x 1.18) + garage 55.00 m2 = 406.64 m2
+# First floor gross ranges 260.78 to 290.28 m2.
+targets:
+  ground_footprint_m2: 406.64
+  first_footprint_m2: 290.28
+
+options:
+
+  - key: A
+    name: "Garden East"
+    summary: >
+      A single bar along the road edge, with the whole garden and pool held on
+      the ESE side facing landscape plot 5130274. The upper floor is pushed to
+      the ESE edge of the bar so the master suite takes the view and the mass
+      throws its afternoon shadow across the pool.
+    ground:
+      - { u: [3.05, 18.11], v: [3.40, 30.40] }
+    first:
+      - { u: [7.36, 18.11], v: [3.40, 30.40] }
+    garage:
+      - { u: [3.05, 11.05], v: [23.50, 30.40] }
+    pool:   { u: [20.50, 24.50], v: [10.00, 20.00] }
+    deck:   { u: [18.50, 26.50], v: [8.00, 22.00] }
+    driveway: { u: [0.00, 3.05], v: [21.00, 30.40] }
+
+  - key: B
+    name: "Garden Southwest"
+    summary: >
+      The bar runs along the NNE edge against neighbour 5130271, with the garden
+      and pool on the SSW side toward neighbour 5130123. This is the option
+      CLAUDE.md asks to be tested against option A.
+    ground:
+      - { u: [3.05, 27.35], v: [13.67, 30.40] }
+    first:
+      - { u: [3.05, 27.35], v: [18.45, 30.40] }
+    garage:
+      - { u: [3.05, 11.05], v: [23.50, 30.40] }
+    pool:   { u: [8.00, 18.00], v: [6.50, 10.50] }
+    deck:   { u: [6.00, 20.00], v: [4.50, 12.50] }
+    driveway: { u: [0.00, 3.05], v: [21.00, 30.40] }
+
+  - key: C
+    name: "Courtyard"
+    summary: >
+      An L wrapping the two hot faces. One wing shields the WNW road face, the
+      other the SSW neighbour face, leaving a sheltered courtyard open to the
+      ESE landscape plot and the NNE neighbour, which are the two coolest
+      afternoon orientations. The pool sits in the courtyard.
+    ground:
+      - { u: [3.05, 14.00], v: [3.40, 30.40] }
+      - { u: [14.00, 27.35], v: [3.40, 11.70] }
+    first:
+      - { u: [3.05, 13.80], v: [3.40, 30.40] }
+    garage:
+      - { u: [3.05, 11.05], v: [23.50, 30.40] }
+    pool:   { u: [18.50, 22.50], v: [15.00, 25.00] }
+    deck:   { u: [16.50, 24.50], v: [13.00, 27.00] }
+    driveway: { u: [0.00, 3.05], v: [21.00, 30.40] }
+
+# Shading assessment times, local Asia/Dubai.
+# Afternoon shade on the pool deck is the metric that matters in Dubai: the deck
+# is unusable in direct sun at 40 C+, and an unshaded pool overheats.
+assessment:
+  summer_dates: ["06-21", "08-21"]
+  winter_dates: ["12-21"]
+  afternoon_hours: [15, 16, 17, 18]
+  winter_midday_hours: [11, 12, 13, 14]
+
+# Boundary wall concept. Proposed at the Phase 1 checkpoint per CLAUDE.md.
+boundary_wall:
+  height_m: 2.40
+  to_verify: true
+  to_verify_note: >
+    Boundary wall height and any gate setback requirement TO VERIFY against DDA
+    regulations and the Dubai Building Code.
+  road_side:
+    side: 1
+    solid_height_m: 1.20
+    screen_to_m: 2.40
+    treatment: >
+      Solid white rendered wall to 1.20 m with a lighter screen above to 2.40 m,
+      so the street reads as enclosed without presenting a blank 2.4 m face.
+      Vehicle gate and a separate pedestrian gate, both recessed to let a car
+      pull clear of the 18.30 m road while the gate opens.
+  neighbour_sides:
+    sides: [2, 4]
+    solid_height_m: 2.40
+    screen_to_m: 2.40
+    treatment: "Solid white rendered wall to 2.40 m for privacy."
+  landscape_side:
+    side: 3
+    solid_height_m: 1.20
+    screen_to_m: 2.40
+    treatment: >
+      The lowest wall on the plot, since 5130274 is a landscape plot with no
+      building and no overlooking. Solid to 1.20 m with open screen above, to
+      keep the view out toward the landscape while still enclosing the garden.
