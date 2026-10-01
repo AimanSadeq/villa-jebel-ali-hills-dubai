@@ -1,0 +1,25 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Node / viewer
+node_modules/
+viewer/dist/
+viewer/.vite/
+*.tsbuildinfo
+
+# Blender working files
+*.blend1
+*.blend2
+
+# OS and editor
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Scratch
+scratch/
+tmp/
