@@ -122,35 +122,36 @@ def totals(program: dict | None = None, site: dict | None = None, factor: float 
         }
 
     core = bucket(lambda r: r.counts)
-    garage = bucket(lambda r: r.key == "garage")
-    roof_encl = bucket(lambda r: r.key == "roof_enclosure")
+    garage = bucket(lambda r: r.key == 'garage')
+    roof_encl = bucket(lambda r: r.key == 'roof_enclosure')
 
+    # Scenarios are built from the unverified items that actually exist, so the
+    # report shrinks as questions get answered instead of printing dead rows.
+    unverified_keys = sorted({r.key for r in rs if r.unverified})
     scenarios = {
         "core": {
-            "label": "House only, confirmed GFA areas",
+            "label": "All areas confirmed to count",
             "gross_low": core["gross_low"],
             "gross_high": core["gross_high"],
             "unverified_included": [],
-        },
-        "core_garage": {
-            "label": "House + garage",
-            "gross_low": core["gross_low"] + garage["gross_low"],
-            "gross_high": core["gross_high"] + garage["gross_high"],
-            "unverified_included": ["garage"],
-        },
-        "core_roof": {
-            "label": "House + roof enclosure",
-            "gross_low": core["gross_low"] + roof_encl["gross_low"],
-            "gross_high": core["gross_high"] + roof_encl["gross_high"],
-            "unverified_included": ["roof_enclosure"],
-        },
-        "core_both": {
-            "label": "House + garage + roof enclosure",
-            "gross_low": core["gross_low"] + garage["gross_low"] + roof_encl["gross_low"],
-            "gross_high": core["gross_high"] + garage["gross_high"] + roof_encl["gross_high"],
-            "unverified_included": ["garage", "roof_enclosure"],
-        },
+        }
     }
+    for key in unverified_keys:
+        b = bucket(lambda r, k=key: r.key == k)
+        scenarios[f"core_{key}"] = {
+            "label": f"Plus {key.replace('_', ' ')}",
+            "gross_low": core["gross_low"] + b["gross_low"],
+            "gross_high": core["gross_high"] + b["gross_high"],
+            "unverified_included": [key],
+        }
+    if len(unverified_keys) > 1:
+        b = bucket(lambda r: r.unverified)
+        scenarios["core_all_unverified"] = {
+            "label": "Plus every unverified area",
+            "gross_low": core["gross_low"] + b["gross_low"],
+            "gross_high": core["gross_high"] + b["gross_high"],
+            "unverified_included": list(unverified_keys),
+        }
 
     cap = float(site["regulations"]["max_gfa_m2"])
     design_target = float(t["design_target_gfa_m2"])
@@ -191,12 +192,13 @@ def sensitivity(program: dict | None = None, site: dict | None = None,
     out = []
     for f in factors:
         t = totals(program, site, factor=f)
+        core = t["scenarios"]["core"]
         out.append({
             "factor": f,
-            "core_low": t["scenarios"]["core"]["gross_low"],
-            "core_high": t["scenarios"]["core"]["gross_high"],
-            "garage_low": t["scenarios"]["core_garage"]["gross_low"],
-            "garage_high": t["scenarios"]["core_garage"]["gross_high"],
+            "core_low": core["gross_low"],
+            "core_high": core["gross_high"],
+            "headroom_low": t["cap_m2"] - core["gross_low"],
+            "headroom_high": t["cap_m2"] - core["gross_high"],
         })
     return out
 
@@ -233,16 +235,15 @@ def report(program: dict | None = None, site: dict | None = None) -> tuple[str, 
             w(f"{f:<12}{bf['net_low']:>10.2f}{bf['net_high']:>10.2f}")
     w(f"{'TOTAL NET':<12}{t['core']['net_low']:>10.2f}{t['core']['net_high']:>10.2f}")
     w("")
-    w(f"Tracked separately: garage {t['garage_m2']:.2f} m2, "
-      f"roof enclosure {t['roof_enclosure_m2']:.2f} m2 (both TO VERIFY)")
+    w(f"Of which the garage, counted toward GFA by owner decision: "
+      f"{t['garage_m2']:.2f} m2")
     w(f"Double-height voids, excluded from upper floor area: {t['voids_m2']:.2f} m2")
     w("")
 
     w("GROSS FLOOR AREA BY SCENARIO, against the 662.99 m2 cap")
     w(f"{'Scenario':<34}{'Low':>9}{'High':>9}{'Head low':>10}{'Head high':>10}  Verdict")
     fails = at_risk = False
-    for key in ("core", "core_garage", "core_roof", "core_both"):
-        s = t["scenarios"][key]
+    for key, s in t["scenarios"].items():
         over = s["breaches_cap_low"] or s["breaches_cap_high"]
         if over:
             if s["unverified_included"]:
@@ -263,8 +264,7 @@ def report(program: dict | None = None, site: dict | None = None) -> tuple[str, 
 
     w("HEADROOM AGAINST THE DESIGN TARGET OF "
       f"{t['design_target_m2']:.2f} m2")
-    for key in ("core", "core_garage", "core_roof", "core_both"):
-        s = t["scenarios"][key]
+    for s in t["scenarios"].values():
         w(f"{s['label']:<34}{s['headroom_target_low']:>9.2f}{s['headroom_target_high']:>9.2f}")
     w("")
     w("Positive means area still available to distribute. Negative means trims")
@@ -272,11 +272,13 @@ def report(program: dict | None = None, site: dict | None = None) -> tuple[str, 
     w("")
 
     w("PLAN EFFICIENCY SENSITIVITY")
-    w("Lower net to gross means more room area for the same GFA.")
-    w(f"{'Factor':<9}{'House low':>11}{'House high':>11}{'+garage low':>13}{'+garage high':>14}")
+    w("Lower net to gross means more room area for the same GFA. Headroom is")
+    w(f"against the {t['cap_m2']:.2f} m2 cap, with the garage counted.")
+    w(f"{'Factor':<9}{'Gross low':>11}{'Gross high':>12}{'Head low':>11}{'Head high':>11}")
     for row in sensitivity(program, site):
-        w(f"{row['factor']:<9.2f}{row['core_low']:>11.2f}{row['core_high']:>11.2f}"
-          f"{row['garage_low']:>13.2f}{row['garage_high']:>14.2f}")
+        flag = "  fits" if row["headroom_low"] >= 0 else "  over"
+        w(f"{row['factor']:<9.2f}{row['core_low']:>11.2f}{row['core_high']:>12.2f}"
+          f"{row['headroom_low']:>11.2f}{row['headroom_high']:>11.2f}{flag}")
     w("")
 
     added = [r for r in t["rooms"] if r.added_by_claude]

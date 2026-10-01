@@ -100,16 +100,20 @@ ground:
     name: "Staircase + Home Elevator"
     target_m2: 20
     gfa: counts
-    notes: "Elevator serves ground, first, and roof."
+    notes: >
+      Elevator serves ground and first. The roof stop was removed by owner
+      decision on 2026-10-01.
   - key: garage
     name: "Garage, Enclosed, 3 Cars"
     target_m2: 55
-    gfa: unverified
+    gfa: counts
     track_separately: true
     notes: >
-      TO VERIFY whether an enclosed garage counts toward GFA under DDA rules.
-      Worth 55 m2. Decides whether the program has roughly 50 m2 of headroom
-      or none. Report GFA both with and without it.
+      Owner decision 2026-10-01: count the parking as part of the GFA. This is
+      the conservative reading. DDA published material does not rule on garages
+      (see docs/open-items.md OI-01), so rather than design against an unknown
+      the owner chose to carry the 55 m2 inside the 662.99 m2 cap. If the Site
+      Plan later excludes it, 55 m2 comes back.
 
 first:
   - key: master_suite
@@ -154,22 +158,22 @@ first:
     notes: >
       Not itemised in CLAUDE.md section 4 but required: the stair and elevator
       must land on the first floor. Added by Claude, flagged for owner review.
+      Now the top landing, since the roof stop was removed on 2026-10-01.
     added_by_claude: true
 
-roof:
-  - key: roof_enclosure
-    name: "Roof Stair and Elevator Enclosure"
-    target_m2: 20
-    gfa: unverified
-    track_separately: true
-    notes: >
-      TO VERIFY whether the roof enclosure counts toward GFA, and the parapet
-      and enclosure rules, against the Dubai Building Code.
-  - key: roof_terrace
-    name: "Roof Terrace"
-    target_m2: null
-    gfa: excluded
-    notes: "Open terrace. Area follows from the plan. Space for screened VRF outdoor units."
+# Roof. Owner decision 2026-10-01: no roof terrace and no roof enclosure.
+#
+# This removes the roof stair and elevator enclosure that CLAUDE.md section 4
+# asked for, and with it the risk flagged in OI-05 that DDA might count a roof
+# enclosure as an additional floor and breach the G+1 cap outright.
+#
+# Consequences carried forward:
+#  - The elevator now serves ground and first only, not three levels.
+#  - The flat roof still exists and still needs a 1.20 m parapet, DDA FAQ Q34.
+#  - The VRF outdoor units still need a home. They can sit on the flat roof
+#    behind a low screen, which needs no enclosure and adds no floor, or at
+#    ground level in the service zone. Decided in Phase 5. See OI-17.
+roof: []
 
 # Double-height voids. Per CLAUDE.md section 3 these do not add upper-floor
 # area. Listed so they appear in reports and are never double counted.

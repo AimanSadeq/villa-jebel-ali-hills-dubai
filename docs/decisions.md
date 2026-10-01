@@ -6,6 +6,48 @@ Columns: date, decision, reason, approved by Aiman.
 
 ---
 
+## 2026-10-01, owner decisions on roof and garage
+
+### D-018 Count the parking as part of the GFA
+
+**Decision.** The 55 m2 garage counts toward the 662.99 m2 GFA cap.
+`brief/program.yaml` now marks it `gfa: counts`, and the GFA check has no
+unverified areas left.
+
+**Reason.** Owner decision. DDA's published material does not rule on garages,
+so rather than design against an unknown and risk a redesign at submission, the
+conservative reading is adopted. If the issued Site Plan later excludes the
+garage, 55 m2 comes straight back and the room ranges reopen.
+
+**Consequence, and it is not small.** The briefed program no longer fits. At the
+low end of every bedroom range it reaches 667.42 m2 against the 662.99 m2 cap,
+over by 4.43 m2, and over the 653.00 m2 design target by 14.42 m2. At the high
+end it is 33.93 m2 over the cap, and no plan efficiency tested can recover that,
+so the top of the bedroom ranges is no longer available. Trims are needed and
+are tracked as OI-18. No room has been cut.
+
+**Approved by Aiman: yes.** Stated directly.
+
+### D-017 No roof terrace and no roof enclosure
+
+**Decision.** The roof terrace and the roof stair and elevator enclosure are
+removed from scope. `brief/program.yaml` now has an empty `roof` section. The
+elevator serves ground and first only.
+
+**Reason.** Owner decision. This also removes the risk found in the DDA FAQ,
+where Q27 counts a roof gym as an additional floor unless the master developer
+excludes it. On that reading a roof enclosure could have breached the G+1 cap
+outright rather than merely adding GFA. That risk is now gone, and OI-02 closes.
+
+**Carried forward.** The flat roof still exists and still needs a 1.20 m parapet.
+The VRF outdoor units still need a location, either on the flat roof behind a low
+screen, which needs no enclosure and adds no floor, or at ground level in the
+service zone. Decided in Phase 5, tracked as OI-17.
+
+**Approved by Aiman: yes.** Stated directly.
+
+---
+
 ## 2026-10-01, owner selection and DDA research
 
 ### D-016 Parapet raised to 1.20 m, the DDA minimum

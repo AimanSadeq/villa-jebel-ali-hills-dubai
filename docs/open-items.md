@@ -6,7 +6,7 @@ names the document that must answer it.
 
 Status key: OPEN, ASKED (sent to a third party), CLOSED.
 
-Last updated: 2026-10-01 (DDA published material checked, option C selected)
+Last updated: 2026-10-01 (roof dropped, garage counted, trims now needed)
 
 ## Critical. Blocks Phase 2 room layouts
 
@@ -14,60 +14,94 @@ Last updated: 2026-10-01 (DDA published material checked, option C selected)
 
 | | |
 |---|---|
-| Status | **OPEN. DDA published material checked 2026-10-01 and does not answer it.** |
-| Raised | 2026-10-01, Phase 0 |
+| Status | **SETTLED BY OWNER DECISION 2026-10-01, still worth confirming** |
 | Worth | 55.00 m2 |
-| Answered by | The issued Site Plan for plot 5130272, and the Meraas development guideline |
-| Checked | DDA FAQs, 20 pages, and the Dubai Building Code objectives, 17 pages |
+| Answered by | The issued Site Plan, if ever obtained |
 
-**What was checked.** Both documents were retrieved and parsed in full. The word
-"garage" appears **zero times** in either. There is no published DDA rule on
-whether an enclosed villa garage counts toward GFA.
+The owner decided on 2026-10-01 to **count the parking as part of the GFA**, the
+conservative reading, rather than wait. The design now proceeds on that basis and
+no longer depends on the answer. See decision D-018.
 
-**Where the answer actually lives.** DDA's own FAQ says so twice:
+It is still worth confirming, because a DDA answer excluding the garage would
+return 55 m2 and reopen the full bedroom ranges. An enquiry covering this and
+five other points is drafted and sits in the owner's Gmail awaiting a confirmed
+recipient. DDA publishes no enquiry email address: their contact page gives phone
+numbers and a web form only.
 
-- "Where can I find the Planning Regulations for my Plot?" to which the answer is
-  "You can find the regulations for your plot on the issued site plan, or you may
-  log your enquiry through 'connect with us' under DDA website".
-- "What are the Parking standards as per DDA?" to which the answer is "as
-  mentioned in the site plan".
-
-So this is plot-specific, and the Site Plan, which is also OI-03, answers it.
-
-**One thing the FAQ does settle.** GFA and BUA are not the same measure in DDA's
-usage. Q25: "Balconies are always excluded from GFA calculations, but included in
-the BUA calculation." The 662.99 m2 cap on this plot is on **GFA**. A garage
-could in principle sit in BUA but outside GFA, which is the outcome that would
-suit this project.
-
-**Pattern worth noting, not a conclusion.** Where the FAQ does address a space
-that might be excluded, the phrasing is consistently "unless the master developer
-allows it to be excluded", for the gym in Q26 and the roof gym in Q27, and
-"Podium floors are only allowed if they are mentioned in the affection plan" in
-Q32. The default in those answers is inclusion, with exclusion at the master
-developer's discretion. That leans toward the garage counting unless Meraas's
-guideline says otherwise. **It is an inference from adjacent rulings, not a rule
-about garages, and must not be designed against.**
-
-Impact is unchanged: if the garage counts, the program breaches the cap at both
-ends of the room ranges. Until this is answered, no room layout can be finalised.
-
-Source: DDA FAQs - Building, retrieved 2026-10-01 from https://webzoning.dda.gov.ae/Zoning/Content/dda/FAQs.pdf
+What DDA's published material does establish, from the FAQs retrieved
+2026-10-01: GFA and BUA are different measures, since Q25 excludes balconies from
+GFA but includes them in BUA. The cap on this plot is on GFA.
 
 ### OI-02 Does the roof stair and elevator enclosure count toward GFA?
 
 | | |
 |---|---|
-| Status | OPEN |
-| Raised | 2026-10-01, Phase 0 |
-| Worth | 20.00 m² |
-| Answered by | DDA regulations and the Dubai Building Code |
-| Source needed | Document reference and clause number |
+| Status | **CLOSED 2026-10-01** |
 
-Compounds OI-01. If both the garage and the roof enclosure count, the total
-reaches 687.42 to 716.92 m², over the cap by 24 to 54 m².
+Closed by removing the roof terrace and the roof enclosure from scope, on the
+owner's decision. See D-017. The question no longer arises, and with it goes the
+sharper risk that DDA FAQ Q27's treatment of a roof gym as an additional floor
+might have applied to a roof enclosure and breached G+1 outright.
 
-## Important. Blocks Phase 1 or Phase 3
+### OI-18 The program no longer fits, and needs trims
+
+| | |
+|---|---|
+| Status | **OPEN, blocks Phase 2** |
+| Raised | 2026-10-01 |
+| Decided by | Aiman |
+
+Counting the garage toward GFA (D-018) puts the briefed program over the cap.
+
+| | Gross | vs cap 662.99 | vs target 653.00 |
+|---|---|---|---|
+| Low end of every range | 667.42 m2 | **+4.43 over** | **+14.42 over** |
+| High end of every range | 696.92 m2 | **+33.93 over** | +43.92 over |
+
+**The high end is gone.** Even at the most efficient net to gross tested, 1.12,
+the high end still misses by 1.29 m2. Master suite at 80 m2 and bedrooms at 35 m2
+are not available while the garage counts.
+
+At the low end the gap is small. Three routes, none of them taken without the
+owner. CLAUDE.md section 3 is explicit that rooms are not cut unilaterally.
+
+**Route A, no cuts at all.** Buy it with plan efficiency. Net to gross must come
+in at 1.171 to clear the cap, or 1.152 to reach the design target, against the
+1.18 assumed. Option C's single storey wing already achieves 1.13, though the
+bedroom floor with four en-suites will be worse. Unprovable until Phase 2 plans
+exist, so it carries risk.
+
+**Route B, service and circulation only, 13 m2 net.** Touches no principal room.
+Stair and lift on the first floor 20 to 15, now the top landing with no roof
+flight to accommodate; stair and lift ground 20 to 18; pantry 6 to 5; laundry 8
+to 7; maid's room 12 to 11; driver's room 12 to 11; plant room 8 to 7; entrance
+foyer 20 to 19, still double height. Lands at 652.08 m2, inside both the cap and
+the target.
+
+**Route C, secondary rooms, 14 m2 net.** Sunroom 20 to 15; home office 14 to 12;
+entrance foyer 20 to 17; stair and lift first 20 to 16. Lands at 650.90 m2.
+
+**Route D, shave the bedrooms, 12 m2 net.** Master 70 to 66, still 2.2 times the
+other bedrooms as CLAUDE.md section 4 requires; bedrooms 2 to 4 each 30 to 28;
+family living 35 to 33. Lands at 653.26 m2, which clears the cap but misses the
+design target by 0.26 m2.
+
+Route B is the one that costs the least that anyone will notice. Awaiting the
+owner's choice.
+
+### OI-17 Where do the VRF outdoor units go?
+
+| | |
+|---|---|
+| Status | OPEN, Phase 5 |
+| Raised | 2026-10-01 |
+
+The roof terrace was removed on 2026-10-01, but the VRF condensers still need a
+home. Either on the flat roof behind a low screen, which needs no enclosure and
+adds no floor, or at ground level in the service zone. Roof mounting is normally
+preferable for noise and for refrigerant pipe runs. Decided in Phase 5.
+
+## Important. Blocks Phase 1 or Phase 3## Important. Blocks Phase 1 or Phase 3
 
 ### OI-03 Demarcation Certificate coordinates
 
