@@ -6,7 +6,7 @@ names the document that must answer it.
 
 Status key: OPEN, ASKED (sent to a third party), CLOSED.
 
-Last updated: 2026-10-02 (plan 2 fits after the two car garage)
+Last updated: 2026-10-02 (corridor width found; it decides whether plan 2 fits)
 
 ## Critical. Blocks Phase 2 room layouts
 
@@ -76,6 +76,52 @@ Plan 2 fits. The margin held back against a consultant's remeasure is 6.56 m2,
 real, and it can be restored if OI-01 returns the garage area.
 
 Plan 1 remains over the cap and is not available.
+
+### OI-21 Corridor width, and whether DDA's 1.8 m applies inside a villa
+
+| | |
+|---|---|
+| Status | **OPEN, blocks the Phase 2 drawings** |
+| Raised | 2026-10-02, Phase 2 |
+| Answered by | DDA, or the registered consultant |
+
+Found while generating the actual room layout. The feasibility model allowed a
+1.40 m corridor over a 12 m service spine. Once the rooms were packed into the
+wings it was clear the spine has to run the full 20.80 m of the banded part of
+the road wing, and the first floor corridor the full length of the bedroom zone.
+Corridors cost more than the model assumed.
+
+DDA FAQs Building Q12: "What is the width required for corridors?" Answer:
+"1.8 meter minimum for commercial and residential buildings. 1.5 meter minimum
+for service corridors. 2.4 meter for other use buildings."
+
+**Whether that governs a corridor inside a single private villa, as opposed to a
+common corridor in a residential building, is TO VERIFY.** It is the difference
+between the plan fitting and not.
+
+| Corridor width | Total gross | vs the 662.99 m2 cap |
+|---|---|---|
+| 0.00, rooms interconnect entirely | 631.22 | 31.77 inside |
+| 1.20 | 659.76 | 3.23 inside |
+| 1.40 | 668.75 | **5.76 over** |
+| **1.80, the DDA figure** | **686.72** | **23.73 over** |
+
+Only the 1.20 m case fits, and it fits by 3.23 m2, which is a 0.5% margin against
+a consultant's remeasure. That is too thin to design to, and 1.20 m is below the
+DDA figure in any case.
+
+**The clean fix is OI-01.** The garage counts 38.00 m2 toward GFA by the owner
+decision of 2026-10-01. If the Site Plan excludes it, even the fully compliant
+1.80 m case lands at 648.72 m2, inside the cap with 14.27 m2 of margin, and every
+corridor question dissolves. One document answers this, the height basis, the
+boundary wall and the pool setback, and replaces the boundary coordinates.
+
+The alternative is a fourth pass over the room list, about 24 m2 at 1.80 m
+corridors. The rooms that are easy to trim went in route B and the third car went
+on 2026-10-02.
+
+No plan has been drawn. Drawing one at 1.20 m corridors would mean drawing
+something that may not be permitted.
 
 ### OI-19 How to spend the remaining range headroom
 
