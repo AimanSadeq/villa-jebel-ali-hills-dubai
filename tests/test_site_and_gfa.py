@@ -23,6 +23,7 @@ from model.site import (  # noqa: E402
     load_site,
     plot_polygon,
     sides,
+    vertices,
 )
 
 # Tolerances. The boundary coordinates are scaled from the DDA plan, which is
@@ -84,11 +85,54 @@ def test_gfa_not_the_setbacks_is_the_binding_constraint():
     assert a["max_gfa_m2"] < a["geometric_capacity_m2"]
 
 
-def test_site_yaml_flags_provisional_data_as_to_verify():
+def test_site_yaml_still_flags_the_boundary_as_to_verify():
+    """The Demarcation Certificate is still outstanding, so this stays true."""
+    assert load_site()["boundary"]["to_verify"] is True
+
+
+def test_orientation_and_location_are_verified_and_carry_their_evidence():
+    """Verified against the DDA GIS on 2026-10-01. Guards against silent reversion."""
     site = load_site()
-    assert site["boundary"]["to_verify"] is True
-    assert site["orientation"]["to_verify"] is True
-    assert site["location"]["to_verify"] is True
+
+    orientation = site["orientation"]
+    assert orientation["plan_up_is_true_north"] is True
+    assert orientation["to_verify"] is False
+    assert orientation["verified_on"] == "2026-10-01"
+    assert abs(orientation["mean_bearing_error_deg"]) < 0.5, (
+        "Plan-up is only true north while the measured bearing error stays small"
+    )
+
+    location = site["location"]
+    assert location["to_verify"] is False
+    assert 24.8 < location["latitude"] < 25.0
+    assert 54.9 < location["longitude"] < 55.1
+
+
+def test_boundary_vertices_carry_their_source_wgs84_position():
+    """The local metric frame must always be reproducible from the source data."""
+    for vertex in vertices():
+        assert vertex.lonlat is not None, f"Vertex {vertex.id} has no WGS84 position"
+        lon, lat = vertex.lonlat
+        assert 54.96 < lon < 54.97
+        assert 24.89 < lat < 24.90
+
+
+def test_local_frame_matches_the_wgs84_source():
+    """Re-project the stored lon/lat and confirm it reproduces the stored x/y."""
+    import math
+
+    verts = vertices()
+    lat0 = sum(v.lat for v in verts) / len(verts)
+    phi = math.radians(lat0)
+    m_lat = 111132.92 - 559.82 * math.cos(2 * phi) + 1.175 * math.cos(4 * phi)
+    m_lon = 111412.84 * math.cos(phi) - 93.5 * math.cos(3 * phi)
+    origin = verts[0]
+
+    for v in verts:
+        x = (v.lon - origin.lon) * m_lon
+        y = (v.lat - origin.lat) * m_lat
+        assert abs(x - v.x) < 0.01, f"Vertex {v.id} x drifted from its WGS84 source"
+        assert abs(y - v.y) < 0.01, f"Vertex {v.id} y drifted from its WGS84 source"
 
 
 # GFA

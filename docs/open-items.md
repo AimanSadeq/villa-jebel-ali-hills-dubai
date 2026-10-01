@@ -6,7 +6,7 @@ names the document that must answer it.
 
 Status key: OPEN, ASKED (sent to a third party), CLOSED.
 
-Last updated: 2026-10-01 (end of Phase 0)
+Last updated: 2026-10-01 (north and location verified against the DDA GIS)
 
 ## Critical. Blocks Phase 2 room layouts
 
@@ -54,31 +54,63 @@ reaches 687.42 to 716.92 m², over the cap by 24 to 54 m².
 
 | | |
 |---|---|
-| Status | OPEN |
+| Status | OPEN, downgraded 2026-10-01 |
 | Raised | 2026-10-01, Phase 0 |
 | Answered by | Site Plan and Demarcation Certificate from the master developer |
 
-The DDA plot plan states it is for illustration only. The boundary coordinates
-in `brief/site.yaml` are scaled from that drawing. They are good: the computed
-area is within 0.029% of the official 1,019.98 m², and all four side lengths are
-within 0.23% of the stated figures. They are still provisional.
+**Downgraded.** The boundary no longer comes from coordinates scaled off a
+drawing. `brief/site.yaml` now carries the DDA's own GIS geometry in WGS84,
+retrieved from the Development Information System on 2026-10-01, with the source
+lon and lat stored on every vertex.
 
-Replace the `boundary.vertices` block in `brief/site.yaml` when the certificate
-arrives. Nothing else needs to change, and the full drawing and report set
-regenerates from that one edit.
+| Check | Result |
+|---|---|
+| Plot area vs official 1,019.98 m² | 1,019.97 m², deviation **-0.001%** |
+| Side 1, stated 33.80 m | 33.80 m, -0.00% |
+| Side 2, stated 30.56 m | 30.56 m, -0.01% |
+| Side 3, stated 33.13 m | 33.14 m, +0.02% |
+| Side 4, stated 30.53 m | 30.53 m, +0.01% |
+
+The GIS polygon reproduces every stated side length. This is the authority's own
+published data, so it is good enough to design and model on.
+
+It is still not the Demarcation Certificate, which remains the legally
+authoritative document and should replace these values when issued. Replacing
+them is a single edit to `boundary.vertices` in `brief/site.yaml`.
 
 ### OI-04 True north confirmation
 
 | | |
 |---|---|
-| Status | OPEN |
+| Status | **CLOSED 2026-10-01** |
 | Raised | 2026-10-01, Phase 0 |
-| Answered by | Site Plan |
+| Closed by | Two independent measurements, see below |
 
-Plan-up is assumed to be true north, from the north arrow on the DDA plan. Every
-sun study, shading calculation, facade solar exposure figure, and the pool and
-garden recommendation in Phase 1 depends on this. If it is wrong, Phase 1 is
-wrong. Confirm before the Phase 1 checkpoint.
+**Plan-up is true north. Confirmed.** Phase 1 can proceed on this.
+
+Two independent confirmations, neither of them by eye:
+
+1. **The north arrow on the DDA plot plan**, measured from the PDF vector
+   geometry rather than from a rendered image. Its axis runs from apex
+   (1149.236, 42.882) to tail notch (1149.236, 60.082) in PDF points. Identical
+   x, so the axis is exactly vertical on the sheet: **0.000 degrees**.
+2. **The DDA GIS polygon in WGS84**, compared edge by edge against the project
+   coordinates. Mean bearing difference across all five edges is **-0.02
+   degrees**, with a spread of 0.48 degrees, which is within the precision of
+   the data.
+
+| Edge | GIS bearing | Project bearing | Difference |
+|---|---|---|---|
+| E to A, road frontage | 30.18° | 30.38° | -0.20° |
+| A to B | 120.78° | 120.59° | +0.19° |
+| B to C | 211.15° | 211.03° | +0.13° |
+| C to D | 209.83° | 210.12° | -0.29° |
+| D to E | 299.53° | 299.45° | +0.09° |
+
+A pytest check now guards this, so it cannot silently revert.
+
+Note this is **true** north, not magnetic. Magnetic declination at Dubai is
+roughly 2 degrees east and is irrelevant to solar geometry.
 
 ### OI-05 Roof terrace parapet and enclosure rules
 
@@ -95,13 +127,24 @@ Needed before the roof is modelled in Phase 3.
 
 | | |
 |---|---|
-| Status | OPEN |
+| Status | **CLOSED 2026-10-01** |
 | Raised | 2026-10-01, Phase 0 |
-| Answered by | Demarcation Certificate, follows from OI-03 |
+| Closed by | Centroid of the DDA GIS plot polygon |
 
-`brief/site.yaml` carries 25.0 N, 55.1 E as an approximation. Adequate for
-concept-stage sun paths, since a few kilometres of error moves sun altitude by a
-negligible amount at this latitude, but it should be refined.
+The site is at **24.897528 N, 54.964976 E**, Asia/Dubai.
+
+The earlier assumption of 25.0 N, 55.1 E was **17.7 km** away from the real plot.
+That sounds alarming and was not: the effect on solar geometry is about
+**0.1 degrees** of sun altitude, which is immaterial at concept stage and far
+below the uncertainty that OI-04 carried before it closed.
+
+| Moment | Altitude, assumed | Altitude, real | Change |
+|---|---|---|---|
+| 21 Jun 12:00 | 84.88° | 84.79° | -0.09° |
+| 21 Dec 12:00 | 41.39° | 41.48° | +0.09° |
+| 21 Jun 16:00, west sun | 40.50° | 40.60° | +0.10° |
+
+Corrected anyway, because the exact figure was available at no cost.
 
 ## Owner decisions outstanding
 

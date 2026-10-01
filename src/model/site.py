@@ -35,10 +35,19 @@ class Vertex:
     name: str
     x: float
     y: float
+    # Source WGS84 position, carried so the local metric frame can always be
+    # rebuilt or checked against the DDA GIS. Absent only if a future boundary
+    # source supplies local coordinates alone.
+    lon: float | None = None
+    lat: float | None = None
 
     @property
     def xy(self) -> tuple[float, float]:
         return (self.x, self.y)
+
+    @property
+    def lonlat(self) -> tuple[float, float] | None:
+        return None if self.lon is None or self.lat is None else (self.lon, self.lat)
 
 
 @dataclass(frozen=True)
@@ -215,11 +224,24 @@ def report(site: dict | None = None) -> str:
           f"{s.deviation_m:>8.2f}{s.deviation_pct:>8.2f}  {s.orientation:<12}"
           f"{s.adjacency}{flag}")
 
+    w("")
+    w("DATA PROVENANCE")
+    w(f"Boundary source: {site['boundary'].get('source', 'not stated')}")
     if a["boundary_to_verify"]:
-        w("")
-        w("TO VERIFY: boundary coordinates are scaled from the DDA plan, which is")
-        w("for illustration only. Replace with the Demarcation Certificate.")
-        w("TO VERIFY: plan-up assumed to be true north. See brief/site.yaml.")
+        w("TO VERIFY: the Demarcation Certificate remains the legally authoritative")
+        w("source and should replace these coordinates when issued.")
+
+    orient = site["orientation"]
+    if orient.get("to_verify"):
+        w("TO VERIFY: plan-up is assumed to be true north. See brief/site.yaml.")
+    else:
+        w(f"VERIFIED {orient.get('verified_on', '')}: plan-up is true north, mean "
+          f"bearing error {orient.get('mean_bearing_error_deg', 0):+.2f} deg.")
+
+    loc = site["location"]
+    tag = "TO VERIFY" if loc.get("to_verify") else f"VERIFIED {loc.get('verified_on', '')}"
+    w(f"{tag}: site at {loc['latitude']:.6f} N, {loc['longitude']:.6f} E, "
+      f"{loc['timezone']}.")
 
     w("")
     w(site["meta"]["stamp"])

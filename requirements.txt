@@ -11,3 +11,5 @@ pyyaml==6.0.3         # reads brief/program.yaml and brief/site.yaml
 pvlib==0.16.1         # sun positions for shading studies
 pandas==3.0.6         # schedules, load calculation tables
 pytest==9.1.1         # automated checks (GFA limit, setbacks)
+pymupdf==1.28.2       # reads authority PDFs, including vector geometry such as
+                      # the north arrow on the DDA plot plan

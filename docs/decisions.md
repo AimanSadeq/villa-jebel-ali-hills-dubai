@@ -8,6 +8,39 @@ Columns: date, decision, reason, approved by Aiman.
 
 ## 2026-10-01
 
+### D-009 Boundary taken from the DDA GIS, and true north confirmed
+
+**Decision.** `brief/site.yaml` now carries the DDA Development Information
+System's own plot geometry in WGS84, with the source lon and lat stored on every
+vertex, replacing the coordinates scaled off the plot plan drawing. Plan-up is
+confirmed as true north and `orientation.to_verify` is set to false.
+
+**Reason.** Phase 1 rests entirely on the orientation being right. An error there
+would have invalidated the sun study, every facade solar exposure figure, the
+master suite orientation, and the pool and garden recommendation, rather than
+merely shifting a number. The owner asked for it to be settled before Phase 1.
+
+Two independent measurements, neither by eye:
+
+- The north arrow on the DDA plan, measured from the PDF vector geometry, runs
+  apex to tail notch at identical x, so exactly 0.000 degrees from sheet vertical.
+- The DDA GIS polygon bearings match the project coordinates to a mean of -0.02
+  degrees across all five edges.
+
+The GIS geometry also improved the boundary itself. Plot area deviation fell from
++0.029% to -0.001%, and all four stated side lengths are now reproduced to within
+0.02%. The site location was corrected from an assumed 25.0 N, 55.1 E to the
+actual 24.897528 N, 54.964976 E, 17.7 km away, though that correction changes sun
+altitude by only about 0.1 degrees and was immaterial.
+
+Pytest checks now guard the orientation, the location, and the agreement between
+each vertex's local coordinates and its stored WGS84 source, so none of this can
+silently revert.
+
+**Approved by Aiman: yes.** The owner directed the verification.
+
+---
+
 ### D-008 Site plan issued at 1:200 on A2 landscape, not A3
 
 **Decision.** The site plan sheet is A2 landscape at a true 1:200.

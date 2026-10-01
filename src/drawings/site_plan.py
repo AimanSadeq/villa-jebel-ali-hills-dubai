@@ -238,9 +238,9 @@ def _draw_north_arrow(msp, x, y):
     )
     _text(msp, "N", (x, y + 2.6), H_BODY, layer="NORTH-SCALE",
           align=TextEntityAlignment.MIDDLE_CENTER)
-    _text(msp, "TO VERIFY: PLAN UP", (x, y - 3.1), H_TINY,
+    _text(msp, "TRUE NORTH, VERIFIED", (x, y - 3.1), H_TINY,
           align=TextEntityAlignment.MIDDLE_CENTER)
-    _text(msp, "ASSUMED TRUE NORTH", (x, y - 3.7), H_TINY,
+    _text(msp, "AGAINST DDA GIS 2026-10-01", (x, y - 3.7), H_TINY,
           align=TextEntityAlignment.MIDDLE_CENTER)
 
 
@@ -325,14 +325,21 @@ def _draw_title_block(msp, x0, site, a):
     y -= 0.4
     rule()
 
-    _text(msp, "TO VERIFY", (x, y), H_SMALL)
+    _text(msp, "DATA PROVENANCE", (x, y), H_SMALL)
     y -= 1.2
     for note in (
-        "Boundary coordinates are scaled from the",
-        "DDA plot plan, which is for illustration",
-        "only. Replace with the Demarcation",
-        "Certificate when issued.",
-        "Plan up assumed to be true north.",
+        "Boundary from the DDA Development",
+        "Information System GIS, WGS84,",
+        "retrieved 2026-10-01. Reproduces all",
+        "five stated side lengths.",
+        "",
+        "True north VERIFIED 2026-10-01 against",
+        "the DDA GIS. Mean bearing error across",
+        "the five edges: -0.02 deg.",
+        "",
+        "TO VERIFY: the Demarcation Certificate",
+        "remains the authoritative source and",
+        "should replace these coordinates.",
     ):
         _text(msp, note, (x, y), H_TINY)
         y -= 0.78

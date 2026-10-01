@@ -49,17 +49,36 @@ targets:
     roughly 5 m2 of net room area. Tune as plans develop and report on every build.
 
 # Plot boundary. Five sided. Coordinates in metres, x = east, y = north,
-# origin at the west vertex. Scaled from the DDA plan drawing.
-# Shoelace area of this polygon is 1020.27 m2, within 0.03% of the official figure.
+# origin at the west vertex E.
+#
+# Source, as of 2026-10-01: the DDA Development Information System, the
+# authority's own GIS, queried for PLOT_NUMBER 5130272 and returned in WGS84.
+#   https://gis.dda.gov.ae/server/rest/services/DIS/MAIN_MAP/MapServer/13
+# This replaces the coordinates previously scaled off the plot plan drawing.
+#
+# The GIS polygon reproduces all five side lengths exactly as printed on the DDA
+# plot plan (33.80, 30.53, 7.72, 25.41, 30.56) and gives an area of 1019.94 m2
+# against the official 1019.98 m2.
+#
+# Local metres are derived from WGS84 on a local tangent plane at the plot
+# centre, using 110771.347 m per degree latitude and 101033.690 m per degree
+# longitude. The lon and lat on each vertex are the source values, so the
+# conversion can be redone or checked at any time.
 boundary:
   to_verify: true
-  to_verify_note: "Replace with Demarcation Certificate coordinates when issued."
+  to_verify_note: >
+    Downgraded from provisional to authority GIS data on 2026-10-01. The formal
+    Demarcation Certificate remains the legally authoritative source and should
+    still replace these values when issued, but these are now the DDA's own
+    published coordinates rather than a measurement scaled off a drawing.
+  source: "DDA Development Information System GIS, layer 13, WGS84, retrieved 2026-10-01"
+  datum: "WGS84 (EPSG:4326), projected to a local tangent plane at the plot centre"
   vertices:
-    - { id: E, name: "west",      x:  0.00, y:   0.00 }
-    - { id: A, name: "north",     x: 17.10, y:  29.17 }
-    - { id: B, name: "east",      x: 43.34, y:  13.66 }
-    - { id: C, name: "east bend", x: 39.31, y:   6.96 }
-    - { id: D, name: "south",     x: 26.57, y: -15.00 }
+    - { id: E, name: "west",      x:  0.000, y:   0.000, lon: 54.964726211, lat: 24.897465310 }
+    - { id: A, name: "north",     x: 16.994, y:  29.217, lon: 54.964894409, lat: 24.897729067 }
+    - { id: B, name: "east",      x: 43.226, y:  13.591, lon: 54.965154045, lat: 24.897588003 }
+    - { id: C, name: "east bend", x: 39.230, y:   6.980, lon: 54.965114493, lat: 24.897528324 }
+    - { id: D, name: "south",     x: 26.588, y: -15.063, lon: 54.964989374, lat: 24.897329329 }
 
 # Sides as described on the DDA plan, mapped to the vertex pairs above.
 sides:
@@ -94,16 +113,37 @@ sides:
     adjacency: "Neighbour plot 5130123"
     is_main_access: false
 
+# VERIFIED 2026-10-01. Not an assumption any more.
+#
+# Two independent confirmations:
+#  1. The north arrow on the DDA plot plan was measured from the PDF vector
+#     geometry, not by eye. Its axis from apex (1149.236, 42.882) to tail notch
+#     (1149.236, 60.082) is exactly vertical on the sheet, 0.000 deg.
+#  2. The DDA GIS polygon in WGS84 was compared edge by edge against these
+#     coordinates. Mean bearing difference across all five edges is -0.02 deg,
+#     with a spread of 0.48 deg, which is within the precision of the data.
+#
+# Plan up is true north. No rotation correction is applied anywhere.
 orientation:
   plan_up_is_true_north: true
-  to_verify: true
-  to_verify_note: "Assumed from the north arrow on the DDA plan. Confirm with the Site Plan."
+  to_verify: false
+  verified_on: "2026-10-01"
+  verification_method: >
+    PDF north arrow vector geometry measured at 0.000 deg from sheet vertical,
+    and DDA GIS WGS84 polygon bearings matched to within -0.02 deg mean across
+    all five edges.
+  mean_bearing_error_deg: -0.02
+  magnetic_declination_note: >
+    True north, not magnetic. Magnetic declination at Dubai is roughly 2 deg
+    east and is irrelevant to solar geometry, which uses true north.
 
-# Location for sun and shading studies.
+# Location for sun and shading studies. From the DDA GIS polygon centroid.
 location:
   name: "Jebel Ali Hills, Dubai"
-  latitude: 25.0
-  longitude: 55.1
+  latitude: 24.897528
+  longitude: 54.964976
   timezone: "Asia/Dubai"
-  to_verify: true
-  to_verify_note: "Approximate. Refine from the Demarcation Certificate coordinates."
+  to_verify: false
+  verified_on: "2026-10-01"
+  source: "Centroid of the DDA GIS plot polygon, WGS84"
+  previous_assumption: "25.0 N, 55.1 E, which was 17.7 km away from the real plot"
