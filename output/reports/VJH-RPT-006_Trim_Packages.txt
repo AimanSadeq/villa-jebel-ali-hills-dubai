@@ -1,0 +1,53 @@
+TRIM PACKAGES
+Plan 2, massing option C, two car garage, corridors 1.80 m per DDA FAQ Q12.
+Proposals only. No room is cut without the owner.
+
+Baseline, as drawn:  686.72 m2   -23.73 against the 662.99 m2 cap
+
+Pkg    Net cut  Gross saved     Total   Margin  Name
+0          0.0         8.92    677.80   -14.81  Right-size the SSW wing only, no room cut
+1         20.0        33.13    653.59    +9.40  Spread thin, no room loses more than 2 m2
+2         20.0        32.15    654.58    +8.41  Drop the sunroom
+3         18.0        32.15    654.58    +8.41  Smaller guest suite, majlis and sunroom
+4         19.0        28.77    657.95    +5.04  Shave the bedroom floor
+
+PACKAGE 0  Right-size the SSW wing only, no room cut
+    No room changes.
+    lands at 677.80 m2, margin -14.81
+
+PACKAGE 1  Spread thin, no room loses more than 2 m2
+    majlis                 35 -> 33     -2
+    guest_bedroom          32 -> 30     -2
+    sunroom                20 -> 18     -2
+    home_office            14 -> 12     -2
+    entrance_foyer         19 -> 17     -2
+    family_living          35 -> 33     -2
+    bedroom_2              30 -> 29     -1
+    bedroom_3              30 -> 29     -1
+    bedroom_4              30 -> 29     -1
+    master_suite           70 -> 68     -2
+    living                 45 -> 44     -1
+    dining                 22 -> 21     -1
+    show_kitchen           25 -> 24     -1
+    lands at 653.59 m2, margin +9.40
+
+PACKAGE 2  Drop the sunroom
+    sunroom                20 -> 0     -20   Removed. The courtyard and the double height living room already give the house its garden room.
+    lands at 654.58 m2, margin +8.41
+
+PACKAGE 3  Smaller guest suite, majlis and sunroom
+    guest_bedroom          32 -> 26     -6
+    majlis                 35 -> 30     -5
+    sunroom                20 -> 15     -5
+    home_office            14 -> 12     -2
+    lands at 654.58 m2, margin +8.41
+
+PACKAGE 4  Shave the bedroom floor
+    master_suite           70 -> 64     -6   64 against 27 keeps the brief's 2.2 to 2.5 times ratio, at 2.37.
+    bedroom_2              30 -> 27     -3
+    bedroom_3              30 -> 27     -3
+    bedroom_4              30 -> 27     -3
+    family_living          35 -> 31     -4
+    lands at 657.95 m2, margin +5.04
+
+CONCEPT DESIGN, NOT FOR CONSTRUCTION
