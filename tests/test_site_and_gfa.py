@@ -299,3 +299,55 @@ def test_the_landscape_plot_side_faces_east():
     assert 67.5 <= side3.azimuth <= 157.5, (
         f"Side 3 faces {side3.azimuth:.0f} degrees, which is not easterly"
     )
+
+
+# Route B trims, owner approved 2026-10-01
+
+
+def test_every_trim_records_the_brief_figure_it_came_from():
+    """A trimmed room must keep the CLAUDE.md target beside its new one, so the
+    trim stays visible and reversible rather than quietly becoming the brief."""
+    program = load_program()
+    trimmed = [r for floor in ("ground", "first") for r in program[floor]
+               if r.get("trimmed")]
+    assert trimmed, "Route B trims are missing from brief/program.yaml"
+    for room in trimmed:
+        assert room["trimmed"] == "route_b"
+        assert "brief_target_m2" in room, f"{room['key']} lost its brief figure"
+        assert room["target_m2"] < room["brief_target_m2"]
+        assert room.get("trim_note"), f"{room['key']} has no reason recorded"
+
+
+def test_route_b_trims_total_thirteen_square_metres():
+    program = load_program()
+    saved = sum(r["brief_target_m2"] - r["target_m2"]
+                for floor in ("ground", "first") for r in program[floor]
+                if r.get("trimmed"))
+    assert saved == 13, f"Route B should save 13 m2 net, not {saved}"
+
+
+def test_only_service_and_circulation_was_trimmed():
+    """Route B was chosen precisely because it touches no principal room."""
+    principal = {"living", "majlis", "dining", "show_kitchen", "guest_bedroom",
+                 "sunroom", "home_office", "master_suite", "bedroom_2",
+                 "bedroom_3", "bedroom_4", "family_living", "garage"}
+    program = load_program()
+    trimmed = {r["key"] for floor in ("ground", "first") for r in program[floor]
+               if r.get("trimmed")}
+    assert not (trimmed & principal), (
+        f"Route B trimmed a principal room: {sorted(trimmed & principal)}"
+    )
+
+
+def test_the_program_fits_at_the_minimum_of_every_range():
+    """What Route B was for."""
+    t = totals()
+    core = t["scenarios"]["core"]
+    assert core["gross_low"] <= t["cap_m2"], (
+        f"Low end reaches {core['gross_low']:.2f} m2 against a "
+        f"{t['cap_m2']:.2f} m2 cap"
+    )
+    assert core["gross_low"] <= t["design_target_m2"], (
+        f"Low end reaches {core['gross_low']:.2f} m2 against the "
+        f"{t['design_target_m2']:.2f} m2 design target"
+    )

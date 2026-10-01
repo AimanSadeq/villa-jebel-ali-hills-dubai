@@ -18,7 +18,12 @@ meta:
 ground:
   - key: entrance_foyer
     name: "Entrance Foyer"
-    target_m2: 20
+    target_m2: 19
+    brief_target_m2: 20
+    trimmed: route_b
+    trim_note: >
+      Trimmed from the CLAUDE.md section 4 target of 20 m2 to 19 m2. Owner
+      approved trim route B, 2026-10-01. Still double height.
     gfa: counts
     double_height: true
     notes: "Double height."
@@ -64,11 +69,21 @@ ground:
     notes: "Behind the show kitchen, service access."
   - key: pantry
     name: "Pantry / Storage"
-    target_m2: 6
+    target_m2: 5
+    brief_target_m2: 6
+    trimmed: route_b
+    trim_note: >
+      Trimmed from the CLAUDE.md section 4 target of 6 m2 to 5 m2. Owner
+      approved trim route B, 2026-10-01.
     gfa: counts
   - key: laundry
     name: "Laundry"
-    target_m2: 8
+    target_m2: 7
+    brief_target_m2: 8
+    trimmed: route_b
+    trim_note: >
+      Trimmed from the CLAUDE.md section 4 target of 8 m2 to 7 m2. Owner
+      approved trim route B, 2026-10-01.
     gfa: counts
     notes: "Near the staff and service zone."
   - key: sunroom
@@ -83,22 +98,43 @@ ground:
     notes: "Quiet, near entrance."
   - key: maids_room
     name: "Maid's Room with Bathroom"
-    target_m2: 12
+    target_m2: 11
+    brief_target_m2: 12
+    trimmed: route_b
+    trim_note: >
+      Trimmed from the CLAUDE.md section 4 target of 12 m2 to 11 m2. Owner
+      approved trim route B, 2026-10-01.
     gfa: counts
     notes: "In the staff zone with a separate entrance."
   - key: drivers_room
     name: "Driver's Room with Bathroom"
-    target_m2: 12
+    target_m2: 11
+    brief_target_m2: 12
+    trimmed: route_b
+    trim_note: >
+      Trimmed from the CLAUDE.md section 4 target of 12 m2 to 11 m2. Owner
+      approved trim route B, 2026-10-01.
     gfa: counts
     notes: "In the staff zone, can open to outside or garage."
   - key: plant_room
     name: "MEP Plant Room"
-    target_m2: 8
+    target_m2: 7
+    brief_target_m2: 8
+    trimmed: route_b
+    trim_note: >
+      Trimmed from the CLAUDE.md section 4 target of 8 m2 to 7 m2. Owner
+      approved trim route B, 2026-10-01.
     gfa: counts
     notes: "Water tanks, filtration, controls, low-current rack."
   - key: stair_lift_ground
     name: "Staircase + Home Elevator"
-    target_m2: 20
+    target_m2: 18
+    brief_target_m2: 20
+    trimmed: route_b
+    trim_note: >
+      Trimmed from the CLAUDE.md section 4 target of 20 m2 to 18 m2. Owner
+      approved trim route B, 2026-10-01. Tightened with the first floor
+      core.
     gfa: counts
     notes: >
       Elevator serves ground and first. The roof stop was removed by owner
@@ -153,7 +189,13 @@ first:
     gfa: counts
   - key: stair_lift_first
     name: "Staircase + Home Elevator"
-    target_m2: 20
+    target_m2: 15
+    brief_target_m2: 20
+    trimmed: route_b
+    trim_note: >
+      Trimmed from the CLAUDE.md section 4 target of 20 m2 to 15 m2. Owner
+      approved trim route B, 2026-10-01. Now the top landing. The roof
+      stop was removed, so there is no further flight to accommodate.
     gfa: counts
     notes: >
       Not itemised in CLAUDE.md section 4 but required: the stair and elevator

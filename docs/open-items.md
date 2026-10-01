@@ -6,7 +6,7 @@ names the document that must answer it.
 
 Status key: OPEN, ASKED (sent to a third party), CLOSED.
 
-Last updated: 2026-10-01 (roof dropped, garage counted, trims now needed)
+Last updated: 2026-10-01 (trim route B applied, program fits again)
 
 ## Critical. Blocks Phase 2 room layouts
 
@@ -47,47 +47,45 @@ might have applied to a roof enclosure and breached G+1 outright.
 
 | | |
 |---|---|
-| Status | **OPEN, blocks Phase 2** |
-| Raised | 2026-10-01 |
+| Status | **CLOSED 2026-10-01** |
 | Decided by | Aiman |
 
-Counting the garage toward GFA (D-018) puts the briefed program over the cap.
+Closed by trim route B, 13 m2 net from service and circulation only. See D-019.
+The program lands at 652.08 m2 at the minimum of every range, inside both the
+662.99 m2 cap and the 653.00 m2 design target.
 
-| | Gross | vs cap 662.99 | vs target 653.00 |
-|---|---|---|---|
-| Low end of every range | 667.42 m2 | **+4.43 over** | **+14.42 over** |
-| High end of every range | 696.92 m2 | **+33.93 over** | +43.92 over |
+### OI-19 How to spend the remaining range headroom
 
-**The high end is gone.** Even at the most efficient net to gross tested, 1.12,
-the high end still misses by 1.29 m2. Master suite at 80 m2 and bedrooms at 35 m2
-are not available while the garage counts.
+| | |
+|---|---|
+| Status | OPEN, not blocking |
+| Raised | 2026-10-01 |
+| Decided by | Aiman, at the Phase 2 checkpoint |
 
-At the low end the gap is small. Three routes, none of them taken without the
-owner. CLAUDE.md section 3 is explicit that rooms are not cut unilaterally.
+CLAUDE.md gives the master suite as 70 to 80 m2 and bedrooms 2 to 4 as 30 to
+35 m2, a span of 25 m2 net in total. After route B, only part of that span is
+affordable.
 
-**Route A, no cuts at all.** Buy it with plan efficiency. Net to gross must come
-in at 1.171 to clear the cap, or 1.152 to reach the design target, against the
-1.18 assumed. Option C's single storey wing already achieves 1.13, though the
-bedroom floor with four en-suites will be worse. Unprovable until Phase 2 plans
-exist, so it carries risk.
+| | Net available |
+|---|---|
+| Full range, minimum to maximum | 25.00 m2 |
+| Affordable against the 662.99 m2 cap | **9.25 m2**, 37% of the range |
+| Affordable against the 653.00 m2 design target | 0.78 m2 |
 
-**Route B, service and circulation only, 13 m2 net.** Touches no principal room.
-Stair and lift on the first floor 20 to 15, now the top landing with no roof
-flight to accommodate; stair and lift ground 20 to 18; pantry 6 to 5; laundry 8
-to 7; maid's room 12 to 11; driver's room 12 to 11; plant room 8 to 7; entrance
-foyer 20 to 19, still double height. Lands at 652.08 m2, inside both the cap and
-the target.
+So the master suite at 80 m2 with all three bedrooms at 35 m2 is **not
+reachable**: it needs 15.75 m2 net more than the cap allows.
 
-**Route C, secondary rooms, 14 m2 net.** Sunroom 20 to 15; home office 14 to 12;
-entrance foyer 20 to 17; stair and lift first 20 to 16. Lands at 650.90 m2.
+The 9.25 m2 figure assumes the 9.99 m2 design margin from D-005 is released. Kept
+as it stands, there is effectively nothing to spend and every bedroom sits at its
+minimum.
 
-**Route D, shave the bedrooms, 12 m2 net.** Master 70 to 66, still 2.2 times the
-other bedrooms as CLAUDE.md section 4 requires; bedrooms 2 to 4 each 30 to 28;
-family living 35 to 33. Lands at 653.26 m2, which clears the cap but misses the
-design target by 0.26 m2.
-
-Route B is the one that costs the least that anyone will notice. Awaiting the
-owner's choice.
+Three ways to spend it, for the owner at the Phase 2 checkpoint:
+- All on the master suite, taking it from 70 to about 79 m2, which is the brief's
+  stated priority that the master be much larger than the other bedrooms.
+- Spread evenly, about 2.3 m2 on each of the four bedrooms.
+- Keep the margin and leave the rooms at minimum until the Site Plan answers
+  OI-01. If the garage turns out to be excluded from GFA, 55 m2 returns and the
+  full range reopens.
 
 ### OI-17 Where do the VRF outdoor units go?
 

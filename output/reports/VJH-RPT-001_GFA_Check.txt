@@ -9,37 +9,52 @@ Net to gross factor (assumption)             1.18
 
 NET ROOM AREA BY FLOOR, confirmed GFA areas only
 Floor              Low      High
-ground          353.00    353.00
-first           221.00    246.00
-TOTAL NET       574.00    599.00
+ground          345.00    345.00
+first           216.00    241.00
+TOTAL NET       561.00    586.00
 
 Of which the garage, counted toward GFA by owner decision: 55.00 m2
 Double-height voids, excluded from upper floor area: 65.00 m2
 
 GROSS FLOOR AREA BY SCENARIO, against the 662.99 m2 cap
 Scenario                                Low     High  Head low Head high  Verdict
-All areas confirmed to count         667.42   696.92     -4.43    -33.93  FAIL, over the cap, at both ends
+All areas confirmed to count         652.08   681.58     10.91    -18.59  fits at minimum, high end unaffordable
 
 HEADROOM AGAINST THE DESIGN TARGET OF 653.00 m2
-All areas confirmed to count         -14.42   -43.92
+All areas confirmed to count           0.92   -28.58
 
 Positive means area still available to distribute. Negative means trims
 are needed. Trims are never made without the owner's approval.
+
+RANGE HEADROOM
+CLAUDE.md gives the master suite and bedrooms as ranges. At the
+minimum of every range the program lands at 652.08 m2. This is how much of
+that range can then be spent.
+Full range, minimum to maximum                 25.00 m2 net
+Affordable against the cap                      9.25 m2 net
+Affordable against the design target            0.78 m2 net
+Share of the range available                     37 %
+
+The top of the ranges needs 15.75 m2 net more than
+the cap allows. Master suite at 80 m2 with all three bedrooms at
+35 m2 is not reachable.
 
 PLAN EFFICIENCY SENSITIVITY
 Lower net to gross means more room area for the same GFA. Headroom is
 against the 662.99 m2 cap, with the garage counted.
 Factor     Gross low  Gross high   Head low  Head high
-1.12          636.28      664.28      26.71      -1.29  fits
-1.14          646.66      675.16      16.33     -12.17  fits
-1.16          657.04      686.04       5.95     -23.05  fits
-1.18          667.42      696.92      -4.43     -33.93  over
-1.20          677.80      707.80     -14.81     -44.81  over
-1.22          688.18      718.68     -25.19     -55.69  over
+1.12          621.72      649.72      41.27      13.27  fits
+1.14          631.84      660.34      31.15       2.65  fits
+1.16          641.96      670.96      21.03      -7.97  fits
+1.18          652.08      681.58      10.91     -18.59  fits
+1.20          662.20      692.20       0.79     -29.21  fits
+1.22          672.32      702.82      -9.33     -39.83  over
 
 ADDED BY CLAUDE, needs owner review
-  Staircase + Home Elevator (first), 20 m2
+  Staircase + Home Elevator (first), 15 m2
 
-VERDICT: FAIL. Confirmed GFA areas exceed the DDA cap.
+VERDICT: PASS at the minimum of every range, with 10.91 m2 of headroom
+to the cap. The maximum of every range does not fit and is not
+available. See RANGE HEADROOM above.
 
 CONCEPT DESIGN, NOT FOR CONSTRUCTION

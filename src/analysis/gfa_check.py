@@ -244,20 +244,20 @@ def report(program: dict | None = None, site: dict | None = None) -> tuple[str, 
     w(f"{'Scenario':<34}{'Low':>9}{'High':>9}{'Head low':>10}{'Head high':>10}  Verdict")
     fails = at_risk = False
     for key, s in t["scenarios"].items():
-        over = s["breaches_cap_low"] or s["breaches_cap_high"]
-        if over:
+        # A breach at the LOW end means no version of the program fits, which is
+        # a failure. A breach only at the high end means the full wish list does
+        # not fit but a buildable version does, which is a budget to manage.
+        if s["breaches_cap_low"]:
             if s["unverified_included"]:
                 at_risk = True
-                verdict = "RISK, unverified areas"
+                verdict = "RISK, unverified areas, over at both ends"
             else:
                 fails = True
-                verdict = "FAIL, over the cap"
+                verdict = "FAIL, over the cap even at minimum"
+        elif s["breaches_cap_high"]:
+            verdict = "fits at minimum, high end unaffordable"
         else:
-            verdict = "fits"
-        if s["breaches_cap_low"] and s["breaches_cap_high"]:
-            verdict += ", at both ends"
-        elif over:
-            verdict += ", at the high end"
+            verdict = "fits at both ends"
         w(f"{s['label']:<34}{s['gross_low']:>9.2f}{s['gross_high']:>9.2f}"
           f"{s['headroom_cap_low']:>10.2f}{s['headroom_cap_high']:>10.2f}  {verdict}")
     w("")
@@ -270,6 +270,29 @@ def report(program: dict | None = None, site: dict | None = None) -> tuple[str, 
     w("Positive means area still available to distribute. Negative means trims")
     w("are needed. Trims are never made without the owner's approval.")
     w("")
+
+    core_s = t["scenarios"]["core"]
+    span_net = t["core"]["net_high"] - t["core"]["net_low"]
+    if span_net > 0:
+        afford_gross = t["cap_m2"] - core_s["gross_low"]
+        afford_net = afford_gross / t["factor"]
+        afford_t_net = (t["design_target_m2"] - core_s["gross_low"]) / t["factor"]
+        w("RANGE HEADROOM")
+        w("CLAUDE.md gives the master suite and bedrooms as ranges. At the")
+        w("minimum of every range the program lands at "
+          f"{core_s['gross_low']:.2f} m2. This is how much of")
+        w("that range can then be spent.")
+        w(f"{'Full range, minimum to maximum':<44}{span_net:>8.2f} m2 net")
+        w(f"{'Affordable against the cap':<44}{afford_net:>8.2f} m2 net")
+        w(f"{'Affordable against the design target':<44}{afford_t_net:>8.2f} m2 net")
+        pct = max(afford_net, 0) / span_net * 100
+        w(f"{'Share of the range available':<44}{pct:>7.0f} %")
+        w("")
+        if afford_net < span_net:
+            w(f"The top of the ranges needs {span_net - afford_net:.2f} m2 net more than")
+            w("the cap allows. Master suite at 80 m2 with all three bedrooms at")
+            w("35 m2 is not reachable.")
+            w("")
 
     w("PLAN EFFICIENCY SENSITIVITY")
     w("Lower net to gross means more room area for the same GFA. Headroom is")
@@ -289,7 +312,13 @@ def report(program: dict | None = None, site: dict | None = None) -> tuple[str, 
         w("")
 
     if fails:
-        w("VERDICT: FAIL. Confirmed GFA areas exceed the DDA cap.")
+        w("VERDICT: FAIL. The program exceeds the cap even at the minimum of")
+        w("every range. Trims are needed before any layout can proceed.")
+    elif t["scenarios"]["core"]["breaches_cap_high"]:
+        w("VERDICT: PASS at the minimum of every range, with "
+          f"{t['cap_m2'] - t['scenarios']['core']['gross_low']:.2f} m2 of headroom")
+        w("to the cap. The maximum of every range does not fit and is not")
+        w("available. See RANGE HEADROOM above.")
     elif at_risk:
         w("VERDICT: PASS with RISK. The house alone fits. One or more unverified")
         w("areas push the total over the cap if they are ruled to count.")

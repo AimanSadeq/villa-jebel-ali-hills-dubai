@@ -6,6 +6,59 @@ Columns: date, decision, reason, approved by Aiman.
 
 ---
 
+## 2026-10-01, trims
+
+### D-019 Trim route B, service and circulation only, 13 m2 net
+
+**Decision.** Owner approved trim route B. Eight rooms reduced, none of them a
+principal room:
+
+| Room | Brief | Trimmed | |
+|---|---|---|---|
+| Staircase + elevator, first | 20 | 15 | now the top landing, no roof flight to accommodate |
+| Staircase + elevator, ground | 20 | 18 | tightened with the first floor core |
+| Entrance foyer | 20 | 19 | still double height |
+| Pantry / storage | 6 | 5 | |
+| Laundry | 8 | 7 | |
+| Maid's room | 12 | 11 | |
+| Driver's room | 12 | 11 | |
+| MEP plant room | 8 | 7 | |
+| **Total** | | | **13 m2 net, 15.34 m2 gross** |
+
+**Reason.** Counting the garage toward GFA (D-018) put the program 4.43 m2 over
+the cap and 14.42 m2 over the design target at the minimum of every range. Four
+routes were costed and put to the owner, who chose B because it touches no
+principal room. The largest single saving, 5 m2 from the first floor stair and
+lift, comes almost free: removing the roof stop in D-017 means there is no
+further flight to accommodate.
+
+**Result.** The program now lands at **652.08 m2** at the minimum of every range,
+10.91 m2 inside the cap and 0.92 m2 inside the design target. The GFA check
+passes.
+
+Every trimmed room keeps its CLAUDE.md figure in `brief/program.yaml` as
+`brief_target_m2`, with the reason, so the trim stays visible and reversible. A
+pytest check enforces that, and another enforces that no principal room was
+touched.
+
+**Approved by Aiman: yes.** Chose route B directly.
+
+### D-020 GFA check pass and fail semantics corrected
+
+**Decision.** A breach at the minimum of the ranges is a FAIL. A breach only at
+the maximum is reported as "fits at minimum, high end unaffordable", with a new
+RANGE HEADROOM section quantifying how much of the range can be spent.
+
+**Reason.** The old logic failed the build whenever the top of the bedroom ranges
+did not fit, which would have left the suite permanently red for a condition that
+is a budget to manage rather than a defect. The villa is built at one size, not
+at a range. What matters is that a buildable version exists under the cap and
+that everyone can see how much of the range is affordable.
+
+**Approved by Aiman: not required.** Technical.
+
+---
+
 ## 2026-10-01, owner decisions on roof and garage
 
 ### D-018 Count the parking as part of the GFA
