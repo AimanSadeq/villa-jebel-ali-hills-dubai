@@ -117,8 +117,8 @@
  "heights": {
   "ground": 4.0,
   "first": 3.8,
-  "parapet": 1.1,
-  "overall": 8.9
+  "parapet": 1.2,
+  "overall": 9.0
  },
  "boundaryWall": {
   "heightM": 2.4,
@@ -412,11 +412,11 @@
     "firstM2": 290.2,
     "openGroundM2": 613.3,
     "poolDeckM2": 112.0,
-    "coolingPmShade": 0.927,
-    "coolingPmShadeMin": 0.607,
+    "coolingPmShade": 0.929,
+    "coolingPmShadeMin": 0.613,
     "winterMiddaySun": 1.0,
     "byHour": {
-     "15": 0.654,
+     "15": 0.661,
      "16": 0.986,
      "17": 0.996,
      "18": 1.0,
@@ -908,12 +908,12 @@
     "firstM2": 290.3,
     "openGroundM2": 613.5,
     "poolDeckM2": 112.0,
-    "coolingPmShade": 0.868,
-    "coolingPmShadeMin": 0.377,
-    "winterMiddaySun": 0.784,
+    "coolingPmShade": 0.872,
+    "coolingPmShadeMin": 0.386,
+    "winterMiddaySun": 0.778,
     "byHour": {
-     "15": 0.426,
-     "16": 0.915,
+     "15": 0.436,
+     "16": 0.926,
      "17": 1.0,
      "18": 1.0,
      "19": 1.0

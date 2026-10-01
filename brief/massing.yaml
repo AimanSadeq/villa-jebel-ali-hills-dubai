@@ -46,14 +46,46 @@ grid:
 # Indicative heights. Not a design decision, and not a regulatory value.
 # The DDA cap is G+1; overall height limits in metres are TO VERIFY against the
 # Dubai Building Code. See docs/open-items.md.
+# Heights. Updated 2026-10-01 against the DDA published FAQ retrieved from
+# https://webzoning.dda.gov.ae/Zoning/Content/dda/FAQs.pdf (FAQs - Building).
+# Question numbers are DDA's own.
 heights:
   ground_floor_m: 4.00
   first_floor_m: 3.80
-  parapet_m: 1.10
+  parapet_m: 1.20          # DDA FAQ Building Q34: minimum parapet 1.2 m from FFL
   roof_slab_m: 7.80        # ground + first, top of the first floor slab
-  overall_m: 8.90          # including parapet, the shadow-casting height
+  overall_m: 9.00          # including parapet, the shadow-casting height
+  parapet_source: >
+    DDA FAQs - Building, Q34: "What is the minimum parapet and balcony handrail
+    height?" Answer: "1.2m from the floor finish level." Previously assumed
+    1.10 m, which was below the DDA minimum.
   to_verify: true
-  to_verify_note: "Overall height limit in metres TO VERIFY against the Dubai Building Code."
+  to_verify_note: >
+    Overall height in metres is NOT settled. DDA FAQs - Building Q29 states the
+    maximum height in metres is the number of floors multiplied by 4.2, measured
+    to the last point of the project, which for G+1 gives 8.40 m. The same answer
+    says some developments are limited by the number of floors instead, and this
+    plot's DDA details give only "G+1" with no metre figure. See OI-13.
+
+# Two height cases, so the cost of the stricter one is visible rather than argued.
+height_scenarios:
+  as_designed:
+    label: "As designed, generous floor to floor"
+    ground_floor_m: 4.00
+    first_floor_m: 3.80
+    parapet_m: 1.20
+    overall_m: 9.00
+  dda_metre_cap:
+    label: "Within the 8.40 m metre cap, if it applies"
+    ground_floor_m: 3.60
+    first_floor_m: 3.60
+    parapet_m: 1.20
+    overall_m: 8.40
+    note: >
+      2 floors x 4.2 m = 8.40 m per DDA FAQ Q29, less the 1.2 m parapet leaves
+      7.20 m for two storeys. At 3.60 m floor to floor the clear height is still
+      about 3.25 m, comfortably above the 2.70 m minimum for livable space in
+      DDA FAQ Q33.
 
 # Ground floor footprint target, from src/analysis/gfa_check.py:
 #   house gross 351.64 m2 (298 net x 1.18) + garage 55.00 m2 = 406.64 m2

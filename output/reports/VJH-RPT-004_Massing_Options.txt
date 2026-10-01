@@ -47,9 +47,9 @@ POOL AND DECK IN SHADE, cooling season afternoons
 Computed from the villa's real shadow at each hour on 21 May, Jun, Jul,
 Aug and Sep. 1.00 means the whole deck is shaded.
 Option                   15:00   16:00   17:00   18:00   19:00    Mean   Worst
-A Garden East             0.65    0.99    1.00    1.00    1.00    0.93    0.61
+A Garden East             0.66    0.99    1.00    1.00    1.00    0.93    0.61
 B Garden Southwest        0.00    0.00    0.00    0.00    0.60    0.12    0.00
-C Courtyard               0.43    0.92    1.00    1.00    1.00    0.87    0.38
+C Courtyard               0.44    0.93    1.00    1.00    1.00    0.87    0.39
 
 WINTER MIDDAY SUN ON THE POOL, 21 Dec and 21 Jan, 10:00 to 14:00
 Here you want the opposite: sun on the water when the air is cool.
@@ -62,7 +62,7 @@ WHAT THE NUMBERS SAY
 
 Option A, Garden East:
   The villa stands west of the pool, so its shadow falls across the water
-  through the afternoon: 65% shaded at 15:00, 99% by 16:00 and complete from
+  through the afternoon: 66% shaded at 15:00, 99% by 16:00 and complete from
   17:00 to sunset. Mean 93% across the cooling season. In winter the sun
   swings far enough south to pass the mass entirely, leaving 100% sun on the
   water at midday. Garden and pool face the landscape plot, so no neighbour
@@ -83,7 +83,7 @@ Option C, Courtyard:
   blocks the summer afternoon sun also blocks the low winter sun, leaving
   78% sun on the water at midday against 100% for option A. And at 15:00,
   the hour the deck is most likely to be in use before evening, it manages
-  43% against 65% for option A. It also turns the garden inward and gives up
+  44% against 66% for option A. It also turns the garden inward and gives up
   the view east. Worth keeping if privacy from the road ever matters more
   than the view.
 

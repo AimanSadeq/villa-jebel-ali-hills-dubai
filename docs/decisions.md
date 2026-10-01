@@ -6,6 +6,62 @@ Columns: date, decision, reason, approved by Aiman.
 
 ---
 
+## 2026-10-01, owner selection and DDA research
+
+### D-016 Parapet raised to 1.20 m, the DDA minimum
+
+**Decision.** `brief/massing.yaml` now carries a 1.20 m parapet, up from the
+1.10 m previously assumed.
+
+**Reason.** Not a design choice, a correction. DDA FAQs - Building, retrieved 2026-10-01 from https://webzoning.dda.gov.ae/Zoning/Content/dda/FAQs.pdf, Q34: "What is the minimum
+parapet and balcony handrail height?" Answer: "1.2m from the floor finish
+level." The earlier 1.10 m was below the DDA minimum. Overall height moves from
+8.90 m to 9.00 m and every shadow figure was recomputed.
+
+**Approved by Aiman: not required.** Correcting to a cited authority minimum.
+
+### D-015 DDA published material checked for the garage question
+
+**Decision.** OI-01 stays OPEN. DDA's published guidance does not answer it.
+
+**Reason.** Owner asked for DDA to be checked before any query was drafted. Two
+DDA sources were retrieved and parsed in full:
+
+- DDA FAQs - Building, retrieved 2026-10-01 from https://webzoning.dda.gov.ae/Zoning/Content/dda/FAQs.pdf, 20 pages
+- Objectives of the Dubai Building Code, dda.gov.ae, 17 pages
+
+The word "garage" appears **zero times** in either document. DDA's own answer to
+"Where can I find the Planning Regulations for my Plot?" is "You can find the
+regulations for your plot on the issued site plan", and to "What are the Parking
+standards as per DDA?" is "as mentioned in the site plan". So the answer is
+plot-specific and lives in the issued Site Plan and the Meraas development
+guideline, neither of which we hold. See OI-01 and OI-03.
+
+What the FAQ does settle is that **GFA and BUA are different measures** in DDA's
+own usage. Q25: "Balconies are always excluded from GFA calculations, but
+included in the BUA calculation." The cap on this plot is on GFA, 662.99 m2, not
+on BUA.
+
+**Approved by Aiman: not required.** Research, reported to the owner.
+
+### D-014 Option C, Courtyard, selected, with the double height living room
+
+**Decision.** Option C is the massing to carry into Phase 2. The living room in
+the single storey SSW wing is double height.
+
+**Reason.** Owner decision, stated 2026-10-01. Option C holds 87% of the pool
+deck in shade through cooling season afternoons against option A's 93%, and
+gives up the open view east, but it encloses a private courtyard and the double
+height living room costs no upper floor area because nothing sits above that
+wing. The owner weighed that against the recommendation and chose C.
+
+All three options carry the same 406.5 m2 ground floor and 290.3 m2 first floor,
+so the choice moves no GFA.
+
+**Approved by Aiman: yes.** Stated directly.
+
+---
+
 ## 2026-10-01, Phase 1
 
 ### D-013 Plans are drawn plot up, not north up

@@ -6,7 +6,7 @@ names the document that must answer it.
 
 Status key: OPEN, ASKED (sent to a third party), CLOSED.
 
-Last updated: 2026-10-01 (end of Phase 1)
+Last updated: 2026-10-01 (DDA published material checked, option C selected)
 
 ## Critical. Blocks Phase 2 room layouts
 
@@ -14,26 +14,45 @@ Last updated: 2026-10-01 (end of Phase 1)
 
 | | |
 |---|---|
-| Status | OPEN |
+| Status | **OPEN. DDA published material checked 2026-10-01 and does not answer it.** |
 | Raised | 2026-10-01, Phase 0 |
-| Worth | 55.00 m² |
-| Answered by | DDA development control regulations for Saih Shuaib 1, via a DDA-registered consultant |
-| Source needed | Document reference and clause number |
+| Worth | 55.00 m2 |
+| Answered by | The issued Site Plan for plot 5130272, and the Meraas development guideline |
+| Checked | DDA FAQs, 20 pages, and the Dubai Building Code objectives, 17 pages |
 
-The DDA Plot Details give a maximum GFA of 662.99 m² but do not state how an
-enclosed garage is treated. With the owner directive to maximise built-up area,
-this is now the single most consequential unknown in the project.
+**What was checked.** Both documents were retrieved and parsed in full. The word
+"garage" appears **zero times** in either. There is no published DDA rule on
+whether an enclosed villa garage counts toward GFA.
 
-Impact, from `output/reports/VJH-RPT-001_GFA_Check.txt`:
+**Where the answer actually lives.** DDA's own FAQ says so twice:
 
-- If the garage is **excluded**: the house fits at 612.42 to 641.92 m², leaving
-  21 to 51 m² of headroom to distribute.
-- If the garage **counts**: the total reaches 667.42 to 696.92 m², which breaches
-  the 662.99 m² cap **at both ends of the room ranges**, not only at the top.
-  Trims of roughly 5 to 34 m² would be required, and more against the design
-  target of 653.00 m².
+- "Where can I find the Planning Regulations for my Plot?" to which the answer is
+  "You can find the regulations for your plot on the issued site plan, or you may
+  log your enquiry through 'connect with us' under DDA website".
+- "What are the Parking standards as per DDA?" to which the answer is "as
+  mentioned in the site plan".
 
-Until this is answered, no room layout can be finalised.
+So this is plot-specific, and the Site Plan, which is also OI-03, answers it.
+
+**One thing the FAQ does settle.** GFA and BUA are not the same measure in DDA's
+usage. Q25: "Balconies are always excluded from GFA calculations, but included in
+the BUA calculation." The 662.99 m2 cap on this plot is on **GFA**. A garage
+could in principle sit in BUA but outside GFA, which is the outcome that would
+suit this project.
+
+**Pattern worth noting, not a conclusion.** Where the FAQ does address a space
+that might be excluded, the phrasing is consistently "unless the master developer
+allows it to be excluded", for the gym in Q26 and the roof gym in Q27, and
+"Podium floors are only allowed if they are mentioned in the affection plan" in
+Q32. The default in those answers is inclusion, with exclusion at the master
+developer's discretion. That leans toward the garage counting unless Meraas's
+guideline says otherwise. **It is an inference from adjacent rulings, not a rule
+about garages, and must not be designed against.**
+
+Impact is unchanged: if the garage counts, the program breaches the cap at both
+ends of the room ranges. Until this is answered, no room layout can be finalised.
+
+Source: DDA FAQs - Building, retrieved 2026-10-01 from https://webzoning.dda.gov.ae/Zoning/Content/dda/FAQs.pdf
 
 ### OI-02 Does the roof stair and elevator enclosure count toward GFA?
 
@@ -116,12 +135,22 @@ roughly 2 degrees east and is irrelevant to solar geometry.
 
 | | |
 |---|---|
-| Status | OPEN |
+| Status | **PARTLY CLOSED 2026-10-01** |
 | Raised | 2026-10-01, Phase 0 |
-| Answered by | Dubai Building Code |
-| Source needed | Clause reference for parapet height and roof enclosure extent |
 
-Needed before the roof is modelled in Phase 3.
+**Parapet: answered.** DDA FAQs - Building Q34, "What is the minimum parapet and
+balcony handrail height?", answer "1.2m from the floor finish level."
+`brief/massing.yaml` previously assumed 1.10 m, below the minimum, and has been
+corrected to 1.20 m. All shadow figures were recomputed.
+
+**Roof enclosure: still open, and now looks riskier.** The FAQ does not address a
+roof stair and lift enclosure, but Q27 rules that "When the gym is constructed on
+the roof then it will be counted as an additional floor unless the master
+developer allows it to be excluded." If that logic extends to a roof enclosure,
+the enclosure could be read as an additional floor and breach the G+1 cap, not
+merely add GFA. This connects OI-02 to the height question in OI-13.
+
+Source: DDA FAQs - Building, retrieved 2026-10-01 from https://webzoning.dda.gov.ae/Zoning/Content/dda/FAQs.pdf
 
 ### OI-06 Exact site coordinates for sun studies
 
@@ -164,36 +193,110 @@ villa, which would change the shading balance. Worth asking, not blocking.
 
 | | |
 |---|---|
-| Status | OPEN |
+| Status | OPEN, now with a cited figure to test against |
 | Raised | 2026-10-01, Phase 1 |
-| Answered by | Dubai Building Code and DDA regulations |
+| Answered by | The issued Site Plan and the Meraas development guideline |
 
-The DDA plot details cap the villa at G+1 but give no height in metres.
-`brief/massing.yaml` assumes 4.00 m ground, 3.80 m first, 1.10 m parapet,
-8.90 m overall. Every shadow figure in the Phase 1 study depends on it: a taller
-mass shades more, a shorter one less. Needed before Phase 3.
+DDA FAQs - Building Q29: "What is the maximum height allowed for building by
+meter?" Answer: "Maximum height by meter allowed for buildings is calculated by
+number of floors multiplied by 4.2. and this height is measured to the last point
+of the project. **However in some developments the maximum height is not limited
+to the equation above but to the number of floors.**"
 
-## Owner decisions outstanding
+For G+1 that gives **8.40 m to the last point of the project**. The DDA plot
+details for 5130272 give only "G+1" with no metre figure, so it is genuinely
+unclear which case applies.
+
+| Case | Ground | First | Parapet | Overall | Option C pool shade, 21 Aug mean |
+|---|---|---|---|---|---|
+| As designed | 4.00 | 3.80 | 1.20 | **9.00 m** | 83% |
+| Within the 8.40 m cap | 3.60 | 3.60 | 1.20 | **8.40 m** | 80% |
+
+The stricter case costs 3 percentage points of afternoon shade, so it does not
+change the design, and at 3.60 m floor to floor the clear height is still about
+3.25 m against the 2.70 m minimum for livable space in Q33. Both cases are
+carried in `brief/massing.yaml` under `height_scenarios`.
+
+Related DDA figures now on record: ground floor clear height up to 6 m and
+typical floors limited to 4.2 m (Q28); minimum clear height 2.7 m for livable
+space and 2.4 m for corridors, kitchens and service rooms (Q33).
+
+Source: DDA FAQs - Building, retrieved 2026-10-01 from https://webzoning.dda.gov.ae/Zoning/Content/dda/FAQs.pdf
+
+### OI-14 Is a boundary wall permitted on this plot?
+
+| | |
+|---|---|
+| Status | OPEN |
+| Raised | 2026-10-01 |
+| Answered by | The Meraas development guideline |
+
+DDA FAQs - Building Q3: "Is Boundary wall allowed in all sites?" Answer: "Not
+allowed unless the development guideline allow the boundary wall."
+
+The Phase 1 boundary wall concept, decision D-011, assumes a wall is permitted.
+That assumption now has a citation against it and needs the Meraas guideline to
+confirm. If walls are not permitted, the privacy argument for the SSW and NNE
+faces changes and the landscape design has to carry it instead.
+
+Source: DDA FAQs - Building, retrieved 2026-10-01 from https://webzoning.dda.gov.ae/Zoning/Content/dda/FAQs.pdf
+
+### OI-15 Air well for the enclosed Arabic kitchen
+
+| | |
+|---|---|
+| Status | OPEN, affects Phase 2 |
+| Raised | 2026-10-01 |
+
+DDA FAQs - Building Q16: "All Kitchen must have natural source of light and
+ventilation as per standard, In Case of closed kitchen air well of 3*3 meter is a
+must."
+
+CLAUDE.md section 4 puts the Arabic (dirty) kitchen behind the show kitchen with
+service access, which makes it a closed kitchen. On this reading it needs a 3 x 3
+m air well, 9 m2, which is not in the room program and would have to come out of
+the floor plate. Confirm the reading before Phase 2 layouts.
+
+Source: DDA FAQs - Building, retrieved 2026-10-01 from https://webzoning.dda.gov.ae/Zoning/Content/dda/FAQs.pdf
+
+### OI-16 Dubai Civil Defence approval
+
+| | |
+|---|---|
+| Status | OPEN, standing |
+| Raised | 2026-10-01 |
+
+DDA FAQs - Building Q42: "Is DCD approval mandatory for individual and community
+villas and private/commercial villas?" Answer: "Yes, as per UAE life Safety code
+2017 DCD approvals are mandatory."
+
+Noted for the consultant handover package in Phase 8.
+
+Source: DDA FAQs - Building, retrieved 2026-10-01 from https://webzoning.dda.gov.ae/Zoning/Content/dda/FAQs.pdf
+
+## Owner decisions outstanding## Owner decisions outstanding
 
 ### OI-07 Pool and main garden position
 
 | | |
 |---|---|
-| Status | OPEN, awaiting owner decision |
-| Decided by | Aiman, at the Phase 1 checkpoint |
-| Updated | 2026-10-01 |
+| Status | **CLOSED 2026-10-01** |
+| Decided by | Aiman |
 
-Three options tested with real cast-shadow geometry, not estimates. See
-`output/reports/VJH-RPT-004_Massing_Options.txt` and
-`output/pdf/VJH-MA-001_Massing_Options.pdf`.
+**Option C, Courtyard, selected**, with the double height living room in the
+single storey SSW wing. The pool sits in the courtyard, enclosed by the road wing
+to the WNW and the single storey wing to the SSW, open to the NNE and ESE.
 
-| Option | Summer afternoon shade on pool | Winter midday sun |
-|---|---|---|
-| A, Garden East | **93%**, never below 61% | **100%** |
-| B, Garden Southwest | 12%, none at all 15:00 to 18:00 | 100% |
-| C, Courtyard | 87% | 78% |
+| Option | Summer afternoon shade | Winter midday sun | |
+|---|---|---|---|
+| A, Garden East | 93% | 100% | recommended on the numbers |
+| B, Garden Southwest | 12% | 100% | rejected |
+| **C, Courtyard** | **87%** | **78%** | **selected by owner** |
 
-**Recommended: option A.** Awaiting the owner's decision.
+The owner weighed the 6 point shade difference and the loss of the view east
+against a private courtyard and a double height living room that costs no upper
+floor area, and chose C. All three options carry identical floor areas, so the
+choice moved no GFA. See decision D-014.
 
 ### OI-08 Dining room size
 

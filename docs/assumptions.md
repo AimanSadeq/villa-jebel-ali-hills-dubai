@@ -114,12 +114,21 @@ consultant confirms the measurement basis.
 
 | | |
 |---|---|
-| Set in | `brief/massing.yaml`, `heights` |
-| Type | Engineering assumption, not a regulation |
+| Set in | `brief/massing.yaml`, `heights` and `height_scenarios` |
+| Type | Partly sourced, partly assumed |
 | Tracked as | OI-13 |
 
-4.00 m ground, 3.80 m first, 1.10 m parapet, 8.90 m overall. Typical for a Dubai
-villa of this size, but not taken from any code. Every shadow figure in the
+4.00 m ground, 3.80 m first, **1.20 m parapet**, 9.00 m overall.
+
+The parapet is no longer an assumption: 1.20 m is the DDA minimum, from
+DDA FAQs - Building, retrieved 2026-10-01 from https://webzoning.dda.gov.ae/Zoning/Content/dda/FAQs.pdf, Q34. It was previously assumed at 1.10 m, below that minimum, and has been
+corrected.
+
+The floor to floor heights remain assumptions. DDA Q29 gives a maximum height in
+metres of floors times 4.2, so 8.40 m for G+1, but says some developments are
+limited by floor count instead, and this plot's details give only "G+1". Both
+cases are carried in `height_scenarios`, and the stricter one costs 3 percentage
+points of afternoon pool shade. Every shadow figure in the
 Phase 1 study scales with it: a taller mass shades more of the pool, a shorter
 one less. The ranking of the options is unlikely to change, since it comes from
 where the mass sits relative to the pool rather than from how tall it is, but the
