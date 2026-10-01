@@ -54,57 +54,56 @@ Closed by trim route B, 13 m2 net from service and circulation only. See D-019.
 The program lands at 652.08 m2 at the minimum of every range, inside both the
 662.99 m2 cap and the 653.00 m2 design target.
 
-### OI-20 The plan needs more area than the flat 1.18 assumption allowed
+### OI-20 The plan needs more area than the cap allows
 
 | | |
 |---|---|
 | Status | **OPEN, blocks the Phase 2 layouts** |
 | Raised | 2026-10-02, Phase 2 |
+| Updated | 2026-10-02, wall model corrected |
 | Decided by | Aiman |
 
-Tested before drawing any room, by `src/analysis/plan_feasibility.py`. Corridors
-have length and walls have thickness, and once both are counted the program needs
-**672.88 m2**, which is **9.89 m2 over the cap** and 19.88 m2 over the design
-target.
+Tested before drawing any room, by `src/analysis/plan_feasibility.py`.
 
-| Zone | Net | Corridor | Walls | Flat | Gross |
+**Plan direction chosen by the owner: plan 2, Courtyard.** Reception rooms
+interconnect around the courtyard and the corridor shrinks to a service spine.
+That saves **20.96 m2** against a conventional corridor plan, all of it
+circulation, and it is the right call. It is still not enough.
+
+| | Gross | vs cap | vs target | net:gross | corridor |
 |---|---|---|---|---|---|
-| SSW wing, single depth | 92.00 | 0.00 | 7.36 | 0.00 | 99.36 |
-| Road wing, double loaded | 198.00 | 37.80 | 15.84 | 55.00 | 306.64 |
-| First floor, double loaded | 216.00 | 33.60 | 17.28 | 0.00 | 266.88 |
-| **Total** | 506.00 | **71.40** | 40.48 | 55.00 | **672.88** |
+| Plan 1, Corridor | 694.26 | **31.27 over** | 41.26 over | 1.263 | 63.00 |
+| **Plan 2, Courtyard** | **673.30** | **10.31 over** | 20.30 over | 1.222 | 42.00 |
 
-The implied net to gross is **1.221**, against the 1.18 carried since Phase 0.
-A-01 always said that factor would be replaced by measurement from Phase 2, and
-this is that measurement.
+**A correction to my own figures.** The first pass allowed a flat 8% of net area
+for walls. That does not even cover the external walls of a 27 m long wing, and
+it understated the total by about 29 m2. Walls are now computed from each wing's
+real perimeter, with partitions at 4.5% of net area. The numbers above are the
+corrected ones.
 
-**Corridors are the whole problem.** 71.40 m2, 11% of the building, nearly all of
-it in two wings that are 27 m long and about 11 m deep. The SSW wing, which is
-single depth with every room opening to the courtyard, needs no corridor at all
-and measures 1.13.
+| Zone | Size | Net | Corridor | External wall | Gross |
+|---|---|---|---|---|---|
+| SSW wing, single depth | 8.30 x 13.35 | 92.0 | 0.0 | 10.8 | 106.97 |
+| Road wing | 11.03 x 27.00 | 198.0 | 16.8 | 19.0 | 297.72 |
+| First floor | 11.03 x 24.36 | 216.0 | 25.2 | 17.7 | 268.61 |
 
-Two plan directions follow, and they are the two options CLAUDE.md section 11
-asks Phase 2 to produce.
+**Three ways out, and they are not equal.**
 
-**Plan 1, Corridor.** Conventional double loaded corridor on both floors. Simple,
-conventional, every room reached under cover. Needs about **10 m2 of further
-trims** to clear the cap, or 20 m2 to reach the design target.
+**Settle OI-01.** The garage is worth 55.00 m2, which is **5.3 times** the 10.31
+m2 shortfall. If the Site Plan excludes it, plan 2 needs 618.30 m2 and fits with
+44 m2 to spare, which also reopens the bedroom ranges in OI-19. Cutting another
+10 m2 while a 55 m2 question sits unanswered is the wrong order of work.
 
-**Plan 2, Courtyard.** The reception rooms interconnect around the courtyard
-rather than off a corridor, and the corridor shrinks to a short service spine
-serving the staff zone, guest bedroom and office. Cutting the ground floor
-corridor from 27 m to about 12 m saves roughly **21 m2**, which lands the plan at
-about **651.9 m2**, inside both the cap and the design target with no further
-cuts to any room.
+**A third round of trims, about 8.5 m2 net.** Possible, but this would be the
+third pass over the same room list, and the rooms that are easy to trim have
+already been trimmed in route B.
 
-The cost of plan 2 is how the house works: you cross the courtyard or pass
-through a reception room to reach some parts of the ground floor, rather than
-walking a corridor. In a Dubai villa that is a real comfort question in August,
-and it is the owner's call, not a trim to make unilaterally.
+**Drop a room.** The sunroom at 20 m2 net would clear the shortfall outright and
+leave margin. It is the only ground floor room with no fixed function in the
+brief beyond being glazed and garden facing, and option C's courtyard already
+gives the house a garden room of sorts. This is the owner's call, not mine.
 
-Settling OI-01 would dissolve this entirely. If the Site Plan excludes the garage
-from GFA, 55 m2 returns, the plan needs 617.88 m2, and both directions fit with
-room to spare.
+Recommendation: get the Site Plan before cutting again.
 
 ### OI-19 How to spend the remaining range headroom
 

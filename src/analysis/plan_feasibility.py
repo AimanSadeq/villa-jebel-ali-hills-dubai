@@ -28,16 +28,31 @@ REPORT_OUT = REPO_ROOT / "output" / "reports" / "VJH-RPT-005_Plan_Feasibility.tx
 # Rooms the Phase 1 indicative plan put in the single storey SSW wing.
 SSW_WING_ROOMS = ("living", "dining", "show_kitchen")
 
-# A double loaded corridor needs this width, and walls take roughly this share
-# of net area in a room-dense plan. Both are assumptions, stated not buried.
+# A double loaded corridor needs this width.
 CORRIDOR_W = 1.40
-WALL_FRACTION = 0.08
+
+# Wall thicknesses. External walls are the expensive ones: they scale with the
+# perimeter, so a long thin wing pays far more for them than a compact one.
+T_EXTERNAL = 0.25
+T_INTERNAL = 0.15
+
+# Internal partitions, as a share of net area. Partitions are genuinely roughly
+# proportional to the number and size of rooms, unlike external walls.
+PARTITION_FRACTION = 0.045
+
+# How much corridor each plan direction needs along the road wing. Plan 1 runs a
+# corridor the full length. Plan 2 lets the reception rooms interconnect around
+# the courtyard and keeps a short service spine.
+ROAD_CORRIDOR_M = {"plan1": 27.0, "plan2": 12.0}
+FIRST_CORRIDOR_M = 18.0
 
 
 @dataclass
 class Zone:
     name: str
     net_m2: float
+    depth_m: float
+    length_m: float
     corridor_length_m: float
     flat_m2: float = 0.0        # areas already expressed as a footprint
 
@@ -46,22 +61,33 @@ class Zone:
         return CORRIDOR_W * self.corridor_length_m
 
     @property
+    def external_wall_m2(self) -> float:
+        return 2 * (self.depth_m + self.length_m) * T_EXTERNAL
+
+    @property
+    def partition_m2(self) -> float:
+        return self.net_m2 * PARTITION_FRACTION
+
+    @property
     def walls_m2(self) -> float:
-        return self.net_m2 * WALL_FRACTION
+        return self.external_wall_m2 + self.partition_m2
 
     @property
     def gross_m2(self) -> float:
-        return self.net_m2 + self.corridor_m2 + self.walls_m2 + self.flat_m2
+        return (self.net_m2 + self.corridor_m2 + self.walls_m2 + self.flat_m2)
 
 
-def zones() -> list[Zone]:
+def zones(plan: str = "plan2") -> list[Zone]:
+    """The three zones of massing option C, sized to hold their rooms."""
     by_floor_key = {(r.floor, r.key): r for r in rooms()}
     ground = [r for r in rooms() if r.floor == "ground"]
     first = [r for r in rooms() if r.floor == "first"]
 
     spec = next(o for o in load_massing()["options"] if o["key"] == "C")
     road_length = spec["ground"][0]["v"][1] - spec["ground"][0]["v"][0]
-    ssw_length = spec["ground"][1]["u"][1] - spec["ground"][1]["u"][0]
+    ssw = spec["ground"][1]
+    ssw_length = ssw["u"][1] - ssw["u"][0]
+    ssw_depth = ssw["v"][1] - ssw["v"][0]
 
     ssw_net = sum(by_floor_key[("ground", k)].low_m2 for k in SSW_WING_ROOMS)
     garage = by_floor_key[("ground", "garage")].low_m2
@@ -69,18 +95,36 @@ def zones() -> list[Zone]:
                    if r.key not in SSW_WING_ROOMS and r.key != "garage")
     first_net = sum(r.low_m2 for r in first)
 
+    road_corridor = ROAD_CORRIDOR_M[plan]
+    road_depth = _solve_depth(road_length, road_net, road_corridor, flat=garage)
+    first_length = _solve_length(road_depth, first_net, FIRST_CORRIDOR_M)
+
     return [
         # Single depth, every room opening straight to the courtyard, so no
         # corridor at all. This is why it measured 1.13 in VJH-MA-002.
-        Zone("SSW wing, single depth", ssw_net, 0.0),
-        Zone("Road wing, double loaded", road_net, road_length, flat_m2=garage),
-        Zone("First floor, double loaded", first_net, 24.0),
+        Zone("SSW wing, single depth", ssw_net, ssw_depth, ssw_length, 0.0),
+        Zone("Road wing", road_net, road_depth, road_length, road_corridor,
+             flat_m2=garage),
+        Zone("First floor", first_net, road_depth, first_length, FIRST_CORRIDOR_M),
     ]
 
 
-def assess() -> dict:
+def _solve_depth(length, net, corridor_m, flat=0.0):
+    """Depth at which a wing of this length exactly holds its contents."""
+    rhs = (net + CORRIDOR_W * corridor_m + flat
+           + 2 * length * T_EXTERNAL + net * PARTITION_FRACTION)
+    return rhs / (length - 2 * T_EXTERNAL)
+
+
+def _solve_length(depth, net, corridor_m, flat=0.0):
+    rhs = (net + CORRIDOR_W * corridor_m + flat
+           + 2 * depth * T_EXTERNAL + net * PARTITION_FRACTION)
+    return rhs / (depth - 2 * T_EXTERNAL)
+
+
+def assess(plan: str = "plan2") -> dict:
     t = totals()
-    zs = zones()
+    zs = zones(plan)
     gross = sum(z.gross_m2 for z in zs)
     net = sum(z.net_m2 for z in zs)
     flat = sum(z.flat_m2 for z in zs)
@@ -97,30 +141,42 @@ def assess() -> dict:
         "assumed_factor": t["factor"],
         "corridor_m2": sum(z.corridor_m2 for z in zs),
         "fits_cap": gross <= t["cap_m2"],
+        "plan": plan,
     }
 
 
-def report() -> str:
-    a = assess()
+def report(plan: str = "plan2") -> str:
+    a = assess(plan)
     site = load_site()
     lines: list[str] = []
     w = lines.append
 
     w("PLAN FEASIBILITY")
     w(f"Plot {site['plot']['number']}, {site['plot']['community']}")
-    w("Phase 2, before any room is drawn. Massing option C, after trim route B.")
+    w(f"Phase 2, before any room is drawn. Massing option C, after trim route B.")
+    w(f"Plan direction: {plan}.")
     w("")
-    w(f"Assumptions stated: corridor width {CORRIDOR_W:.2f} m, "
-      f"walls {WALL_FRACTION:.0%} of net area.")
+    w(f"Assumptions stated: corridor {CORRIDOR_W:.2f} m wide, external walls "
+      f"{T_EXTERNAL:.2f} m,")
+    w(f"internal partitions {T_INTERNAL:.2f} m taken as {PARTITION_FRACTION:.1%} of net area.")
+    w("")
+    w("External walls are computed from each wing's real perimeter, not as a flat")
+    w("share of area. A first pass used a flat 8%, which did not even cover the")
+    w("external walls of a 27 m long wing and understated the total by 29 m2.")
     w("")
 
     w("WHAT EACH ZONE NEEDS")
-    w(f"{'Zone':<30}{'Net':>9}{'Corridor':>10}{'Walls':>8}{'Flat':>8}{'Gross':>9}")
+    w(f"{'Zone':<26}{'Size':>14}{'Net':>8}{'Corr':>7}{'Ext wall':>9}"
+      f"{'Part':>7}{'Flat':>7}{'Gross':>9}")
     for z in a["zones"]:
-        w(f"{z.name:<30}{z.net_m2:>9.2f}{z.corridor_m2:>10.2f}{z.walls_m2:>8.2f}"
-          f"{z.flat_m2:>8.2f}{z.gross_m2:>9.2f}")
-    w(f"{'TOTAL':<30}{a['net_m2']:>9.2f}{a['corridor_m2']:>10.2f}"
-      f"{a['net_m2'] * WALL_FRACTION:>8.2f}{a['flat_m2']:>8.2f}{a['gross_m2']:>9.2f}")
+        size = f"{z.depth_m:.2f} x {z.length_m:.2f}"
+        w(f"{z.name:<26}{size:>14}{z.net_m2:>8.1f}{z.corridor_m2:>7.1f}"
+          f"{z.external_wall_m2:>9.1f}{z.partition_m2:>7.1f}{z.flat_m2:>7.1f}"
+          f"{z.gross_m2:>9.2f}")
+    w(f"{'TOTAL':<26}{'':>14}{a['net_m2']:>8.1f}{a['corridor_m2']:>7.1f}"
+      f"{sum(z.external_wall_m2 for z in a['zones']):>9.1f}"
+      f"{sum(z.partition_m2 for z in a['zones']):>7.1f}"
+      f"{a['flat_m2']:>7.1f}{a['gross_m2']:>9.2f}")
     w("")
 
     w("AGAINST THE LIMIT")
@@ -153,7 +209,39 @@ def report() -> str:
 
 
 def main() -> int:
-    text = report()
+    blocks = []
+    for plan, label in (("plan1", "PLAN 1, CORRIDOR"),
+                        ("plan2", "PLAN 2, COURTYARD")):
+        rule = "=" * 72
+        blocks.append(f"{rule}\n{label}\n{rule}\n\n" + report(plan))
+
+    a1, a2 = assess("plan1"), assess("plan2")
+    summary = [
+        "=" * 72, "SIDE BY SIDE", "=" * 72, "",
+        f"{'':<22}{'Gross':>10}{'vs cap':>10}{'vs target':>11}"
+        f"{'net:gross':>11}{'corridor':>10}",
+    ]
+    for a, label in ((a1, "Plan 1, Corridor"), (a2, "Plan 2, Courtyard")):
+        summary.append(
+            f"{label:<22}{a['gross_m2']:>10.2f}{-a['over_cap_m2']:>+10.2f}"
+            f"{-a['over_target_m2']:>+11.2f}{a['measured_factor']:>11.3f}"
+            f"{a['corridor_m2']:>10.2f}")
+    summary += [
+        "",
+        f"Plan 2 saves {a1['gross_m2'] - a2['gross_m2']:.2f} m2 against plan 1, "
+        "all of it corridor.",
+        "",
+        f"Neither fits. Plan 2 is {a2['over_cap_m2']:.2f} m2 over the cap and "
+        f"{a2['over_target_m2']:.2f} m2 over",
+        "the design target.",
+        "",
+        "For scale: the garage question in OI-01 is worth 55.00 m2, which is "
+        f"{55.0 / a2['over_cap_m2']:.1f} times",
+        "the shortfall. Settling it would make a third round of trims "
+        "unnecessary.",
+        "",
+    ]
+    text = "\n\n".join(blocks) + "\n\n" + "\n".join(summary)
     print(text)
     REPORT_OUT.parent.mkdir(parents=True, exist_ok=True)
     REPORT_OUT.write_text(text + "\n", encoding="utf-8")

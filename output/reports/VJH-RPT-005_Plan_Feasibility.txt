@@ -1,31 +1,100 @@
+========================================================================
+PLAN 1, CORRIDOR
+========================================================================
+
 PLAN FEASIBILITY
 Plot 5130272, Saih Shuaib 1, Jebel Ali Hills
 Phase 2, before any room is drawn. Massing option C, after trim route B.
+Plan direction: plan1.
 
-Assumptions stated: corridor width 1.40 m, walls 8% of net area.
+Assumptions stated: corridor 1.40 m wide, external walls 0.25 m,
+internal partitions 0.15 m taken as 4.5% of net area.
+
+External walls are computed from each wing's real perimeter, not as a flat
+share of area. A first pass used a flat 8%, which did not even cover the
+external walls of a 27 m long wing and understated the total by 29 m2.
 
 WHAT EACH ZONE NEEDS
-Zone                                Net  Corridor   Walls    Flat    Gross
-SSW wing, single depth            92.00      0.00    7.36    0.00    99.36
-Road wing, double loaded         198.00     37.80   15.84   55.00   306.64
-First floor, double loaded       216.00     33.60   17.28    0.00   266.88
-TOTAL                            506.00     71.40   40.48   55.00   672.88
+Zone                                Size     Net   Corr Ext wall   Part   Flat    Gross
+SSW wing, single depth      8.30 x 13.35    92.0    0.0     10.8    4.1    0.0   106.97
+Road wing                  11.82 x 27.00   198.0   37.8     19.4    8.9   55.0   319.12
+First floor                11.82 x 22.69   216.0   25.2     17.3    9.7    0.0   268.17
+TOTAL                                      506.0   63.0     47.5   22.8   55.0   694.26
 
 AGAINST THE LIMIT
-Gross the plan needs                 672.88 m2       7243 sq ft
+Gross the plan needs                 694.26 m2       7473 sq ft
 DDA cap                              662.99 m2
-Over the cap by                        9.89 m2
+Over the cap by                       31.27 m2
 Design target                        653.00 m2
-Over the target by                    19.88 m2
+Over the target by                    41.26 m2
 
-Net to gross the plan implies         1.221
+Net to gross the plan implies         1.263
 Net to gross assumed so far           1.180
 
 VERDICT: the program does NOT fit. The 1.18 net to gross assumption
-was optimistic. Corridors are the cost: 71.40 m2, which is 11% of the whole building, almost
+was optimistic. Corridors are the cost: 63.00 m2, which is 9% of the whole building, almost
 all of it in two wings that are long and thin.
 
 This is a decision for the owner, not a trim to make unilaterally.
 See docs/open-items.md OI-20.
 
 CONCEPT DESIGN, NOT FOR CONSTRUCTION
+
+========================================================================
+PLAN 2, COURTYARD
+========================================================================
+
+PLAN FEASIBILITY
+Plot 5130272, Saih Shuaib 1, Jebel Ali Hills
+Phase 2, before any room is drawn. Massing option C, after trim route B.
+Plan direction: plan2.
+
+Assumptions stated: corridor 1.40 m wide, external walls 0.25 m,
+internal partitions 0.15 m taken as 4.5% of net area.
+
+External walls are computed from each wing's real perimeter, not as a flat
+share of area. A first pass used a flat 8%, which did not even cover the
+external walls of a 27 m long wing and understated the total by 29 m2.
+
+WHAT EACH ZONE NEEDS
+Zone                                Size     Net   Corr Ext wall   Part   Flat    Gross
+SSW wing, single depth      8.30 x 13.35    92.0    0.0     10.8    4.1    0.0   106.97
+Road wing                  11.03 x 27.00   198.0   16.8     19.0    8.9   55.0   297.72
+First floor                11.03 x 24.36   216.0   25.2     17.7    9.7    0.0   268.61
+TOTAL                                      506.0   42.0     47.5   22.8   55.0   673.30
+
+AGAINST THE LIMIT
+Gross the plan needs                 673.30 m2       7247 sq ft
+DDA cap                              662.99 m2
+Over the cap by                       10.31 m2
+Design target                        653.00 m2
+Over the target by                    20.30 m2
+
+Net to gross the plan implies         1.222
+Net to gross assumed so far           1.180
+
+VERDICT: the program does NOT fit. The 1.18 net to gross assumption
+was optimistic. Corridors are the cost: 42.00 m2, which is 6% of the whole building, almost
+all of it in two wings that are long and thin.
+
+This is a decision for the owner, not a trim to make unilaterally.
+See docs/open-items.md OI-20.
+
+CONCEPT DESIGN, NOT FOR CONSTRUCTION
+
+========================================================================
+SIDE BY SIDE
+========================================================================
+
+                           Gross    vs cap  vs target  net:gross  corridor
+Plan 1, Corridor          694.26    -31.27     -41.26      1.263     63.00
+Plan 2, Courtyard         673.30    -10.31     -20.30      1.222     42.00
+
+Plan 2 saves 20.96 m2 against plan 1, all of it corridor.
+
+Neither fits. Plan 2 is 10.31 m2 over the cap and 20.30 m2 over
+the design target.
+
+For scale: the garage question in OI-01 is worth 55.00 m2, which is 5.3 times
+the shortfall. Settling it would make a third round of trims unnecessary.
+
