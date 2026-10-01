@@ -1,0 +1,13 @@
+# Villa 5130272 concept design toolchain. Python 3.12 (IfcOpenShell has no
+# CPython 3.13 or 3.14 wheels, so 3.12 is required, per CLAUDE.md section 8).
+# Install: py -3.12 -m venv .venv ; .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+
+ifcopenshell==0.9.0   # IFC4 model generation, reading, clash detection
+ezdxf==1.4.4          # DXF drawings, rendered to PDF via the drawing addon
+matplotlib==3.11.2    # PDF drawing output, charts, ezdxf backend
+numpy==2.5.3          # numerics
+shapely==2.1.2        # plot polygon, setbacks, areas
+pyyaml==6.0.3         # reads brief/program.yaml and brief/site.yaml
+pvlib==0.16.1         # sun positions for shading studies
+pandas==3.0.6         # schedules, load calculation tables
+pytest==9.1.1         # automated checks (GFA limit, setbacks)
