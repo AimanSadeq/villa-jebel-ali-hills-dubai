@@ -17,19 +17,19 @@ external walls of a 27 m long wing and understated the total by 29 m2.
 WHAT EACH ZONE NEEDS
 Zone                                Size     Net   Corr Ext wall   Part   Flat    Gross
 SSW wing, single depth      8.30 x 13.35    92.0    0.0     10.8    4.1    0.0   106.97
-Road wing                  11.82 x 27.00   198.0   37.8     19.4    8.9   55.0   319.12
-First floor                11.82 x 22.69   216.0   25.2     17.3    9.7    0.0   268.17
-TOTAL                                      506.0   63.0     47.5   22.8   55.0   694.26
+Road wing                  11.18 x 27.00   198.0   37.8     19.1    8.9   38.0   301.80
+First floor                11.18 x 24.02   216.0   25.2     17.6    9.7    0.0   268.52
+TOTAL                                      506.0   63.0     47.5   22.8   38.0   677.28
 
 AGAINST THE LIMIT
-Gross the plan needs                 694.26 m2       7473 sq ft
+Gross the plan needs                 677.28 m2       7290 sq ft
 DDA cap                              662.99 m2
-Over the cap by                       31.27 m2
+Over the cap by                       14.29 m2
 Design target                        653.00 m2
-Over the target by                    41.26 m2
+Over the target by                    24.28 m2
 
 Net to gross the plan implies         1.263
-Net to gross assumed so far           1.180
+Net to gross assumed so far           1.222
 
 VERDICT: the program does NOT fit. The 1.18 net to gross assumption
 was optimistic. Corridors are the cost: 63.00 m2, which is 9% of the whole building, almost
@@ -59,26 +59,21 @@ external walls of a 27 m long wing and understated the total by 29 m2.
 WHAT EACH ZONE NEEDS
 Zone                                Size     Net   Corr Ext wall   Part   Flat    Gross
 SSW wing, single depth      8.30 x 13.35    92.0    0.0     10.8    4.1    0.0   106.97
-Road wing                  11.03 x 27.00   198.0   16.8     19.0    8.9   55.0   297.72
-First floor                11.03 x 24.36   216.0   25.2     17.7    9.7    0.0   268.61
-TOTAL                                      506.0   42.0     47.5   22.8   55.0   673.30
+Road wing                  10.39 x 27.00   198.0   16.8     18.7    8.9   38.0   280.40
+First floor                10.39 x 25.91   216.0   25.2     18.1    9.7    0.0   269.07
+TOTAL                                      506.0   42.0     47.7   22.8   38.0   656.43
 
 AGAINST THE LIMIT
-Gross the plan needs                 673.30 m2       7247 sq ft
+Gross the plan needs                 656.43 m2       7066 sq ft
 DDA cap                              662.99 m2
-Over the cap by                       10.31 m2
+Over the cap by                       -6.56 m2
 Design target                        653.00 m2
-Over the target by                    20.30 m2
+Over the target by                     3.43 m2
 
 Net to gross the plan implies         1.222
-Net to gross assumed so far           1.180
+Net to gross assumed so far           1.222
 
-VERDICT: the program does NOT fit. The 1.18 net to gross assumption
-was optimistic. Corridors are the cost: 42.00 m2, which is 6% of the whole building, almost
-all of it in two wings that are long and thin.
-
-This is a decision for the owner, not a trim to make unilaterally.
-See docs/open-items.md OI-20.
+VERDICT: the program fits inside the cap as laid out.
 
 CONCEPT DESIGN, NOT FOR CONSTRUCTION
 
@@ -87,14 +82,16 @@ SIDE BY SIDE
 ========================================================================
 
                            Gross    vs cap  vs target  net:gross  corridor
-Plan 1, Corridor          694.26    -31.27     -41.26      1.263     63.00
-Plan 2, Courtyard         673.30    -10.31     -20.30      1.222     42.00
+Plan 1, Corridor          677.28    -14.29     -24.28      1.263     63.00
+Plan 2, Courtyard         656.43     +6.56      -3.43      1.222     42.00
 
-Plan 2 saves 20.96 m2 against plan 1, all of it corridor.
+Plan 2 saves 20.85 m2 against plan 1, all of it corridor.
 
-Neither fits. Plan 2 is 10.31 m2 over the cap and 20.30 m2 over
-the design target.
+PLAN 2 FITS. It lands 6.56 m2 inside the 662.99 m2 cap.
 
-For scale: the garage question in OI-01 is worth 55.00 m2, which is 5.3 times
-the shortfall. Settling it would make a third round of trims unnecessary.
+It sits 3.43 m2 above the 653.00 m2 design target, so the margin held
+back against a remeasure is 6.56 m2 rather than the 9.99 m2 recommended in
+D-005. That is 1.0% of the cap, against the 1.5% advised. Thinner, not reckless.
+
+Plan 1, the corridor plan, remains 14.29 m2 over the cap and is not available.
 

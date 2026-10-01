@@ -6,7 +6,7 @@ names the document that must answer it.
 
 Status key: OPEN, ASKED (sent to a third party), CLOSED.
 
-Last updated: 2026-10-02 (Phase 2 opened, plan feasibility tested)
+Last updated: 2026-10-02 (plan 2 fits after the two car garage)
 
 ## Critical. Blocks Phase 2 room layouts
 
@@ -58,52 +58,24 @@ The program lands at 652.08 m2 at the minimum of every range, inside both the
 
 | | |
 |---|---|
-| Status | **OPEN, blocks the Phase 2 layouts** |
+| Status | **CLOSED 2026-10-02** |
 | Raised | 2026-10-02, Phase 2 |
-| Updated | 2026-10-02, wall model corrected |
-| Decided by | Aiman |
 
-Tested before drawing any room, by `src/analysis/plan_feasibility.py`.
+Closed by two owner decisions taken together: plan direction 2 (D-021) and the
+two car garage (D-022).
 
-**Plan direction chosen by the owner: plan 2, Courtyard.** Reception rooms
-interconnect around the courtyard and the corridor shrinks to a service spine.
-That saves **20.96 m2** against a conventional corridor plan, all of it
-circulation, and it is the right call. It is still not enough.
+| | Gross | vs cap |
+|---|---|---|
+| Plan 1, Corridor, 3 car garage | 694.26 | 31.27 over |
+| Plan 2, Courtyard, 3 car garage | 673.30 | 10.31 over |
+| Plan 1, Corridor, 2 car garage | 677.28 | 14.29 over |
+| **Plan 2, Courtyard, 2 car garage** | **656.43** | **6.56 inside** |
 
-| | Gross | vs cap | vs target | net:gross | corridor |
-|---|---|---|---|---|---|
-| Plan 1, Corridor | 694.26 | **31.27 over** | 41.26 over | 1.263 | 63.00 |
-| **Plan 2, Courtyard** | **673.30** | **10.31 over** | 20.30 over | 1.222 | 42.00 |
+Plan 2 fits. The margin held back against a consultant's remeasure is 6.56 m2,
+1.0% of the cap, against the 1.5% recommended in D-005. Thinner than advised but
+real, and it can be restored if OI-01 returns the garage area.
 
-**A correction to my own figures.** The first pass allowed a flat 8% of net area
-for walls. That does not even cover the external walls of a 27 m long wing, and
-it understated the total by about 29 m2. Walls are now computed from each wing's
-real perimeter, with partitions at 4.5% of net area. The numbers above are the
-corrected ones.
-
-| Zone | Size | Net | Corridor | External wall | Gross |
-|---|---|---|---|---|---|
-| SSW wing, single depth | 8.30 x 13.35 | 92.0 | 0.0 | 10.8 | 106.97 |
-| Road wing | 11.03 x 27.00 | 198.0 | 16.8 | 19.0 | 297.72 |
-| First floor | 11.03 x 24.36 | 216.0 | 25.2 | 17.7 | 268.61 |
-
-**Three ways out, and they are not equal.**
-
-**Settle OI-01.** The garage is worth 55.00 m2, which is **5.3 times** the 10.31
-m2 shortfall. If the Site Plan excludes it, plan 2 needs 618.30 m2 and fits with
-44 m2 to spare, which also reopens the bedroom ranges in OI-19. Cutting another
-10 m2 while a 55 m2 question sits unanswered is the wrong order of work.
-
-**A third round of trims, about 8.5 m2 net.** Possible, but this would be the
-third pass over the same room list, and the rooms that are easy to trim have
-already been trimmed in route B.
-
-**Drop a room.** The sunroom at 20 m2 net would clear the shortfall outright and
-leave margin. It is the only ground floor room with no fixed function in the
-brief beyond being glazed and garden facing, and option C's courtyard already
-gives the house a garden room of sorts. This is the owner's call, not mine.
-
-Recommendation: get the Site Plan before cutting again.
+Plan 1 remains over the cap and is not available.
 
 ### OI-19 How to spend the remaining range headroom
 

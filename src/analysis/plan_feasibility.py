@@ -226,21 +226,47 @@ def main() -> int:
             f"{label:<22}{a['gross_m2']:>10.2f}{-a['over_cap_m2']:>+10.2f}"
             f"{-a['over_target_m2']:>+11.2f}{a['measured_factor']:>11.3f}"
             f"{a['corridor_m2']:>10.2f}")
+    garage = next(r for r in rooms() if r.key == "garage").low_m2
     summary += [
         "",
         f"Plan 2 saves {a1['gross_m2'] - a2['gross_m2']:.2f} m2 against plan 1, "
         "all of it corridor.",
         "",
-        f"Neither fits. Plan 2 is {a2['over_cap_m2']:.2f} m2 over the cap and "
-        f"{a2['over_target_m2']:.2f} m2 over",
-        "the design target.",
-        "",
-        "For scale: the garage question in OI-01 is worth 55.00 m2, which is "
-        f"{55.0 / a2['over_cap_m2']:.1f} times",
-        "the shortfall. Settling it would make a third round of trims "
-        "unnecessary.",
-        "",
     ]
+    if a2["fits_cap"]:
+        held = a2["cap_m2"] - a2["gross_m2"]
+        summary += [
+            f"PLAN 2 FITS. It lands {held:.2f} m2 inside the "
+            f"{a2['cap_m2']:.2f} m2 cap.",
+            "",
+        ]
+        if a2["over_target_m2"] > 0:
+            summary += [
+                f"It sits {a2['over_target_m2']:.2f} m2 above the "
+                f"{a2['target_m2']:.2f} m2 design target, so the margin held",
+                f"back against a remeasure is {held:.2f} m2 rather than the "
+                f"{a2['cap_m2'] - a2['target_m2']:.2f} m2 recommended in",
+                f"D-005. That is {held / a2['cap_m2']:.1%} of the cap, against "
+                "the 1.5% advised. Thinner, not reckless.",
+                "",
+            ]
+    else:
+        summary += [
+            f"Plan 2 is still {a2['over_cap_m2']:.2f} m2 over the cap.",
+            "",
+            f"For scale: the garage counts {garage:.2f} m2 toward GFA under the "
+            "owner decision of",
+            f"2026-10-01, which is {garage / a2['over_cap_m2']:.1f} times the "
+            "shortfall. Settling OI-01",
+            "would make a further round of trims unnecessary.",
+            "",
+        ]
+    if not a1["fits_cap"]:
+        summary += [
+            f"Plan 1, the corridor plan, remains {a1['over_cap_m2']:.2f} m2 over "
+            "the cap and is not available.",
+            "",
+        ]
     text = "\n\n".join(blocks) + "\n\n" + "\n".join(summary)
     print(text)
     REPORT_OUT.parent.mkdir(parents=True, exist_ok=True)

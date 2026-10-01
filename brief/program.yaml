@@ -140,16 +140,30 @@ ground:
       Elevator serves ground and first. The roof stop was removed by owner
       decision on 2026-10-01.
   - key: garage
-    name: "Garage, Enclosed, 3 Cars"
-    target_m2: 55
+    name: "Garage, Enclosed, 2 Cars"
+    target_m2: 38
+    brief_target_m2: 55
+    cars: 2
     gfa: counts
     track_separately: true
     notes: >
-      Owner decision 2026-10-01: count the parking as part of the GFA. This is
-      the conservative reading. DDA published material does not rule on garages
-      (see docs/open-items.md OI-01), so rather than design against an unknown
-      the owner chose to carry the 55 m2 inside the 662.99 m2 cap. If the Site
-      Plan later excludes it, 55 m2 comes back.
+      Owner decision 2026-10-02: two cars, not three. CLAUDE.md section 4 asked
+      for an enclosed three car garage at 55 m2.
+
+      Sized from the DDA bay standard rather than scaled down. DDA FAQs
+      Building Q5 gives a standard bay as 2.5 x 5.5 m. The 55 m2 three car
+      figure works out as a footprint about 8.15 x 6.75 m, holding three bays
+      at 2.55 m with 6.25 m of depth. Removing one bay takes 2.55 m off the
+      width, giving about 5.60 x 6.75 m, so 38 m2.
+
+      The DDA plot details require a minimum of one parking space, so two
+      remains compliant.
+
+      Counted toward GFA by the owner decision of 2026-10-01. See D-018.
+    trimmed: owner_2_cars
+    trim_note: >
+      Saves 17 m2 of gross floor area directly, since a garage footprint is
+      already a gross figure and no net to gross factor applies to it.
 
 first:
   - key: master_suite

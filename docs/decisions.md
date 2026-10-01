@@ -6,6 +6,68 @@ Columns: date, decision, reason, approved by Aiman.
 
 ---
 
+## 2026-10-02, Phase 2
+
+### D-023 Net to gross factor replaced by measurement, 1.18 to 1.222
+
+**Decision.** `brief/site.yaml` now carries 1.222, measured, with the previous
+1.18 kept beside it as `net_to_gross_previous`.
+
+**Reason.** A-01 always said the Phase 0 assumption would be replaced by the
+ratio of the actual plan at Phase 2. This is that replacement. It comes from
+`src/analysis/plan_feasibility.py`: external walls from each wing's real
+perimeter at 0.25 m, partitions at 4.5% of net, a 1.40 m corridor on the first
+floor and a service spine on the ground.
+
+It is worse than assumed because option C has two long thin wings, and a long
+thin wing pays for its external walls by the metre. The single depth SSW wing,
+where every room opens to the courtyard and there is no corridor, measures 1.13
+on its own.
+
+The GFA check and the feasibility model now agree to within 0.1 m2, 656.33
+against 656.43, where before they differed by 21 m2.
+
+**Approved by Aiman: not required.** Replacing an assumption with a measurement.
+
+### D-022 Garage reduced to two cars, 55 m2 to 38 m2
+
+**Decision.** The enclosed garage holds two cars, not the three in CLAUDE.md
+section 4. 38 m2.
+
+**Reason.** Owner decision 2026-10-02. Sized from the DDA bay standard rather
+than scaled down: DDA FAQs Building Q5 gives a standard bay as 2.5 x 5.5 m, and
+the 55 m2 three car figure works out as roughly 8.15 x 6.75 m holding three bays
+at 2.55 m. Removing one bay takes 2.55 m off the width, giving about
+5.60 x 6.75 m, so 38 m2.
+
+The DDA plot details require a minimum of one parking space, so two remains
+compliant.
+
+**This is what made the plan fit.** A garage target is already a gross footprint,
+so the 17 m2 comes straight off GFA with no net to gross factor applied. Plan 2
+moves from 10.31 m2 over the cap to 6.56 m2 inside it.
+
+**Approved by Aiman: yes.** Stated directly.
+
+### D-021 Plan direction 2, Courtyard
+
+**Decision.** The reception rooms interconnect around the courtyard rather than
+hanging off a corridor, and the corridor shrinks to a short service spine serving
+the staff zone, guest bedroom and office.
+
+**Reason.** Owner decision 2026-10-02. It saves 20.96 m2 against a conventional
+corridor plan, all of it circulation, and it is the plan that actually uses the
+courtyard that option C commits to. Plan 1, the corridor plan, remains 14.29 m2
+over the cap even after the two car garage, and is not available.
+
+The cost is how the house works: some parts of the ground floor are reached by
+crossing the courtyard or passing through a reception room rather than walking a
+corridor.
+
+**Approved by Aiman: yes.** Stated directly.
+
+---
+
 ## 2026-10-01, trims
 
 ### D-019 Trim route B, service and circulation only, 13 m2 net

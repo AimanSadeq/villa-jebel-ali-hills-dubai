@@ -42,11 +42,25 @@ targets:
     the consultant. A concept-stage figure can drift by several square metres on
     wall thicknesses alone, and exceeding the cap at submission means redesign.
     Release this margin only once the consultant confirms the measurement basis.
-  net_to_gross_factor: 1.18
+  net_to_gross_factor: 1.222
   net_to_gross_note: >
-    Assumption, not a regulation. Covers external and internal walls, structure,
-    and circulation not itemised in the room program. Each 0.01 reduction frees
-    roughly 5 m2 of net room area. Tune as plans develop and report on every build.
+    MEASURED, not assumed, as of 2026-10-02. A-01 always said the 1.18 carried
+    from Phase 0 would be replaced by the ratio of the actual plan at Phase 2,
+    and this is that replacement.
+
+    From src/analysis/plan_feasibility.py for massing option C under plan
+    direction 2: external walls computed from each wing real perimeter at 0.25 m,
+    internal partitions at 4.5 percent of net area, a 1.40 m corridor on the
+    first floor and a short service spine on the ground floor.
+
+    Higher than the 1.18 assumed because option C has two long thin wings, and a
+    long thin wing pays for its external walls by the metre. The single depth SSW
+    wing, where every room opens straight to the courtyard and there is no
+    corridor at all, measures 1.13 on its own.
+
+    The garage is excluded from this ratio: a garage target is already gross.
+  net_to_gross_previous: 1.18
+  net_to_gross_measured_on: "2026-10-02"
 
 # Plot boundary. Five sided. Coordinates in metres, x = east, y = north,
 # origin at the west vertex E.
