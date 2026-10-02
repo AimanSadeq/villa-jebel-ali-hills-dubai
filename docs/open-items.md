@@ -534,7 +534,7 @@ about 0.5 m from the store or the prep kitchen.
 | Status | OPEN, for the owner, with the first floor design (D-038) |
 | Raised | 2026-10-02, D-046 |
 
-- The 6 m2 linen store (brief) has no place since answer 12l; brief/program.yaml marks it deferred.
+- The 6 m2 linen store (brief) has no place since answer 12l. CLOSED by FF4 (C): no separate store, linen in built-in cupboards.
 - The master suite's coffee station (brief) was the reference pantry's; it needs a place in the suite.
 - The family room above the salon is 26.2 m2 against the brief's 35 m2 (program target 33).
 - GFA margin 1.30 m2: the first floor design has to restore at least 5 m2, and the D-005 reserve if the owner approves it (two strict expected failures in tests/test_layout.py).
