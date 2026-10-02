@@ -43,6 +43,9 @@ pip install -r requirements.txt
 | `python src/analysis/gfa_check.py` | GFA against the 662.99 m² cap, by scenario |
 | `python src/analysis/gfa_check.py --strict` | Same, failing when unverified areas breach the cap |
 | `python src/analysis/plan_feasibility.py` | Can the program be laid out inside the massing |
+| `python src/analysis/trim_packages.py` | Cost trim packages against the plan geometry |
+| `python src/model/layout_gen.py` | Generate the room layout, writes brief/layouts.yaml |
+| `python src/drawings/floor_plans.py` | Ground and first floor plans, A1 at 1:100 |
 | `python src/drawings/site_plan.py` | Site plan DXF and PDF |
 | `python src/analysis/sun_study.py` | Sun paths and facade solar exposure |
 | `python src/model/massing.py` | Validates the options, shade scores, wall to boundary |
@@ -51,7 +54,7 @@ pip install -r requirements.txt
 | `python src/drawings/option_c_wing.py` | Option C wing, indicative plan |
 | `python src/model/export_massing.py` | Writes the viewer's data file |
 | `npm run dev --prefix viewer` | Massing viewer at http://localhost:5173 |
-| `python -m pytest -q` | Setback, GFA, shading and orientation guards, 50 checks |
+| `python -m pytest -q` | Setback, GFA, shading, orientation and layout guards, 70 checks |
 
 ## Where things live
 
@@ -79,7 +82,7 @@ and regenerate: nothing else needs touching.
 |---|---|---|
 | 0 | Repo setup, brief files, plot and area verification | Complete, awaiting review |
 | 1 | Sun study, massing options, pool and garden position | Complete, awaiting review |
-| 2 | Room layouts, two plan options, GFA check | Started, blocked by OI-20 |
+| 2 | Room layouts, two plan options, GFA check | Plan drawn, 6.30 m2 over, OI-22 |
 | 3 | Full IFC architectural model | Not started |
 | 4 | Walkthrough, furniture, landscape, three palettes | Not started |
 | 5 | MEP design, calculations, clash detection | Not started |
@@ -102,3 +105,4 @@ Each phase stops for the owner's approval before the next begins.
 | `output/reports/VJH-RPT-003_Sun_Study.txt` | Facade solar exposure, am and pm split |
 | `output/reports/VJH-RPT-004_Massing_Options.txt` | Option comparison and recommendation |
 | `output/pdf/VJH-MA-002_Option_C_Wing.pdf` | Option C single storey wing, indicative layout, true 1:75 |
+| `output/pdf/VJH-GA-001_Floor_Plans.pdf` | Ground and first floor plans, measured GFA, A1 at 1:100 |

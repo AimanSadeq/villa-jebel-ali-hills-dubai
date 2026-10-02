@@ -6,7 +6,7 @@ names the document that must answer it.
 
 Status key: OPEN, ASKED (sent to a third party), CLOSED.
 
-Last updated: 2026-10-02 (corridor width found; it decides whether plan 2 fits)
+Last updated: 2026-10-02 (plan drawn and measured; it is 6.30 m2 over)
 
 ## Critical. Blocks Phase 2 room layouts
 
@@ -77,6 +77,45 @@ real, and it can be restored if OI-01 returns the garage area.
 
 Plan 1 remains over the cap and is not available.
 
+### OI-22 The drawn plan is 6.30 m2 over the cap, and why
+
+| | |
+|---|---|
+| Status | **OPEN, blocks the Phase 2 checkpoint** |
+| Raised | 2026-10-02, Phase 2 |
+| Decided by | Aiman, or answered by DDA through OI-01 and OI-21 |
+
+Drawn on `output/pdf/VJH-GA-001_Floor_Plans.pdf` and measured from the geometry:
+**669.29 m2 against the 662.99 m2 cap, 6.30 m2 over.**
+
+**The cause is structural, not the room list.** The first floor holds 216 m2 of
+rooms plus its corridor and walls, and it can only stand on the two storey road
+wing. Option C puts 92 m2 of ground floor rooms in the single storey SSW wing, so
+the road wing has too few ground rooms to fill the footprint the bedrooms above
+need. The difference shows as padding: on the drawn plan the majlis comes out at
+49.2 m2 against its 35 m2 brief, and the garage at 38.0 m2 internal against
+31.3. The generator proves this is structural rather than a drafting artefact:
+when the ground floor outline is allowed to step back instead of padding, every
+layout is rejected because the first floor would overhang.
+
+**The double height foyer does not fit the envelope at all** in the arrangement
+the owner approved. With the void over it, the first floor needs more length
+than the 27 m the road wing is allowed. The drawn plan therefore shows a
+**single height foyer. That is not an owner decision; it is the nearest
+arrangement that can be drawn**, shown so the plan can be seen.
+
+**What closes it, measured by the generator:**
+
+| | Double height foyer | Single height foyer |
+|---|---|---|
+| Corridor 1.80 m, DDA Q12 | does not fit the envelope | 669.29, 6.30 over |
+| Corridor 1.50 m, DDA Q12 service corridor | does not fit the envelope | 658.13, 4.86 inside |
+| Corridor 1.20 m | 662.38, 0.61 inside | 647.92, 15.07 inside |
+| Garage excluded from GFA, OI-01 | does not fit the envelope | about 631, about 32 inside |
+
+Both DDA questions in the drafted email decide this. The email is in the owner's
+Gmail awaiting a recipient address.
+
 ### OI-21 Corridor width, and whether DDA's 1.8 m applies inside a villa
 
 | | |
@@ -108,7 +147,9 @@ between the plan fitting and not.
 
 Only the 1.20 m case fits, and it fits by 3.23 m2, which is a 0.5% margin against
 a consultant's remeasure. That is too thin to design to, and 1.20 m is below the
-DDA figure in any case.
+DDA figure in any case. These were costing model figures; the measured plan
+supersedes them, see OI-22. Q12 also gives 1.5 m for service corridors, and at
+1.50 m the single height plan measures 658.13 m2, inside the cap.
 
 **The clean fix is OI-01.** The garage counts 38.00 m2 toward GFA by the owner
 decision of 2026-10-01. If the Site Plan excludes it, even the fully compliant

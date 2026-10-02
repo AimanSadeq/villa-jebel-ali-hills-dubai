@@ -86,11 +86,6 @@ ground:
       approved trim route B, 2026-10-01.
     gfa: counts
     notes: "Near the staff and service zone."
-  - key: sunroom
-    name: "Sunroom"
-    target_m2: 20
-    gfa: counts
-    notes: "Glazed, garden facing, sun controlled."
   - key: home_office
     name: "Home Office"
     target_m2: 14
@@ -230,6 +225,21 @@ first:
 #    behind a low screen, which needs no enclosure and adds no floor, or at
 #    ground level in the service zone. Decided in Phase 5. See OI-17.
 roof: []
+
+# Rooms removed from the CLAUDE.md section 4 program, kept on record so the
+# removal is visible and reversible rather than silent.
+removed:
+  - key: sunroom
+    name: "Sunroom"
+    brief_target_m2: 20
+    removed_on: "2026-10-02"
+    decision: "D-024, trim package 2"
+    reason: >
+      Owner chose trim package 2 to make plan 2 fit at DDA's 1.80 m corridor
+      width (FAQ Q12). Of the four costed packages it was the only one that
+      left every other room at its brief size. The courtyard in massing option
+      C, and the glazed double height living room facing it, already give the
+      house its garden room.
 
 # Double-height voids. Per CLAUDE.md section 3 these do not add upper-floor
 # area. Listed so they appear in reports and are never double counted.

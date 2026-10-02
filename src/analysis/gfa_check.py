@@ -29,6 +29,16 @@ from model.site import SQM_TO_SQFT, load_site  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PROGRAM_YAML = REPO_ROOT / "brief" / "program.yaml"
+LAYOUTS_YAML = REPO_ROOT / "brief" / "layouts.yaml"
+
+
+def measured_layout() -> dict | None:
+    """GFA measured from the generated plan, if one exists. Once a plan
+    exists this, not the net to gross estimate, is the binding figure."""
+    if not LAYOUTS_YAML.exists():
+        return None
+    data = yaml.safe_load(LAYOUTS_YAML.read_text(encoding="utf-8"))
+    return data.get("gfa_measured")
 
 FLOORS = ("ground", "first", "roof")
 
@@ -310,6 +320,25 @@ def report(program: dict | None = None, site: dict | None = None) -> tuple[str, 
         for r in added:
             w(f"  {r.name} ({r.floor}), {r.low_m2:.0f} m2")
         w("")
+
+    m = measured_layout()
+    if m is not None:
+        w("MEASURED FROM THE PLAN, brief/layouts.yaml")
+        w("The estimate above uses a net to gross factor. The plan below is drawn")
+        w("geometry, and it is the figure the cap is tested against.")
+        w(f"{'Road wing, ground':<40}{m['road_wing_ground']:>9.2f} m2")
+        w(f"{'SSW wing, ground':<40}{m['ssw_wing_ground']:>9.2f} m2")
+        w(f"{'First floor, less voids':<40}{m['first_floor_less_void']:>9.2f} m2")
+        w(f"{'Total':<40}{m['total']:>9.2f} m2")
+        w(f"{'Margin to the cap':<40}{m['margin']:>+9.2f} m2")
+        w("")
+        if m["total"] > t["cap_m2"]:
+            fails = True
+            w("VERDICT: FAIL. The drawn plan exceeds the DDA cap by "
+              f"{-m['margin']:.2f} m2. See docs/open-items.md OI-22.")
+            w("")
+            w(program["meta"]["stamp"])
+            return "\n".join(lines), fails, at_risk
 
     if fails:
         w("VERDICT: FAIL. The program exceeds the cap even at the minimum of")

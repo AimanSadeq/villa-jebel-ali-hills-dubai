@@ -6,6 +6,40 @@ Columns: date, decision, reason, approved by Aiman.
 
 ---
 
+## 2026-10-02, trim package 2 and the measured plan
+
+### D-025 Once a plan exists, measured GFA is the binding figure
+
+**Decision.** `src/analysis/gfa_check.py` now reads `brief/layouts.yaml` and
+tests the cap against GFA measured from the drawn plan, failing loudly when it is
+exceeded, as CLAUDE.md section 3 requires. The net to gross estimate is still
+printed, but it no longer decides the verdict.
+
+**Reason.** Four successive estimates of this plan each came in optimistic: a
+flat wall allowance, a corridor assumed shorter than the plan needed, a corridor
+width below the DDA figure, and finally a first floor allowed to be deeper than
+the ground floor it sits on. Each was corrected, and each correction made the
+figure worse. Drawn geometry ends that pattern: `src/model/layout_gen.py` places
+every room, stacks the stair cores, keeps the first floor over the ground floor,
+and the area is measured from what is drawn.
+
+**Approved by Aiman: not required.** Technical.
+
+### D-024 Trim package 2: the sunroom is removed
+
+**Decision.** The sunroom, 20 m2 net, is removed from the program. It is kept on
+record under `removed:` in `brief/program.yaml` with its brief figure and reason.
+The SSW wing is sized to its rooms at brief size rather than to the Phase 1
+massing.
+
+**Reason.** Owner chose package 2 of the four costed on 2026-10-02, the only one
+that left every other room at its brief size. The courtyard and the double height
+living room facing it already give the house its garden room.
+
+**Approved by Aiman: yes.** Chose package 2 directly.
+
+---
+
 ## 2026-10-02, Phase 2
 
 ### D-023 Net to gross factor replaced by measurement, 1.18 to 1.222

@@ -1,0 +1,325 @@
+"""Ground and first floor plans for Villa 5130272, drawn from brief/layouts.yaml.
+
+A1 landscape, both floors side by side at a true 1:100, plot up, so the entrance
+side reads on the left and the courtyard on the right as in the Phase 1 sheets.
+
+Every area on this sheet is measured from the generated geometry. The GFA table
+is the measured figure, and any room that came out larger than its brief target
+because it had to hold up the floor above is labelled as padding rather than
+hidden.
+
+CONCEPT DESIGN, NOT FOR CONSTRUCTION.
+"""
+
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+import matplotlib
+matplotlib.use("Agg")
+
+import matplotlib.pyplot as plt  # noqa: E402
+import yaml  # noqa: E402
+from matplotlib.patches import Polygon as MplPolygon  # noqa: E402
+from matplotlib.patches import Rectangle  # noqa: E402
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(REPO_ROOT / "src"))
+
+from drawings.massing_sheets import GRID_BEARING, _g, _side_badge  # noqa: E402
+from model.massing import load_massing  # noqa: E402
+from model.site import SQM_TO_SQFT, buildable_envelope, plot_polygon, sides  # noqa: E402
+
+LAYOUTS = REPO_ROOT / "brief" / "layouts.yaml"
+PROGRAM = REPO_ROOT / "brief" / "program.yaml"
+OUT = REPO_ROOT / "output" / "pdf" / "VJH-GA-001_Floor_Plans.pdf"
+
+MM = 1 / 25.4
+A1 = (841 * MM, 594 * MM)
+SCALE = 100
+
+INK = "#1a1a1a"
+MUTED = "#6b6b6b"
+WALL = "#262626"
+ROOM = "#f7f5f1"
+SERVICE = "#eeebe5"
+STAFF = "#e9e6f0"
+PAD = "#fbe3d6"
+CORR = "#ffffff"
+VOID = "#dfe9f2"
+POOL = "#2a7fb8"
+DECK = "#ded3bd"
+PLOT = "#b3261e"
+ENV = "#b8860b"
+GOOD = "#2e7d4f"
+BAD = "#b3261e"
+DIM = "#1f6f8b"
+
+SERVICE_KEYS = {"arabic_kitchen", "pantry", "laundry", "plant_room", "garage",
+                "stair_lift_ground", "stair_lift_first", "linen_storage",
+                "guest_powder"}
+STAFF_KEYS = {"maids_room", "drivers_room"}
+STAIR_KEYS = {"stair_lift_ground", "stair_lift_first"}
+
+SHORT = {
+    "entrance_foyer": "FOYER", "guest_bedroom": "GUEST BED", "majlis": "MAJLIS",
+    "guest_powder": "WC", "dining": "DINING", "show_kitchen": "KITCHEN",
+    "arabic_kitchen": "ARABIC KIT", "pantry": "PANTRY", "laundry": "LAUNDRY",
+    "home_office": "OFFICE", "maids_room": "MAID", "drivers_room": "DRIVER",
+    "plant_room": "PLANT", "stair_lift_ground": "STAIR + LIFT",
+    "stair_lift_first": "STAIR + LIFT", "garage": "GARAGE, 2 CARS",
+    "living": "LIVING", "master_suite": "MASTER SUITE", "bedroom_2": "BED 2",
+    "bedroom_3": "BED 3", "bedroom_4": "BED 4", "family_living": "FAMILY",
+    "linen_storage": "LINEN",
+}
+
+
+def load() -> tuple[dict, dict]:
+    lay = yaml.safe_load(LAYOUTS.read_text(encoding="utf-8"))
+    prog = yaml.safe_load(PROGRAM.read_text(encoding="utf-8"))
+    targets = {}
+    for floor in ("ground", "first"):
+        for r in prog.get(floor, []) or []:
+            targets[r["key"]] = r.get("target_m2") or r.get("target_min_m2")
+    targets["garage"] = 31.3          # internal, see src/model/layout_gen.py
+    return lay, targets
+
+
+def _poly(ax, coords, **kw):
+    ax.add_patch(MplPolygon(coords, closed=True, **kw))
+
+
+def _rect(ax, r, **kw):
+    (u0, u1), (v0, v1) = r["u"], r["v"]
+    ax.add_patch(Rectangle((u0, v0), u1 - u0, v1 - v0, **kw))
+
+
+def _context(ax):
+    xs, ys = _g(plot_polygon()).exterior.xy
+    _poly(ax, list(zip(xs, ys)), facecolor="#fbfaf7", edgecolor="none", zorder=0)
+    xs, ys = _g(buildable_envelope()).exterior.xy
+    ax.plot(xs, ys, color=ENV, lw=0.6, ls=(0, (6, 3)), zorder=1)
+    xs, ys = _g(plot_polygon()).exterior.xy
+    ax.plot(xs, ys, color=PLOT, lw=1.3, zorder=1)
+
+
+def _badges(ax):
+    """Compact side labels just outside the plot, so nothing clips at 1:100."""
+    spots = {1: (-1.6, 17.0, 90), 3: (32.4, 17.0, -90), 2: (15.3, -1.7, 0),
+             4: (15.3, 35.3, 0)}
+    for s in sides():
+        x, y, rot = spots[s.id]
+        role = ("ENTRANCE" if s.is_main_access else
+                "COURTYARD SIDE" if s.id == 3 else "NEIGHBOUR")
+        col = GOOD if s.id in (1, 3) else MUTED
+        ax.text(x, y, f"SIDE {s.id}  {role}  {s.adjacency}", rotation=rot,
+                ha="center", va="center", fontsize=6.4, color=col, zorder=9,
+                bbox=dict(boxstyle="round,pad=0.35", fc="white", ec=col, lw=0.6))
+
+
+def _room(ax, r, targets, padding_keys):
+    key = r["key"]
+    fill = (PAD if key in padding_keys else
+            STAFF if key in STAFF_KEYS else
+            SERVICE if key in SERVICE_KEYS else ROOM)
+    _rect(ax, r, facecolor=fill, edgecolor=WALL, lw=0.7, zorder=4)
+    (u0, u1), (v0, v1) = r["u"], r["v"]
+    w, l = u1 - u0, v1 - v0
+    cx, cy = (u0 + u1) / 2, (v0 + v1) / 2
+    if key in STAIR_KEYS:
+        n = max(int(l / 0.28), 4)
+        for i in range(1, n):
+            y = v0 + i * l / n
+            ax.plot([u0 + 0.15, u0 + w * 0.55], [y, y], color=MUTED, lw=0.3, zorder=5)
+        ax.add_patch(Rectangle((u0 + w * 0.62, v0 + 0.2), w * 0.32, min(1.6, l - 0.4),
+                               facecolor="none", edgecolor=MUTED, lw=0.5, zorder=5))
+    small = min(w, l) < 2.2
+    fs = 4.6 if small else 5.6
+    rot = 90 if (w < l and w < 2.4) else 0
+    tgt = targets.get(key, r["area_m2"])
+    lines = [SHORT.get(key, key.upper())]
+    lines.append(f"{r['area_m2']:.1f} m2")
+    if not small:
+        lines.append(f"{r['area_m2'] * SQM_TO_SQFT:,.0f} sq ft")
+        lines.append(f"{w:.2f} x {l:.2f}")
+    if key in padding_keys:
+        lines.append(f"brief {tgt:.0f}, +{r['area_m2'] - tgt:.1f}")
+    ax.text(cx, cy, "\n".join(lines), ha="center", va="center", fontsize=fs,
+            color=BAD if key in padding_keys else INK, zorder=7, rotation=rot,
+            linespacing=1.25)
+
+
+def _circulation(ax, items):
+    for r in items:
+        _rect(ax, r, facecolor=CORR, edgecolor=WALL, lw=0.5, hatch="....",
+              zorder=3)
+        (u0, u1), (v0, v1) = r["u"], r["v"]
+        ax.text((u0 + u1) / 2, (v0 + v1) / 2,
+                f"CORRIDOR {u1 - u0:.2f} m", ha="center", va="center",
+                fontsize=4.4, color=MUTED, rotation=90, zorder=7)
+
+
+def _outline(ax, coords, lw=2.2):
+    xs = [c[0] for c in coords]
+    ys = [c[1] for c in coords]
+    ax.plot(xs, ys, color=WALL, lw=lw, solid_joinstyle="miter", zorder=8)
+
+
+def _rect_outline(ax, plate, lw=2.2):
+    (u0, u1), (v0, v1) = plate["u"], plate["v"]
+    _outline(ax, [(u0, v0), (u1, v0), (u1, v1), (u0, v1), (u0, v0)], lw)
+
+
+def _pool(ax, road_east):
+    spec = next(o for o in load_massing()["options"] if o["key"] == "C")
+    clash = spec["deck"]["u"][0] < road_east
+    for part, fill, edge in (("deck", DECK, "#b8a888"), ("pool", POOL, "#1b5f8c")):
+        (u0, u1), (v0, v1) = spec[part]["u"], spec[part]["v"]
+        ax.add_patch(Rectangle((u0, v0), u1 - u0, v1 - v0, facecolor=fill,
+                               edgecolor=edge, lw=0.6, zorder=2))
+    (u0, u1), (v0, v1) = spec["pool"]["u"], spec["pool"]["v"]
+    ax.text((u0 + u1) / 2, (v0 + v1) / 2, "POOL\n10 x 4", ha="center",
+            va="center", fontsize=5.4, color="white", zorder=3)
+    return clash
+
+
+def _north(ax, x, y, size=2.4):
+    import numpy as np
+    a = np.radians(GRID_BEARING)
+    dx, dy = -np.sin(a), np.cos(a)
+    ax.annotate("", xy=(x + dx * size, y + dy * size),
+                xytext=(x - dx * size * 0.4, y - dy * size * 0.4),
+                arrowprops=dict(arrowstyle="-|>", color=INK, lw=1.0))
+    ax.text(x + dx * (size + 1.2), y + dy * (size + 1.2), "N", ha="center",
+            va="center", fontsize=7, color=INK)
+
+
+def plan_axes(fig, left_mm, bottom_mm, w_mm, h_mm):
+    ax = fig.add_axes([left_mm / 841, bottom_mm / 594, w_mm / 841, h_mm / 594])
+    # True 1:100: 1 m of model space is 10 mm on the sheet.
+    span_u, span_v = w_mm / 1000 * SCALE, h_mm / 1000 * SCALE
+    cu, cv = 15.3, 16.6
+    ax.set_xlim(cu - span_u / 2, cu + span_u / 2)
+    ax.set_ylim(cv - span_v / 2, cv + span_v / 2)
+    ax.set_aspect("equal")
+    ax.axis("off")
+    return ax
+
+
+def build() -> Path:
+    lay, targets = load()
+    pad_keys = {p["key"] for p in lay.get("padding", [])}
+    g = lay["gfa_measured"]
+    over = g["margin"] < 0
+
+    fig = plt.figure(figsize=A1)
+    fig.patch.set_facecolor("white")
+    fig.text(0.025, 0.958, "VILLA 5130272", fontsize=26, color=INK)
+    fig.text(0.025, 0.938, "SAIH SHUAIB 1, JEBEL ALI HILLS, DUBAI", fontsize=8,
+             color=MUTED)
+    fig.text(0.025, 0.910, "FLOOR PLANS", fontsize=15, color=INK)
+    fig.text(0.025, 0.893,
+             "Massing option C, plan direction 2, trim package 2, two car garage, "
+             f"corridors {lay['meta']['corridor_m']:.2f} m. Plot up, not north up.",
+             fontsize=8, color=MUTED)
+    if over:
+        fig.text(0.60, 0.950, f"OVER THE GFA CAP BY {-g['margin']:.2f} m2",
+                 fontsize=15, color=BAD)
+        fig.text(0.60, 0.930,
+                 "Shown so the owner can see the plan. Not a valid design until "
+                 "this is closed.", fontsize=8, color=BAD)
+
+    # Ground floor
+    axg = plan_axes(fig, 15, 70, 380, 420)
+    _context(axg)
+    clash = _pool(axg, lay["plates"]["road"]["u"][1])
+    _circulation(axg, lay["floors"]["ground"]["circulation"])
+    for r in lay["floors"]["ground"]["rooms"]:
+        _room(axg, r, targets, pad_keys)
+    _outline(axg, lay["outlines"]["road_ground"])
+    _rect_outline(axg, lay["plates"]["ssw"])
+    _badges(axg)
+    axg.text(0.0, 1.005, "GROUND FLOOR", transform=axg.transAxes, fontsize=12,
+             color=INK)
+    axg.text(1.0, 1.005, "SCALE 1:100 AT A1", transform=axg.transAxes,
+             fontsize=7, color=MUTED, ha="right")
+
+    # First floor
+    axf = plan_axes(fig, 405, 70, 380, 420)
+    _context(axf)
+    _outline(axf, lay["outlines"]["road_ground"], lw=0.6)          # ground, ghosted
+    _rect_outline(axf, lay["plates"]["ssw"], lw=0.6)
+    axf.text(*[(lay["plates"]["ssw"]["u"][0] + lay["plates"]["ssw"]["u"][1]) / 2,
+               (lay["plates"]["ssw"]["v"][0] + lay["plates"]["ssw"]["v"][1]) / 2],
+             "ROOF OVER\nSINGLE STOREY\nWING", ha="center", va="center", fontsize=6,
+             color=MUTED, zorder=6)
+    _circulation(axf, lay["floors"]["first"]["circulation"])
+    for v in lay["floors"]["first"].get("voids", []):
+        if v["area_m2"] < 0.01:
+            continue
+        _rect(axf, v, facecolor=VOID, edgecolor=WALL, lw=0.6, ls="--", zorder=4)
+        (u0, u1), (v0, v1) = v["u"], v["v"]
+        axf.plot([u0, u1], [v0, v1], color=MUTED, lw=0.4, zorder=5)
+        axf.plot([u0, u1], [v1, v0], color=MUTED, lw=0.4, zorder=5)
+        axf.text((u0 + u1) / 2, (v0 + v1) / 2, f"VOID OVER FOYER\n{v['area_m2']:.1f} m2",
+                 ha="center", va="center", fontsize=5.4, color=MUTED, zorder=6)
+    for r in lay["floors"]["first"]["rooms"]:
+        _room(axf, r, targets, pad_keys)
+    _outline(axf, lay["outlines"]["first"])
+    _badges(axf)
+    _north(axf, 31.0, 33.0)
+    axf.text(0.0, 1.005, "FIRST FLOOR", transform=axf.transAxes, fontsize=12,
+             color=INK)
+
+    # GFA and notes
+    x0, y = 0.025, 0.105
+    fig.text(x0, y, "GFA, MEASURED FROM THE PLAN", fontsize=9, color=INK)
+    rows = [("Road wing, ground", g["road_wing_ground"]),
+            ("SSW wing, ground, single storey", g["ssw_wing_ground"]),
+            ("First floor, less the void", g["first_floor_less_void"]),
+            ("Total", g["total"]),
+            ("DDA cap", g["cap"])]
+    for i, (label, val) in enumerate(rows):
+        fig.text(x0, y - 0.016 * (i + 1), label, fontsize=7.4, color=INK)
+        fig.text(x0 + 0.19, y - 0.016 * (i + 1), f"{val:8.2f} m2", fontsize=7.4,
+                 color=INK, ha="right", family="monospace")
+    fig.text(x0, y - 0.016 * 6.2, "Margin", fontsize=8, color=BAD if over else GOOD)
+    fig.text(x0 + 0.19, y - 0.016 * 6.2, f"{g['margin']:+8.2f} m2", fontsize=8,
+             color=BAD if over else GOOD, ha="right", family="monospace")
+
+    x1 = 0.255
+    fig.text(x1, y, "NOTES", fontsize=9, color=INK)
+    notes = [
+        "Rooms shaded orange came out larger than their brief target. They are "
+        "padding: the first floor above",
+        "needs that much ground floor beneath it, and in option C there are not "
+        "enough ground floor rooms in the",
+        "two storey wing to fill it, because the single storey SSW wing holds 92 m2 "
+        "of them. See OI-22.",
+        "Corridors at 1.80 m per DDA FAQs Building Q12. Whether that applies "
+        "inside a private villa is TO VERIFY, OI-21.",
+        "Garage counted toward GFA by owner decision, D-018. Its exclusion would "
+        "return 38 m2, OI-01.",
+        "Walls: external 0.25 m, internal 0.15 m, indicative. Structure by a "
+        "licensed structural engineer, not in scope.",
+    ]
+    if clash:
+        notes.append("The pool deck from the Phase 1 massing clashes with the "
+                     "widened road wing and must move east.")
+    for i, n in enumerate(notes):
+        fig.text(x1, y - 0.015 * (i + 1), n, fontsize=6.8, color=MUTED)
+
+    fig.text(0.975, 0.030, "CONCEPT DESIGN, NOT FOR CONSTRUCTION", fontsize=9,
+             color=BAD, ha="right")
+    fig.text(0.975, 0.016, "Drawing VJH-GA-001   Phase 2   Rev A   A1 landscape   "
+             "true 1:100", fontsize=6.5, color=MUTED, ha="right")
+
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(OUT, facecolor="white")
+    plt.close(fig)
+    return OUT
+
+
+if __name__ == "__main__":
+    print(f"PDF  {build().relative_to(REPO_ROOT)}")

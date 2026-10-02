@@ -139,24 +139,16 @@ def test_local_frame_matches_the_wgs84_source():
 
 
 def test_a_breach_of_the_cap_is_always_reported():
-    """The invariant that matters: the cap is never exceeded SILENTLY.
-
-    Since the owner decided on 2026-10-01 to count the garage toward GFA, the
-    briefed program does exceed 662.99 m2 and needs trims. That is a live design
-    question, tracked as OI-18, not a bug. What must never happen is the check
-    passing while the total is over.
-    """
-    from analysis.gfa_check import report  # noqa: PLC0415
+    """The invariant that matters: the cap is never exceeded SILENTLY, whether
+    the breach shows in the estimate or in the measured plan."""
+    from analysis.gfa_check import measured_layout, report  # noqa: PLC0415
 
     t = totals()
-    core = t["scenarios"]["core"]
     _, fails, _ = report()
-
-    over = core["gross_low"] > t["cap_m2"]
-    assert fails == over, (
-        f"GFA check reported fails={fails} while the low end is "
-        f"{core['gross_low']:.2f} m2 against a cap of {t['cap_m2']:.2f} m2"
-    )
+    over_estimate = t["scenarios"]["core"]["gross_low"] > t["cap_m2"]
+    m = measured_layout()
+    over_measured = m is not None and m["total"] > t["cap_m2"]
+    assert fails == (over_estimate or over_measured)
 
 
 def test_the_trim_still_needed_is_small_enough_to_be_a_design_question():
