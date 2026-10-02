@@ -15,3 +15,4 @@ size, the GFA margin, the TV wall step, the powder room distance).
 | No. | Question | Answer | Consequence |
 |---|---|---|---|
 | FF1 | What should the first floor start from | **A: the reference first floor, adjusted.** Keep its layout as the base and change only what the owner asks, as on the ground floor. | Walls, stair, lift and the void stay as built; each later answer is a change to it. |
+| FF2 | How the master suite meets the brief | **A: keep its walls (75.3 m2) and fit the brief's contents inside:** sitting area in the bedroom by the balcony, his and hers walk-in wardrobes in the dressing room, a coffee station between them, a bathroom with a bathtub and a separate shower. | No GFA change. Layout drawn on sketch VJH-SK-015 for the owner to check. The 2.2 to 2.5 times ratio to the other bedrooms (today about 1.9) is settled with the bedrooms. |
