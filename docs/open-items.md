@@ -541,6 +541,21 @@ about 0.5 m from the store or the prep kitchen.
 - The first floor wall at the void's end stood 0.21 m forward of the TV wall below. CLOSED by FF7 (A): lined up, built (D-050).
 - The guest powder room is about 12 m from the salon; the brief puts it next to the salon.
 
+### OI-28 Open roof pergola for looks, with no access (answer R1)
+
+| | |
+|---|---|
+| Status | OPEN, TO VERIFY with DDA through the consultant |
+| Raised | 2026-10-02, answer R1 |
+
+The owner keeps the reference renders' timber louvred pergola on the roof for
+its look only: open on all sides, no roof terrace, no stair or lift to the roof
+(D-017 stands), a roof hatch for maintenance. To verify: whether DDA counts an
+open, unreachable roof pergola toward GFA or the G+1 height limit (the DDA FAQ
+Q27 reading in D-017 covers roof enclosures, not open pergolas), any limit on
+its height above the roof, and the roof hatch and parapet rules in the Dubai
+Building Code. No value is assumed.
+
 ## Owner decisions outstanding
 
 ### OI-07 Pool and main garden position
