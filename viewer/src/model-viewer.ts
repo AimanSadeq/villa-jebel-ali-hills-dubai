@@ -21,6 +21,7 @@ interface RoomLabel {
   key: string; name: string; label: string; storey: 'ground' | 'first';
   u: number; v: number; z: number;
   area_m2: number; area_sqft: number; circulation: boolean; sub?: boolean;
+  w_m?: number; l_m?: number; height?: string;
 }
 
 interface ModelData {
@@ -197,12 +198,17 @@ async function boot() {
   const map = (list: number[]): ModelIdMap => ({ [model.modelId]: new Set(list) });
   const state = { view: 'whole' as View, spaces: false, site: true, labels: true };
 
+  // CLAUDE.md rule 9 (D-045): width x length, then the area.
+  const size = (r: RoomLabel) => (r.w_m && r.l_m
+    ? `${fmt(r.w_m)} x ${fmt(r.l_m)} m, ${fmt(r.area_m2, 1)} m²`
+    : `${fmt(r.area_m2, 1)} m²`);
   const roomLabels: { obj: CSS2DObject; room: RoomLabel }[] = [];
   for (const r of data.rooms) {
     const el = h('div', { class: r.circulation ? 'label circ' : r.sub ? 'label sub' : 'label' },
       h('b', {}, r.label),
-      r.circulation ? null : h('span', {}, `${fmt(r.area_m2, 1)} m²`));
-    el.title = `${r.name}, ${fmt(r.area_m2, 1)} m², ${fmt(r.area_sqft, 0)} sq ft`;
+      r.circulation ? null : h('span', {}, size(r)),
+      r.circulation || !r.height ? null : h('span', {}, r.height));
+    el.title = `${r.name}, ${size(r)}, ${fmt(r.area_sqft, 0)} sq ft${r.height ? `, ${r.height}` : ''}`;
     const obj = new CSS2DObject(el);
     obj.position.copy(toThree(r.u, r.v, r.z));
     world.scene.three.add(obj);
@@ -268,7 +274,9 @@ async function boot() {
     const room = data.rooms.find((r) => r.key === n?.longName &&
       (spaceLevel.get(picked!) ?? 'ground') === r.storey);
     if (cat === 'IFCSPACE' && room) {
+      if (room.w_m && room.l_m) t.append(tr('Size', `${fmt(room.w_m)} x ${fmt(room.l_m)} m`));
       t.append(tr('Net area', `${fmt(room.area_m2)} m²`), tr('', `${fmt(room.area_sqft, 0)} sq ft`));
+      if (room.height) t.append(tr('Clear height', room.height.replace(/^h /, '')));
     }
     info.append(t);
   });

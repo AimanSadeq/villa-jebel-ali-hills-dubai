@@ -41,6 +41,7 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from analysis import gfa_check  # noqa: E402
 from model import architecture  # noqa: E402
+from model.heights import clear_heights, room_height_text  # noqa: E402
 from model.site import sqft  # noqa: E402
 
 REPORT = REPO_ROOT / "output" / "reports" / "VJH-RPT-007_Model_Build.txt"
@@ -115,6 +116,12 @@ def plan_area(items) -> float:
 
 
 def measured_from_ifc(f, meshes) -> dict:
+    """Walls and spaces of each storey projected to plan. Walls are measured
+    without their openings: a door or a full height glazed opening does not
+    take floor area away (answer 12i's glass above the front door, D-046)."""
+    whole = ifcopenshell.geom.settings()
+    whole.set("use-world-coords", True)
+    whole.set("disable-opening-subtractions", True)
     out = {}
     for storey in f.by_type("IfcBuildingStorey"):
         items = []
@@ -123,9 +130,12 @@ def measured_from_ifc(f, meshes) -> dict:
             parent = ifcopenshell.util.element.get_aggregate(el)
             if storey not in (container, parent):
                 continue
-            if (el.is_a("IfcSpace") and el.PredefinedType != "EXTERNAL") or (
-                    el.is_a("IfcWall") and el.PredefinedType != "PARAPET"):
+            if el.is_a("IfcSpace") and el.PredefinedType != "EXTERNAL":
                 items.append((el, verts, faces))
+            elif el.is_a("IfcWall") and el.PredefinedType != "PARAPET":
+                g = ifcopenshell.geom.create_shape(whole, el).geometry
+                items.append((el, np.array(g.verts).reshape(-1, 3),
+                              np.array(g.faces).reshape(-1, 3)))
         out[storey.Name] = plan_area(items)
     return out
 
@@ -139,18 +149,23 @@ def publish_to_viewer(model, path: Path, lay: dict, ifc_areas: dict) -> None:
     VIEWER_DATA.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(path, VIEWER_DATA / path.name)
     elev = {"ground": 0.0, "first": model.HG}
+    heights = clear_heights(lay)
     rooms = []
     for storey, key in (("ground", "ground"), ("first", "first")):
         floor = lay["floors"][key]
         for d in floor["rooms"] + floor["circulation"]:
             (u0, u1), (v0, v1) = d["u"], d["v"]
             area = (u1 - u0) * (v1 - v0)
+            w, l = sorted((u1 - u0, v1 - v0))
             rooms.append({
                 "key": d["key"], "name": model.names.get(d["key"], d["key"]),
                 "label": LABEL.get(d["key"], model.names.get(d["key"], d["key"])),
                 "storey": storey, "u": round((u0 + u1) / 2, 3),
                 "v": round((v0 + v1) / 2, 3), "z": elev[storey] + 1.2,
                 "area_m2": round(area, 2), "area_sqft": round(sqft(area), 1),
+                # CLAUDE.md rule 9 (D-045): width x length and clear height.
+                "w_m": round(w, 2), "l_m": round(l, 2),
+                "height": room_height_text(d, storey, lay, heights),
                 "circulation": d in floor["circulation"],
             })
     # Sub-rooms from the interiors: small labels, picked by their LongName.

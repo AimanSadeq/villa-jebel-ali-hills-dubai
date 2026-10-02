@@ -6,32 +6,32 @@ CONCEPT DESIGN, NOT FOR CONSTRUCTION
 2. IFC generated: output/ifc/VJH-ARCH-001_Villa_5130272.ifc
    Schema IFC4. Stair and lift core: reference stair: 28 risers of 179 mm, going 253 mm, two flights 1.47 m wide, half landing 1.47 m, in a 4.80 x 2.98 m stair room; the reference's 300 mm treads and 1.5 m landing need 5.45 m (OI-23, TO VERIFY); lift in its own shaft 1.80 x 2.15 m
    IfcColumn                     3
-   IfcDoor                      22
+   IfcDoor                      31
    IfcGeographicElement          1
-   IfcOpeningElement            54
-   IfcSlab                      10
-   IfcSpace                     54
+   IfcOpeningElement            69
+   IfcSlab                       9
+   IfcSpace                     50
    IfcStair                      1
    IfcTransportElement           1
    IfcWall                      16
-   IfcWindow                    32
+   IfcWindow                    36
 
 3. Schema validation: PASS, 0 issue(s)
 
-4. Geometry: 140 elements tessellated, 0 failed
+4. Geometry: 148 elements tessellated, 0 failed
    IfcColumn                     3        1.58 m3
-   IfcDoor                      22        3.69 m3
+   IfcDoor                      31        5.84 m3
    IfcGeographicElement          1      305.99 m3
-   IfcSlab                      10      370.43 m3
-   IfcSpace                     54     2934.06 m3
+   IfcSlab                       9      372.00 m3
+   IfcSpace                     50     3134.92 m3
    IfcStair                      1       12.92 m3
    IfcTransportElement           1       27.14 m3
-   IfcWall                      16      345.28 m3
-   IfcWindow                    32        8.88 m3
+   IfcWall                      16      323.82 m3
+   IfcWindow                    36        7.46 m3
 
 5. Floor area, IFC against the plan (walls and spaces in plan; tolerance 0.10 m2)
-   Ground Floor   IFC   324.40   plan   324.37   PASS
-   First Floor    IFC   320.70   plan   320.70   PASS
-   Total          IFC   645.10   plan   645.07   cap 662.99
+   Ground Floor   IFC   355.58   plan   355.58   PASS
+   First Floor    IFC   306.10   plan   306.11   PASS
+   Total          IFC   661.68   plan   661.69   cap 662.99
 
 RESULT: PASS

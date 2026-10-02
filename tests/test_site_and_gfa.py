@@ -184,12 +184,11 @@ def test_the_roof_enclosure_is_gone():
     assert "roof_terrace" not in keys
 
 
-def test_only_the_carport_and_the_lawn_court_are_unverified():
-    """D-039 and D-040 (2026-10-02): the owner designs to the reference set's
-    reading that car parking and open areas are outside GFA. Both stay
-    unverified until DDA confirms it (OI-01), so the check reports both
-    scenarios and nothing else is left open."""
-    assert sorted(r.key for r in rooms() if r.unverified) == ["garage", "lawn_court"]
+def test_only_the_carport_is_unverified():
+    """D-039 (2026-10-02): the owner designs to the reference set's reading
+    that car parking is outside GFA, unverified until DDA confirms it (OI-01).
+    The lawn court, the other open area, became the salon (answer 12, D-046)."""
+    assert sorted(r.key for r in rooms() if r.unverified) == ["garage"]
 
 
 def test_voids_are_excluded_from_gfa():

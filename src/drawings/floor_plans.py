@@ -23,11 +23,14 @@ import matplotlib.pyplot as plt  # noqa: E402
 import yaml  # noqa: E402
 from matplotlib.patches import Polygon as MplPolygon  # noqa: E402
 from matplotlib.patches import Rectangle  # noqa: E402
+from shapely.geometry import box  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from drawings.massing_sheets import GRID_BEARING, _g, _side_badge  # noqa: E402
+from drawings.sketch_doors import draw_door  # noqa: E402
+from model.heights import clear_heights, room_height_text  # noqa: E402
 from model.massing import load_massing  # noqa: E402
 from model.interiors import plan as plan_interiors  # noqa: E402
 from model.site import SQM_TO_SQFT, buildable_envelope, plot_polygon, sides  # noqa: E402
@@ -70,7 +73,7 @@ STAFF_KEYS = {"maids_room", "drivers_room"}
 STAIR_KEYS = {"stair_lift_ground", "stair_lift_first"}
 
 SHORT = {
-    "entrance_foyer": "HALL", "guest_bedroom": "GUEST BED", "majlis": "MAJLIS",
+    "entrance_foyer": "FOYER", "guest_bedroom": "GUEST BED", "majlis": "MAJLIS (SALON)",
     "guest_powder": "WC", "dining": "DINING", "show_kitchen": "KITCHEN",
     "arabic_kitchen": "ARABIC KIT", "pantry": "PANTRY", "laundry": "LAUNDRY",
     "home_office": "OFFICE", "maids_room": "MAID", "drivers_room": "DRIVER",
@@ -87,7 +90,15 @@ SHORT = {
     "bedroom_2_toilet": "BATH", "bedroom_3_dress": "DRESS", "bedroom_3_toilet": "BATH",
     "bedroom_4_dress": "DRESS", "bedroom_4_toilet": "BATH", "pantry_first": "PANTRY",
     "lift_first": "LIFT", "family_sitting": "FAMILY\nSITTING",
+    "show_kitchen": "ISLAND KITCHEN", "arabic_kitchen": "ARABIC KITCHEN",
+    "family_living": "FAMILY ROOM", "arabic_kitchen_bay": "ARABIC KIT.", "laundry_bay": "LAUNDRY",
 }
+CIRC_NAMES = {"corridor": "GALLERY", "corridor_first": "CORRIDOR", "gallery": "GALLERY",
+              "stair_hall": "STAIR HALL", "service_lobby": "SERVICE LOBBY",
+              "service_steps": "STEPS", "service_passage": "PASSAGE", "landing": "LANDING",
+              "lift_lobby": "LIFT LOBBY"}
+VOID_NAMES = {"void_over_foyer": "VOID OVER FOYER", "void_over_entrance": "VOID OVER PORCH",
+              "void_over_living": "VOID OVER LIVING\nAND KITCHEN"}
 
 
 def _interiors(ax, interiors, storey):
@@ -125,6 +136,59 @@ def _interiors(ax, interiors, storey):
                 ax.plot([d.u - half, d.u + half], [d.v, d.v], color=DOOR, lw=1.4, zorder=8)
             else:
                 ax.plot([d.u, d.u], [d.v - half, d.v + half], color=DOOR, lw=1.4, zorder=8)
+
+
+def _open_joins(ax, lay, storey):
+    """Open joins (D-033, D-046) have no wall: fill the gap between the two
+    rooms as floor and mark the edge with a dashed line, so it does not read
+    as a partition."""
+    floor = lay["floors"][storey]
+    by = {r["key"]: r for r in floor["rooms"] + floor["circulation"]}
+    for j in (lay.get("open_joins") or {}).get(storey, []):
+        a, b = (by.get(k) for k in j.split("/"))
+        if not a or not b:
+            continue
+        for ax_i, other in ((0, 1), (1, 0)):          # 0: u, 1: v
+            ka, ko = ("u", "v")[ax_i], ("u", "v")[other]
+            for p_, q_ in ((a, b), (b, a)):
+                gap = q_[ka][0] - p_[ka][1]
+                if not (-1e-6 <= gap <= 0.35):
+                    continue
+                lo, hi = max(a[ko][0], b[ko][0]), min(a[ko][1], b[ko][1])
+                if hi - lo < 0.3:
+                    continue
+                g0, g1 = p_[ka][1], q_[ka][0]
+                if ka == "u":
+                    rect = Rectangle((g0, lo), max(g1 - g0, 0.0), hi - lo)
+                    line = ([(g0 + g1) / 2] * 2, [lo, hi])
+                else:
+                    rect = Rectangle((lo, g0), hi - lo, max(g1 - g0, 0.0))
+                    line = ([lo, hi], [(g0 + g1) / 2] * 2)
+                rect.set(facecolor=ROOM, edgecolor="none", zorder=4.5)
+                ax.add_patch(rect)
+                ax.plot(*line, color=MUTED, lw=0.5, ls=(0, (4, 3)), zorder=4.6)
+
+
+def _doors(ax, doors, storey, joins=()):
+    """The door schedule (src/model/doors.py) as resolved by the layout, with
+    swings and the schedule numbers. Openings that are open joins are drawn by
+    _open_joins; only their number is shown."""
+    joins = {frozenset(j.split("/")) for j in joins}
+    for d in doors:
+        if d["storey"] != storey:
+            continue
+        if d["kind"] == "open" and frozenset((d["a"], d["b"])) in joins:
+            ax.text(d["u"], d["v"], d["no"], fontsize=4.6, color="white", ha="center",
+                    va="center", weight="bold", zorder=9,
+                    bbox=dict(boxstyle="round,pad=0.18", fc=BAD, ec="none"))
+            continue
+        t = d["wall_t"]
+        if d["along_u"]:      # the door spans u in a wall across v
+            draw_door(ax, "x", d["v"] - t / 2, d["v"] + t / 2, d["u"], d["width_m"],
+                      d["kind"], d["swing"], d["no"])
+        else:
+            draw_door(ax, "y", d["u"] - t / 2, d["u"] + t / 2, d["v"], d["width_m"],
+                      d["kind"], d["swing"], d["no"])
 
 
 def load() -> tuple[dict, dict]:
@@ -171,7 +235,7 @@ def _badges(ax):
                 bbox=dict(boxstyle="round,pad=0.35", fc="white", ec=col, lw=0.6))
 
 
-def _room(ax, r, targets, padding_keys, centre=None):
+def _room(ax, r, targets, padding_keys, centre=None, height=""):
     key = r["key"]
     fill = (PAD if key in padding_keys else
             STAFF if key in STAFF_KEYS else
@@ -191,11 +255,16 @@ def _room(ax, r, targets, padding_keys, centre=None):
     fs = 4.6 if small else 5.6
     rot = 90 if (w < l and w < 2.4) else 0
     tgt = targets.get(key, r["area_m2"])
+    # CLAUDE.md rule 9 (D-045): width x length, area in m2 and sq ft, height.
     lines = [SHORT.get(key, key.upper())]
-    lines.append(f"{r['area_m2']:.1f} m2")
-    if not small:
-        lines.append(f"{r['area_m2'] * SQM_TO_SQFT:,.0f} sq ft")
-        lines.append(f"{w:.2f} x {l:.2f}")
+    lines.append(f"{min(w, l):.2f} x {max(w, l):.2f} m")
+    if small:
+        lines.append(f"{r['area_m2']:.1f} m2")
+    else:
+        lines.append(f"{r['area_m2']:.1f} m2 ({r['area_m2'] * SQM_TO_SQFT:,.0f} sq ft)")
+    if height:
+        lines.append(height.replace(" under the void, ", "\nunder void, ") if not small else
+                     height.split(" under")[0])
     if key in padding_keys:
         lines.append(f"brief {tgt:.0f}, +{r['area_m2'] - tgt:.1f}")
     ax.text(cx, cy, "\n".join(lines), ha="center", va="center", fontsize=fs,
@@ -208,10 +277,11 @@ def _circulation(ax, items):
         _rect(ax, r, facecolor=CORR, edgecolor=WALL, lw=0.5, hatch="....",
               zorder=3)
         (u0, u1), (v0, v1) = r["u"], r["v"]
+        w, l = u1 - u0, v1 - v0
         ax.text((u0 + u1) / 2, (v0 + v1) / 2,
-                f"{'GALLERY' if r['key'] == 'corridor' else r['key'].upper()} "
-                f"{min(u1 - u0, v1 - v0):.2f} m", ha="center", va="center",
-                fontsize=4.4, color=MUTED, rotation=90, zorder=7)
+                f"{CIRC_NAMES.get(r['key'], r['key'].upper())} "
+                f"{min(w, l):.2f} x {max(w, l):.2f} m", ha="center", va="center",
+                fontsize=4.4, color=MUTED, rotation=90 if l > w else 0, zorder=7)
 
 
 def _outline(ax, coords, lw=2.2):
@@ -278,14 +348,14 @@ def build() -> Path:
              color=MUTED)
     fig.text(0.025, 0.910, "FLOOR PLANS", fontsize=15, color=INK)
     fig.text(0.025, 0.893,
-             "Massing option C, two car garage, trims route B, package 2 and D-027, "
-             f"corridors {lay['meta']['corridor_m']:.2f} m. Plot up, not north up.",
+             "The owner's reference villa, mirrored, carport south (D-038 to D-044), with "
+             "ground floor answer 12 (D-046). Plot up, not north up.",
              fontsize=8, color=MUTED)
     if not over:
         fig.text(0.60, 0.950, f"INSIDE THE GFA CAP BY {g['margin']:.2f} m2",
                  fontsize=15, color=GOOD)
-        fig.text(0.60, 0.930, "Measured from the drawn plan. Phase 3, "
-                 "for owner review.", fontsize=8, color=MUTED)
+        fig.text(0.60, 0.930, "Measured from the drawn plan, outer face of the "
+                 "external walls. For owner review.", fontsize=8, color=MUTED)
     if over:
         fig.text(0.60, 0.950, f"OVER THE GFA CAP BY {-g['margin']:.2f} m2",
                  fontsize=15, color=BAD)
@@ -294,6 +364,8 @@ def build() -> Path:
                  "this is closed.", fontsize=8, color=BAD)
 
     interiors = plan_interiors(lay)
+    H = clear_heights(lay)
+    doors = lay.get("doors") or []
     centres = {k: (it.main.representative_point().x, it.main.representative_point().y)
                for k, it in interiors.items()}
 
@@ -303,8 +375,11 @@ def build() -> Path:
     clash = _pool(axg, lay["plates"]["road"]["u"][1], lay)
     _circulation(axg, lay["floors"]["ground"]["circulation"])
     for r in lay["floors"]["ground"]["rooms"]:
-        _room(axg, r, targets, pad_keys, centre=centres.get(r["key"]))
+        _room(axg, r, targets, pad_keys, centre=centres.get(r["key"]),
+              height=room_height_text(r, "ground", lay, H))
     _interiors(axg, interiors, "ground")
+    _open_joins(axg, lay, "ground")
+    _doors(axg, doors, "ground", (lay.get("open_joins") or {}).get("ground", []))
     _outline(axg, lay["outlines"]["road_ground"])
     if "ssw" in lay["plates"]:
         _rect_outline(axg, lay["plates"]["ssw"])
@@ -313,8 +388,8 @@ def build() -> Path:
     if "carport" in lay["plates"]:
         _rect_outline(axg, lay["plates"]["carport"], lw=1.2)
     _badges(axg)
-    axg.text(0.0, 1.005, "GROUND FLOOR", transform=axg.transAxes, fontsize=12,
-             color=INK)
+    axg.text(0.0, 1.005, f"GROUND FLOOR   clear height {H['ground']:.2f} m, double height "
+             f"{H['double']:.2f} m", transform=axg.transAxes, fontsize=12, color=INK)
     axg.text(1.0, 1.005, "SCALE 1:100 AT A1", transform=axg.transAxes,
              fontsize=7, color=MUTED, ha="right")
 
@@ -348,72 +423,73 @@ def build() -> Path:
         (u0, u1), (v0, v1) = v["u"], v["v"]
         axf.plot([u0, u1], [v0, v1], color=MUTED, lw=0.4, zorder=5)
         axf.plot([u0, u1], [v1, v0], color=MUTED, lw=0.4, zorder=5)
-        axf.text((u0 + u1) / 2, (v0 + v1) / 2, f"VOID OVER FOYER\n{v['area_m2']:.1f} m2",
+        axf.text((u0 + u1) / 2, (v0 + v1) / 2,
+                 f"{VOID_NAMES.get(v['key'], 'VOID')}\n{min(u1 - u0, v1 - v0):.2f} x "
+                 f"{max(u1 - u0, v1 - v0):.2f} m, {v['area_m2']:.1f} m2",
                  ha="center", va="center", fontsize=5.4, color=MUTED, zorder=6)
     for r in lay["floors"]["first"]["rooms"]:
-        _room(axf, r, targets, pad_keys, centre=centres.get(r["key"]))
+        _room(axf, r, targets, pad_keys, centre=centres.get(r["key"]),
+              height=room_height_text(r, "first", lay, H))
     _interiors(axf, interiors, "first")
+    _open_joins(axf, lay, "first")
+    _doors(axf, doors, "first", (lay.get("open_joins") or {}).get("first", []))
     _outline(axf, lay["outlines"]["first"])
     _badges(axf)
     _north(axf, 31.0, 33.0)
-    axf.text(0.0, 1.005, "FIRST FLOOR", transform=axf.transAxes, fontsize=12,
-             color=INK)
+    axf.text(0.0, 1.005, f"FIRST FLOOR   clear height {H['first']:.2f} m",
+             transform=axf.transAxes, fontsize=12, color=INK)
 
     # GFA and notes
-    x0, y = 0.025, 0.105
+    x0, y = 0.025, 0.112
     fig.text(x0, y, "GFA, MEASURED FROM THE PLAN", fontsize=9, color=INK)
-    rows = [("Road wing, ground", g["road_wing_ground"]),
-            ("SSW wing, ground, single storey", g["ssw_wing_ground"]),
-            ("Living block, ground, double height", g.get("living_block_ground", 0.0)),
-            ("Carport, outside GFA, TO VERIFY", g.get("outside_gfa_to_verify", {}).get("carport_m2", 0.0)),
-            ("Lawn court, open, outside GFA, TO VERIFY", g.get("outside_gfa_to_verify", {}).get("lawn_court_m2", 0.0)),
-            ("First floor, less the void", g["first_floor_less_void"]),
+    ogv = g.get("outside_gfa_to_verify", {})
+    rows = [("Ground floor", g["road_wing_ground"] + g["ssw_wing_ground"]
+             + g.get("living_block_ground", 0.0)),
+            ("First floor, less the voids", g["first_floor_less_void"]),
             ("Total", g["total"]),
-            ("DDA cap", g["cap"])]
+            ("DDA cap", g["cap"]),
+            ("Carport, outside GFA, TO VERIFY", ogv.get("carport_m2", 0.0)),
+            ("Balconies, terraces, outside GFA, TO VERIFY",
+             ogv.get("first_floor_balconies_terrace_m2", 0.0))]
     for i, (label, val) in enumerate(rows):
-        fig.text(x0, y - 0.016 * (i + 1), label, fontsize=7.4, color=INK)
-        fig.text(x0 + 0.19, y - 0.016 * (i + 1), f"{val:8.2f} m2", fontsize=7.4,
+        fig.text(x0, y - 0.012 * (i + 1), label, fontsize=7.4, color=INK)
+        fig.text(x0 + 0.19, y - 0.012 * (i + 1), f"{val:8.2f} m2", fontsize=7.4,
                  color=INK, ha="right", family="monospace")
-    fig.text(x0, y - 0.016 * 6.2, "Margin", fontsize=8, color=BAD if over else GOOD)
-    fig.text(x0 + 0.19, y - 0.016 * 6.2, f"{g['margin']:+8.2f} m2", fontsize=8,
+    fig.text(x0, y - 0.012 * 7.4, "Margin to the cap", fontsize=8, color=BAD if over else GOOD)
+    fig.text(x0 + 0.19, y - 0.012 * 7.4, f"{g['margin']:+8.2f} m2", fontsize=8,
              color=BAD if over else GOOD, ha="right", family="monospace")
 
     x1 = 0.255
     fig.text(x1, y, "NOTES", fontsize=9, color=INK)
     notes = [
-        "Rooms shaded orange came out larger than their brief target. The first "
-        "floor needs that much ground floor beneath it, and in option C the two",
-        "storey wing has fewer ground rooms than that, because the single storey "
-        "wing holds 92 m2 of them. The majlis and garage take up the difference.",
-        "Living room double height, in the single storey wing with nothing above "
-        "it. Foyer single height, its height coming from a tall ground floor,",
-        "which DDA FAQ Q28 allows up to 6 m clear, subject to the overall height "
-        "rule in OI-13. Ceiling height is not GFA.",
-        "Corridors 1.80 m and garage counted toward GFA, owner decision D-026. "
-        "Master 68 (D-027), bedrooms 30 (D-029), family 33. No driver's room; "
-        "outdoor WC and shower to the courtyard, D-028.",
-        "Central hall plan, D-036: big foyer in the middle, majlis north (left on "
-        "entering), dining south (right), living straight ahead as a 9 m tall block,",
-        "kitchens beyond the dining. Pool moved north onto the living's deck, D-037. "
-        "Open plan D-033: hall, gallery, stair, living, dining and show kitchen join.",
-        "First floor around a central family hall with no corridor, D-032: "
-        "bedrooms open off the family room, the master and bedroom 4 off the landing.",
-        "Interiors D-034, D-035: en-suite bath and wardrobe (WR) beside each bedroom "
-        "door; master with dressing gallery, his and hers walk-in wardrobes, bath,",
-        "coffee station and a terrace on the kitchen roof (DDA Q25, not GFA). "
-        "Partitions 0.10 m. Bathroom ventilation TO VERIFY, OI-25.",
-        "Walls: external 0.25 m, internal 0.15 m, indicative. Structure by a "
-        "licensed structural engineer, not in scope.",
+        "Ground floor, owner answer 12 (D-046): the salon (majlis) takes the old lawn court's "
+        "place, open to the foyer, the living room and the dining (12c, 12h).",
+        "Island kitchen, double height living room and dining along the backyard (12a B); "
+        "a solid TV wall between the living room and the dining (12g).",
+        "Arabic kitchen walled, entered from the island kitchen by an opening with no "
+        "door (12m). Front door a 2.40 x 4.50 m pivot door, glass above (12i).",
+        "Doors numbered G01 to G23 and F01 to F15 as on the door schedule, sketch VJH-SK-013 "
+        "page 2. Every room is reached; the build checks it.",
+        "First floor: the reference's, a placeholder until it is designed (D-038), with the "
+        "family room above the salon (12b) and the void over the living room",
+        "and island kitchen in place of the pantry and linen store (12l). The 6 m2 linen "
+        "store and the master's coffee station are still to be placed (OI-27).",
+        "Heights indicative, brief/massing.yaml (D-030): h is clear height, floor to floor "
+        "less 0.30 m slab and 0.15 m ceiling services zone.",
+        "Carport, porch, balconies and terraces outside GFA by owner decision D-039, TO VERIFY "
+        "with DDA (OI-01). The D-005 reserve below the cap is not held.",
+        "Walls: external 0.25 m, internal 0.10 to 0.25 m as the reference draws them, "
+        "indicative. Structure by a licensed structural engineer, not in scope.",
     ]
     if clash:
         notes.append("The pool deck from the Phase 1 massing clashes with the "
                      "widened road wing and must move east.")
     for i, n in enumerate(notes):
-        fig.text(x1, y - 0.015 * (i + 1), n, fontsize=6.8, color=MUTED)
+        fig.text(x1, y - 0.0105 * (i + 1), n, fontsize=6.6, color=MUTED)
 
     fig.text(0.975, 0.030, "CONCEPT DESIGN, NOT FOR CONSTRUCTION", fontsize=9,
              color=BAD, ha="right")
-    fig.text(0.975, 0.016, "Drawing VJH-GA-001   Phase 2   Rev A   A1 landscape   "
+    fig.text(0.975, 0.016, "Drawing VJH-GA-001   Ground floor answer 12   Rev B   A1 landscape   "
              "true 1:100", fontsize=6.5, color=MUTED, ha="right")
 
     OUT.parent.mkdir(parents=True, exist_ok=True)

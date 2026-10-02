@@ -260,16 +260,6 @@ ground:
   reference_name: Guest toilet
   confidence: high
   decision: reference
-- key: lawn_court
-  kind: open_to_sky
-  x0: 20.716
-  x1: 26.209
-  y0: 9.794
-  y1: 14.795
-  reference_key: lawn_court
-  reference_name: Lawn court (open to sky)
-  confidence: high
-  decision: answer 3, D-040
 - key: show_kitchen
   kind: room
   x0: 9.461
@@ -280,37 +270,37 @@ ground:
   reference_name: Island kitchen (west part of the 17.2 x 6.0 garden room)
   confidence: medium
   decision: reference
-- key: family_sitting
+- key: living
   kind: room
   x0: 13.559
-  x1: 17.2
+  x1: 20.661
   y0: 15.04
   y1: 21.04
-  reference_key: family_sitting
-  reference_name: Family sitting (part of the garden room)
-  confidence: low
-  decision: answer 5
+  reference_key: family_sitting+dining
+  reference_name: ''
+  confidence: owner answer
+  decision: 'answers 12, 12a B, 12g: double height living room, TV wall to the dining'
 - key: dining
   kind: room
-  x0: 17.2
-  x1: 20.511
-  y0: 15.04
-  y1: 21.04
-  reference_key: dining
-  reference_name: Dining (part of the garden room)
-  confidence: low
-  decision: reference
-  adjusted: 'D-042: 0.15 m partition to the majlis taken from the dining'
-- key: majlis
-  kind: room
-  x0: 20.661
+  x0: 20.811
   x1: 26.661
-  y0: 15.04
+  y0: 17.294
   y1: 21.04
   reference_key: formal_lounge
-  reference_name: Formal lounge (east end of the garden room)
-  confidence: medium
-  decision: 'D-042: the majlis, closed off from the dining'
+  reference_name: ''
+  confidence: owner answer
+  decision: 'answers 12a B, 12e, 12g: dining in the north corner, faces the backyard'
+- key: majlis
+  kind: room
+  x0: 20.716
+  x1: 26.661
+  y0: 9.794
+  y1: 17.294
+  reference_key: lawn_court+formal_lounge
+  reference_name: ''
+  confidence: owner answer
+  decision: 'answers 12, 12c, 12d, 12e, 12h: the salon in the lawn court''s place, open to the foyer,
+    the living room and the dining'
 first:
 - key: master_suite
   kind: room
@@ -422,33 +412,6 @@ first:
   reference_name: TOILET (bed room 3)
   confidence: high
   trimmed: north setback line, placeholder
-- key: family_living
-  kind: room
-  x0: 14.456
-  x1: 20.455
-  y0: 16.34
-  y1: 20.547
-  reference_key: family_lounge
-  reference_name: FAMILY LOUNGE (+5.45m FFL)
-  confidence: high
-- key: pantry_first
-  kind: room
-  x0: 10.757
-  x1: 14.355
-  y0: 16.444
-  y1: 18.44
-  reference_key: pantry
-  reference_name: PANTRY
-  confidence: high
-- key: linen_storage
-  kind: room
-  x0: 10.757
-  x1: 14.355
-  y0: 18.552
-  y1: 20.547
-  reference_key: store
-  reference_name: STORE
-  confidence: high
 - key: lift_first
   kind: room
   x0: 10.907
@@ -512,15 +475,6 @@ first:
   reference_key: foyer_void
   reference_name: ENT.FOYER BELOW (double height void over the entrance foyer)
   confidence: high
-- key: lawn_court_open
-  kind: void
-  x0: 20.716
-  x1: 25.966
-  y0: 9.799
-  y1: 14.791
-  reference_key: lawn_court_void
-  reference_name: Open void over the ground floor lawn court (hatched, unlabelled)
-  confidence: medium
 - key: void_over_entrance
   kind: void
   x0: 15.308
@@ -538,15 +492,6 @@ first:
   y1: 22.803
   reference_key: balcony_1
   reference_name: COVERED BALCONY (west, off master ensuite)
-  confidence: high
-- key: balcony_family
-  kind: balcony
-  x0: 10.813
-  x1: 19.902
-  y0: 20.796
-  y1: 23.004
-  reference_key: balcony_2
-  reference_name: COVERED BALCONY (middle, off family lounge and store)
   confidence: high
 - key: balcony_bedroom_4
   kind: balcony
@@ -577,12 +522,33 @@ first:
   reference_name: OPEN TERRACE over the carport, west strip beside the master toilet
   confidence: medium
   trimmed: carport end, placeholder
+- key: family_living
+  kind: room
+  x0: 20.716
+  x1: 25.966
+  y0: 9.799
+  y1: 14.791
+  reference_key: lawn_court_void
+  reference_name: ''
+  confidence: owner answer
+  decision: 'answer 12b: the family room above the salon'
+- key: void_over_living
+  kind: void
+  x0: 10.757
+  x1: 20.455
+  y0: 16.34
+  y1: 20.547
+  reference_key: family_lounge+pantry+store
+  reference_name: ''
+  confidence: owner answer
+  decision: 'answers 12 and 12l: void over the living room and the island kitchen'
 open_joins:
   ground:
-  - show_kitchen/family_sitting
-  - family_sitting/dining
-  - entrance_foyer/family_sitting
-  - entrance_foyer/dining
+  - show_kitchen/living
+  - entrance_foyer/living
+  - entrance_foyer/majlis
+  - majlis/dining
+  - majlis/living
   - entrance_foyer/stair_lift_ground
   - entrance_foyer/stair_hall
   - stair_lift_ground/stair_hall
@@ -591,114 +557,399 @@ open_joins:
   - laundry/laundry_bay
   - laundry_bay/service_passage
   - arabic_kitchen/arabic_kitchen_bay
-  - arabic_kitchen_bay/service_passage
   - service_steps/service_lobby
   first:
   - master_suite/master_dress
   - bedroom_2/bedroom_2_dress
   - bedroom_3/bedroom_3_dress
   - bedroom_4/bedroom_4_dress
-  - corridor_first/family_living
-  - corridor_first/pantry_first
   - corridor_first/landing
   - corridor_first/gallery
   - landing/lift_lobby
   - stair_lift_first/landing
-room_links:
-- - dining
-  - majlis
-  - 1.6
-  - door
-  - 1.1
-- - wash
-  - guest_powder
-  - 0.8
-  - door
-- - service_passage
-  - show_kitchen
-  - 0.9
-  - door
-- - service_lobby
-  - stair_hall
-  - 0.9
-  - door
-- - guest_bedroom
-  - guest_toilet
-  - 0.8
-  - door
-- - home_office
-  - office_toilet
-  - 0.8
-  - door
-- - laundry
-  - maids_room
-  - 0.8
-  - door
-- - maids_room
-  - maids_toilet
-  - 0.8
-  - door
-- - master_dress
-  - master_toilet
-  - 0.8
-  - door
-- - bedroom_2_dress
-  - bedroom_2_toilet
-  - 0.8
-  - door
-- - bedroom_3_dress
-  - bedroom_3_toilet
-  - 0.8
-  - door
-- - bedroom_4_dress
-  - bedroom_4_toilet
-  - 0.8
-  - door
-- - pantry_first
-  - linen_storage
-  - 0.8
-  - door
-- - entrance_foyer
-  - lawn_court
-  - 3.0
-  - window
-external_doors:
-- room: entrance_foyer
-  face: W
-  width_m: 2.4
-  height_m: 3.0
-  material: door
-  why: 'reference: the main double door, at the back of the porch'
-- room: service_steps
-  face: W
+doors:
+- 'no': F01
+  storey: first
+  a: corridor_first
+  b: master_suite
   width_m: 1.0
   height_m: 2.4
-  material: door
-  why: 'reference: service entry from the carport'
-- room: plant_room
-  face: S
+  kind: single
+  swing_into: master_suite
+  at: 15.67
+  source: 'reference: master door from the corridor'
+- 'no': F02
+  storey: first
+  a: master_suite
+  b: master_dress
+  width_m: 1.0
+  height_m: 2.4
+  kind: open
+  swing_into: master_dress
+  at: 5.75
+  source: 'reference: doorless opening'
+- 'no': F03
+  storey: first
+  a: master_dress
+  b: master_toilet
+  width_m: 0.8
+  height_m: 2.4
+  kind: single
+  swing_into: master_toilet
+  at: 5.5
+  source: 'reference: master bath from the dress'
+- 'no': F04
+  storey: first
+  a: lift_lobby
+  b: bedroom_2
+  width_m: 1.0
+  height_m: 2.4
+  kind: single
+  swing_into: bedroom_2
+  at: 14.2
+  source: 'reference: bedroom 2 from the lift lobby'
+- 'no': F05
+  storey: first
+  a: bedroom_2_dress
+  b: bedroom_2_toilet
+  width_m: 0.8
+  height_m: 2.4
+  kind: single
+  swing_into: bedroom_2_toilet
+  at: 8.35
+  source: 'reference: toilet from the dress'
+- 'no': F06
+  storey: first
+  a: gallery
+  b: bedroom_3
+  width_m: 1.0
+  height_m: 2.4
+  kind: single
+  swing_into: bedroom_3
+  at: 19.85
+  source: 'reference: bedroom 3 from the gallery'
+- 'no': F07
+  storey: first
+  a: bedroom_3_dress
+  b: bedroom_3_toilet
+  width_m: 0.8
+  height_m: 2.4
+  kind: single
+  swing_into: bedroom_3_toilet
+  at: 24.88
+  source: 'reference: toilet from the dress'
+- 'no': F08
+  storey: first
+  a: corridor_first
+  b: bedroom_4
+  width_m: 1.0
+  height_m: 2.4
+  kind: single
+  swing_into: bedroom_4
+  at: 15.65
+  source: 'reference: bedroom 4 from the corridor'
+- 'no': F09
+  storey: first
+  a: bedroom_4_dress
+  b: bedroom_4_toilet
+  width_m: 0.8
+  height_m: 2.4
+  kind: single
+  swing_into: bedroom_4_toilet
+  at: 26.15
+  source: 'reference: toilet from the dress'
+- 'no': F12
+  storey: first
+  a: lift_first
+  b: lift_lobby
+  width_m: 0.9
+  height_m: 2.1
+  kind: lift
+  swing_into: lift_lobby
+  at: null
+  source: 'reference: lift door on the lobby face; size TO VERIFY (OI-23)'
+- 'no': F13
+  storey: first
+  a: gallery
+  b: family_living
+  width_m: 1.6
+  height_m: 2.4
+  kind: double
+  swing_into: family_living
+  at: null
+  source: 'answer 12b: family room off the gallery; double doors proposed'
+- 'no': F14
+  storey: first
+  a: master_suite
+  b: outside
+  axis: y
+  lo: 20.55
+  hi: 20.8
+  at: 6.8
+  width_m: 3.0
+  height_m: 2.4
+  kind: sliding
+  swing_into: master_suite
+  source: 'reference: glazed rear wall to the master balcony'
+- 'no': F15
+  storey: first
+  a: bedroom_4
+  b: outside
+  axis: y
+  lo: 20.55
+  hi: 20.8
+  at: 22.9
+  width_m: 2.0
+  height_m: 2.4
+  kind: sliding
+  swing_into: bedroom_4
+  source: 'reference: glazed rear wall to the bedroom 4 balcony'
+- 'no': G01
+  storey: ground
+  a: entrance_foyer
+  b: outside
+  axis: y
+  lo: 9.49
+  hi: 9.74
+  at: 17.05
+  width_m: 2.4
+  height_m: 4.5
+  kind: pivot
+  swing_into: entrance_foyer
+  source: 'answer 12i: tall pivot door at the back of the porch, fixed glass above to full height'
+- 'no': G02
+  storey: ground
+  a: entrance_foyer
+  b: home_office
+  width_m: 0.9
+  height_m: 2.7
+  kind: single
+  swing_into: home_office
+  at: null
+  source: 'reference: door in the office''s foyer wall'
+- 'no': G03
+  storey: ground
+  a: home_office
+  b: office_toilet
+  width_m: 0.8
+  height_m: 2.4
+  kind: single
+  swing_into: office_toilet
+  at: null
+  source: 'reference: the toilet''s only door is from the office'
+- 'no': G04
+  storey: ground
+  a: entrance_foyer
+  b: guest_bedroom
+  width_m: 0.9
+  height_m: 2.7
+  kind: single
+  swing_into: guest_bedroom
+  at: null
+  source: 'answer 12f: from the foyer (not readable on the reference)'
+- 'no': G05
+  storey: ground
+  a: guest_dress
+  b: guest_toilet
+  width_m: 0.8
+  height_m: 2.4
+  kind: single
+  swing_into: guest_toilet
+  at: null
+  source: 'reference: toilet entered from the dress'
+- 'no': G07
+  storey: ground
+  a: entrance_foyer
+  b: living
+  width_m: 6.9
+  height_m: 0.0
+  kind: open
+  swing_into: living
+  at: null
+  source: 'reference: the foyer opens into the garden room (D-033)'
+- 'no': G08
+  storey: ground
+  a: lift
+  b: stair_hall
+  width_m: 0.9
+  height_m: 2.1
+  kind: lift
+  swing_into: stair_hall
+  at: null
+  source: 'model: home lift door, size TO VERIFY with the lift supplier (OI-23)'
+- 'no': G09
+  storey: ground
+  a: service_lobby
+  b: stair_hall
+  width_m: 0.9
+  height_m: 2.7
+  kind: single
+  swing_into: service_lobby
+  at: null
+  source: 'reference: door in the service lobby''s top wall'
+- 'no': G10
+  storey: ground
+  a: service_steps
+  b: outside
+  axis: y
+  lo: 8.79
+  hi: 9.04
+  at: 8.26
+  width_m: 1.2
+  height_m: 0.0
+  kind: open
+  swing_into: service_steps
+  source: 'reference: opening from the carport, no leaf'
+- 'no': G11
+  storey: ground
+  a: stair_hall
+  b: wash
   width_m: 0.9
   height_m: 2.4
-  material: door
-  why: 'answers 9 and 11a: its own outside door'
-- room: outdoor_bathroom
-  face: W
+  kind: single
+  swing_into: wash
+  at: null
+  source: 'reference: wash entered from the stair hall'
+- 'no': G12
+  storey: ground
+  a: wash
+  b: guest_powder
+  width_m: 0.8
+  height_m: 2.4
+  kind: single
+  swing_into: guest_powder
+  at: null
+  source: 'reference: powder room entered through the wash'
+- 'no': G13
+  storey: ground
+  a: maids_room
+  b: maids_toilet
+  width_m: 0.8
+  height_m: 2.4
+  kind: single
+  swing_into: maids_toilet
+  at: null
+  source: 'reference: toilet door in the maid''s room wall'
+- 'no': G14
+  storey: ground
+  a: laundry
+  b: maids_room
+  width_m: 0.8
+  height_m: 2.4
+  kind: single
+  swing_into: maids_room
+  at: null
+  source: 'model (D-044): maid''s room reached through the laundry'
+- 'no': G15
+  storey: ground
+  a: laundry
+  b: outside
+  axis: x
+  lo: 2.81
+  hi: 3.06
+  at: 16.68
+  width_m: 0.9
+  height_m: 2.4
+  kind: single
+  swing_into: laundry
+  source: 'reference: side door to the service yard'
+- 'no': G16
+  storey: ground
+  a: plant_room
+  b: outside
+  axis: x
+  lo: 2.81
+  hi: 3.06
+  at: 9.88
+  width_m: 0.9
+  height_m: 2.4
+  kind: single
+  swing_into: plant_room
+  source: 'answers 9 and 11a: the old driver''s outside door'
+- 'no': G17
+  storey: ground
+  a: outdoor_bathroom
+  b: outside
+  axis: y
+  lo: 8.99
+  hi: 9.24
+  at: 6.71
   width_m: 0.8
   height_m: 2.2
-  material: door
-  why: 'answers 11 and 11a: opens onto the carport'
-- room: laundry
-  face: S
+  kind: single
+  swing_into: outdoor_bathroom
+  source: 'answer 11a: opens onto the carport'
+- 'no': G18
+  storey: ground
+  a: service_passage
+  b: pantry
   width_m: 0.9
   height_m: 2.4
-  material: door
-  why: 'reference: side door to the service yard'
-- room: family_sitting
-  face: E
+  kind: single
+  swing_into: pantry
+  at: null
+  source: 'model (D-044): store off the service passage'
+- 'no': G19
+  storey: ground
+  a: service_passage
+  b: show_kitchen
+  width_m: 0.8
+  height_m: 2.4
+  kind: single
+  swing_into: service_passage
+  at: null
+  source: 'reference: door arc from the passage into the island kitchen'
+- 'no': G20
+  storey: ground
+  a: living
+  b: outside
+  axis: y
+  lo: 21.04
+  hi: 21.29
+  at: 17.11
   width_m: 3.0
   height_m: 3.0
-  material: glass
-  why: 'reference: the garden room opens to the garden'
+  kind: sliding
+  swing_into: living
+  source: 'answer 12j: garden door of the living room; kitchen rear glass fixed'
+- 'no': G21
+  storey: ground
+  a: arabic_kitchen
+  b: outside
+  axis: y
+  lo: 21.04
+  hi: 21.29
+  at: 4.4
+  width_m: 1.0
+  height_m: 2.4
+  kind: single
+  swing_into: arabic_kitchen
+  source: 'answer 12j: service door from the Arabic kitchen to the backyard, laundry end; position proposed'
+- 'no': G22
+  storey: ground
+  a: dining
+  b: outside
+  axis: y
+  lo: 21.04
+  hi: 21.29
+  at: 23.74
+  width_m: 3.0
+  height_m: 3.0
+  kind: sliding
+  swing_into: dining
+  source: 'answer 12k: garden door of the dining, as the living room''s, centred on its back wall'
+- 'no': G23
+  storey: ground
+  a: show_kitchen
+  b: arabic_kitchen
+  width_m: 1.2
+  height_m: 2.4
+  kind: open
+  swing_into: arabic_kitchen
+  at: 19.5
+  source: 'answer 12m: open entrance from the island kitchen, no door leaf'
+room_links: []
+external_doors: []
 levels:
   ground_ffl_above_gate_m: 0.45
   carport_ffl_above_gate_m: 0.15
@@ -707,8 +958,8 @@ levels:
   source: reference sheet A-09-001
 double_height:
 - entrance_foyer
-open_to_sky:
-- lawn_court
+- living
+open_to_sky: []
 transcription_notes:
   ground_problems:
   - 'The ground floor GFA (usable plus circulation, taken from internal face to face rectangles) is 297.02

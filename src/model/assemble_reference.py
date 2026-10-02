@@ -40,7 +40,7 @@ SOURCE = ("reference/owner/Reference_villa_plot_5131627_Paradise_Home_2025-07.pd
 GROUND_MAP = {
     "ent_foyer": ("entrance_foyer", "room", "reference, double height"),
     "main_entrance": ("main_entrance", "porch", "reference: open, recessed, double height porch"),
-    "formal_lounge": ("majlis", "room", "D-042: the majlis, closed off from the dining"),
+    "formal_lounge": ("majlis", "room", "reference formal lounge; replaced by answer 12"),
     "island_kitchen": ("show_kitchen", "room", "reference"),
     "family_sitting": ("family_sitting", "room", "answer 5"),
     "dining": ("dining", "room", "reference"),
@@ -106,8 +106,31 @@ FIRST_MAP = {
 # they fold into the partition zone.
 FIRST_DROP = {"bedroom_1_dress_strip"}
 
-# Open joins, by our keys. Ground: the reference's, less dining/majlis (D-042).
+# Open joins, by our keys (no wall, no door). Ground: answer 12 (D-046): the
+# island kitchen, living room, majlis (salon), dining and foyer are one open
+# space, except the TV wall between the living room and the dining (12g); the
+# Arabic kitchen is walled from the service passage (12m).
 OPEN_JOINS = {
+    "ground": [
+        "show_kitchen/living", "entrance_foyer/living", "entrance_foyer/majlis",
+        "majlis/dining", "majlis/living",
+        "entrance_foyer/stair_lift_ground", "entrance_foyer/stair_hall",
+        "stair_lift_ground/stair_hall", "stair_lift_ground/show_kitchen",
+        "guest_bedroom/guest_dress",
+        "laundry/laundry_bay", "laundry_bay/service_passage",
+        "arabic_kitchen/arabic_kitchen_bay",
+        "service_steps/service_lobby",
+    ],
+    "first": [
+        "master_suite/master_dress",
+        "bedroom_2/bedroom_2_dress", "bedroom_3/bedroom_3_dress", "bedroom_4/bedroom_4_dress",
+        "corridor_first/landing", "corridor_first/gallery",
+        "landing/lift_lobby", "stair_lift_first/landing",
+    ],
+}
+
+# The joins as they stood before answer 12, for the decision sketches.
+OPEN_JOINS_BEFORE_12 = {
     "ground": [
         "show_kitchen/family_sitting", "family_sitting/dining",
         "entrance_foyer/family_sitting", "entrance_foyer/dining",
@@ -127,44 +150,8 @@ OPEN_JOINS = {
     ],
 }
 
-# Doors between rooms that are not hubs: (a, b, width m, kind[, at m]). "at"
-# places the door centre that far along the shared wall from its end nearer
-# the road; otherwise the door is centred.
-ROOM_LINKS = [
-    # D-042: wide double doors from the dining into the majlis, by the foyer.
-    ["dining", "majlis", 1.60, "door", 1.10],
-    ["wash", "guest_powder", 0.80, "door"],
-    ["service_passage", "show_kitchen", 0.90, "door"],
-    ["service_lobby", "stair_hall", 0.90, "door"],
-    ["guest_bedroom", "guest_toilet", 0.80, "door"],
-    ["home_office", "office_toilet", 0.80, "door"],
-    ["laundry", "maids_room", 0.80, "door"],
-    ["maids_room", "maids_toilet", 0.80, "door"],
-    ["master_dress", "master_toilet", 0.80, "door"],
-    ["bedroom_2_dress", "bedroom_2_toilet", 0.80, "door"],
-    ["bedroom_3_dress", "bedroom_3_toilet", 0.80, "door"],
-    ["bedroom_4_dress", "bedroom_4_toilet", 0.80, "door"],
-    ["pantry_first", "linen_storage", 0.80, "door"],
-    # The lawn court is glazed toward the foyer, as the reference draws it.
-    ["entrance_foyer", "lawn_court", 3.00, "window"],
-]
-
-# External doors, faces in our grid after mirroring: W road, E rear garden,
-# S south (the carport end), N north.
-EXTERNAL_DOORS = [
-    {"room": "entrance_foyer", "face": "W", "width_m": 2.40, "height_m": 3.00,
-     "material": "door", "why": "reference: the main double door, at the back of the porch"},
-    {"room": "service_steps", "face": "W", "width_m": 1.00, "height_m": 2.40,
-     "material": "door", "why": "reference: service entry from the carport"},
-    {"room": "plant_room", "face": "S", "width_m": 0.90, "height_m": 2.40,
-     "material": "door", "why": "answers 9 and 11a: its own outside door"},
-    {"room": "outdoor_bathroom", "face": "W", "width_m": 0.80, "height_m": 2.20,
-     "material": "door", "why": "answers 11 and 11a: opens onto the carport"},
-    {"room": "laundry", "face": "S", "width_m": 0.90, "height_m": 2.40,
-     "material": "door", "why": "reference: side door to the service yard"},
-    {"room": "family_sitting", "face": "E", "width_m": 3.00, "height_m": 3.00,
-     "material": "glass", "why": "reference: the garden room opens to the garden"},
-]
+# Doors: the schedule in src/model/doors.py (G01 to G23, F01 to F15), copied
+# into the plan as data. Every door the owner was shown on sketch VJH-SK-013.
 
 T_EXT = 0.25
 
@@ -185,7 +172,83 @@ def _rect(d: dict, key: str, kind: str) -> dict:
             "confidence": d.get("confidence", "")}
 
 
-def assemble() -> tuple[dict, list[str]]:
+# Answer 12, owner decisions 2026-10-02 (docs/ground-floor-decisions.md, 12 and
+# 12a to 12m; D-046). Sizes come from the reference rectangles they replace.
+DINING_ALONG_ROAD = 6.00    # 12a B: the dining in the north corner, 6.00 m along the road
+MAJLIS_ACROSS = 7.50        # 12d, 12e: the salon 6.00 m across, then 1.50 m more from the dining
+TV_WALL_T = 0.15            # 12g: the TV wall, taken from the dining as the D-042 wall was
+
+
+def apply_answer_12(ground: list, first: list, report: list[str]) -> tuple[list, list]:
+    """Ground: the salon (majlis) takes the lawn court's place, lined up with
+    the dining and open to the foyer, the living room and the dining; the
+    island kitchen, a double height living room and the dining run along the
+    backyard; a solid TV wall stands between the living room and the dining.
+    First: the family room above the salon, a void over the living room and
+    the island kitchen in place of the reference family lounge, pantry and
+    linen store (12b, 12l)."""
+    g = {r["key"]: r for r in ground}
+    f = {r["key"]: r for r in first}
+    k, m, c = g["show_kitchen"], g["majlis"], g["lawn_court"]
+    split = round(m["x1"] - DINING_ALONG_ROAD, 3)
+    line = round(c["y0"] + MAJLIS_ACROSS, 3)
+
+    def room(key, x0, x1, y0, y1, ref, why):
+        return {"key": key, "kind": "room", "x0": round(x0, 3), "x1": round(x1, 3),
+                "y0": round(y0, 3), "y1": round(y1, 3), "reference_key": ref,
+                "reference_name": "", "confidence": "owner answer", "decision": why}
+
+    out_g = [r for r in ground if r["key"] not in ("family_sitting", "dining", "majlis", "lawn_court")]
+    out_g += [
+        room("living", k["x1"], split, k["y0"], k["y1"], "family_sitting+dining",
+             "answers 12, 12a B, 12g: double height living room, TV wall to the dining"),
+        room("dining", split + TV_WALL_T, m["x1"], line, k["y1"], "formal_lounge",
+             "answers 12a B, 12e, 12g: dining in the north corner, faces the backyard"),
+        room("majlis", c["x0"], m["x1"], c["y0"], line, "lawn_court+formal_lounge",
+             "answers 12, 12c, 12d, 12e, 12h: the salon in the lawn court's place, open "
+             "to the foyer, the living room and the dining"),
+    ]
+    report.append(f"answer 12: living {split - k['x1']:.2f} x {k['y1'] - k['y0']:.2f}, dining "
+                  f"{m['x1'] - split - TV_WALL_T:.2f} x {k['y1'] - line:.2f}, majlis "
+                  f"{m['x1'] - c['x0']:.2f} x {line - c['y0']:.2f}")
+
+    fam, court, pantry, corr = (f["family_living"], f["lawn_court_open"], f["pantry_first"],
+                                f["corridor_first"])
+    out_f = [r for r in first if r["key"] not in
+             ("family_living", "lawn_court_open", "balcony_family", "pantry_first", "linen_storage")]
+    new_fam = room("family_living", court["x0"], court["x1"], court["y0"], court["y1"],
+                   "lawn_court_void", "answer 12b: the family room above the salon")
+    void = room("void_over_living", pantry["x0"], corr["x1"], corr["y1"], fam["y1"],
+                "family_lounge+pantry+store",
+                "answers 12 and 12l: void over the living room and the island kitchen")
+    void["kind"] = "void"
+    out_f += [new_fam, void]
+    report.append("answer 12: first floor family room over the salon; reference family lounge, "
+                  "pantry, linen store and family balcony replaced by the void (12l)")
+    return out_g, out_f
+
+
+def door_table(placed: set) -> list[dict]:
+    """The door schedule as plan data, frame coordinates."""
+    from model.doors import FIRST, FIRST_EXT, GROUND, GROUND_EXT  # noqa: PLC0415
+    out = []
+    for storey, inner, ext in (("ground", GROUND, GROUND_EXT), ("first", FIRST, FIRST_EXT)):
+        for no, a, b, w, h, kind, into, at, src in inner:
+            if a in placed and b in placed:
+                out.append({"no": no, "storey": storey, "a": a, "b": b, "width_m": w,
+                            "height_m": h, "kind": kind, "swing_into": into, "at": at,
+                            "source": src})
+        for no, r, axis, lo, hi, c, w, h, kind, src in ext:
+            if r in placed:
+                out.append({"no": no, "storey": storey, "a": r, "b": "outside", "axis": axis,
+                            "lo": lo, "hi": hi, "at": c, "width_m": w, "height_m": h,
+                            "kind": kind, "swing_into": r, "source": src})
+    return sorted(out, key=lambda d: d["no"])
+
+
+def assemble(answer_12: bool = True) -> tuple[dict, list[str]]:
+    """answer_12=False gives the plan as it stood before answer 12, which the
+    decision sketches VJH-SK-012 to VJH-SK-014 start from."""
     from model.reference_plan import Placement  # noqa: PLC0415
 
     g_src, f_src = _load("ground_floor.json"), _load("first_floor.json")
@@ -218,15 +281,6 @@ def assemble() -> tuple[dict, list[str]]:
         key, kind = FIRST_MAP[k]
         first.append(_rect(d, key, kind))
 
-    # D-042: the majlis is closed off from the dining. The reference has no
-    # wall there (the rooms touch), so a 0.15 m partition is taken from the
-    # dining, which narrows by that much.
-    gk = {r["key"]: r for r in ground}
-    if "dining" in gk and "majlis" in gk and abs(gk["dining"]["x1"] - gk["majlis"]["x0"]) < 0.01:
-        gk["dining"]["x1"] = round(gk["majlis"]["x0"] - 0.15, 3)
-        gk["dining"]["adjusted"] = "D-042: 0.15 m partition to the majlis taken from the dining"
-        report.append(f"ground: dining narrowed by 0.15 m for the D-042 wall to the majlis")
-
     body = [r for r in ground if r["kind"] in ("room", "circulation")]
     plan = {
         "source": SOURCE,
@@ -252,21 +306,28 @@ def assemble() -> tuple[dict, list[str]]:
             report.append(f"first: {r['key']} trimmed at the carport end, x0 {r['x0']:.3f} -> 0.000")
             r["x0"], r["trimmed"] = 0.0, "carport end, placeholder"
 
+    if answer_12:
+        ground, first = apply_answer_12(ground, first, report)
+        plan["ground"], plan["first"] = ground, first
+
     placed = {r["key"] for r in ground + first}
+    table = OPEN_JOINS if answer_12 else OPEN_JOINS_BEFORE_12
     joins = {f: [j for j in js if all(k in placed for k in j.split("/"))]
-             for f, js in OPEN_JOINS.items()}
-    for f, js in OPEN_JOINS.items():
+             for f, js in table.items()}
+    for f, js in table.items():
         for j in js:
             if j not in joins[f]:
                 report.append(f"{f}: open join {j} skipped, a room is missing")
     plan["open_joins"] = joins
-    plan["room_links"] = [l for l in ROOM_LINKS if l[0] in placed and l[1] in placed]
-    plan["external_doors"] = [d for d in EXTERNAL_DOORS if d["room"] in placed]
+    if answer_12:
+        plan["doors"] = door_table(placed)
+    plan["room_links"] = []
+    plan["external_doors"] = []
     plan["levels"] = {"ground_ffl_above_gate_m": 0.45, "carport_ffl_above_gate_m": 0.15,
                       "first_ffl_above_gate_m": 5.45, "carport_roof_m": 3.75,
                       "source": "reference sheet A-09-001"}
-    plan["double_height"] = ["entrance_foyer"]
-    plan["open_to_sky"] = ["lawn_court"]
+    plan["double_height"] = ["entrance_foyer", "living"] if answer_12 else ["entrance_foyer"]
+    plan["open_to_sky"] = [] if answer_12 else ["lawn_court"]
     plan["transcription_notes"] = {
         "ground_problems": g_src.get("problems", []),
         "ground_notes": g_src.get("notes", []),

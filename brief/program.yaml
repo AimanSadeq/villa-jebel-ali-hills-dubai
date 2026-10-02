@@ -29,24 +29,30 @@ ground:
     gfa: counts
     double_height: true
     notes: "Double height."
-  - key: family_sitting
-    name: "Family Sitting"
-    target_m2: 21.9
+  - key: living
+    name: "Living Room"
+    target_m2: 42.6
+    brief_target_m2: 45
     gfa: counts
+    double_height: true
     added_by_owner: "2026-10-02"
     notes: >
-      Owner answer 5, 2026-10-02: the middle zone of the reference villa's open
-      garden room, between the island kitchen and the dining, open to both.
-      Target set from the reference plan (answer 6, reference sizes kept).
+      Owner answers 12, 12a B and 12g, 2026-10-02 (D-046): the living room
+      returns, 6.00 x 7.10 m, double height, along the backyard between the
+      island kitchen and the dining. A solid TV wall separates it from the
+      dining; it stays open to the kitchen, the foyer and the salon.
   - key: majlis
     name: "Majlis (Salon)"
-    target_m2: 36.0
-    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
+    target_m2: 44.6
+    reference_size: "owner answers 12d and 12e, 2026-10-02: 5.95 x 7.50 m in the lawn court's place"
     target_before_restart_m2: 35
     gfa: counts
     notes: >
       Formal reception, close to entrance, with its own guest powder room.
       Owner confirmed 2026-10-01 that majlis and salon are the same room.
+      Answers 12, 12c and 12h (D-046): it takes the lawn court's place and is
+      open to the foyer, the living room and the dining, by the owner's
+      decision (it was a closed room under D-042).
   - key: guest_powder
     name: "Guest Powder Room"
     target_m2: 3.4
@@ -63,8 +69,8 @@ ground:
     notes: "Only bedroom on the ground floor."
   - key: dining
     name: "Dining"
-    target_m2: 19.9
-    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
+    target_m2: 21.9
+    reference_size: "owner answers 12a B, 12e and 12g, 2026-10-02: 3.75 x 5.85 m in the north corner"
     target_before_restart_m2: 22
     gfa: counts
     notes: >
@@ -126,18 +132,6 @@ ground:
       approved trim route B, 2026-10-01.
     gfa: counts
     notes: "In the staff zone with a separate entrance."
-  - key: lawn_court
-    name: "Internal Lawn Court, open to the sky"
-    target_m2: 27.5
-    gfa: unverified
-    gfa_note: >
-      Open to the sky, so most likely outside GFA like the reference set's
-      balconies and terraces. TO VERIFY with DDA, OI-01.
-    added_by_owner: "2026-10-02"
-    notes: >
-      Owner decision 2026-10-02, D-040: kept from the reference villa, where it
-      is 5.5 x 5.0 m off the entrance foyer between the guest bedroom and the
-      formal lounge, lighting the middle of a 17.5 m deep plan.
   - key: outdoor_bathroom
     name: "Outdoor Bathroom, WC and Shower"
     target_m2: 3.6
@@ -232,7 +226,6 @@ ancillary:
   - {floor: first, key: bedroom_3_toilet, name: "Bedroom 3, Bathroom", serves: bedroom_3_dress, target_m2: 7.2, gfa: counts, placeholder: true}
   - {floor: first, key: bedroom_4_dress, name: "Bedroom 4, Dress", serves: bedroom_4, target_m2: 6.0, gfa: counts, placeholder: true}
   - {floor: first, key: bedroom_4_toilet, name: "Bedroom 4, Bathroom", serves: bedroom_4_dress, target_m2: 7.2, gfa: counts, placeholder: true}
-  - {floor: first, key: pantry_first, name: "First Floor Pantry", serves: family_living, target_m2: 7.2, gfa: counts, placeholder: true}
   - {floor: first, key: lift_first, name: "Home Lift, first floor", serves: stair_lift_first, target_m2: 3.9, gfa: counts, placeholder: true}
 
 first:
@@ -280,6 +273,10 @@ first:
     name: "Linen and General Storage"
     target_m2: 6
     gfa: counts
+    deferred: >
+      Owner answer 12l, 2026-10-02 (D-046): the reference's linen store became
+      void over the island kitchen to keep the house inside the GFA cap. Not
+      placed until the first floor is designed (D-038); OI-27.
   - key: stair_lift_first
     name: "Staircase + Home Elevator"
     target_m2: 15
@@ -372,16 +369,30 @@ interiors:
 # Rooms removed from the CLAUDE.md section 4 program, kept on record so the
 # removal is visible and reversible rather than silent.
 removed:
-  - key: living
-    name: "Living Room"
-    brief_target_m2: 45
+  - key: family_sitting
+    name: "Family Sitting"
+    brief_target_m2: null
     removed_on: "2026-10-02"
-    decision: "D-040"
+    decision: "D-046"
     reason: >
-      Owner answer 4, 2026-10-02, "keep as per attached reference": no separate
-      double height living room. The ground floor sitting space is the family
-      sitting in the open garden room and the majlis; the double height is the
-      entrance foyer.
+      Owner answer 12: the garden room is rearranged; its sitting area becomes
+      the double height living room.
+  - key: lawn_court
+    name: "Internal Lawn Court, open to the sky"
+    brief_target_m2: null
+    removed_on: "2026-10-02"
+    decision: "D-046"
+    reason: >
+      Owner answer 12: "Remove the lawn, and replace it with salon." Enclosing
+      it adds its area to the GFA.
+  - key: pantry_first
+    name: "First Floor Pantry"
+    brief_target_m2: null
+    removed_on: "2026-10-02"
+    decision: "D-046"
+    reason: >
+      Owner answer 12l: became void over the island kitchen to bring answer 12
+      inside the GFA cap. Its coffee station belongs in the master suite (brief).
   - key: pool
     name: "Swimming Pool"
     brief_target_m2: 40
@@ -421,10 +432,11 @@ voids:
     target_m2: 20
     gfa: excluded
   - key: void_over_living
-    name: "Void over Living Room"
+    name: "Void over Living Room and Island Kitchen"
     over: living
-    target_m2: 45
+    target_m2: 40.8
     gfa: excluded
+    notes: "Answers 12 and 12l (D-046): over the living room and most of the island kitchen."
 
 # Outdoor scope. Not GFA. Sized and positioned in Phase 1 and Phase 4.
 outdoor:

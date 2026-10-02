@@ -885,6 +885,7 @@ def to_yaml(lay: dict) -> dict:
         "open_joins": lay.get("open_joins", {}),
         "room_links": lay.get("room_links", []),
         "external_doors": lay.get("external_doors", []),
+        "doors": lay.get("doors", []),
         "double_height": lay.get("double_height", []),
         "open_to_sky": lay.get("open_to_sky", []),
         "porches": lay.get("porches", []),

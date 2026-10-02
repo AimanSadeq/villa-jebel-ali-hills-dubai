@@ -36,6 +36,7 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from drawings.sketch_12_floors import (CAP, CHANGED, F_LABELS, INK, MUTED, PLAN, SQFT,  # noqa: E402
                                        _draw_floor, apply_answer_12, clear_heights, dims_text,
+                                       plan_before_12,
                                        measure)
 from drawings.sketch_doors import draw_all, place, unreached  # noqa: E402
 
@@ -99,7 +100,7 @@ LABELS = {**F_LABELS, "recess_bedroom_2": "Recess", "recess_bedroom_3": "Recess"
 
 
 def main() -> int:
-    plan = yaml.safe_load(PLAN.read_text(encoding="utf-8"))
+    plan = plan_before_12()
     ground, first, _ = apply_answer_12(plan)
     H = clear_heights(plan)
     base = measure(ground, first)

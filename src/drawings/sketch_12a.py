@@ -132,7 +132,7 @@ def _furniture(ax, key, x0, x1, y0, y1, opt):
         if w >= 8.0:
             ax.add_patch(Rectangle((y0 + 1.0, x1 - 3.6), 0.9, 2.8, **kw))
             ax.add_patch(Rectangle((y0 + 3.6, x1 - 3.6), 0.9, 2.8, **kw))
-    elif key == "salon":
+    elif key in ("salon", "majlis"):
         ax.add_patch(Rectangle((y0 + 0.4, x0 + 0.4), 0.8, w - 0.8, **kw))
         ax.add_patch(Rectangle((y1 - 1.2, x0 + 0.4), 0.8, w - 0.8, **kw))
         ax.add_patch(Rectangle((y0 + 1.2, x1 - 1.2), d - 2.4, 0.8, **kw))
@@ -227,8 +227,16 @@ def draw_option(ax, plan: dict, opt: dict, letter: str):
     ax.axis("off")
 
 
+def plan_before_12() -> dict:
+    """The plan before answer 12 was built (D-046)."""
+    import sys  # noqa: PLC0415
+    sys.path.insert(0, str(REPO_ROOT / "src"))
+    from model.assemble_reference import assemble  # noqa: PLC0415
+    return assemble(answer_12=False)[0]
+
+
 def main() -> int:
-    plan = yaml.safe_load(PLAN.read_text(encoding="utf-8"))
+    plan = plan_before_12()
     g = {r["key"]: r for r in plan["ground"]}
     opts = options(g)
 

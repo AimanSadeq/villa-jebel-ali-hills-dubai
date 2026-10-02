@@ -31,11 +31,22 @@ def _box(r):
 
 def test_every_program_room_is_placed_exactly_once():
     """Every room of brief/program.yaml, the reference villa's own dress rooms,
-    toilets and bays (the ancillary list) included, is placed once."""
+    toilets and bays (the ancillary list) included, is placed once. A room the
+    owner deferred (answer 12l: the linen store, until the first floor is
+    designed) is not placed and carries its reason."""
     placed = [r["key"] for f in ("ground", "first") for r in lay["floors"][f]["rooms"]]
-    wanted = [r["key"] for f in ("ground", "first") for r in prog[f]]
+    wanted = [r["key"] for f in ("ground", "first") for r in prog[f] if not r.get("deferred")]
     wanted += [a["key"] for a in prog.get("ancillary", []) or []]
     assert sorted(placed) == sorted(wanted)
+
+
+def test_deferred_rooms_are_on_record_and_not_placed():
+    """D-046, answer 12l: only the linen store is deferred, and it says why."""
+    deferred = {r["key"]: r for f in ("ground", "first") for r in prog[f] if r.get("deferred")}
+    assert set(deferred) == {"linen_storage"}
+    assert "12l" in deferred["linen_storage"]["deferred"]
+    placed = {r["key"] for f in ("ground", "first") for r in lay["floors"][f]["rooms"]}
+    assert not placed & set(deferred)
 
 
 def test_the_sunroom_is_removed_and_on_record():
@@ -113,10 +124,13 @@ def test_the_measured_plan_fits_the_cap():
     assert m["total"] <= m["cap"]
 
 
+@pytest.mark.xfail(strict=True, reason=(
+    "D-046: the owner chose first floor trim 12l with 1.30 m2 inside the cap, told the "
+    "D-005 reserve (never approved) is not held. Revisit when the first floor is designed."))
 def test_the_measured_plan_holds_the_recommended_margin():
     """D-005: hold about 10 m2 back for the consultant's remeasure. A strict
     expected failure from D-029 (6.52 m2) until the central hall plan, D-036,
-    restored the margin."""
+    restored the margin, and again from answer 12 (D-046)."""
     m = lay["gfa_measured"]
     assert m["margin"] >= 9.99 - 1e-6, f"only {m['margin']:.2f} m2 held back"
 
@@ -144,6 +158,9 @@ def test_the_outdoor_bathroom_counts_toward_gfa():
     assert progs["outdoor_bathroom"]["gfa"] == "counts"
 
 
+@pytest.mark.xfail(strict=True, reason=(
+    "D-046: answer 12 with trim 12l holds 1.30 m2. Flagged to the owner; the first "
+    "floor design (D-038) has to restore at least 5 m2."))
 def test_the_measured_plan_holds_a_real_margin():
     """The floor below the D-005 recommendation: never design with nothing in
     hand against a consultant's remeasure."""
@@ -156,23 +173,61 @@ def _room(floor, key):
 
 def test_the_plan_is_the_reference_mirrored_with_the_carport_south():
     """D-038, answer 7: the reference villa facing the road, mirrored, so the
-    carport takes the south (low v) end and the majlis the north rear corner."""
+    carport takes the south (low v) end. Answer 12a B: the dining takes the
+    north rear corner, the majlis (salon) the old lawn court beside it."""
     rooms = lay["floors"]["ground"]["rooms"]
-    car, majlis = _room("ground", "garage"), _room("ground", "majlis")
+    car, dining = _room("ground", "garage"), _room("ground", "dining")
+    majlis = _room("ground", "majlis")
     assert car["v"][0] <= min(r["v"][0] for r in rooms) + 1e-6
-    assert majlis["v"][1] >= max(r["v"][1] for r in rooms) - 0.6
-    assert majlis["u"][1] >= max(r["u"][1] for r in rooms) - 1e-6
+    assert dining["v"][1] >= max(r["v"][1] for r in rooms) - 0.6
+    assert dining["u"][1] >= max(r["u"][1] for r in rooms) - 1e-6
+    assert abs(majlis["v"][1] - dining["v"][1]) < 0.01, "12d: the majlis lines up with the dining"
     assert lay["meta"]["massing_option"] == "R"
 
 
-def test_the_majlis_is_closed_off_from_the_dining():
-    """D-042: a wall, with double doors by the foyer, between the dining and the
-    majlis; they are not one open space."""
+def test_answer_12_open_plan_with_a_tv_wall():
+    """D-046: the majlis (salon) is open to the foyer, the living room and the
+    dining (12c, 12h); the island kitchen opens to the living room; a solid
+    wall stands between the living room and the dining for the TV (12g)."""
     joins = {frozenset(j.split("/")) for j in lay["open_joins"]["ground"]}
-    assert frozenset(("dining", "majlis")) not in joins
-    gap = _box(_room("ground", "dining")).distance(_box(_room("ground", "majlis")))
-    assert 0.10 <= gap <= 0.30, f"no wall between the dining and the majlis ({gap:.2f} m)"
-    assert any({l[0], l[1]} == {"dining", "majlis"} and l[3] == "door" for l in lay["room_links"])
+    for pair in (("majlis", "dining"), ("majlis", "entrance_foyer"), ("majlis", "living"),
+                 ("show_kitchen", "living"), ("entrance_foyer", "living")):
+        assert frozenset(pair) in joins, f"{pair} should be open"
+    assert frozenset(("living", "dining")) not in joins
+    gap = _box(_room("ground", "living")).distance(_box(_room("ground", "dining")))
+    assert 0.10 <= gap <= 0.30, f"no TV wall between the living room and the dining ({gap:.2f} m)"
+    assert "living" in lay["double_height"] and "entrance_foyer" in lay["double_height"]
+
+
+def test_the_arabic_kitchen_is_walled_with_an_open_entrance_from_the_kitchen():
+    """D-046, answer 12m: walled from the service passage, entered from the
+    island kitchen by an opening with no door leaf."""
+    joins = {frozenset(j.split("/")) for j in lay["open_joins"]["ground"]}
+    assert frozenset(("arabic_kitchen_bay", "service_passage")) not in joins
+    entry = [d for d in lay["doors"] if {d["a"], d["b"]} == {"show_kitchen", "arabic_kitchen"}]
+    assert len(entry) == 1 and entry[0]["kind"] == "open"
+
+
+def test_the_door_schedule_is_complete_and_numbered_once():
+    """D-046: the doors the owner was shown on VJH-SK-013, each once, each with
+    its source, each between placed rooms or to the outside."""
+    nos = [d["no"] for d in lay["doors"]]
+    assert len(nos) == len(set(nos)) == 35
+    placed = {r["key"] for f in ("ground", "first")
+              for r in lay["floors"][f]["rooms"] + lay["floors"][f]["circulation"]}
+    for d in lay["doors"]:
+        assert d["source"], d["no"]
+        assert d["a"] in placed and (d["b"] in placed or d["b"] == "outside"), d["no"]
+
+
+@pytest.mark.parametrize("bedroom", ["guest_bedroom", "master_suite", "bedroom_2",
+                                     "bedroom_3", "bedroom_4"])
+def test_every_bedroom_has_an_entry_door_from_a_hall(bedroom):
+    """The defect in the 2026-10-02 build (commit 6322806): no bedroom had a
+    door from a hall, only to its own dress or WC. Each now has one."""
+    halls = {"entrance_foyer", "corridor_first", "gallery", "lift_lobby", "landing"}
+    assert any(d["kind"] != "open" and {d["a"], d["b"]} & halls and bedroom in (d["a"], d["b"])
+               for d in lay["doors"]), f"{bedroom} has no door from a hall"
 
 
 def test_the_house_stays_behind_the_setback_lines():

@@ -57,7 +57,9 @@ pip install -r requirements.txt
 | `python src/analysis/shade_check.py` | Afternoon shade on the pool deck from the planned footprint, VJH-RPT-008 |
 | `npm run dev --prefix viewer` | Massing viewer at http://localhost:5173 |
 | (same server) | Phase 3 IFC model viewer at http://localhost:5173/model.html |
-| `python -m pytest -q` | Setback, GFA, shading, orientation, layout and interior guards, 88 checks |
+| `python src/model/assemble_reference.py` | The owner's reference villa with his answers, writes brief/reference_plan.yaml (run before layout_gen) |
+| `python src/drawings/sketch_12_floors.py` | Decision sketch VJH-SK-013, answer 12 on both floors with the door schedule (also sketch_12a.py, sketch_12_trims.py) |
+| `python -m pytest -q` | Setback, GFA, shading, orientation, layout, door and interior guards, 96 checks (2 expected failures on the GFA margin, D-046) |
 
 ## Where things live
 

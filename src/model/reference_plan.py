@@ -107,6 +107,43 @@ def _outline(polys: list[Polygon]) -> Polygon:
     return Polygon(out.exterior).simplify(0.01)
 
 
+def resolve_doors(plan: dict, pl: "Placement") -> list[dict]:
+    """Every door of the plan on its wall, in our grid, after checking that
+    every room can be reached: from the foyer on the ground floor (rooms with
+    their own outside door excepted) and from the stair on the first."""
+    from model.doors import resolve, unreached  # noqa: PLC0415
+
+    entries = plan.get("doors") or []
+    if not entries:
+        return []
+    out = []
+    for floor, start in (("ground", "entrance_foyer"), ("first", "stair_lift_first")):
+        rooms = plan[floor]
+        doors = resolve(rooms, [d for d in entries if d["storey"] == floor])
+        joins = {frozenset(j.split("/")) for j in plan.get("open_joins", {}).get(floor, [])}
+        outside = {d["a"] for d in doors if d["b"] == "outside"}
+        lost = [k for k in unreached([r for r in rooms if r["kind"] in ("room", "circulation")],
+                                     doors, joins, start) if k not in outside]
+        if lost:
+            raise ValueError(f"{floor} floor: no way into {', '.join(lost)}")
+        for d in doors:
+            mid = (d["lo"] + d["hi"]) / 2
+            if d["axis"] == "x":     # wall across the frame x (our v); the door spans u
+                v = pl.v0 + mid if pl.mirror else pl.v1 - mid
+                u, along_u = pl.u(d["c"]), True
+                swing = d["s"] if pl.mirror else -d["s"]
+            else:                    # wall across the frame y (our u); the door spans v
+                u = pl.u(mid)
+                v = pl.v0 + d["c"] if pl.mirror else pl.v1 - d["c"]
+                along_u, swing = False, d["s"]
+            out.append({"no": d["no"], "storey": floor, "a": d["a"], "b": d["b"],
+                        "kind": d["kind"], "width_m": round(d["w"], 3), "height_m": d["h"],
+                        "u": round(u, 3), "v": round(v, 3), "along_u": along_u,
+                        "wall_t": round(d["hi"] - d["lo"], 3), "swing": swing,
+                        "source": d["src"]})
+    return out
+
+
 def build_layout(plan: dict | None = None) -> dict:
     """The layout dictionary, in the shape layout_gen.build() returns."""
     from model.layout_gen import Rect  # noqa: PLC0415
@@ -202,6 +239,7 @@ def build_layout(plan: dict | None = None) -> dict:
         "reference": plan.get("source", ""),
         "open_joins": plan.get("open_joins", {}),
         "room_links": plan.get("room_links", []),
+        "doors": resolve_doors(plan, pl),
         "open_to_sky": plan.get("open_to_sky", []),
         "porches": [r.as_dict() for d, r in g_all if kind(d) == "porch"],
         "external_doors": plan.get("external_doors", []),

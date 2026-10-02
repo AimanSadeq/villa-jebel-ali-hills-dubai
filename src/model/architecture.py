@@ -78,6 +78,10 @@ NO_WINDOWS = {"garage", "pantry", "plant_room", "linen_storage", "lift", "main_e
               "lawn_court", "guest_dress", "master_dress", "bedroom_2_dress", "bedroom_3_dress",
               "bedroom_4_dress", "pantry_first", "stair_lift_ground", "stair_lift_first"}
 
+# First floor voids over a double height room whose external faces are glazed
+# full height (D-046). The porch void is outdoor space and stays open.
+VOID_GLAZING = {"void_over_living"}
+
 DOOR_WIDTH = {"majlis": 1.20, "master_suite": 1.00, "family_living": 1.20,
               "garage": 0.90, "dining": 1.60}
 
@@ -184,6 +188,13 @@ class Model:
                       for f in ("ground", "first") for r in self.prog[f]}
         self.names.update({"corridor": "Corridor", "hall_link": "Link hall",
                            "family_hall": "Family hall", "hall_arm": "Stair landing"})
+        self.names.update({v["key"]: v["name"] for v in self.prog.get("voids", []) or []})
+        # The reference plan's own rooms and halls (D-040, D-046).
+        self.names.update({a["key"]: a["name"] for a in self.prog.get("ancillary", []) or []})
+        self.names.update({"stair_hall": "Stair Hall", "service_lobby": "Service Lobby",
+                           "service_steps": "Service Steps", "service_passage": "Service Passage",
+                           "corridor_first": "First Floor Corridor", "gallery": "Gallery",
+                           "landing": "Landing", "lift_lobby": "Lift Lobby"})
         self.f = ifcopenshell.file(schema="IFC4")
         self.b = ShapeBuilder(self.f)
         self.walls: dict[str, list] = {"ground": [], "first": []}
@@ -196,7 +207,8 @@ class Model:
         self.external_doors = EXTERNAL_DOORS + [
             ("master_suite", "E", terrace["door_width_m"], terrace["door_height_m"],
              "glass")]
-        if self.lay.get("external_doors"):
+        self.lay_doors = list(self.lay.get("doors") or [])
+        if self.lay.get("external_doors") or self.lay_doors:
             self.external_doors = []
         for d in self.lay.get("external_doors") or []:
             if isinstance(d, dict):
@@ -481,7 +493,12 @@ class Model:
                                               and self.living and not self.ssw.is_empty else set())
         if "living" in self.lay["plates"]:
             dh_keys.add("living")
-        tall_rooms = [r.poly for r in self.g_rooms if r.key in dh_keys]
+        # A double height room under a first floor void (the reference plan's
+        # foyer and, from D-046, its living room) takes its height from the
+        # void; only one with no first floor over it is a tall block of its own.
+        void_u = unary_union([v.poly for v in self.voids]) if self.voids else Polygon()
+        tall_rooms = [r.poly for r in self.g_rooms if r.key in dh_keys
+                      and r.poly.intersection(void_u).area < 0.5 * r.area]
         tall = unary_union(tall_rooms).buffer(0.30, join_style=2) if tall_rooms else Polygon()
         tall = tall.difference(self.first_fp.buffer(0.01, join_style=2))
         self.ext_ring_g = self.walls_for(
@@ -877,7 +894,57 @@ class Model:
                     return True, ((lo + hi) / 2, v), gap, hi - lo
         return None
 
+    # IFC4 IfcDoorTypeOperationEnum for each kind in src/model/doors.py.
+    OPERATION = {"single": "SINGLE_SWING_LEFT", "double": "DOUBLE_DOOR_SINGLE_SWING",
+                 "sliding": "SLIDING_TO_LEFT", "pivot": "USERDEFINED", "lift": "USERDEFINED"}
+
+    def _door_name(self, d) -> str:
+        a = self.names.get(d["a"], d["a"])
+        if d["b"] != "outside":
+            return f"Door {d['no']}, {a} to {self.names.get(d['b'], d['b'])}"
+        if d["a"] == "entrance_foyer":
+            return f"Front door {d['no']}"
+        if d["kind"] == "sliding":
+            where = "Garden" if d["storey"] == "ground" else "Balcony"
+            return f"{where} door {d['no']}, {a}"
+        return f"External door {d['no']}, {a}"
+
+    def build_scheduled_doors(self):
+        """The plan's door schedule (src/model/doors.py, D-046), each door on
+        the wall the layout resolved it to. Openings that are open joins have
+        no wall to cut and are skipped; a door with no host wall fails the
+        build (build_model.py)."""
+        open_pairs = {st: {frozenset(p) for p in self._joins(st)} for st in ("ground", "first")}
+        for d in self.lay_doors:
+            st = d["storey"]
+            if d["kind"] == "open" and frozenset((d["a"], d["b"])) in open_pairs[st]:
+                continue
+            kind = "opening" if d["kind"] == "open" else "door"
+            # An opening with no height given runs the full storey height.
+            height = d["height_m"] or ((self.HG if st == "ground" else self.HF) - self.SLAB)
+            fill = self.opening(st, kind, self._door_name(d), d["u"], d["v"], d["along_u"],
+                                d["width_m"], 0.0, height, d["wall_t"],
+                                material="glass" if d["kind"] == "sliding" else None)
+            if fill is None or kind == "opening":
+                continue
+            fill.OperationType = self.OPERATION[d["kind"]]
+            if fill.OperationType == "USERDEFINED":
+                fill.UserDefinedOperationType = {"pivot": "PIVOT", "lift": "LIFT_SLIDING"}[d["kind"]]
+            pset = ifcopenshell.api.pset.add_pset(self.f, product=fill, name="VJH_DoorSchedule")
+            ifcopenshell.api.pset.edit_pset(self.f, pset=pset, properties={
+                "Number": d["no"], "Kind": d["kind"], "Source": d["source"]})
+            if d["kind"] == "pivot" and st == "ground":
+                # 12i: fixed glass above the front door to the full double height.
+                host = self.host("first", Point(d["u"], d["v"]))
+                if host is not None:
+                    self.opening("first", "window", f"Glass above front door {d['no']}",
+                                 d["u"], d["v"], d["along_u"], d["width_m"], 0.0,
+                                 self.HF - self.SLAB, d["wall_t"])
+
     def build_doors(self):
+        if self.lay_doors:
+            self.build_scheduled_doors()
+            return
         for storey, rooms, circ in (("ground", self.g_rooms, self.g_circ),
                                     ("first", self.f_rooms, self.f_circ)):
             door_h = 2.70 if storey == "ground" else 2.40
@@ -1032,10 +1099,29 @@ class Model:
             return {"N": "courtyard", "E": "landscape", "S": "hot", "W": "inner"}[face]
         return {"E": "courtyard", "W": "hot", "S": "hot", "N": "north"}[face]
 
+    def _door_spans(self, storey, r: R, face: str) -> list[tuple[float, float]]:
+        """Stretches of a room's external face taken by scheduled doors, with
+        0.30 m of wall either side."""
+        out = []
+        for d in self.lay_doors:
+            if d["storey"] != storey or d["b"] != "outside" or d["a"] != r.key:
+                continue
+            if d["along_u"]:
+                f = "S" if d["v"] < r.v0 else "N"
+                c = d["u"]
+            else:
+                f = "W" if d["u"] < r.u0 else "E"
+                c = d["v"]
+            if f == face:
+                out.append((c - d["width_m"] / 2 - 0.30, c + d["width_m"] / 2 + 0.30))
+        return sorted(out)
+
     def build_windows_and_external_doors(self):
         lived_in = [c for c in self.f_circ if c.key == "family_hall"]
+        glazed_voids = [v for v in self.voids if v.key in VOID_GLAZING]
         for storey, rooms, ring in (("ground", self.g_rooms, self.ext_ring_g),
-                                    ("first", self.f_rooms + lived_in, self.ext_ring_f)):
+                                    ("first", self.f_rooms + lived_in + glazed_voids,
+                                     self.ext_ring_f)):
             ground = storey == "ground"
             clear = (self.HG if ground else self.HF) - self.SLAB - self.SERV
             ext_doors = {(k, face): (w, h, m) for k, face, w, h, m in self.external_doors}
@@ -1054,6 +1140,28 @@ class Model:
                     if not mains:
                         continue
                     _, s0, s1 = max(mains, key=lambda x: x[2] - x[1])
+                    spans = self._door_spans(storey, r, face)
+                    if spans:
+                        pieces = [(s0, s1)]
+                        for a, b2 in spans:
+                            pieces = [q for x, y in pieces
+                                      for q in ((x, min(y, a)), (max(x, b2), y)) if q[1] - q[0] > 0.01]
+                        pieces = [q for q in pieces if q[1] - q[0] >= 0.9]
+                        if r.key in NO_WINDOWS or r.key == "entrance_foyer" or not pieces:
+                            continue
+                        kind = self._face_kind(r, face)
+                        if r.key in PRINCIPAL and kind in ("courtyard", "landscape"):
+                            # Fixed glass either side of a garden or balcony door.
+                            sill = 0.15 if ground else 0.90
+                            for x, y in pieces:
+                                mid = (x + y) / 2
+                                uw_, vw_ = ((mid, wall_line) if along_u else (wall_line, mid))
+                                self.opening(storey, "window",
+                                             f"Fixed glass, {self.names.get(r.key, r.key)}",
+                                             uw_, vw_, along_u, y - x - 0.30, sill,
+                                             clear - 0.30 - sill, T_EXT)
+                            continue
+                        s0, s1 = max(pieces, key=lambda q: q[1] - q[0])
                     length = s1 - s0
                     centre = (s0 + s1) / 2
                     u_c, v_c = ((centre, wall_line) if along_u else (wall_line, centre))
@@ -1088,7 +1196,11 @@ class Model:
                         kind = "courtyard"
                     if kind == "inner":
                         continue
-                    if r.key in HIGH_WINDOWS:
+                    if r.key in VOID_GLAZING:
+                        # Full height glass, continuing the double height room's
+                        # glazing below (D-046).
+                        wdt, sill, hgt = length - 0.60, 0.0, self.HF - self.SLAB - 0.30
+                    elif r.key in HIGH_WINDOWS:
                         wdt, sill, hgt = 0.60, 1.80, 0.60
                     elif r.key in PRINCIPAL and kind in ("courtyard", "landscape"):
                         wdt = min(0.75 * length, 6.0)
