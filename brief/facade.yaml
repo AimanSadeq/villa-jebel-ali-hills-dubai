@@ -19,7 +19,7 @@
 
 meta:
   stamp: "CONCEPT DESIGN, NOT FOR CONSTRUCTION"
-  status: "Proposal for the owner (sketch VJH-SK-017, answer R3). Not approved."
+  status: "Approved by the owner as sketched on VJH-SK-017 (answer R4: A, 2026-10-02, D-051). Built in the IFC."
 
 materials:
   render:  {label: "Beige render", colour: "#dccdb0"}
@@ -155,11 +155,13 @@ cuts:
     u: [20.78, 21.32]
     v: [13.80, 24.15]
     z: [4.99, 6.21]
-  - name: "South end of bedroom 4's balcony"
-    reason: "The garden frame's north leg takes its place (changes_to_model)."
-    u: [20.78, 22.82]
-    v: [23.40, 24.12]
-    z: [4.69, 6.21]
+
+# Balconies shortened by the facade, applied to the plan itself
+# (src/model/reference_plan.py), so areas and the walkthrough follow.
+balcony_trims:
+  - key: balcony_bedroom_4
+    v0: 24.12
+    reason: "The garden frame's north leg takes the balcony's south end."
 
 # Consequences the facade build will carry out once the sketch is approved.
 changes_to_model:

@@ -96,6 +96,8 @@ def ifc_meshes() -> tuple[list[tuple[str, str, np.ndarray]], list[dict]]:
             sh = it.get()
             e = f.by_id(sh.id)
             mat = ifc_material(e.is_a(), e.Name)
+            if (getattr(e, "ObjectType", None) or "").startswith("Facade"):
+                mat = None        # drawn from brief/facade.yaml instead
             if mat:
                 v = np.array(sh.geometry.verts).reshape(-1, 3)
                 t = np.array(sh.geometry.faces).reshape(-1, 3)

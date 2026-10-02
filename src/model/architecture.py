@@ -52,6 +52,9 @@ from ifcopenshell.util.shape_builder import ShapeBuilder
 from shapely.geometry import MultiPolygon, Point, Polygon, box
 from shapely.ops import unary_union
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from model import facade as facade_mod  # noqa: E402
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
@@ -87,7 +90,10 @@ DOOR_WIDTH = {"salon": 1.20, "master_suite": 1.00, "family_living": 1.20,
 
 # key, name, RGB, transparency. Neutral concept colours, not finishes.
 STYLES = [
-    ("ext", "White render", (0.96, 0.95, 0.92), 0.0),
+    ("ext", "Beige render", (0.86, 0.80, 0.69), 0.0),        # D-048, brief/facade.yaml
+    ("stone", "Warm split face stone", (0.78, 0.68, 0.50), 0.0),
+    ("timber", "Timber, soffits, fins and pergola", (0.60, 0.39, 0.23), 0.0),
+    ("led", "Linear LED line, warm white", (1.00, 0.86, 0.60), 0.0),
     ("int", "Partition, painted", (0.90, 0.89, 0.86), 0.0),
     ("slab", "Slab, rendered edge", (0.93, 0.92, 0.89), 0.0),
     ("roof", "Roof finish", (0.86, 0.85, 0.82), 0.0),
@@ -218,6 +224,12 @@ class Model:
                   for r in self.lay["floors"][f]["rooms"] + self.lay["floors"][f]["circulation"]}
         self.external_doors = [d for d in self.external_doors if d[0] in placed]
         self.counts: dict[str, int] = {}
+        # Facade, answers R1 to R4: brief/facade.yaml.
+        self.fspec = facade_mod.load()
+        self.cuts = self.fspec.get("cuts", []) or []
+        self.elev = {"ground": 0.0, "first": self.HG, "roof": self.HG + self.HF}
+        self.window_boxes: list[dict] = []
+        self.facade_obstacles: list[Polygon] = []
 
     # Setup -----------------------------------------------------------------
 
@@ -292,7 +304,10 @@ class Model:
             self.style[key] = st
 
         self.mat = {}
-        for key, name, cat in (("ext", "Masonry, white render", "block"),
+        for key, name, cat in (("ext", "Masonry, beige render", "block"),
+                               ("stone", "Split face stone cladding", "stone"),
+                               ("timber", "Timber, exterior", "wood"),
+                               ("led", "Linear LED profile", "aluminium"),
                                ("int", "Blockwork partition", "block"),
                                ("slab", "Reinforced concrete", "concrete"),
                                ("glass", "Glazing", "glass"),
@@ -321,6 +336,14 @@ class Model:
         return mat
 
     # Element helpers -------------------------------------------------------
+
+    def _cut(self, geom, storey, z0, z1):
+        """geom less the facade cuts (brief/facade.yaml) that span its height."""
+        e = self.elev[storey]
+        for c in self.cuts:
+            if c["z"][0] <= e + z0 + 1e-6 and c["z"][1] >= e + z1 - 1e-6:
+                geom = geom.difference(box(c["u"][0], c["v"][0], c["u"][1], c["v"][1]))
+        return geom
 
     def _prism(self, poly: Polygon, z0: float, h: float):
         # Drop zero length edges left where unions meet (a repeated vertex
@@ -479,7 +502,7 @@ class Model:
                 parts = [(zone.difference(tall_zone), z_top),
                          (zone.intersection(tall_zone), tall_top)]
             for geom, top in parts:
-                for poly in clean(geom):
+                for poly in clean(self._cut(geom, storey, 0.0, top)):
                     kind = "external" if is_ext else "partition"
                     w = self.element("IfcWall", f"Wall, {kind}, {storey}", storey,
                                      [self._prism(poly, 0.0, top)],
@@ -583,7 +606,7 @@ class Model:
             for t in taller:
                 if not t.is_empty:
                     ring = ring.difference(t.buffer(0.01, join_style=2))
-            for p in clean(ring):
+            for p in clean(self._cut(ring, storey, 0.0, self.PAR)):
                 self.element("IfcWall", f"Parapet, {name.lower()}", storey,
                              [self._prism(p, 0.0, self.PAR)],
                              predefined="PARAPET", material="ext")
@@ -914,6 +937,11 @@ class Model:
                             material=material or ("door" if cls == "IfcDoor" else "glass"))
         fill.OverallWidth = width
         fill.OverallHeight = height
+        if cls == "IfcWindow":
+            b = pane.bounds
+            e = self.elev[storey]
+            self.window_boxes.append(dict(name=name, u0=b[0], u1=b[2], v0=b[1], v1=b[3],
+                                          z0=e + sill, z1=e + sill + height))
         ifcopenshell.api.feature.add_filling(self.f, opening=op, element=fill)
         return fill
 
@@ -1311,6 +1339,53 @@ class Model:
 
     # Build ---------------------------------------------------------------------
 
+    FACADE_CLASS = {
+        "cladding": ("IfcCovering", "CLADDING"),
+        "surround": ("IfcCovering", "CLADDING"),
+        "soffit": ("IfcCovering", "USERDEFINED"),
+        "canopy": ("IfcSlab", "USERDEFINED"),
+        "fin": ("IfcShadingDevice", "USERDEFINED"),
+        "pergola": ("IfcBuildingElementProxy", "USERDEFINED"),
+    }
+
+    def build_facade(self):
+        """The facade of brief/facade.yaml (answers F1, F2, R1 to R4): stone
+        portal and garden frame, eaves, carport piers, surrounds and fins on
+        the hot windows, the open roof pergola and the LED lines. One element
+        per named part; a window's surround, its fins, and the pergola each as
+        one element. Visual concept finishes, not a specification."""
+        inside = facade_mod.inside_from_layouts(LAYOUTS)
+        bx, self.facade_notes = facade_mod.boxes(self.window_boxes, self.fspec, inside)
+        groups: dict[tuple, list] = {}
+        for b in bx:
+            key = ("Roof pergola" if b.kind == "pergola" else b.name, b.kind, b.material)
+            groups.setdefault(key, []).append(b)
+        for (name, kind, mat), parts in groups.items():
+            z0 = min(p.z0 for p in parts)
+            storey = "roof" if z0 >= self.HG + self.HF - 0.31 else ("first" if z0 >= self.HG - 0.31
+                                                                     else "ground")
+            e = self.elev[storey]
+            items = [self._prism(box(p.u0, p.v0, p.u1, p.v1), p.z0 - e, p.z1 - p.z0) for p in parts]
+            cls, pre = self.FACADE_CLASS[kind]
+            el = self.element(cls, name, storey, items, predefined=pre,
+                              object_type=f"Facade: {kind}",
+                              material={"render": "ext"}.get(mat, mat))
+            el.Description = "Facade proposal, brief/facade.yaml. CONCEPT DESIGN, NOT FOR CONSTRUCTION."
+            if kind in ("cladding",) and z0 < 0.5:
+                self.facade_obstacles += [box(p.u0, p.v0, p.u1, p.v1).buffer(0.02) for p in parts]
+        # LED lines: 40 mm profiles along the polylines.
+        t = 0.04
+        for ln in self.fspec.get("led", []) or []:
+            pts = ln["points"]
+            items = []
+            for p, q in zip(pts[:-1], pts[1:]):
+                lo = [min(a, b) - t / 2 for a, b in zip(p, q)]
+                hi = [max(a, b) + t / 2 for a, b in zip(p, q)]
+                items.append(self._prism(box(lo[0], lo[1], hi[0], hi[1]), lo[2], hi[2] - lo[2]))
+            el = self.element("IfcLightFixture", f"Linear LED, {ln['name']}", "ground", items,
+                              predefined="NOTDEFINED", object_type="Facade: led", material="led")
+            el.Description = "Facade proposal, brief/facade.yaml. CONCEPT DESIGN, NOT FOR CONSTRUCTION."
+
     def build_railings(self):
         """Glass balustrades along every open edge of the first floor voids,
         where no wall stands. Height 1.20 m from the floor finish, the DDA
@@ -1352,6 +1427,9 @@ class Model:
         plot = site_to_grid(plot_polygon())
         ground = unary_union([interior("ground", self.g_rooms, self.g_circ),
                               plot.difference(self.g_fp)]).difference(solid)
+        # Facade parts standing on the ground (portal legs, carport piers).
+        for ob in self.facade_obstacles:
+            ground = ground.difference(ob)
         voids = unary_union([v.poly for v in self.voids]) if self.voids else Polygon()
         first = unary_union([interior("first", self.f_rooms, self.f_circ)]
                             + [r.poly for r in self.f_outdoor if "terrace" not in r.key])
@@ -1404,6 +1482,7 @@ class Model:
         self.build_windows_and_external_doors()
         self.build_furniture()
         self.build_outdoor()
+        self.build_facade()
         self.build_site()
         OUT.parent.mkdir(parents=True, exist_ok=True)
         self.f.write(str(OUT))

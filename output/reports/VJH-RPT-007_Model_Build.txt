@@ -5,35 +5,43 @@ CONCEPT DESIGN, NOT FOR CONSTRUCTION
 
 2. IFC generated: output/ifc/VJH-ARCH-001_Villa_5130272.ifc
    Schema IFC4. Stair and lift core: reference stair: 28 risers of 179 mm, going 253 mm, two flights 1.47 m wide, half landing 1.47 m, in a 4.80 x 2.98 m stair room; the reference's 300 mm treads and 1.5 m landing need 5.45 m (OI-23, TO VERIFY); lift in its own shaft 1.80 x 2.15 m
+   IfcBuildingElementProxy       1
    IfcColumn                     3
+   IfcCovering                  28
    IfcDoor                      30
    IfcGeographicElement          1
+   IfcLightFixture               7
    IfcOpeningElement            68
-   IfcRailing                    3
-   IfcSlab                       9
+   IfcRailing                    4
+   IfcShadingDevice              4
+   IfcSlab                      11
    IfcSpace                     50
    IfcStair                      1
    IfcTransportElement           1
-   IfcWall                      16
+   IfcWall                      15
    IfcWindow                    36
 
 3. Schema validation: PASS, 0 issue(s)
 
-4. Geometry: 150 elements tessellated, 0 failed
+4. Geometry: 192 elements tessellated, 0 failed
+   IfcBuildingElementProxy       1        4.41 m3
    IfcColumn                     3        1.58 m3
+   IfcCovering                  28      143.41 m3
    IfcDoor                      30        5.61 m3
    IfcGeographicElement          1      305.99 m3
-   IfcRailing                    3        1.72 m3
-   IfcSlab                       9      369.59 m3
-   IfcSpace                     50     3062.19 m3
+   IfcLightFixture               7        0.14 m3
+   IfcRailing                    4        1.95 m3
+   IfcShadingDevice              4        0.43 m3
+   IfcSlab                      11      379.09 m3
+   IfcSpace                     50     3057.17 m3
    IfcStair                      1       12.92 m3
    IfcTransportElement           1       27.14 m3
-   IfcWall                      16      306.17 m3
+   IfcWall                      15      297.26 m3
    IfcWindow                    36        7.44 m3
 
 5. Floor area, IFC against the plan (walls and spaces in plan; tolerance 0.10 m2)
    Ground Floor   IFC   355.56   plan   355.58   PASS
-   First Floor    IFC   305.23   plan   305.25   PASS
-   Total          IFC   660.80   plan   660.82   cap 662.99
+   First Floor    IFC   304.38   plan   304.40   PASS
+   Total          IFC   659.95   plan   659.98   cap 662.99
 
 RESULT: PASS

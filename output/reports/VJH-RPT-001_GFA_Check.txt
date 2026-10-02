@@ -56,9 +56,9 @@ The estimate above uses a net to gross factor. The plan below is drawn
 geometry, and it is the figure the cap is tested against.
 Road wing, ground                          355.58 m2
 SSW wing, ground                             0.00 m2
-First floor, less voids                    305.25 m2
-Total                                      660.82 m2
-Margin to the cap                           +2.17 m2
+First floor, less voids                    304.40 m2
+Total                                      659.98 m2
+Margin to the cap                           +3.01 m2
 
 VERDICT: PASS in every scenario.
 

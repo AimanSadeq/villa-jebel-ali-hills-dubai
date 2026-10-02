@@ -41,15 +41,15 @@ gfa_measured:
   road_wing_ground: 355.58
   ssw_wing_ground: 0.0
   living_block_ground: 0.0
-  first_floor_less_void: 305.25
+  first_floor_less_void: 304.4
   first_floor_voids: 81.73
-  total: 660.82
+  total: 659.98
   cap: 662.99
-  margin: 2.17
+  margin: 3.01
   outside_gfa_to_verify:
     carport_m2: 77.35
     lawn_court_m2: 0.0
-    first_floor_balconies_terrace_m2: 84.04
+    first_floor_balconies_terrace_m2: 82.63
 outlines:
   road_ground:
   - - 8.99
@@ -1073,9 +1073,9 @@ floors:
       - 20.796
       - 22.803
       v:
-      - 23.415
+      - 24.12
       - 30.556
-      area_m2: 14.33
+      area_m2: 12.92
     - key: terrace_over_carport
       u:
       - 0.456

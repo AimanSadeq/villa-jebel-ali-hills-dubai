@@ -537,7 +537,7 @@ about 0.5 m from the store or the prep kitchen.
 - The 6 m2 linen store (brief) has no place since answer 12l. CLOSED by FF4 (C): no separate store, linen in built-in cupboards.
 - The master suite's coffee station (brief) was the reference pantry's. CLOSED by FF3: a 1.80 m station between the dressing room and the bedroom (VJH-SK-015); modelled with the Phase 4 furniture.
 - The family room above the salon was 26.2 m2 against the brief's 35 m2. CLOSED by FF5: open to the gallery, 4.99 x 5.25 m plus 1.49 x 5.04 m, about 33.7 m2 (363 sq ft), clear height 3.55 m.
-- GFA margin: 2.17 m2 since FF7 (was 1.30 m2). The owner keeps it (FF6) and declines the D-005 reserve for now; the risk stays open until the consultant measures (OI-01).
+- GFA margin: 3.01 m2 since the facade build (R4, D-051: the wall over the porch removed); 2.17 m2 after FF7, 1.30 m2 before. The owner keeps it (FF6) and declines the D-005 reserve for now; the risk stays open until the consultant measures (OI-01).
 - The first floor wall at the void's end stood 0.21 m forward of the TV wall below. CLOSED by FF7 (A): lined up, built (D-050).
 - The guest powder room is about 12 m from the salon; the brief puts it next to the salon.
 

@@ -8,6 +8,24 @@ Columns: date, decision, reason, approved by Aiman.
 
 ## 2026-10-02, the ground floor built from the reference
 
+### D-051 Facade built, after the owner's renders (answers R1 to R4)
+
+**Date.** 2026-10-02.
+
+**Decision.** The facade of sketch VJH-SK-017 is built in the IFC from brief/facade.yaml (src/model/facade.py, architecture.build_facade):
+- Road side: a warm split face stone portal around the double height porch, 3.85 m wide outside, 2.95 m inside, from the ground to the parapet top (+10.20), timber soffit and LED.
+- Garden side: a stone frame 2.55 m deep around the tall glass of the double height living room; its bottom band shades the living room glass 2.06 m deep.
+- South face: eaves 1.50 m at the roof and 1.00 m over the ground floor, timber soffits.
+- Carport columns clad in stone; projecting surrounds on the windows of the hot faces, vertical timber fins on the larger road side windows.
+- An open timber louvred pergola, 6.00 x 9.41 m, over the garden frame, no roof access (R1, R2, D-017 stands), top +11.70 TO VERIFY (OI-28, OI-13).
+- Beige render replaces white on the walls (D-048); linear LED lines as in the renders.
+- Model changes: the first floor wall across the road side of the porch removed (the porch opens to the road over its full double height); the 1.20 m parapet on the 0.49 m ledge in front of the living room's tall glass removed inside the frame (TO VERIFY, OI-29); bedroom 4's balcony starts at v 24.12, 0.70 x 2.00 m shorter.
+- GFA measured from the plan 659.98 m2, margin 3.01 m2 (was 660.82 m2, 2.17 m2): the removed wall over the porch (3.39 x 0.25 m) no longer counts. IFC check 659.94 m2.
+
+**Reason.** Owner's answers F1, F2 (the renders' design language), R1 to R4; the brief's deep overhangs and recessed glazing on the south and west faces (CLAUDE.md section 5), the road face taking the most afternoon sun (VJH-RPT-003).
+
+**Approved by Aiman.** Yes (R4: A, 2026-10-02).
+
 ### D-050 First floor built (answers FF1 to FF8)
 
 **Date.** 2026-10-02.

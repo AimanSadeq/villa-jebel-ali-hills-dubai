@@ -298,6 +298,27 @@ def _outline(ax, coords, lw=2.2):
     ax.plot(xs, ys, color=WALL, lw=lw, solid_joinstyle="miter", zorder=8)
 
 
+def _facade_cuts(ax, coords):
+    """Gaps where the facade removes the first floor wall over its full height
+    (brief/facade.yaml cuts, answer R4): the porch opens to the road."""
+    from shapely.geometry import LineString  # noqa: PLC0415
+
+    from model.facade import load as load_facade  # noqa: PLC0415
+    ring = LineString(coords)
+    for c in load_facade().get("cuts", []) or []:
+        if not (c["z"][0] <= 5.0 and c["z"][1] >= 8.7):
+            continue
+        gap = ring.intersection(box(c["u"][0], c["v"][0], c["u"][1], c["v"][1]))
+        for g in getattr(gap, "geoms", [gap]):
+            if g.is_empty or g.length < 0.1:
+                continue
+            xs, ys = g.xy
+            ax.plot(xs, ys, color="white", lw=3.2, zorder=9, solid_capstyle="butt")
+            ax.plot(xs, ys, color=WALL, lw=0.5, ls=(0, (4, 3)), zorder=9)
+            ax.text(min(xs) - 0.35, sum(ys) / len(ys), "open to the road (R4)", rotation=90,
+                    ha="center", va="center", fontsize=4.5, color=MUTED, zorder=9)
+
+
 def _rect_outline(ax, plate, lw=2.2):
     (u0, u1), (v0, v1) = plate["u"], plate["v"]
     _outline(ax, [(u0, v0), (u1, v0), (u1, v1), (u0, v1), (u0, v0)], lw)
@@ -445,6 +466,7 @@ def build() -> Path:
     _open_joins(axf, lay, "first")
     _doors(axf, doors, "first", (lay.get("open_joins") or {}).get("first", []))
     _outline(axf, lay["outlines"]["first"])
+    _facade_cuts(axf, lay["outlines"]["first"])
     _badges(axf)
     _north(axf, 31.0, 33.0)
     axf.text(0.0, 1.005, f"FIRST FLOOR   clear height {H['first']:.2f} m",
@@ -487,6 +509,8 @@ def build() -> Path:
         "to the gallery, about 33.7 m2 (363 sq ft), h 3.55 m (FF5).",
         "No separate linen store, linen in built-in cupboards (FF4). Wall over the TV wall "
         "lined up; bedroom 4 4.35 x 5.50 m (FF7). Master suite as VJH-SK-015 (FF3).",
+        "Facade (R4, D-051): as sketch VJH-SK-017; the first floor wall over the porch is "
+        "removed, the porch opens to the road over its full double height.",
         "Heights indicative, brief/massing.yaml (D-030): h is clear height, floor to floor "
         "less 0.30 m slab and 0.15 m ceiling services zone.",
         "Carport, porch, balconies and terraces outside GFA by owner decision D-039, TO VERIFY "
@@ -502,7 +526,7 @@ def build() -> Path:
 
     fig.text(0.975, 0.030, "CONCEPT DESIGN, NOT FOR CONSTRUCTION", fontsize=9,
              color=BAD, ha="right")
-    fig.text(0.975, 0.016, "Drawing VJH-GA-001   Ground floor answer 12, first floor FF1 to FF8   Rev C   A1 landscape   "
+    fig.text(0.975, 0.016, "Drawing VJH-GA-001   Ground floor answer 12, first floor FF1 to FF8, facade R4   Rev D   A1 landscape   "
              "true 1:100", fontsize=6.5, color=MUTED, ha="right")
 
     OUT.parent.mkdir(parents=True, exist_ok=True)

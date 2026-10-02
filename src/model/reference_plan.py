@@ -169,6 +169,15 @@ def build_layout(plan: dict | None = None) -> dict:
     f_circ = [r for d, r in f_all if kind(d) == "circulation"]
     f_voids = [r for d, r in f_all if kind(d) == "void"]
     f_outdoor = [(d, r) for d, r in f_all if kind(d) in ("balcony", "terrace")]
+    # The facade shortens a balcony where the garden frame stands (answer R4,
+    # brief/facade.yaml balcony_trims).
+    from model.facade import load as load_facade  # noqa: PLC0415
+    for t in load_facade().get("balcony_trims", []) or []:
+        for d, r in f_outdoor:
+            if r.key == t["key"]:
+                for k in ("u0", "u1", "v0", "v1"):
+                    if k in t:
+                        setattr(r, k, float(t[k]))
 
     # Footprints. The carport is roofed but open and outside GFA (D-039); the
     # lawn court is open to the sky through both floors (D-040).
@@ -186,7 +195,19 @@ def build_layout(plan: dict | None = None) -> dict:
     # The court sits in a notch of the outline, open on one side, so it is
     # already outside the body; only an enclosed court would need taking out.
     road_g = body.area - (body.intersection(court_u).area if court_u is not None else 0.0)
-    first_g = first_body.area - sum(v.area for v in f_voids)
+    # A facade cut that removes the first floor wall over its full height
+    # (brief/facade.yaml cuts, answer R4: the wall over the porch) leaves no
+    # floor area there.
+    from model.facade import load as load_facade  # noqa: PLC0415
+    hts = yaml.safe_load((REPO_ROOT / "brief" / "massing.yaml").read_text(encoding="utf-8"))["heights"]
+    f_lo = float(hts["ground_floor_m"])
+    f_hi = f_lo + float(hts["first_floor_m"]) - float(hts.get("slab_m", 0.30))
+    measured_first = first_body
+    for c in load_facade().get("cuts", []) or []:
+        if c["z"][0] <= f_lo + 1e-6 and c["z"][1] >= f_hi - 1e-6:
+            measured_first = measured_first.difference(box(c["u"][0], c["v"][0], c["u"][1], c["v"][1]))
+    # Voids and cuts may overlap at the cut's edge: take them out as one shape.
+    first_g = measured_first.difference(unary_union([v.poly() for v in f_voids])).area
     carport_g = carport_plate.area if carport_plate is not None else 0.0
     outdoor_first = sum(r.area for d, r in f_outdoor)
     ground_poly = unary_union([body] + ([carport_plate] if carport_plate is not None else []))

@@ -58,3 +58,16 @@ def test_road_windows_get_surrounds_and_fins():
     bx, notes = facade.boxes([w], SPEC, facade.inside_from_layouts())
     kinds = [b.kind for b in bx if w["name"] in b.name]
     assert kinds.count("surround") == 4 and kinds.count("fin") >= 4 and not notes
+
+
+def test_the_facade_changes_reach_the_plan():
+    """R4, D-051: bedroom 4's balcony starts behind the garden frame, and the
+    plan's GFA leaves out the first floor wall the porch cut removes."""
+    lay = yaml.safe_load((REPO_ROOT / "brief" / "layouts.yaml").read_text(encoding="utf-8"))
+    bal = next(r for r in lay["floors"]["first"]["outdoor"] if r["key"] == "balcony_bedroom_4")
+    trim = next(t for t in SPEC["balcony_trims"] if t["key"] == "balcony_bedroom_4")
+    assert abs(bal["v"][0] - trim["v0"]) < 1e-3
+    leg = next(e for e in SPEC["elements"] if e["name"] == "Garden frame, north leg")
+    assert bal["v"][0] >= leg["v"][1] - 1e-3
+    m = lay["gfa_measured"]
+    assert m["total"] <= m["cap"]
