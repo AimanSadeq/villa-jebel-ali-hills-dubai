@@ -125,8 +125,8 @@ def test_the_measured_plan_fits_the_cap():
 
 
 @pytest.mark.xfail(strict=True, reason=(
-    "D-046: the owner chose first floor trim 12l with 1.30 m2 inside the cap, told the "
-    "D-005 reserve (never approved) is not held. Revisit when the first floor is designed."))
+    "D-046 and first floor answer FF6: the owner keeps 1.30 m2 inside the cap and declines "
+    "the D-005 reserve for now, knowing a remeasure could take the house over."))
 def test_the_measured_plan_holds_the_recommended_margin():
     """D-005: hold about 10 m2 back for the consultant's remeasure. A strict
     expected failure from D-029 (6.52 m2) until the central hall plan, D-036,
@@ -159,8 +159,8 @@ def test_the_outdoor_bathroom_counts_toward_gfa():
 
 
 @pytest.mark.xfail(strict=True, reason=(
-    "D-046: answer 12 with trim 12l holds 1.30 m2. Flagged to the owner; the first "
-    "floor design (D-038) has to restore at least 5 m2."))
+    "D-046 and first floor answer FF6: the owner keeps 1.30 m2 and declines the 5 m2 floor "
+    "for now (offered a 0.50 m step back of bedrooms 2 and 3 for 7.80 m2)."))
 def test_the_measured_plan_holds_a_real_margin():
     """The floor below the D-005 recommendation: never design with nothing in
     hand against a consultant's remeasure."""

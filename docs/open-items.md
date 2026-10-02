@@ -537,7 +537,7 @@ about 0.5 m from the store or the prep kitchen.
 - The 6 m2 linen store (brief) has no place since answer 12l. CLOSED by FF4 (C): no separate store, linen in built-in cupboards.
 - The master suite's coffee station (brief) was the reference pantry's; it needs a place in the suite.
 - The family room above the salon is 26.2 m2 against the brief's 35 m2 (program target 33).
-- GFA margin 1.30 m2: the first floor design has to restore at least 5 m2, and the D-005 reserve if the owner approves it (two strict expected failures in tests/test_layout.py).
+- GFA margin 1.30 m2: the owner keeps it (FF6) and declines the D-005 reserve for now; the risk stays open until the consultant measures (OI-01).
 - The first floor wall at the void's end stands 0.21 m forward of the TV wall below, so the 8.55 m TV wall face is not flush.
 - The guest powder room is about 12 m from the salon; the brief puts it next to the salon.
 
