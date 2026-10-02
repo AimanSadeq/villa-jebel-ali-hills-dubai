@@ -27,7 +27,8 @@ interface ModelData {
   meta: { plot: string; community: string; stamp: string; phase: number; ifc: string; built: string };
   north_uv: [number, number];
   heights: { ground_m: number; first_m: number; parapet_m: number; roof_m: number; overall_m: number };
-  gfa: { road_wing_ground: number; ssw_wing_ground: number; first_floor_less_void: number;
+  gfa: { road_wing_ground: number; ssw_wing_ground: number; living_block_ground?: number;
+         first_floor_less_void: number;
          total: number; cap: number; margin: number };
   gfa_from_ifc: Record<string, number>;
   core: string;
@@ -314,6 +315,7 @@ async function boot() {
   const area = h('table', { class: 'metrics' },
     tr('Ground, road wing', `${fmt(g.road_wing_ground)} m²`),
     tr('Ground, SSW wing', `${fmt(g.ssw_wing_ground)} m²`),
+    tr('Ground, living block', `${fmt(g.living_block_ground ?? 0)} m²`),
     tr('First floor, less void', `${fmt(g.first_floor_less_void)} m²`),
     tr('Total GFA', `${fmt(g.total)} m²`),
     tr('', sqft(g.total), 'adj'),
@@ -348,6 +350,15 @@ async function boot() {
       'Indicative model generated from brief/*.yaml. Structure, MEP and finishes are not modelled yet. A DDA registered consultant and a licensed structural engineer must review and stamp all final drawings.')));
 
   await applyVisibility();
+
+  // Reload when a new build lands, so the page always shows the latest model.
+  const built = data.meta.built;
+  setInterval(async () => {
+    try {
+      const r = await fetch('data/model.json', { cache: 'no-store' });
+      if (r.ok && ((await r.json()) as ModelData).meta.built !== built) window.location.reload();
+    } catch { /* offline between rebuilds */ }
+  }, 4000);
 
   // Development only: lets the camera be scripted when checking views.
   if (import.meta.env.DEV) {

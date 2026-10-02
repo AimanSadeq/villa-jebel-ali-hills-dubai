@@ -290,10 +290,8 @@ def plan(lay: dict | None = None, prog: dict | None = None) -> dict[str, Interio
     prog = prog or yaml.safe_load(PROGRAM.read_text(encoding="utf-8"))
     cfg = config(prog)
     names = {r["key"]: r["name"] for f in ("ground", "first") for r in prog[f]}
-    ssw = lay["plates"]["ssw"]
     footprints = {
-        "ground": unary_union([Polygon(lay["outlines"]["road_ground"]),
-                               box(ssw["u"][0], ssw["v"][0], ssw["u"][1], ssw["v"][1])]),
+        "ground": Polygon(lay["outlines"].get("ground", lay["outlines"]["road_ground"])),
         "first": Polygon(lay["outlines"]["first"]),
     }
     out = {}

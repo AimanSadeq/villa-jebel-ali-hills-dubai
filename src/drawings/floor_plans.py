@@ -67,7 +67,7 @@ STAFF_KEYS = {"maids_room", "drivers_room"}
 STAIR_KEYS = {"stair_lift_ground", "stair_lift_first"}
 
 SHORT = {
-    "entrance_foyer": "FOYER", "guest_bedroom": "GUEST BED", "majlis": "MAJLIS",
+    "entrance_foyer": "HALL", "guest_bedroom": "GUEST BED", "majlis": "MAJLIS",
     "guest_powder": "WC", "dining": "DINING", "show_kitchen": "KITCHEN",
     "arabic_kitchen": "ARABIC KIT", "pantry": "PANTRY", "laundry": "LAUNDRY",
     "home_office": "OFFICE", "maids_room": "MAID", "drivers_room": "DRIVER",
@@ -198,7 +198,8 @@ def _circulation(ax, items):
               zorder=3)
         (u0, u1), (v0, v1) = r["u"], r["v"]
         ax.text((u0 + u1) / 2, (v0 + v1) / 2,
-                f"CORRIDOR {u1 - u0:.2f} m", ha="center", va="center",
+                f"{'GALLERY' if r['key'] == 'corridor' else r['key'].upper()} "
+                f"{min(u1 - u0, v1 - v0):.2f} m", ha="center", va="center",
                 fontsize=4.4, color=MUTED, rotation=90, zorder=7)
 
 
@@ -213,8 +214,9 @@ def _rect_outline(ax, plate, lw=2.2):
     _outline(ax, [(u0, v0), (u1, v0), (u1, v1), (u0, v1), (u0, v0)], lw)
 
 
-def _pool(ax, road_east):
-    spec = next(o for o in load_massing()["options"] if o["key"] == "C")
+def _pool(ax, road_east, lay=None):
+    spec = (lay if lay and lay.get("pool") else
+            next(o for o in load_massing()["options"] if o["key"] == "C"))
     clash = spec["deck"]["u"][0] < road_east
     for part, fill, edge in (("deck", DECK, "#b8a888"), ("pool", POOL, "#1b5f8c")):
         (u0, u1), (v0, v1) = spec[part]["u"], spec[part]["v"]
@@ -284,13 +286,15 @@ def build() -> Path:
     # Ground floor
     axg = plan_axes(fig, 15, 70, 380, 420)
     _context(axg)
-    clash = _pool(axg, lay["plates"]["road"]["u"][1])
+    clash = _pool(axg, lay["plates"]["road"]["u"][1], lay)
     _circulation(axg, lay["floors"]["ground"]["circulation"])
     for r in lay["floors"]["ground"]["rooms"]:
         _room(axg, r, targets, pad_keys, centre=centres.get(r["key"]))
     _interiors(axg, interiors, "ground")
     _outline(axg, lay["outlines"]["road_ground"])
     _rect_outline(axg, lay["plates"]["ssw"])
+    if "living" in lay["plates"]:
+        _rect_outline(axg, lay["plates"]["living"])
     _badges(axg)
     axg.text(0.0, 1.005, "GROUND FLOOR", transform=axg.transAxes, fontsize=12,
              color=INK)
@@ -302,11 +306,16 @@ def build() -> Path:
     _context(axf)
     _outline(axf, lay["outlines"]["road_ground"], lw=0.6)          # ground, ghosted
     _rect_outline(axf, lay["plates"]["ssw"], lw=0.6)
+    if "living" in lay["plates"]:
+        lv = lay["plates"]["living"]
+        _rect_outline(axf, lv, lw=0.6)
+        axf.text((lv["u"][0] + lv["u"][1]) / 2, (lv["v"][0] + lv["v"][1]) / 2,
+                 "ROOF OVER THE\nDOUBLE HEIGHT\nLIVING ROOM", ha="center",
+                 va="center", fontsize=6, color=MUTED, zorder=6)
     axf.text(*[(lay["plates"]["ssw"]["u"][0] + lay["plates"]["ssw"]["u"][1]) / 2,
                (lay["plates"]["ssw"]["v"][0] + lay["plates"]["ssw"]["v"][1]) / 2],
-             "MASTER TERRACE\non the kitchen roof, D-035\nnot GFA (DDA Q25)\n\n"
-             "ROOF OVER THE\nDOUBLE HEIGHT LIVING ROOM", ha="center", va="center",
-             fontsize=6, color=MUTED, zorder=6)
+             "MASTER TERRACE\non the kitchen roof, D-035\nnot GFA (DDA Q25)",
+             ha="center", va="center", fontsize=6, color=MUTED, zorder=6)
     _circulation(axf, lay["floors"]["first"]["circulation"])
     for v in lay["floors"]["first"].get("voids", []):
         if v["area_m2"] < 0.01:
@@ -331,6 +340,7 @@ def build() -> Path:
     fig.text(x0, y, "GFA, MEASURED FROM THE PLAN", fontsize=9, color=INK)
     rows = [("Road wing, ground", g["road_wing_ground"]),
             ("SSW wing, ground, single storey", g["ssw_wing_ground"]),
+            ("Living block, ground, double height", g.get("living_block_ground", 0.0)),
             ("First floor, less the void", g["first_floor_less_void"]),
             ("Total", g["total"]),
             ("DDA cap", g["cap"])]
@@ -356,8 +366,10 @@ def build() -> Path:
         "Corridors 1.80 m and garage counted toward GFA, owner decision D-026. "
         "Master 68 (D-027), bedrooms 30 (D-029), family 33. No driver's room; "
         "outdoor WC and shower to the courtyard, D-028.",
-        "Open plan, owner rule D-033: foyer, stair hall, corridor, link hall, "
-        "kitchen, dining and living join with no partitions. Boxes show room areas.",
+        "Central hall plan, D-036: big foyer in the middle, majlis north (left on "
+        "entering), dining south (right), living straight ahead as a 9 m tall block,",
+        "kitchens beyond the dining. Pool moved north onto the living's deck, D-037. "
+        "Open plan D-033: hall, gallery, stair, living, dining and show kitchen join.",
         "First floor around a central family hall with no corridor, D-032: "
         "bedrooms open off the family room, the master and bedroom 4 off the landing.",
         "Interiors D-034, D-035: en-suite bath and wardrobe (WR) beside each bedroom "

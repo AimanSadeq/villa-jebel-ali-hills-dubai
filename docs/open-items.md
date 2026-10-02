@@ -6,7 +6,7 @@ names the document that must answer it.
 
 Status key: OPEN, ASKED (sent to a third party), CLOSED.
 
-Last updated: 2026-10-02 (Phase 3 model; open plan; plan inside the cap by 9.89 m2)
+Last updated: 2026-10-02 (Phase 3 model; central hall plan; inside the cap by 18.17 m2)
 
 ## Critical. Blocks Phase 2 room layouts
 
@@ -344,6 +344,10 @@ below the uncertainty that OI-04 carried before it closed.
 Corrected anyway, because the exact figure was available at no cost.
 
 ### OI-12 May a swimming pool sit within the 3 m setback?
+
+**Update 2026-10-02, D-037.** With the pool moved north onto the living room's
+deck, the deck's north edge is inside the buildable envelope, so this question
+does not arise for the current position. Kept open in case the pool moves.
 
 | | |
 |---|---|

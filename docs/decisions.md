@@ -6,6 +6,63 @@ Columns: date, decision, reason, approved by Aiman.
 
 ---
 
+## 2026-10-02, central hall ground floor
+
+### D-037 Pool moved north onto the living room's deck
+
+**Decision.** The pool keeps its Phase 1 orientation and east west position
+(u 18.50 to 22.50, 10 m along the plot's long axis) and moves north so that
+its deck starts at the living room's north wall: pool v 19.45 to 29.45, deck
+to v 30.45, 2 m each side. The deck stays inside the buildable envelope, so
+the pool setback question (OI-12) no longer arises for this position.
+
+**Reason.** Follows from D-036: the tall living block now stands where the
+Phase 1 pool was, and the owner wants the living room opening onto the pool.
+The afternoon shade on the deck must be re-checked against the real footprint
+and the 10.20 m height, as promised at the start of Phase 3. An east west pool
+across the living room's frontage was considered and can be offered if the
+shade check favours it.
+
+**Approved by Aiman: no,** Claude's consequence of D-036, for review.
+
+### D-036 Central hall ground floor
+
+**Decision.** The ground floor is replanned as a central hall villa. From the
+front door on the road: a big hall across the full width of the wing (11.40 x
+3.50 m, 39.9 m2, against a 19 m2 program target), the stair open to it; the
+majlis north of the hall (on the left when entering) with its powder room at
+the road end, both opening off the hall; the dining south of the hall (on the
+right) reached along a 1.80 m entrance gallery that it opens onto, with the
+pantry at its south end; the double height living room straight ahead, a 7.50
+x 6.00 m block 9.00 m tall standing in the courtyard with nothing above it,
+open to the hall through a 3.50 m wide join and glazed north to the pool and
+east to the landscape plot; the show kitchen beyond the dining in the SSW wing,
+open to it across 3.3 m of wall, with the Arabic kitchen behind it at the
+south end and its service door on the south face. The guest bedroom takes the
+road side of the south end, the office sits beside the stair off the gallery.
+The garage, the staff strip and the whole first floor are unchanged, and the
+master terrace stays on the kitchen roof.
+
+**Reason.** Owner instruction 2026-10-02: the earlier plan was not an open
+area design; the owner asked for the salon on the left, the dining on the
+right, a big foyer, the living room in the centre with a high ceiling, and the
+kitchen after the dining room. Claude confirmed the orientation (left is
+north) and offered two ways to carry the double height: a tall block in the
+courtyard, or a void with a gallery upstairs, which would have cost about 45
+m2 of first floor program. The owner chose the tall block.
+
+**Result, measured: 644.82 m2, 18.17 m2 inside the cap,** up from 9.89 m2.
+The D-005 margin is restored and its expected failure marker is off. Road
+wing 282.12, SSW wing 45.47, living block 49.01, first floor 268.22. Padding:
+the hall by design (+20.9), the office +1.8, the master +5.7 (it follows the
+guest bedroom's length). The kitchens keep a wall to the living room; opening
+it is an option for the owner.
+
+**Approved by Aiman: yes,** the arrangement and the tall living block. The
+hall size and the room sizes: for review.
+
+---
+
 ## 2026-10-02, interiors drawn in Phase 3
 
 ### D-035 Master suite plan, with its terrace on the kitchen roof

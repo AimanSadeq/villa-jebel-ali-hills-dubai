@@ -100,10 +100,12 @@ STYLES = [
 # double height living room, a bulkhead stays above the lower ceiling to mark
 # the edge of the double height.
 OPEN_JOINS = {
-    "ground": [("entrance_foyer", "corridor"), ("stair_lift_ground", "corridor"),
-               ("hall_link", "corridor"), ("hall_link", "dining"),
-               ("show_kitchen", "dining"), ("dining", "living"),
-               ("show_kitchen", "living")],
+    # Central hall plan, D-036: the hall opens to the stair, the entrance
+    # gallery and the living room; the dining opens to the gallery and the
+    # show kitchen. The kitchen keeps a wall to the living room.
+    "ground": [("entrance_foyer", "corridor"), ("stair_lift_ground", "entrance_foyer"),
+               ("stair_lift_ground", "corridor"), ("entrance_foyer", "living"),
+               ("dining", "corridor"), ("show_kitchen", "dining")],
     "first": [("stair_lift_first", "hall_arm"), ("hall_arm", "family_hall"),
               ("family_hall", "family_living")],
 }
@@ -120,6 +122,7 @@ ROOM_LINKS = [
     ("dining", "living", 3.00, "opening"),
     ("garage", "laundry", 0.90, "door"),
     ("laundry", "maids_room", 0.90, "door"),     # the maid's way into the house
+    ("pantry", "arabic_kitchen", 0.90, "door"),  # D-036: pantry beside the kitchens
 ]
 # External doors: room, face, width, height, material. The master suite's
 # terrace door (D-035) is added from brief/program.yaml.
@@ -129,6 +132,7 @@ EXTERNAL_DOORS = [
     ("outdoor_bathroom", "E", 0.90, 2.40, "door"),   # opens to the courtyard, D-028
     ("maids_room", "N", 0.90, 2.40, "door"),         # staff entrance, CLAUDE.md s4
     ("plant_room", "E", 0.90, 2.40, "door"),         # service access
+    ("arabic_kitchen", "S", 0.90, 2.40, "door"),     # kitchen service door, D-036
 ]
 
 
@@ -346,14 +350,21 @@ class Model:
                       if d["area_m2"] > 0.01]
         living = next(r for r in self.g_rooms if r.key == "living")
         self.living = living
-        # SSW wing splits into the single storey kitchen block and the double
-        # height living block, divided at the living room's partition.
-        cut = living.u0 - T_INT
-        self.kitchen_block = box(self.ssw.bounds[0], self.ssw.bounds[1], cut,
-                                 self.ssw.bounds[3])
-        self.living_block = box(cut, self.ssw.bounds[1], self.ssw.bounds[2],
-                                self.ssw.bounds[3])
-        self.g_fp = unary_union([self.road, self.ssw])
+        if "living" in lay["plates"]:
+            # Central hall plan, D-036: the living room is a tall block of its
+            # own, sharing the SSW wing's north wall.
+            p = lay["plates"]["living"]
+            self.living_block = box(p["u"][0], p["v"][0], p["u"][1], p["v"][1])
+            self.kitchen_block = self.ssw
+        else:
+            # Wing plans: the SSW wing splits into the single storey kitchen
+            # block and the double height living block at the living's partition.
+            cut = living.u0 - T_INT
+            self.kitchen_block = box(self.ssw.bounds[0], self.ssw.bounds[1], cut,
+                                     self.ssw.bounds[3])
+            self.living_block = box(cut, self.ssw.bounds[1], self.ssw.bounds[2],
+                                    self.ssw.bounds[3])
+        self.g_fp = unary_union([self.road, self.ssw, self.living_block])
 
     # Walls -------------------------------------------------------------------
 
@@ -475,14 +486,14 @@ class Model:
                      predefined="FLOOR", material="slab")
 
         roofs = [
-            ("Main roof", "roof", self.first_fp, 0.0, [], ),
+            ("Main roof", "roof", self.first_fp, 0.0, [self.living_block]),
             ("Roof over the garage and service end", "first",
              self.low_road, 0.0, [self.first_fp]),
-            ("Roof terrace over the kitchen and dining, master suite terrace",
+            ("Roof terrace over the kitchen, master suite terrace",
              "first", self.kitchen_block, 0.0,
              [self.first_fp, self.living_block]),
             ("Roof over the double height living room", "roof", self.living_block,
-             0.0, []),
+             0.0, [self.first_fp]),
         ]
         for name, storey, poly, _, taller in roofs:
             parts = clean(poly)
@@ -764,6 +775,8 @@ class Model:
                              style="joinery")
 
     def _face_kind(self, r: R, face: str) -> str:
+        if r.key == "living" and "living" in self.lay["plates"]:
+            return {"N": "courtyard", "E": "landscape", "S": "hot", "W": "inner"}[face]
         in_ssw = self.ssw.buffer(0.01).contains(r.poly)
         if in_ssw:
             return {"N": "courtyard", "E": "landscape", "S": "hot", "W": "inner"}[face]
@@ -850,13 +863,14 @@ class Model:
         self.element("IfcGeographicElement", "Plot terrain", None,
                      [self._prism(plot, -0.45, 0.30)], predefined="TERRAIN",
                      container=True, style="terrain")
-        spec = next(o for o in self.m["options"] if o["key"] == "C")
+        spec = self.lay if self.lay.get("pool") else next(
+            o for o in self.m["options"] if o["key"] == "C")
         (pu0, pu1), (pv0, pv1) = spec["pool"]["u"], spec["pool"]["v"]
         (du0, du1), (dv0, dv1) = spec["deck"]["u"], spec["deck"]["v"]
         pool = box(pu0, pv0, pu1, pv1)
         shell = pool.buffer(T_EXT, join_style=2)
         depth = 1.50
-        if not unary_union([self.road, self.ssw]).disjoint(box(du0, dv0, du1, dv1)):
+        if self.g_fp.buffer(-0.01).intersects(box(du0, dv0, du1, dv1)):
             raise ValueError("pool deck clashes with the building")
         self.element("IfcBuildingElementProxy", "Swimming pool shell", None,
                      [self._prism(shell.difference(pool), -depth - T_EXT, depth + T_EXT),

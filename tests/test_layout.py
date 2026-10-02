@@ -108,12 +108,10 @@ def test_the_measured_plan_fits_the_cap():
     assert m["total"] <= m["cap"]
 
 
-@pytest.mark.xfail(strict=True, reason=(
-    "D-029 left 6.52 m2 against the 9.99 m2 recommended in D-005; the family hall, "
-    "D-032, brought it to 9.89 m2. Inside the cap, 0.10 m2 thinner than advised. "
-    "Strict, so the marker must come off if the margin is ever restored."))
 def test_the_measured_plan_holds_the_recommended_margin():
-    """D-005: hold about 10 m2 back for the consultant's remeasure."""
+    """D-005: hold about 10 m2 back for the consultant's remeasure. A strict
+    expected failure from D-029 (6.52 m2) until the central hall plan, D-036,
+    restored the margin."""
     m = lay["gfa_measured"]
     assert m["margin"] >= 9.99 - 1e-6, f"only {m['margin']:.2f} m2 held back"
 
@@ -148,18 +146,69 @@ def test_the_measured_plan_holds_a_real_margin():
     assert lay["gfa_measured"]["margin"] >= 5.0
 
 
-def test_the_family_rooms_are_reached_without_crossing_the_majlis():
-    """A link hall must run from the corridor to the dining room, so the
-    kitchen, dining and living wing is never reached through the majlis or the
-    Arabic kitchen. Found while placing doors in Phase 3."""
-    g = lay["floors"]["ground"]
-    corridor = next(c for c in g["circulation"] if c["key"] == "corridor")
-    link = next(c for c in g["circulation"] if c["key"] == "hall_link")
-    dining = next(r for r in g["rooms"] if r["key"] == "dining")
-    # The link starts across one partition from the corridor...
-    assert abs(link["u"][0] - corridor["u"][1] - 0.15) < 1e-3
-    # ...and ends across one external wall thickness from the dining room...
-    assert abs(dining["u"][0] - link["u"][1] - lay["meta"]["wall_external_m"]) < 1e-3
-    # ...with enough shared length for a door.
-    overlap = min(link["v"][1], dining["v"][1]) - max(link["v"][0], dining["v"][0])
-    assert overlap >= 1.2
+def _room(floor, key):
+    return next(r for r in lay["floors"][floor]["rooms"] if r["key"] == key)
+
+
+def _shared_length(a, b, gap):
+    """Length of wall two rectangles share across a gap of one wall thickness."""
+    if abs(b["u"][0] - a["u"][1] - gap) < 2e-3 or abs(a["u"][0] - b["u"][1] - gap) < 2e-3:
+        return min(a["v"][1], b["v"][1]) - max(a["v"][0], b["v"][0])
+    if abs(b["v"][0] - a["v"][1] - gap) < 2e-3 or abs(a["v"][0] - b["v"][1] - gap) < 2e-3:
+        return min(a["u"][1], b["u"][1]) - max(a["u"][0], b["u"][0])
+    return 0.0
+
+
+def test_the_hall_is_central_with_the_rooms_the_owner_placed_around_it():
+    """D-036: from the front door, the majlis is on the left (north), the
+    dining on the right (south), the living room straight ahead (east), and
+    the kitchen beyond the dining."""
+    t_int, t_ext = lay["meta"]["wall_internal_m"], lay["meta"]["wall_external_m"]
+    hall, majlis = _room("ground", "entrance_foyer"), _room("ground", "majlis")
+    dining, living = _room("ground", "dining"), _room("ground", "living")
+    show, stair = _room("ground", "show_kitchen"), _room("ground", "stair_lift_ground")
+    road = lay["plates"]["road"]
+    # The hall spans the wing and touches the road wall: the front door.
+    assert abs(hall["u"][0] - (road["u"][0] + t_ext)) < 1e-3
+    assert abs(hall["u"][1] - (road["u"][1] - t_ext)) < 1e-3
+    # Majlis north of the hall, across one partition.
+    assert _shared_length(hall, majlis, t_int) >= 6.0 and majlis["v"][0] > hall["v"][1]
+    # Dining south of the hall, reached along the entrance gallery.
+    gallery = next(c for c in lay["floors"]["ground"]["circulation"] if c["key"] == "corridor")
+    assert dining["v"][1] < hall["v"][0]
+    assert _shared_length(gallery, hall, t_int) >= 1.5
+    assert _shared_length(gallery, dining, t_int) >= 2.4
+    # Living straight ahead through the courtyard wall, a wide open join.
+    assert living["u"][0] >= hall["u"][1] + t_ext - 1e-3
+    assert _shared_length(hall, living, t_ext) >= 2.4
+    # Kitchen beyond the dining, sharing enough wall to open to it.
+    assert show["u"][0] >= dining["u"][1] + t_ext - 1e-3
+    assert _shared_length(dining, show, t_ext) >= 2.4
+    # The stair opens off the hall.
+    assert _shared_length(stair, hall, t_int) >= 2.4
+
+
+def test_the_living_room_is_a_tall_block_with_nothing_above():
+    """D-036: the living block sits outside the first floor outline."""
+    living = lay["plates"]["living"]
+    first = Polygon(lay["outlines"]["first"])
+    assert box(living["u"][0] + 0.01, living["v"][0] + 0.01,
+               living["u"][1], living["v"][1]).disjoint(first)
+
+
+def test_the_pool_sits_on_the_living_room_deck_inside_the_envelope():
+    """D-037: the deck starts at the living room's north wall; nothing of the
+    pool or deck runs into the building or past the setback line."""
+    sys.path.insert(0, str(REPO_ROOT / "src"))
+    from model.massing import site_to_grid
+    from model.site import buildable_envelope
+
+    pool, deck, living = lay["pool"], lay["deck"], lay["plates"]["living"]
+    assert abs(deck["v"][0] - living["v"][1]) < 1e-3
+    deck_box = box(deck["u"][0], deck["v"][0], deck["u"][1], deck["v"][1])
+    pool_box = box(pool["u"][0], pool["v"][0], pool["u"][1], pool["v"][1])
+    assert pool_box.within(deck_box)
+    assert abs(pool_box.area - 40.0) < 1e-6
+    ground = Polygon(lay["outlines"]["ground"])
+    assert deck_box.buffer(-1e-6).disjoint(ground)
+    assert deck_box.buffer(-1e-6).within(site_to_grid(buildable_envelope()))

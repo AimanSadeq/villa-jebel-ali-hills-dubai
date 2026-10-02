@@ -50,14 +50,15 @@ VIEWER_DATA = REPO_ROOT / "viewer" / "public" / "data"
 LABEL = {
     "garage": "Garage", "outdoor_bathroom": "Outdoor WC", "maids_room": "Maid",
     "laundry": "Laundry", "plant_room": "Plant", "home_office": "Office",
-    "guest_powder": "Powder", "entrance_foyer": "Foyer",
+    "guest_powder": "Powder",
     "stair_lift_ground": "Stair + lift", "stair_lift_first": "Stair + lift",
     "majlis": "Majlis", "guest_bedroom": "Guest bedroom", "pantry": "Pantry",
     "arabic_kitchen": "Arabic kitchen", "show_kitchen": "Show kitchen",
     "dining": "Dining", "living": "Living", "master_suite": "Master suite",
     "family_living": "Family room", "linen_storage": "Linen",
-    "hall_link": "Link hall", "corridor": "Corridor",
+    "hall_link": "Link hall",
     "family_hall": "Family hall", "hall_arm": "Landing",
+    "entrance_foyer": "Hall", "corridor": "Gallery",
     "bedroom_2": "Bedroom 2", "bedroom_3": "Bedroom 3", "bedroom_4": "Bedroom 4",
 }
 AREA_TOLERANCE_M2 = 0.10
@@ -172,7 +173,8 @@ def publish_to_viewer(model, path: Path, lay: dict, ifc_areas: dict) -> None:
                     "parapet_m": model.PAR, "roof_m": model.HG + model.HF,
                     "overall_m": model.HG + model.HF + model.PAR},
         "gfa": {k: lay["gfa_measured"][k] for k in
-                ("road_wing_ground", "ssw_wing_ground", "first_floor_less_void",
+                ("road_wing_ground", "ssw_wing_ground", "living_block_ground",
+                 "first_floor_less_void",
                  "total", "cap", "margin")},
         "gfa_from_ifc": {k: round(v, 2) for k, v in ifc_areas.items()},
         "core": model.core_note,
@@ -233,7 +235,8 @@ def main() -> int:
     print("\n5. Floor area measured back from the IFC")
     lay = yaml.safe_load(architecture.LAYOUTS.read_text(encoding="utf-8"))
     g = lay["gfa_measured"]
-    plan = {"Ground Floor": g["road_wing_ground"] + g["ssw_wing_ground"],
+    plan = {"Ground Floor": (g["road_wing_ground"] + g["ssw_wing_ground"]
+                             + g.get("living_block_ground", 0.0)),
             "First Floor": g["first_floor_less_void"]}
     ifc = measured_from_ifc(f, meshes)
     lines += ["", "5. Floor area, IFC against the plan (walls and spaces in plan; "

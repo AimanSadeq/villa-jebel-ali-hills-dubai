@@ -328,6 +328,8 @@ def report(program: dict | None = None, site: dict | None = None) -> tuple[str, 
         w("geometry, and it is the figure the cap is tested against.")
         w(f"{'Road wing, ground':<40}{m['road_wing_ground']:>9.2f} m2")
         w(f"{'SSW wing, ground':<40}{m['ssw_wing_ground']:>9.2f} m2")
+        if m.get("living_block_ground"):
+            w(f"{'Living block, ground':<40}{m['living_block_ground']:>9.2f} m2")
         w(f"{'First floor, less voids':<40}{m['first_floor_less_void']:>9.2f} m2")
         w(f"{'Total':<40}{m['total']:>9.2f} m2")
         w(f"{'Margin to the cap':<40}{m['margin']:>+9.2f} m2")

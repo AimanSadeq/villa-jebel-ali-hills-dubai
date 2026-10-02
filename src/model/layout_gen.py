@@ -39,6 +39,8 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from analysis.gfa_check import rooms, totals  # noqa: E402
+from model.massing import site_to_grid  # noqa: E402
+from model.site import buildable_envelope  # noqa: E402
 
 OUT = REPO_ROOT / "brief" / "layouts.yaml"
 
@@ -61,6 +63,7 @@ GARAGE_INTERNAL = 31.3           # 38 m2 gross footprint, see brief/program.yaml
 # builds the stair to the same figures and checks the fit again.
 CORE_MIN_DEPTH = 2 * 0.90 + 0.05 + 0.05 + 1.00
 MIN_VOID_LENGTH = 2.40           # below this a void reads as a slot, not a volume
+MIN_OPEN_JOIN = 2.40             # an open join narrower than this reads as a doorway
 
 
 @dataclass
@@ -219,6 +222,31 @@ CONFIGS = {
         # which makes the majlis a 3.7 m wide gallery.
         "bands": (5.10, 4.20),
     },
+    # Central hall plan, owner instruction 2026-10-02 (D-036): a big foyer in
+    # the middle of the road wing, the majlis north of it (left on entering),
+    # the dining south of it (right), the double height living room straight
+    # ahead as a tall single storey block in the courtyard, and the kitchens in
+    # the SSW wing beyond the dining. The first floor is the family hall plan.
+    # The ground floor is built by build_central_hall; G_WEST and G_EAST are
+    # not used.
+    "c_central_hall": {
+        "G_WEST": [], "G_EAST": [],
+        "G_STAFF": [("laundry", "plant_room"), ("maids_room", "outdoor_bathroom")],
+        "SSW_KITCHEN": ["arabic_kitchen", "show_kitchen"],   # south to north
+        "F_WEST": [], "F_EAST": [],
+        "first_layout": "family_hall",
+        "ground_layout": "central_hall",
+        "foyer_void": False,
+        "living_depth_m": 6.00,          # along v; width follows from the area
+        # The owner asked for a big foyer (D-036): the hall is held at this
+        # depth across the full width, above its 19 m2 program target.
+        "hall_depth_m": 3.50,
+        # Pool: the Phase 1 position (u 18.50 to 22.50, 10 m along v) moved
+        # north so the living room opens onto its deck. D-037, shade re-checked.
+        "pool_u": (18.50, 22.50),
+        "pool_length_m": 10.0,
+        "deck_margin_m": {"side": 2.0, "south": 1.5, "north": 1.0},
+    },
     "original_double_height_foyer": {
         "G_WEST": ["guest_bedroom", "stair_lift_ground", "entrance_foyer",
                    ("home_office", "guest_powder")],
@@ -271,7 +299,7 @@ CONFIGS = {
         "u_east_max": 18.50,
     },
 }
-ACTIVE = "c_family_hall"
+ACTIVE = "c_central_hall"
 
 F_WEST = ["stair_lift_first", "bedroom_2"]
 F_EAST = ["bedroom_4", "linen_storage", "family_living"]
@@ -314,11 +342,161 @@ def family_hall_first(a: dict, uw: tuple, uc: tuple, ue: tuple, v1: float,
     return [linen, bed4, fam, bed2, bed3], [arm, hall], r0 + depth
 
 
+def envelope_north_at(u0: float, u1: float) -> float:
+    """Lowest v of the buildable envelope's north edge over a u range."""
+    env = site_to_grid(buildable_envelope())
+    xs = [x for x in (u0, u1)]
+    ys = []
+    from shapely.geometry import LineString
+    for x in xs:
+        cut = LineString([(x, 0.0), (x, 60.0)]).intersection(env)
+        ys.append(cut.bounds[3])
+    return min(ys)
+
+
+def build_central_hall(dw: float, de: float, a: dict, cfg: dict) -> dict:
+    """Central hall ground floor, D-036. See the config comment."""
+    from shapely.geometry import box
+    from shapely.ops import unary_union
+
+    a = dict(a)
+    a["garage"] = GARAGE_INTERNAL
+    W = dw + de + CORRIDOR + 2 * T_INT
+    uw = (U0 + T_EXT, U0 + T_EXT + dw)
+    uc = (uw[1] + T_INT, uw[1] + T_INT + CORRIDOR)
+    ue = (uc[1] + T_INT, uc[1] + T_INT + de)
+    vi = V0 + T_EXT
+    half = T_INT / 2
+
+    # South end, under the master suite: the guest bedroom on the road side,
+    # the dining and pantry on the courtyard side, the entrance gallery between.
+    L1 = max(a["guest_bedroom"] / dw, a["master_suite"] / W)
+    guest = Rect("guest_bedroom", uw[0], uw[1], vi, vi + L1)
+    south_east, _ = pack(["pantry", "dining"], ue, vi, a, grow_to=vi + L1,
+                         grow_key="dining")
+    v1 = vi + L1 + T_INT
+
+    # The stair core stacks under the first floor core; the office beside it.
+    stair = Rect("stair_lift_ground", uw[0], uw[1], v1, v1 + a["stair_lift_ground"] / dw)
+    if stair.v1 - stair.v0 < CORE_MIN_DEPTH - 1e-9:
+        raise ValueError("ground core too shallow for the stair and lift")
+    office = Rect("home_office", ue[0], ue[1], stair.v0, stair.v1)
+    if office.area < a["home_office"] - 1e-9:
+        raise ValueError("office beside the stair is below its target")
+    spine = Rect("corridor", uc[0], uc[1], vi, stair.v1)
+
+    # Majlis zone north of the hall: the majlis across the width, the guest
+    # powder room at its road end, both opening off the hall.
+    Ln = (a["majlis"] + a["guest_powder"]) / (W - T_INT)
+    pw = a["guest_powder"] / Ln
+
+    # North block, single storey: garage beside the staff strip.
+    u_gar = (uw[0], uw[0] + GARAGE_DEPTH)
+    u_staff = (u_gar[1] + T_INT, ue[1])
+    N = max(GARAGE_INTERNAL / GARAGE_DEPTH,
+            natural_length(cfg["G_STAFF"], u_staff[1] - u_staff[0], a))
+
+    # First floor, which sets the plate length.
+    f_master = [Rect("master_suite", uw[0], ue[1], vi, vi + L1)]
+    f_stair, _ = pack(["stair_lift_first"], uw, v1, a)
+    if f_stair[0].v1 - f_stair[0].v0 < CORE_MIN_DEPTH - 1e-9:
+        raise ValueError("first floor core too shallow for the stair and lift")
+    f_rest, f_circ, f_end = family_hall_first(a, uw, uc, ue, v1, f_stair[0])
+
+    hall_min = max(a["entrance_foyer"] / W, float(cfg.get("hall_depth_m", 0.0)))
+    ground_need = stair.v1 + T_INT + hall_min + T_INT + Ln + T_INT + N
+    road_int_end = max(ground_need, f_end)
+    if road_int_end + T_EXT - V0 > ROAD_MAX_EXT_LENGTH + 1e-9:
+        raise ValueError("road wing longer than the envelope allows")
+    vN = road_int_end - N
+    hall = Rect("entrance_foyer", uw[0], ue[1], stair.v1 + T_INT, vN - T_INT - Ln - T_INT)
+    powder = Rect("guest_powder", uw[0], uw[0] + pw, hall.v1 + T_INT, vN - T_INT)
+    majlis = Rect("majlis", uw[0] + pw + T_INT, ue[1], hall.v1 + T_INT, vN - T_INT)
+    g_garage = [Rect("garage", u_gar[0], u_gar[1], vN, vN + N)]
+    g_staff, _ = pack(cfg["G_STAFF"], u_staff, vN, a, grow_to=vN + N, grow_key="maids_room")
+    road_ext = (U0, ue[1] + T_EXT, V0, road_int_end + T_EXT)
+
+    # SSW wing: the kitchens, stacked south to north in one depth, beyond the
+    # dining. The Arabic kitchen takes the south end with its service door.
+    s_u0 = road_ext[1]
+    s_vi = SSW_V[0] + T_EXT
+    keys = cfg["SSW_KITCHEN"]
+    k_w = sum(a[k] for k in keys) / (SSW_INT_DEPTH - T_INT * (len(keys) - 1))
+    ssw_rooms, _ = pack(keys, (s_u0, s_u0 + k_w), s_vi, a,
+                        grow_to=s_vi + SSW_INT_DEPTH, grow_key=keys[-1])
+    ssw_ext = (s_u0, s_u0 + k_w + T_EXT, SSW_V[0], SSW_V[1])
+    if ssw_ext[1] > U_EAST_LIMIT + 1e-9:
+        raise ValueError("SSW wing escapes the envelope")
+    dining = next(r for r in south_east if r.key == "dining")
+    show = next(r for r in ssw_rooms if r.key == "show_kitchen")
+    if min(dining.v1, show.v1) - max(dining.v0, show.v0) < MIN_OPEN_JOIN:
+        raise ValueError("dining and show kitchen share too little wall")
+
+    # Living room: a tall single storey block straight ahead of the hall,
+    # sharing the SSW wing's north wall, open to the courtyard north and east.
+    D = float(cfg["living_depth_m"])
+    Lw = a["living"] / D
+    living = Rect("living", s_u0, s_u0 + Lw, SSW_V[1], SSW_V[1] + D)
+    living_ext = (s_u0, s_u0 + Lw + T_EXT, SSW_V[1] - T_EXT, SSW_V[1] + D + T_EXT)
+    if living_ext[1] > U_EAST_LIMIT + 1e-9:
+        raise ValueError("living block escapes the envelope")
+    if min(hall.v1, living.v1) - max(hall.v0, living.v0) < MIN_OPEN_JOIN:
+        raise ValueError("hall and living share too little wall")
+
+    # Pool, north of the living room on its deck.
+    pu = cfg["pool_u"]
+    m = cfg["deck_margin_m"]
+    pool_v0 = living_ext[3] + m["south"]
+    pool = (pu[0], pu[1], pool_v0, pool_v0 + cfg["pool_length_m"])
+    deck = (pu[0] - m["side"], pu[1] + m["side"], living_ext[3], pool[3] + m["north"])
+    if deck[3] > envelope_north_at(deck[0], deck[1]) + 1e-9:
+        raise ValueError("pool deck escapes the envelope to the north")
+    if deck[0] < road_ext[1] - 1e-9:
+        raise ValueError("pool deck runs into the road wing")
+
+    def plate(e):
+        return box(e[0], e[2], e[1], e[3])
+
+    road_poly, ssw_poly, living_poly = plate(road_ext), plate(ssw_ext), plate(living_ext)
+    first_poly = box(U0, V0, ue[1] + T_EXT, f_end + T_EXT)
+    if not first_poly.buffer(-1e-6).within(road_poly):
+        raise ValueError("first floor overhangs the ground floor")
+    road_g = road_poly.area
+    ssw_g = ssw_poly.difference(road_poly).area
+    living_g = living_poly.difference(unary_union([road_poly, ssw_poly])).area
+    first_g = first_poly.area
+    void = Rect("void_over_foyer", uw[0], uw[0], v1, v1)
+    stair_f = f_stair[0]
+    first_ext = tuple(first_poly.bounds[k] for k in (0, 2, 1, 3))
+    ground_poly = unary_union([road_poly, ssw_poly, living_poly])
+
+    return {
+        "params": {"dw": dw, "de": de, "W": W, "corridor": CORRIDOR},
+        "ground": ([guest] + south_east + [stair, office, hall, powder, majlis]
+                   + g_garage + g_staff + ssw_rooms + [living]),
+        "ground_circulation": [spine],
+        "first": f_master + f_stair + f_rest,
+        "first_outline": [[round(x, 3), round(y, 3)] for x, y in first_poly.exterior.coords],
+        "ground_outline": [[round(x, 3), round(y, 3)] for x, y in road_poly.exterior.coords],
+        "footprint_outline": [[round(x, 3), round(y, 3)] for x, y in ground_poly.exterior.coords],
+        "first_circulation": f_circ,
+        "voids": [void],
+        "plates": {"road": road_ext, "ssw": ssw_ext, "living": living_ext,
+                   "first": first_ext},
+        "pool": pool, "deck": deck,
+        "gfa": {"road": road_g, "ssw": ssw_g, "living": living_g, "first": first_g,
+                "void": 0.0, "total": road_g + ssw_g + living_g + first_g},
+        "stair_offset": abs(stair.v0 - stair_f.v0),
+    }
+
+
 def build(dw: float, de: float, a: dict | None = None,
           cfg: dict | None = None) -> dict:
     cfg = cfg or CONFIGS[ACTIVE]
     if cfg.get("massing") == "A":
         return build_bar(dw, de, a or areas(), cfg)
+    if cfg.get("ground_layout") == "central_hall":
+        return build_central_hall(dw, de, a or areas(), cfg)
     G_WEST, G_EAST, G_STAFF = cfg["G_WEST"], cfg["G_EAST"], cfg["G_STAFF"]
     SSW_KITCHEN = cfg["SSW_KITCHEN"]
     a = dict(a or areas())
@@ -614,6 +792,22 @@ def search(step: float = 0.05, cfg: dict | None = None) -> dict:
     if "bands" in cfg:
         return build(*cfg["bands"], cfg=cfg)
     best = None
+    if cfg.get("ground_layout") == "central_hall":
+        # The internal width is held at the approved 11.40 m; only the split
+        # between the road side band and the courtyard side band is searched.
+        W = 11.40
+        for i in range(int((5.60 - 4.60) / step) + 1):
+            dw = round(4.60 + i * step, 3)
+            de = round(W - dw - CORRIDOR - 2 * T_INT, 3)
+            try:
+                lay = build(dw, de, cfg=cfg)
+            except ValueError:
+                continue
+            if best is None or lay["gfa"]["total"] < best["gfa"]["total"]:
+                best = lay
+        if best is None:
+            raise RuntimeError("no central hall layout satisfies every constraint")
+        return best
     for i in range(int((6.40 - 3.80) / step) + 1):
         dw = round(3.80 + i * step, 3)
         for j in range(int((6.40 - 3.00) / step) + 1):
@@ -650,6 +844,7 @@ def to_yaml(lay: dict) -> dict:
         "gfa_measured": {
             "road_wing_ground": round(g["road"], 2),
             "ssw_wing_ground": round(g["ssw"], 2),
+            "living_block_ground": round(g.get("living", 0.0), 2),
             "first_floor_less_void": round(g["first"], 2),
             "void_over_foyer": round(g["void"], 2),
             "total": round(g["total"], 2),
@@ -658,8 +853,15 @@ def to_yaml(lay: dict) -> dict:
         },
         "outlines": {
             "road_ground": lay["ground_outline"],
+            "ground": lay.get("footprint_outline", lay["ground_outline"]),
             "first": lay["first_outline"],
         },
+        "pool": ({"u": [round(lay["pool"][0], 3), round(lay["pool"][1], 3)],
+                  "v": [round(lay["pool"][2], 3), round(lay["pool"][3], 3)]}
+                 if "pool" in lay else None),
+        "deck": ({"u": [round(lay["deck"][0], 3), round(lay["deck"][1], 3)],
+                  "v": [round(lay["deck"][2], 3), round(lay["deck"][3], 3)]}
+                 if "deck" in lay else None),
         "padding": [
             {"key": r.key, "over_target_m2": round(r.area - tgt, 2)}
             for r in lay["ground"] + lay["first"]
@@ -685,8 +887,9 @@ def main() -> int:
     print(f"  bands: west {p['dw']:.2f}, corridor {p['corridor']:.2f}, "
           f"east {p['de']:.2f}, internal width {p['W']:.2f} m")
     print(f"  GFA measured: road {g['road_wing_ground']:.2f} + SSW "
-          f"{g['ssw_wing_ground']:.2f} + first {g['first_floor_less_void']:.2f} "
-          f"(void {g['void_over_foyer']:.2f} excluded) = {g['total']:.2f} m2")
+          f"{g['ssw_wing_ground']:.2f} + living {g['living_block_ground']:.2f} + first "
+          f"{g['first_floor_less_void']:.2f} (void {g['void_over_foyer']:.2f} "
+          f"excluded) = {g['total']:.2f} m2")
     print(f"  cap {g['cap']:.2f}, margin {g['margin']:+.2f} m2")
     print(f"  stair cores stack to within {lay['stair_offset']:.3f} m")
     for floor in ("ground", "first"):
