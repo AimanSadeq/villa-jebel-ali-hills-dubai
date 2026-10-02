@@ -34,12 +34,20 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from drawings.sketch_12a import (CHANGED, INK, MUTED, OPEN, SALON, SQFT, WALL,  # noqa: E402
                                  _furniture, _label)
+from drawings.sketch_doors import draw_all, place, unreached  # noqa: E402
+from matplotlib.backends.backend_pdf import PdfPages  # noqa: E402
 from model.reference_plan import _outline  # noqa: E402
 
 PLAN = REPO_ROOT / "brief" / "reference_plan.yaml"
 MASSING = REPO_ROOT / "brief" / "massing.yaml"
 OUT_PDF = REPO_ROOT / "output" / "pdf" / "VJH-SK-013_Answer_12_Both_Floors.pdf"
 OUT_PNG = REPO_ROOT / "output" / "pdf" / "VJH-SK-013_Answer_12_Both_Floors.png"
+OUT_PNG_DOORS = REPO_ROOT / "output" / "pdf" / "VJH-SK-013_Answer_12_Door_Schedule.png"
+
+# Open joins after answer 12 (no door, no wall): the reference's, with the
+# garden room renamed, plus the new open room and the salon (12c).
+OPEN_GROUND_NEW = ["show_kitchen/living", "living/dining", "salon/dining", "salon/living",
+                   "entrance_foyer/living"]
 
 CAP = 662.99
 DOUBLE_HEIGHT = {"entrance_foyer", "living", "main_entrance"}
@@ -222,6 +230,57 @@ def _draw_floor(ax, rooms, outline, labels, title, floor, H):
     ax.axis("off")
 
 
+NAMES = {"show_kitchen": "Island kitchen", "living": "Living room", "dining": "Dining",
+         "salon": "Salon (majlis)", "outside": "outside", "family_living": "Family room",
+         "corridor_first": "Gallery / corridor", "pantry": "Store",
+         "service_steps": "Service steps", "service_passage": "Service passage",
+         "guest_dress": "Guest dress", "guest_toilet": "Guest WC", "office_toilet": "Office WC",
+         "maids_room": "Maid's room", "maids_toilet": "Maid's WC", "guest_powder": "Powder room",
+         "outdoor_bathroom": "Outdoor bathroom", "plant_room": "Plant room",
+         "bedroom_2_dress": "Bedroom 2 dress", "bedroom_2_toilet": "Bedroom 2 WC",
+         "bedroom_3_dress": "Bedroom 3 dress", "bedroom_3_toilet": "Bedroom 3 WC",
+         "bedroom_4_dress": "Bedroom 4 dress", "bedroom_4_toilet": "Bedroom 4 WC",
+         "lift": "Lift", "lift_first": "Lift", "lift_lobby": "Lift lobby", "service_lobby": "Service lobby",
+         "guest_bedroom": "Guest bedroom", "home_office": "Office", "entrance_foyer": "Foyer"}
+
+
+def _name(k):
+    n = NAMES.get(k) or G_LABELS.get(k) or F_LABELS.get(k) or k
+    return n.replace("\n", " ").replace(" (double height)", "")
+
+
+def door_schedule(doors: list[dict], rooms: list[dict]):
+    kind_txt = {"single": "single leaf", "double": "double leaf", "sliding": "sliding glass",
+                "open": "opening, no leaf", "lift": "lift door"}
+    fig = plt.figure(figsize=(16.5, 11.7))
+    fig.suptitle("Villa 5130272, answer 12: door schedule for sketch VJH-SK-013",
+                 x=0.01, ha="left", fontsize=13, weight="bold")
+    fig.text(0.01, 0.94, "Width x height in metres, indicative. Numbers match the tags on the plans. "
+             "Source says where each door comes from; ASSUMED and TO DECIDE items need your answer.",
+             fontsize=8.5, color=MUTED)
+    rows = []
+    for d in doors:
+        wh = f"{d['w']:.2f} x {d['h']:.2f}" if d["h"] else f"{d['w']:.2f} wide"
+        rows.append([d["no"], f"{_name(d['a'])}  to  {_name(d['b'])}", kind_txt[d["kind"]], wh, d["src"]])
+    ax = fig.add_axes([0.01, 0.06, 0.96, 0.86])
+    ax.axis("off")
+    t = ax.table(cellText=rows, colLabels=["No.", "Between", "Type", "W x H (m)", "Source"],
+                 colWidths=[0.04, 0.24, 0.11, 0.08, 0.50], loc="upper left", cellLoc="left")
+    t.auto_set_font_size(False)
+    t.set_fontsize(7.6)
+    t.scale(1, 1.32)
+    for (r, c), cell in t.get_celld().items():
+        cell.set_edgecolor("#cfcac2")
+        if r == 0:
+            cell.set_facecolor("#ece8e1")
+            cell.set_text_props(weight="bold")
+        elif "ASSUMED" in rows[r - 1][4] or "TO DECIDE" in rows[r - 1][4]:
+            cell.set_facecolor("#fbe3d6")
+    fig.text(0.98, 0.012, "CONCEPT DESIGN, NOT FOR CONSTRUCTION.  VJH-SK-013, page 2",
+             ha="right", fontsize=7.5, color=CHANGED)
+    return fig
+
+
 def main() -> int:
     plan = yaml.safe_load(PLAN.read_text(encoding="utf-8"))
     ground, first, notes = apply_answer_12(plan)
@@ -244,10 +303,23 @@ def main() -> int:
     ax_g.plot([s["y1"], s["y1"]], [s["x0"], s["x1"]], color=MUTED, lw=0.8, ls=(0, (4, 3)), zorder=5)
     ax_g.text(s["y1"], s["x0"] - 0.15, "open to dining (12c)", ha="center", va="top",
               fontsize=5, color=CHANGED, zorder=6)
-    # First: the family room door off the gallery.
     fam = next(r for r in first if r["key"] == "family_living")
-    ax_f.text((fam["y0"] + fam["y1"]) / 2, fam["x0"] - 0.15, "door off the gallery", ha="center",
-              va="top", fontsize=5, color=CHANGED, zorder=6)
+
+    # Doors, and a check that every room can be reached through them.
+    doors_g, doors_f = place(ground, "ground"), place(first, "first")
+    draw_all(ax_g, doors_g)
+    draw_all(ax_f, doors_f)
+    old_names = {"family_sitting": "living"}
+    joins_g = {frozenset(old_names.get(k, k) for k in j.split("/"))
+               for j in plan["open_joins"]["ground"]} | {frozenset(j.split("/")) for j in OPEN_GROUND_NEW}
+    joins_f = {frozenset(j.split("/")) for j in plan["open_joins"]["first"]}
+    outside = {d["a"] for d in doors_g if d["b"] == "outside"}
+    lost_g = [k for k in unreached([r for r in ground if r["kind"] in ("room", "circulation")],
+                                   doors_g, joins_g, "entrance_foyer") if k not in outside]
+    lost_f = unreached([r for r in first if r["kind"] in ("room", "circulation")],
+                       doors_f, joins_f, "stair_lift_first")
+    if lost_g or lost_f:
+        raise ValueError(f"rooms with no way in: ground {lost_g}, first {lost_f}")
 
     over = after["total"] - CAP
     verdict = (f"{over:.2f} m² ({over * SQFT:,.0f} sq ft) OVER the cap"
@@ -281,8 +353,12 @@ def main() -> int:
     fig.text(0.98, 0.012, "CONCEPT DESIGN, NOT FOR CONSTRUCTION.  Decision sketch, indicative "
              "furniture.  Dimensions from brief/reference_plan.yaml.  VJH-SK-013",
              ha="right", fontsize=7.5, color=CHANGED)
-    fig.savefig(OUT_PDF)
+    sched = door_schedule(doors_g + doors_f, ground + first)
+    with PdfPages(OUT_PDF) as pdf:
+        pdf.savefig(fig)
+        pdf.savefig(sched)
     fig.savefig(OUT_PNG, dpi=130)
+    sched.savefig(OUT_PNG_DOORS, dpi=130)
     print(f"Wrote {OUT_PDF.relative_to(REPO_ROOT)} and {OUT_PNG.name}")
     print(f"GFA before {before['total']:.2f}, after {after['total']:.2f} "
           f"(ground {after['ground']:.2f}, first {after['first']:.2f}, voids {after['voids']:.2f}); {verdict}")
