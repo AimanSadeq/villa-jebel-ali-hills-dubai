@@ -113,8 +113,8 @@ Master suite contents: bedroom, private sitting area, his and hers walk-in wardr
 
 ### Outside
 
-- Swimming pool, 10 x 4 m, with deck
-- BBQ area with pergola by the pool
+- Swimming pool, 10 x 4 m, with deck. REMOVED by owner decision 2026-10-02 (D-041): no pool.
+- BBQ area with pergola (was by the pool; position to be decided with the garden, D-041)
 - Landscape and softscape: trees, palms, lawn, planting beds, hardscape paving, driveway
 - Boundary walls and gates: propose design at checkpoint 1
 - Position of pool and main garden: NOT decided. Test at least two options (east toward the landscape plot, and south/southwest) with sun-path and shading studies, then recommend one with reasons.
@@ -136,7 +136,7 @@ Aiman will supervise the MEP personally. Be thorough and transparent: show every
 - Plumbing: water supply, storage tanks, pumps, hot water, whole-house water filtration.
 - Drainage: soil, waste, and stormwater routes.
 - Low current: smart home automation (lighting, AC, security), CCTV, access control, data network, intercom.
-- Pool MEP: filtration plant location and routes.
+- Pool MEP: not required, no pool (D-041).
 - Run clash detection between MEP, architecture, and the indicative structural grid (IfcOpenShell clash tools). Report every clash.
 
 ## 7. Structural boundary

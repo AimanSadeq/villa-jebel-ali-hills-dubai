@@ -101,6 +101,18 @@ ground:
       approved trim route B, 2026-10-01.
     gfa: counts
     notes: "In the staff zone with a separate entrance."
+  - key: lawn_court
+    name: "Internal Lawn Court, open to the sky"
+    target_m2: 27.5
+    gfa: unverified
+    gfa_note: >
+      Open to the sky, so most likely outside GFA like the reference set's
+      balconies and terraces. TO VERIFY with DDA, OI-01.
+    added_by_owner: "2026-10-02"
+    notes: >
+      Owner decision 2026-10-02, D-040: kept from the reference villa, where it
+      is 5.5 x 5.0 m off the entrance foyer between the guest bedroom and the
+      formal lounge, lighting the middle of a 17.5 m deep plan.
   - key: outdoor_bathroom
     name: "Outdoor Bathroom, WC and Shower"
     target_m2: 4.5
@@ -136,30 +148,36 @@ ground:
       Elevator serves ground and first. The roof stop was removed by owner
       decision on 2026-10-01.
   - key: garage
-    name: "Garage, Enclosed, 2 Cars"
-    target_m2: 38
+    name: "Carport, Open, 3 Cars"
+    target_m2: 78
     brief_target_m2: 55
-    cars: 2
-    gfa: counts
+    cars: 3
+    gfa: unverified
+    gfa_note: >
+      D-039, owner decision 2026-10-02: designed as OUTSIDE GFA, as the
+      owner's reference set shows for the same community (car parking as a
+      service area, not GFA). Reverses D-026 / D-018. TO VERIFY with DDA
+      before Phase 6, OI-01.
     track_separately: true
     notes: >
-      Owner decision 2026-10-02: two cars, not three. CLAUDE.md section 4 asked
-      for an enclosed three car garage at 55 m2.
+      Owner decision 2026-10-02, D-040: three cars again, as an open carport
+      like the reference villa's (8.94 x 8.73 m, 78 m2 gross, sheet A-07-001
+      of reference/owner/). Reverses the two car decision of D-026. CLAUDE.md
+      section 4 asked for an enclosed three car garage at 55 m2; DDA FAQs
+      Building Q5 gives a bay as 2.5 x 5.5 m.
 
-      Sized from the DDA bay standard rather than scaled down. DDA FAQs
-      Building Q5 gives a standard bay as 2.5 x 5.5 m. The 55 m2 three car
-      figure works out as a footprint about 8.15 x 6.75 m, holding three bays
-      at 2.55 m with 6.25 m of depth. Removing one bay takes 2.55 m off the
-      width, giving about 5.60 x 6.75 m, so 38 m2.
-
-      The DDA plot details require a minimum of one parking space, so two
-      remains compliant.
-
-      Counted toward GFA by the owner decision of 2026-10-01. See D-018.
-    trimmed: owner_2_cars
-    trim_note: >
-      Saves 17 m2 of gross floor area directly, since a garage footprint is
-      already a gross figure and no net to gross factor applies to it.
+# Ancillary spaces that the owner's reference villa draws as rooms of their
+# own (D-040, 2026-10-02). They count toward GFA and are placed with the room
+# they serve. Sizes are the reference's internal dimensions.
+ancillary:
+  - {key: guest_dress, name: "Guest Bedroom, Dress", serves: guest_bedroom, target_m2: 6.0, gfa: counts}
+  - {key: guest_toilet, name: "Guest Bedroom, Toilet", serves: guest_bedroom, target_m2: 5.0, gfa: counts}
+  - {key: office_toilet, name: "Office, Toilet", serves: home_office, target_m2: 3.0, gfa: counts}
+  - {key: maids_toilet, name: "Maid's Room, Toilet", serves: maids_room, target_m2: 3.5, gfa: counts}
+  - {key: wash, name: "Wash", serves: entrance_foyer, target_m2: 9.0, gfa: counts, notes: "Ablution and wash room beside the powder room, as the reference draws it."}
+  - {key: powder_toilet, name: "Powder Room, Toilet", serves: guest_powder, target_m2: 3.0, gfa: counts}
+  - {key: lift, name: "Home Lift", serves: stair_lift_ground, target_m2: 3.9, gfa: counts}
+  - {key: main_entrance, name: "Main Entrance Lobby", serves: entrance_foyer, target_m2: 11.2, gfa: counts, circulation: true}
 
 first:
   - key: master_suite
@@ -298,6 +316,16 @@ interiors:
 # Rooms removed from the CLAUDE.md section 4 program, kept on record so the
 # removal is visible and reversible rather than silent.
 removed:
+  - key: pool
+    name: "Swimming Pool"
+    brief_target_m2: 40
+    size_m: [10, 4]
+    removed_on: "2026-10-02"
+    decision: "D-041"
+    reason: >
+      Owner decision 2026-10-02, ground floor answer 8 superseded: "I don't
+      need a pool." Not GFA, so no area effect. Pool MEP (CLAUDE.md section 6)
+      falls away with it.
   - key: drivers_room
     name: "Driver's Room with Bathroom"
     brief_target_m2: 12
@@ -334,14 +362,9 @@ voids:
 
 # Outdoor scope. Not GFA. Sized and positioned in Phase 1 and Phase 4.
 outdoor:
-  - key: pool
-    name: "Swimming Pool"
-    size_m: [10, 4]
-    target_m2: 40
-    notes: "With deck. Position NOT decided. Test east and south/southwest in Phase 1."
   - key: bbq_pergola
     name: "BBQ Area with Pergola"
-    notes: "By the pool."
+    notes: "Position to be decided with the garden. Was 'by the pool'; no pool since D-041."
   - key: landscape
     name: "Landscape and Softscape"
     notes: "Trees, palms, lawn, planting beds, hardscape paving, driveway."

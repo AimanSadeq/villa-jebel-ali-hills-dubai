@@ -6,6 +6,80 @@ Columns: date, decision, reason, approved by Aiman.
 
 ---
 
+## 2026-10-02, restart from the ground floor on the owner's reference
+
+### D-041 No swimming pool
+
+**Decision.** The villa has no swimming pool. CLAUDE.md section 4 asked for a
+10 x 4 m pool with a deck and a BBQ by the pool; the pool is removed from the
+program and kept on record under `removed:` in brief/program.yaml. The BBQ and
+pergola stay in the brief and are placed with the garden later. Pool MEP
+(CLAUDE.md section 6) and the pool at sunset render (section 10) fall away.
+
+**Reason.** Owner decision 2026-10-02, replacing his answer 8 (one 10 x 4 m
+pool, no kids' pool) a few minutes earlier: "You know what? I don't need a
+pool." Pools are not GFA, so no area changes.
+
+**Approved by Aiman: yes.**
+
+### D-040 Ground floor, answer 3: no driver's room, 3 car carport, lawn court
+
+**Decision.** From the reference villa the owner keeps the open 3 car carport
+(reversing the two car part of D-026) and the internal lawn court open to the
+sky; he does not keep the driver's room (D-028 stands). A bathroom reachable
+from outside is a must (the outdoor bathroom of D-028 stays). The MEP plant
+room (8 m2), absent from the reference, is added. The carport and the lawn
+court are designed as outside GFA under D-039, both TO VERIFY. Answer 4: no
+separate double height living room; the garden room stays as the reference
+draws it and the double height stays in the entrance foyer. Answer 5: the
+garden room keeps its full 17.2 m, island kitchen, sitting area and dining
+for 12, so the sitting area is kept after all.
+
+**Reason.** Owner answers 2026-10-02 to ground floor questions 3 to 5 in
+docs/ground-floor-decisions.md.
+
+**Approved by Aiman: yes.**
+
+### D-039 Carport and balconies designed as outside GFA, TO VERIFY
+
+**Decision.** The design proceeds on the reading in the owner's reference
+set: GFA is usable rooms plus circulation; the car parking, balconies,
+pergolas and roof terraces are outside it. This reverses D-026's safe
+reading that the garage counts. It stays TO VERIFY with DDA (OI-01) and must
+be confirmed before the Phase 6 drawing set.
+
+**Reason.** Owner choice 2026-10-02 from three options. On the reference
+set's own DDA area sheet (A-03-001, Paradise Home Engineering Consultancy,
+plot 5131627, same community, July 2025) a registered consultant shows the 83
+m2 car parking outside GFA. Under D-026 the reference plan would be about 53
+m2 over our cap on this plot; under this reading about 30 m2 under. The
+risk, accepted by the owner: if DDA counts the carport, about 53 m2 must be
+trimmed later.
+
+**Approved by Aiman: yes.**
+
+### D-038 Design restarted floor by floor on the owner's reference villa
+
+**Decision.** All generated plans (D-026 to D-037) are set aside. The design
+restarts one floor at a time, the ground floor first, with the owner deciding
+each question in turn (docs/ground-floor-decisions.md). The owner supplied a
+consultant's preliminary set for plot 5131627 (reference/owner/) as the
+design he likes; its ground floor becomes the basis, placed with its front to
+our road (side 1), and adapted to our plot and brief question by question.
+Answer 1 before the reference arrived: a single block along the road with
+the garden east, which the reference also is.
+
+**Reason.** Owner instruction 2026-10-02: "I don't like the setup. Let's
+start from the beginning." Three generated plans had not matched what he had
+in mind. The reference footprint, 26.9 m along the road by 17.5 m deep, fits
+our envelope facing the road with 0.8 m spare along the road and a 10.1 m
+rear garden toward the landscape plot (VJH-RF-001). Its section is 5.00 m
+floor to floor on both floors, matching the owner's D-030 ground floor.
+
+**Approved by Aiman: yes.**
+
+---
+
 ## 2026-10-02, central hall ground floor
 
 ### D-037 Pool moved north onto the living room's deck

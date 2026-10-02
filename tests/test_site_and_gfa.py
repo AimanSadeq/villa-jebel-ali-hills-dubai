@@ -167,11 +167,13 @@ def test_design_target_holds_a_margin_below_the_cap():
     assert t["design_margin_m2"] > 0
 
 
-def test_the_garage_counts_toward_gfa():
-    """Owner decision 2026-10-01: count the parking as part of the GFA."""
+def test_the_garage_is_designed_outside_gfa_pending_dda():
+    """D-039 (2026-10-02): the owner's reference set shows car parking outside
+    GFA, and the owner chose to design to that reading. It stays unverified
+    until DDA confirms it (OI-01), so the GFA check keeps both scenarios."""
     garage = next(r for r in rooms() if r.key == "garage")
-    assert garage.counts
-    assert not garage.unverified
+    assert garage.unverified
+    assert not garage.counts
     assert garage.already_gross, "A garage target is a footprint, not a net area"
 
 
@@ -182,10 +184,12 @@ def test_the_roof_enclosure_is_gone():
     assert "roof_terrace" not in keys
 
 
-def test_nothing_is_left_unverified_in_the_gfa_tally():
-    """Both open GFA questions are now settled by owner decision, so the check
-    should have no RISK rows left to report."""
-    assert [r.key for r in rooms() if r.unverified] == []
+def test_only_the_carport_and_the_lawn_court_are_unverified():
+    """D-039 and D-040 (2026-10-02): the owner designs to the reference set's
+    reading that car parking and open areas are outside GFA. Both stay
+    unverified until DDA confirms it (OI-01), so the check reports both
+    scenarios and nothing else is left open."""
+    assert sorted(r.key for r in rooms() if r.unverified) == ["garage", "lawn_court"]
 
 
 def test_voids_are_excluded_from_gfa():
@@ -335,10 +339,10 @@ def test_route_b_trims_still_in_force_total_twelve_square_metres():
     assert saved == 12, f"Route B trims still in force should total 12 m2, not {saved}"
 
 
-def test_the_two_car_garage_saves_seventeen_square_metres():
-    saved = sum(r["brief_target_m2"] - r["target_m2"]
-                for r in _trimmed("owner_2_cars"))
-    assert saved == 17, f"Dropping to two cars should save 17 m2, not {saved}"
+def test_the_two_car_trim_is_withdrawn():
+    """D-040 (2026-10-02) restored three cars as an open carport, so the
+    owner_2_cars trim no longer applies to any room."""
+    assert _trimmed("owner_2_cars") == []
 
 
 def test_route_b_touched_no_principal_room():
@@ -391,11 +395,12 @@ def test_the_net_to_gross_factor_is_measured_not_assumed():
     )
 
 
-def test_the_garage_is_sized_for_two_cars():
-    """Owner decision 2026-10-02."""
+def test_the_carport_is_sized_for_three_cars():
+    """Owner decision 2026-10-02, D-040: an open carport like the reference
+    villa's, 78 m2 gross, outside GFA pending DDA (D-039)."""
     garage = next(r for r in rooms() if r.key == "garage")
-    assert garage.low_m2 == 38
+    assert garage.low_m2 == 78
     program = load_program()
     spec = next(r for r in program["ground"] if r["key"] == "garage")
-    assert spec["cars"] == 2
+    assert spec["cars"] == 3
     assert spec["brief_target_m2"] == 55

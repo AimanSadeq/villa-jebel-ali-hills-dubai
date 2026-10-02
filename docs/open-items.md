@@ -14,7 +14,7 @@ Last updated: 2026-10-02 (Phase 3 model; central hall plan; inside the cap by 18
 
 | | |
 |---|---|
-| Status | **SETTLED BY OWNER DECISION 2026-10-01, still worth confirming** |
+| Status | **OPEN again, 2026-10-02: designed as EXCLUDED by owner decision D-039, TO VERIFY** |
 | Worth | 55.00 m2 |
 | Answered by | The issued Site Plan, if ever obtained |
 
@@ -22,7 +22,15 @@ The owner decided on 2026-10-01 to **count the parking as part of the GFA**, the
 conservative reading, rather than wait. The design now proceeds on that basis and
 no longer depends on the answer. See decision D-018.
 
-It is still worth confirming, because a DDA answer excluding the garage would
+**Update 2026-10-02, D-039.** The owner's reference set (reference/owner/, a
+DDA preliminary submission by a registered consultant for plot 5131627 in the
+same community) shows the 83 m2 car parking, the balconies, pergolas and roof
+terraces outside GFA on its area sheet A-03-001, with GFA taken as usable rooms
+plus circulation. The owner chose to design to that reading. It must be
+confirmed with DDA, or with that consultant, before the Phase 6 drawing set;
+if DDA counts the carport, about 53 m2 must come off the plan.
+
+It was previously worth confirming, because a DDA answer excluding the garage would
 return 55 m2 and reopen the full bedroom ranges. An enquiry covering this and
 five other points is drafted and sits in the owner's Gmail awaiting a confirmed
 recipient. DDA publishes no enquiry email address: their contact page gives phone
