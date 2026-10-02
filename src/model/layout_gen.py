@@ -201,6 +201,27 @@ CONFIGS = {
         "F_WEST": ["bedroom_2", "bedroom_3"],
         "F_EAST": ["bedroom_4", "linen_storage", "family_living"],
     },
+    # Massing option A. One two storey bar on the road edge, garden and pool on
+    # the ESE side facing landscape plot 5130274. Living room and foyer are
+    # both double height for the owner's high ceilings. Reception rooms face the
+    # garden; the majlis sits on the road face beside the foyer, near the
+    # entrance as CLAUDE.md asks; the master suite takes the south end full
+    # width, over the guest bedroom and the kitchens.
+    "A_bar": {
+        "massing": "A",
+        "G_WEST": ["guest_bedroom", "stair_lift_ground", "entrance_foyer",
+                   "majlis", ("home_office", "guest_powder")],
+        "G_WEST_GROW": "majlis",
+        "G_EAST": [("arabic_kitchen", "pantry"), "show_kitchen", "dining",
+                   "living"],
+        "G_EAST_GROW": "dining",
+        "G_STAFF": ["drivers_room", "maids_room", ("laundry", "plant_room")],
+        "F_WEST": ["stair_lift_first", "bedroom_2", "bedroom_3"],
+        "F_EAST": ["bedroom_4", "linen_storage", "family_living"],
+        "voids": ["entrance_foyer", "living"],
+        # Pool deck starts at grid u 18.50 in the Phase 1 option A massing.
+        "u_east_max": 18.50,
+    },
 }
 ACTIVE = "original_single_height_foyer"
 
@@ -213,6 +234,8 @@ SSW_LIVING = "living"
 def build(dw: float, de: float, a: dict | None = None,
           cfg: dict | None = None) -> dict:
     cfg = cfg or CONFIGS[ACTIVE]
+    if cfg.get("massing") == "A":
+        return build_bar(dw, de, a or areas(), cfg)
     G_WEST, G_EAST, G_STAFF = cfg["G_WEST"], cfg["G_EAST"], cfg["G_STAFF"]
     SSW_KITCHEN = cfg["SSW_KITCHEN"]
     a = dict(a or areas())
@@ -359,6 +382,135 @@ def build(dw: float, de: float, a: dict | None = None,
     }
 
 
+def pack_avoid(slots: list, u: tuple[float, float], v0: float, a: dict,
+               blocks: list[tuple[float, float]]):
+    """Pack slots along v, stepping each room past any blocked interval.
+
+    Used on the first floor, where a double height room below leaves a void
+    that no upper room may sit on.
+    """
+    depth = u[1] - u[0]
+    out, v = [], v0
+    for s in slots:
+        keys = _keys(s)
+        length = sum(a[k] for k in keys) / depth
+        moved = True
+        while moved:
+            moved = False
+            for b0, b1 in blocks:
+                if v < b1 + T_INT - 1e-9 and v + length > b0 - T_INT + 1e-9:
+                    v = b1 + T_INT
+                    moved = True
+        if isinstance(s, tuple):
+            a0, a1 = a[s[0]], a[s[1]]
+            split = u[0] + depth * a0 / (a0 + a1)
+            out.append(Rect(s[0], u[0], split - T_INT / 2, v, v + length))
+            out.append(Rect(s[1], split + T_INT / 2, u[1], v, v + length))
+        else:
+            out.append(Rect(s, u[0], u[1], v, v + length))
+        v += length + T_INT
+    return out, v - T_INT
+
+
+def build_bar(dw: float, de: float, a: dict, cfg: dict) -> dict:
+    """Massing option A: one two storey bar along the road edge, garden and
+    pool to the east, no single storey wing. Every room listed in
+    cfg["voids"] is double height and leaves a void on the first floor."""
+    from shapely.geometry import box
+    from shapely.ops import unary_union
+
+    a = dict(a)
+    a["garage"] = GARAGE_INTERNAL
+    W = dw + de + CORRIDOR + 2 * T_INT
+    uw = (U0 + T_EXT, U0 + T_EXT + dw)
+    uc = (uw[1] + T_INT, uw[1] + T_INT + CORRIDOR)
+    ue = (uc[1] + T_INT, uc[1] + T_INT + de)
+    vi = V0 + T_EXT
+    if ue[1] + T_EXT > cfg["u_east_max"] + 1e-9:
+        raise ValueError("bar too wide: it reaches the pool deck")
+
+    L1 = max(a["guest_bedroom"] / dw, a["master_suite"] / W)
+    a_g = dict(a)
+    a_g["guest_bedroom"] = L1 * dw
+    B_end = vi + max(natural_length(cfg["G_WEST"], dw, a_g),
+                     natural_length(cfg["G_EAST"], de, a))
+    g_west, _ = pack(cfg["G_WEST"], uw, vi, a_g, grow_to=B_end,
+                     grow_key=cfg["G_WEST_GROW"])
+    g_east, _ = pack(cfg["G_EAST"], ue, vi, a, grow_to=B_end,
+                     grow_key=cfg["G_EAST_GROW"])
+
+    vN = B_end + T_INT
+    u_gar = (uw[0], uw[0] + GARAGE_DEPTH)
+    u_staff = (u_gar[1] + T_INT, ue[1])
+    if u_staff[1] - u_staff[0] < 2.6:
+        raise ValueError("staff strip too narrow")
+    N = max(GARAGE_INTERNAL / GARAGE_DEPTH,
+            natural_length(cfg["G_STAFF"], u_staff[1] - u_staff[0], a))
+    g_garage = [Rect("garage", u_gar[0], u_gar[1], vN, vN + N)]
+    g_staff, _ = pack(cfg["G_STAFF"], u_staff, vN, a, grow_to=vN + N,
+                      grow_key=cfg["G_STAFF"][1])
+    road_int_end = vN + N
+    road_ext = (U0, ue[1] + T_EXT, V0, road_int_end + T_EXT)
+    if road_ext[3] - road_ext[2] > ROAD_MAX_EXT_LENGTH + 1e-9:
+        raise ValueError("bar longer than the envelope allows")
+
+    # Voids: the full footprint of each double height room below.
+    ground_rooms = {r.key: r for r in g_west + g_east}
+    voids = [Rect(f"void_over_{k}", ground_rooms[k].u0, ground_rooms[k].u1,
+                  ground_rooms[k].v0, ground_rooms[k].v1) for k in cfg["voids"]]
+    for vd in voids:
+        if vd.v0 < vi + L1 + T_INT - 1e-9:
+            raise ValueError("a void falls under the master suite")
+
+    def blocks(u):
+        return [(vd.v0, vd.v1) for vd in voids if vd.u0 < u[1] and vd.u1 > u[0]]
+
+    f_master = [Rect("master_suite", uw[0], ue[1], vi, vi + L1)]
+    v1 = vi + L1 + T_INT
+    f_west, w_end = pack_avoid(cfg["F_WEST"], uw, v1, a, blocks(uw))
+    f_east, e_end = pack_avoid(cfg["F_EAST"], ue, v1, a, blocks(ue))
+    f_end = max(w_end, e_end)
+    if f_end > road_int_end + 1e-9:
+        raise ValueError("first floor overruns the bar")
+
+    stair_g = next(r for r in g_west if r.key == "stair_lift_ground")
+    stair_f = next(r for r in f_west if r.key == "stair_lift_first")
+    if abs(stair_g.v0 - stair_f.v0) > 1e-6:
+        raise ValueError("stair cores do not stack")
+
+    half = T_INT / 2
+    outline = unary_union([
+        box(U0, V0, ue[1] + T_EXT, vi + L1 + half),
+        box(U0, vi + L1, uw[1] + half, w_end + T_EXT),
+        box(uw[1], vi + L1, ue[0], f_end + T_EXT),
+        box(ue[0] - half, vi + L1, ue[1] + T_EXT, e_end + T_EXT),
+    ])
+    road_poly = box(*[road_ext[k] for k in (0, 2, 1, 3)])
+    if not outline.buffer(-1e-6).within(road_poly):
+        raise ValueError("first floor overhangs the ground floor")
+    void_union = unary_union([box(vd.u0, vd.v0, vd.u1, vd.v1) for vd in voids])
+    first_g = outline.area - outline.intersection(void_union).area
+    road_g = road_poly.area
+
+    return {
+        "params": {"dw": dw, "de": de, "W": W, "corridor": CORRIDOR},
+        "ground": g_west + g_east + g_garage + g_staff,
+        "ground_circulation": [Rect("corridor", uc[0], uc[1], vi, B_end)],
+        "first": f_master + f_west + f_east,
+        "first_circulation": [Rect("corridor", uc[0], uc[1], v1, f_end)],
+        "first_outline": [[round(x, 3), round(y, 3)] for x, y in outline.exterior.coords],
+        "ground_outline": [[round(x, 3), round(y, 3)] for x, y in road_poly.exterior.coords],
+        "voids": voids,
+        "plates": {"road": road_ext,
+                   "first": tuple(outline.bounds[k] for k in (0, 2, 1, 3))},
+        "gfa": {"road": road_g, "ssw": 0.0, "first": first_g,
+                "void": sum(vd.area for vd in voids),
+                "total": road_g + first_g},
+        "stair_offset": abs(stair_g.v0 - stair_f.v0),
+        "massing": "A",
+    }
+
+
 def search(step: float = 0.05, cfg: dict | None = None) -> dict:
     best = None
     for i in range(int((6.40 - 3.80) / step) + 1):
@@ -383,8 +535,8 @@ def to_yaml(lay: dict) -> dict:
         "meta": {
             "stamp": "CONCEPT DESIGN, NOT FOR CONSTRUCTION",
             "phase": 2,
-            "massing_option": "C",
-            "plan_direction": "plan2",
+            "massing_option": lay.get("massing", "C"),
+            "plan_direction": "plan2" if lay.get("massing", "C") == "C" else "bar",
             "note": "Generated by src/model/layout_gen.py. Do not edit by hand.",
             "corridor_m": CORRIDOR,
             "wall_external_m": T_EXT,

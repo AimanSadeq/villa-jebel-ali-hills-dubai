@@ -116,6 +116,32 @@ arrangement that can be drawn**, shown so the plan can be seen.
 Both DDA questions in the drafted email decide this. The email is in the owner's
 Gmail awaiting a recipient address.
 
+**Update 2026-10-02, after the owner settled OI-01 and OI-21 conservatively.**
+Neither DDA route can now close this. Two further routes were measured.
+
+*Option A, the single bar, with double height living room and foyer for the
+owner's high ceilings:* **698.86 m2, 35.87 over.** Worse than option C, because
+in a bar the living room's 45 m2 void takes plate the bedrooms need, and the
+bar has to grow. In option C the living room sits in the single storey wing,
+with nothing above it, which is the one place a very high ceiling costs no
+plate at all. A tall ground floor is the other free route to high ceilings:
+ceiling height is not GFA, and DDA FAQs Building Q28 allows a ground floor clear
+height of up to 6 m, subject to the overall height rule in OI-13.
+
+*Option C with a further cut, upstairs or in the single storey wing only.* Cuts
+to ground floor rooms in the two storey wing do not help in option C; they turn
+straight into padding under the bedrooms.
+
+| Cut | Net | Measured | Margin |
+|---|---|---|---|
+| Bedrooms 2 to 4, 30 to 28; family 35 to 33 | 8 | 657.01 | +5.98 |
+| As above, plus master 70 to 68 | 10 | 653.83 | +9.16 |
+| Bedrooms 2 to 4, 30 to 29; living 43; dining 21 | 6 | 657.54 | +5.45 |
+| Bedrooms 2 to 4, 30 to 27 | 9 | 656.50 | +6.49 |
+
+The last row puts the master at 2.59 times the bedrooms, outside the 2.2 to 2.5
+range in CLAUDE.md section 4. Awaiting the owner's choice.
+
 ### OI-21 Corridor width, and whether DDA's 1.8 m applies inside a villa
 
 | | |

@@ -6,6 +6,22 @@ Columns: date, decision, reason, approved by Aiman.
 
 ---
 
+## 2026-10-02, design basis settled by the owner
+
+### D-026 Garage counts toward GFA, and corridors are 1.80 m
+
+**Decision.** The design proceeds on two owner decisions: the enclosed garage
+counts toward the 662.99 m2 GFA cap, and DDA FAQs Building Q12's 1.80 m corridor
+minimum applies to corridors inside this private villa.
+
+**Reason.** Owner decision 2026-10-02. Both were open DDA questions (OI-01 and
+OI-21). The owner settled them on the conservative reading rather than wait, so
+neither can return area later through a DDA answer.
+
+**Approved by Aiman: yes.** Stated directly.
+
+---
+
 ## 2026-10-02, trim package 2 and the measured plan
 
 ### D-025 Once a plan exists, measured GFA is the binding figure
