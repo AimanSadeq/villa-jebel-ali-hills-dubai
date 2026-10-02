@@ -1263,11 +1263,31 @@ class Model:
 
     # Build ---------------------------------------------------------------------
 
+    def build_railings(self):
+        """Glass balustrades along every open edge of the first floor voids,
+        where no wall stands. Height 1.20 m from the floor finish, the DDA
+        minimum for parapets and balcony handrails (DDA FAQs Building Q34,
+        brief/massing.yaml); its use for an internal void edge is TO VERIFY
+        against the Dubai Building Code."""
+        walls = unary_union([poly for _, poly, _ in self.walls["first"]]).buffer(0.03)
+        h = float(self.PAR)
+        for v in self.voids:
+            edge = v.poly.exterior.difference(walls)
+            lines = [edge] if edge.geom_type == "LineString" else list(getattr(edge, "geoms", []))
+            for ln in lines:
+                if ln.length < 0.30:
+                    continue
+                band = ln.buffer(0.03, cap_style=2, join_style=2)
+                self.element("IfcRailing", f"Balustrade, {self.names.get(v.key, v.key)}",
+                             "first", [self._prism(band, 0.0, h)], predefined="BALUSTRADE",
+                             material="glass")
+
     def build(self) -> Path:
         self.setup()
         self.footprints()
         self.build_core()
         self.build_walls()
+        self.build_railings()
         self.build_slabs()
         self.build_spaces()
         self.build_doors()

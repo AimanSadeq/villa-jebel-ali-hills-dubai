@@ -45,8 +45,9 @@ GROUND = [
      "model (D-044): maid's room reached through the laundry"),
     ("G18", "service_passage", "pantry", 0.90, 2.40, "single", "pantry", None,
      "model (D-044): store off the service passage"),
-    ("G19", "service_passage", "show_kitchen", 0.80, 2.40, "single", "service_passage", None,
-     "reference: door arc from the passage into the island kitchen"),
+    ("G19", "service_passage", "show_kitchen", 0.80, 2.40, "single", "show_kitchen", None,
+     "reference: door from the passage into the island kitchen; swings into the kitchen, "
+     "clear of the 1.0 m passage (review, 2026-10-02)"),
     ("G23", "show_kitchen", "arabic_kitchen", 1.20, 2.40, "open", "arabic_kitchen", 19.50,
      "answer 12m: open entrance from the island kitchen, no door leaf"),
 ]

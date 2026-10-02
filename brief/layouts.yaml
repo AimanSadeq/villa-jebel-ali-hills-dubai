@@ -407,8 +407,9 @@ doors:
   v: 12.616
   along_u: true
   wall_t: 0.206
-  swing: -1
-  source: 'reference: door arc from the passage into the island kitchen'
+  swing: 1
+  source: 'reference: door from the passage into the island kitchen; swings into the kitchen,
+    clear of the 1.0 m passage (review, 2026-10-02)'
 - 'no': G20
   storey: ground
   a: living

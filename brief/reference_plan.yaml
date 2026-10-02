@@ -896,9 +896,10 @@ doors:
   width_m: 0.8
   height_m: 2.4
   kind: single
-  swing_into: service_passage
+  swing_into: show_kitchen
   at: null
-  source: 'reference: door arc from the passage into the island kitchen'
+  source: 'reference: door from the passage into the island kitchen; swings into the kitchen, clear of
+    the 1.0 m passage (review, 2026-10-02)'
 - 'no': G20
   storey: ground
   a: living

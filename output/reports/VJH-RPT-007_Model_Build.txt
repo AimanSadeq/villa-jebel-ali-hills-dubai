@@ -9,6 +9,7 @@ CONCEPT DESIGN, NOT FOR CONSTRUCTION
    IfcDoor                      31
    IfcGeographicElement          1
    IfcOpeningElement            69
+   IfcRailing                    3
    IfcSlab                       9
    IfcSpace                     50
    IfcStair                      1
@@ -18,10 +19,11 @@ CONCEPT DESIGN, NOT FOR CONSTRUCTION
 
 3. Schema validation: PASS, 0 issue(s)
 
-4. Geometry: 147 elements tessellated, 0 failed
+4. Geometry: 150 elements tessellated, 0 failed
    IfcColumn                     3        1.58 m3
    IfcDoor                      31        5.84 m3
    IfcGeographicElement          1      305.99 m3
+   IfcRailing                    3        1.70 m3
    IfcSlab                       9      372.00 m3
    IfcSpace                     50     3135.36 m3
    IfcStair                      1       12.92 m3

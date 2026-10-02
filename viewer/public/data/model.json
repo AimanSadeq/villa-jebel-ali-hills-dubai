@@ -5,7 +5,7 @@
   "stamp": "CONCEPT DESIGN, NOT FOR CONSTRUCTION",
   "phase": 3,
   "ifc": "data/VJH-ARCH-001_Villa_5130272.ifc",
-  "built": "2026-10-02T21:14"
+  "built": "2026-10-02T21:17"
  },
  "north_uv": [
   -0.50272,
@@ -43,6 +43,7 @@
   "IfcColumn": 3,
   "IfcDoor": 31,
   "IfcGeographicElement": 1,
+  "IfcRailing": 3,
   "IfcSlab": 9,
   "IfcSpace": 50,
   "IfcStair": 1,
