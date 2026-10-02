@@ -5,7 +5,7 @@
   "stamp": "CONCEPT DESIGN, NOT FOR CONSTRUCTION",
   "phase": 4,
   "ifc": "data/VJH-ARCH-001_Villa_5130272.ifc",
-  "built": "2026-10-02T21:52"
+  "built": "2026-10-02T22:49"
  },
  "north_uv": [
   -0.50272,
@@ -28,28 +28,28 @@
   "road_wing_ground": 355.58,
   "ssw_wing_ground": 0.0,
   "living_block_ground": 0.0,
-  "first_floor_less_void": 306.11,
-  "total": 661.69,
+  "first_floor_less_void": 305.25,
+  "total": 660.82,
   "cap": 662.99,
-  "margin": 1.3
+  "margin": 2.17
  },
  "gfa_from_ifc": {
   "Ground Floor": 355.56,
-  "First Floor": 306.1,
+  "First Floor": 305.23,
   "Roof": 0.0
  },
  "core": "reference stair: 28 risers of 179 mm, going 253 mm, two flights 1.47 m wide, half landing 1.47 m, in a 4.80 x 2.98 m stair room; the reference's 300 mm treads and 1.5 m landing need 5.45 m (OI-23, TO VERIFY); lift in its own shaft 1.80 x 2.15 m",
  "counts": {
   "IfcColumn": 3,
-  "IfcDoor": 31,
+  "IfcDoor": 30,
   "IfcGeographicElement": 1,
   "IfcRailing": 3,
   "IfcSlab": 9,
   "IfcSpace": 50,
   "IfcStair": 1,
   "IfcTransportElement": 1,
-  "IfcWall": 15,
-  "IfcWindow": 37
+  "IfcWall": 16,
+  "IfcWindow": 36
  },
  "rooms": [
   {
@@ -856,16 +856,16 @@
    "label": "Bedroom 4",
    "storey": "first",
    "u": 17.797,
-   "v": 26.166,
+   "v": 26.242,
    "z": 6.2,
-   "area_m2": 24.74,
-   "area_sqft": 266.3,
-   "w_m": 4.5,
+   "area_m2": 23.91,
+   "area_sqft": 257.3,
+   "w_m": 4.35,
    "l_m": 5.5,
    "rect": [
     15.046,
     20.547,
-    23.918,
+    24.069,
     28.415
    ],
    "height": "h 3.55 m",
@@ -1024,17 +1024,17 @@
    "label": "First Floor Corridor",
    "storey": "first",
    "u": 15.59,
-   "v": 18.864,
+   "v": 18.967,
    "z": 6.2,
-   "area_m2": 14.54,
-   "area_sqft": 156.5,
+   "area_m2": 14.85,
+   "area_sqft": 159.8,
    "w_m": 1.5,
-   "l_m": 9.7,
+   "l_m": 9.9,
    "rect": [
     14.841,
     16.34,
     14.015,
-    23.713
+    23.919
    ],
    "height": "h 3.55 m",
    "circulation": true
@@ -1922,10 +1922,6 @@
     "rings": [
      [
       [
-       22.803,
-       6.057
-      ],
-      [
        20.796,
        6.057
       ],
@@ -2242,35 +2238,15 @@
        23.713
       ],
       [
-       11.545,
-       23.713
-      ],
-      [
-       11.545,
-       23.974
-      ],
-      [
        9.799,
        23.974
-      ],
-      [
-       9.799,
-       29.224
-      ],
-      [
-       14.791,
-       29.224
       ],
       [
        14.791,
        23.974
       ],
       [
-       13.045,
-       23.974
-      ],
-      [
-       13.045,
+       14.791,
        23.713
       ],
       [
@@ -2278,16 +2254,20 @@
        23.713
       ],
       [
-       15.2,
-       23.713
+       14.841,
+       23.919
       ],
       [
        15.2,
-       23.918
+       23.919
+      ],
+      [
+       15.2,
+       24.069
       ],
       [
        15.046,
-       23.918
+       24.069
       ],
       [
        15.046,
@@ -2375,19 +2355,19 @@
       ],
       [
        20.547,
-       23.918
+       24.069
       ],
       [
        16.1,
-       23.918
+       24.069
       ],
       [
        16.1,
-       23.713
+       23.919
       ],
       [
        16.34,
-       23.713
+       23.919
       ],
       [
        16.34,
@@ -2424,6 +2404,39 @@
       [
        22.803,
        6.057
+      ],
+      [
+       20.796,
+       6.057
+      ]
+     ]
+    ]
+   },
+   {
+    "name": "first floor",
+    "kind": "flat",
+    "z": 5.0,
+    "rings": [
+     [
+      [
+       9.799,
+       23.974
+      ],
+      [
+       9.799,
+       29.224
+      ],
+      [
+       14.791,
+       29.224
+      ],
+      [
+       14.791,
+       23.974
+      ],
+      [
+       9.799,
+       23.974
       ]
      ]
     ]

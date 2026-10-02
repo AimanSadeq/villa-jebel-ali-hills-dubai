@@ -385,13 +385,14 @@ first:
   confidence: high
 - key: bedroom_4
   kind: room
-  x0: 20.66
+  x0: 20.811
   x1: 25.157
   y0: 15.046
   y1: 20.547
   reference_key: bedroom_3
   reference_name: BED ROOM-3 (sleeping area)
   confidence: high
+  decision: 'FF7: its wall stands on the TV wall below'
 - key: bedroom_4_dress
   kind: room
   x0: 25.157
@@ -451,7 +452,7 @@ first:
 - key: corridor_first
   kind: circulation
   x0: 10.757
-  x1: 20.455
+  x1: 20.661
   y0: 14.841
   y1: 16.34
   reference_key: corridor
@@ -535,7 +536,7 @@ first:
 - key: void_over_living
   kind: void
   x0: 10.757
-  x1: 20.455
+  x1: 20.661
   y0: 16.34
   y1: 20.547
   reference_key: family_lounge+pantry+store
@@ -567,6 +568,7 @@ open_joins:
   - corridor_first/gallery
   - landing/lift_lobby
   - stair_lift_first/landing
+  - gallery/family_living
 doors:
 - 'no': F01
   storey: first
@@ -668,16 +670,6 @@ doors:
   swing_into: lift_lobby
   at: null
   source: 'reference: lift door on the lobby face; size TO VERIFY (OI-23)'
-- 'no': F13
-  storey: first
-  a: gallery
-  b: family_living
-  width_m: 1.6
-  height_m: 2.4
-  kind: double
-  swing_into: family_living
-  at: null
-  source: 'answer 12b: family room off the gallery; double doors proposed'
 - 'no': F14
   storey: first
   a: master_suite

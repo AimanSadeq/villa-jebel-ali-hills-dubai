@@ -262,21 +262,19 @@ first:
     gfa: counts
   - key: family_living
     name: "Family Living Room"
-    target_m2: 33
+    target_m2: 26.2
+    with_gallery_m2: 33.7
+    first_floor_answers: >
+      Owner answers 12b and FF5, 2026-10-02 (D-046, D-050): above the salon,
+      4.99 x 5.25 m, open to the 1.49 x 5.04 m gallery, about 33.7 m2 together,
+      looking over the foyer void.
+    target_before_first_floor_m2: 33
     brief_target_m2: 35
     trimmed: trim_t2
     trim_note: >
       Trimmed by owner decision 2026-10-02, D-027, to bring the measured plan inside the GFA cap. Cut upstairs because in massing option C a ground floor cut in the two storey wing only turns into padding under the bedrooms.
     gfa: counts
     notes: "Acoustically separated from the master suite."
-  - key: linen_storage
-    name: "Linen and General Storage"
-    target_m2: 6
-    gfa: counts
-    deferred: >
-      Owner answer 12l, 2026-10-02 (D-046): the reference's linen store became
-      void over the island kitchen to keep the house inside the GFA cap. Not
-      placed until the first floor is designed (D-038); OI-27.
   - key: stair_lift_first
     name: "Staircase + Home Elevator"
     target_m2: 15
@@ -369,6 +367,15 @@ interiors:
 # Rooms removed from the CLAUDE.md section 4 program, kept on record so the
 # removal is visible and reversible rather than silent.
 removed:
+  - key: linen_storage
+    name: "Linen and General Storage"
+    brief_target_m2: 6
+    removed_on: "2026-10-02"
+    decision: "D-050"
+    reason: >
+      Owner answer FF4: no separate linen store; linen goes into the built-in
+      wardrobes of the dressing rooms. The reference's store became void over
+      the island kitchen by answer 12l.
   - key: family_sitting
     name: "Family Sitting"
     brief_target_m2: null

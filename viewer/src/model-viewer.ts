@@ -451,7 +451,7 @@ async function boot() {
     h('div', { class: 'toggles', style: 'margin-top:12px' },
       toggle('Room labels with areas', 'labels'),
       toggle('Room volumes (IfcSpace)', 'spaces'),
-      toggle('Site, pool and deck', 'site')),
+      toggle('Site and garden', 'site')),
     h('p', { class: 'note' }, icon('ruler', 'icon tiny'),
       'Labels and room volumes show on the floor plan views. The ground floor view cuts away the first floor and the roofs.')));
 

@@ -40,13 +40,27 @@ def test_every_program_room_is_placed_exactly_once():
     assert sorted(placed) == sorted(wanted)
 
 
-def test_deferred_rooms_are_on_record_and_not_placed():
-    """D-046, answer 12l: only the linen store is deferred, and it says why."""
-    deferred = {r["key"]: r for f in ("ground", "first") for r in prog[f] if r.get("deferred")}
-    assert set(deferred) == {"linen_storage"}
-    assert "12l" in deferred["linen_storage"]["deferred"]
+def test_the_linen_store_is_removed_and_on_record():
+    """D-050, first floor answer FF4: no separate linen store; linen in the
+    dressing rooms' built-in wardrobes. Nothing else is deferred."""
+    removed = {r["key"]: r for r in prog.get("removed", [])}
+    assert removed["linen_storage"]["decision"] == "D-050"
+    assert not [r for f in ("ground", "first") for r in prog[f] if r.get("deferred")]
     placed = {r["key"] for f in ("ground", "first") for r in lay["floors"][f]["rooms"]}
-    assert not placed & set(deferred)
+    assert "linen_storage" not in placed
+
+
+def test_first_floor_answers_are_built():
+    """D-050: the family room opens to the gallery (FF5) and the first floor
+    wall at the end of the living room void stands on the TV wall (FF7)."""
+    joins = {frozenset(j.split("/")) for j in lay["open_joins"]["first"]}
+    assert frozenset(("gallery", "family_living")) in joins
+    assert not any(d["no"] == "F13" for d in lay["doors"])
+    living, dining = _room("ground", "living"), _room("ground", "dining")
+    b4 = _room("first", "bedroom_4")
+    void = next(v for v in lay["floors"]["first"]["voids"] if v["key"] == "void_over_living")
+    # In the grid the road-to-garden axis is u and the along-road axis is v.
+    assert abs(b4["v"][0] - dining["v"][0]) < 0.01 and abs(void["v"][1] - living["v"][1]) < 0.01
 
 
 def test_the_sunroom_is_removed_and_on_record():
@@ -210,9 +224,11 @@ def test_the_arabic_kitchen_is_walled_with_an_open_entrance_from_the_kitchen():
 
 def test_the_door_schedule_is_complete_and_numbered_once():
     """D-046: the doors the owner was shown on VJH-SK-013, each once, each with
-    its source, each between placed rooms or to the outside."""
+    its source, each between placed rooms or to the outside. F13 (family
+    room) is retired by FF5: the family room opens to the gallery."""
     nos = [d["no"] for d in lay["doors"]]
-    assert len(nos) == len(set(nos)) == 35
+    assert len(nos) == len(set(nos)) == 34
+    assert "F13" not in nos
     placed = {r["key"] for f in ("ground", "first")
               for r in lay["floors"][f]["rooms"] + lay["floors"][f]["circulation"]}
     for d in lay["doors"]:

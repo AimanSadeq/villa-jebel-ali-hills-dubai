@@ -41,11 +41,11 @@ gfa_measured:
   road_wing_ground: 355.58
   ssw_wing_ground: 0.0
   living_block_ground: 0.0
-  first_floor_less_void: 306.11
-  first_floor_voids: 80.87
-  total: 661.69
+  first_floor_less_void: 305.25
+  first_floor_voids: 81.73
+  total: 660.82
   cap: 662.99
-  margin: 1.3
+  margin: 2.17
   outside_gfa_to_verify:
     carport_m2: 77.35
     lawn_court_m2: 0.0
@@ -171,6 +171,7 @@ open_joins:
   - corridor_first/gallery
   - landing/lift_lobby
   - stair_lift_first/landing
+  - gallery/family_living
 room_links: []
 external_doors: []
 doors:
@@ -563,9 +564,9 @@ doors:
   width_m: 1.0
   height_m: 2.4
   u: 15.65
-  v: 23.815
+  v: 23.994
   along_u: true
-  wall_t: 0.205
+  wall_t: 0.15
   swing: 1
   source: 'reference: bedroom 4 from the corridor'
 - 'no': F09
@@ -594,19 +595,6 @@ doors:
   wall_t: 0.206
   swing: 1
   source: 'reference: lift door on the lobby face; size TO VERIFY (OI-23)'
-- 'no': F13
-  storey: first
-  a: gallery
-  b: family_living
-  kind: double
-  width_m: 1.6
-  height_m: 2.4
-  u: 12.295
-  v: 23.843
-  along_u: true
-  wall_t: 0.261
-  swing: 1
-  source: 'answer 12b: family room off the gallery; double doors proposed'
 - 'no': F14
   storey: first
   a: master_suite
@@ -970,9 +958,9 @@ floors:
       - 15.046
       - 20.547
       v:
-      - 23.918
+      - 24.069
       - 28.415
-      area_m2: 24.74
+      area_m2: 23.91
     - key: bedroom_4_dress
       u:
       - 15.046
@@ -1036,8 +1024,8 @@ floors:
       - 16.34
       v:
       - 14.015
-      - 23.713
-      area_m2: 14.54
+      - 23.919
+      area_m2: 14.85
     - key: gallery
       u:
       - 9.799
@@ -1069,8 +1057,8 @@ floors:
       - 20.547
       v:
       - 14.015
-      - 23.713
-      area_m2: 40.8
+      - 23.919
+      area_m2: 41.67
     outdoor:
     - key: balcony_master
       u:

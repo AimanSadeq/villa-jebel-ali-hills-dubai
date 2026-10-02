@@ -228,9 +228,9 @@ def apply_answer_12(ground: list, first: list, report: list[str]) -> tuple[list,
     return out_g, out_f
 
 
-# First floor answers (docs/first-floor-decisions.md, FF1 to FF7). Off until
-# the owner approves the first floor build; the decision sketch VJH-SK-016
-# draws them from here so the sketch and the build cannot differ.
+# First floor answers (docs/first-floor-decisions.md, FF1 to FF8), built by
+# the owner's FF8 (D-050). main() switches them on; the decision sketch
+# VJH-SK-016 draws them from here so the sketch and the build cannot differ.
 FIRST_FLOOR_JOINS = ["gallery/family_living"]        # FF5: the family room open to the gallery
 FIRST_FLOOR_RETIRED_DOORS = {"F13"}                  # FF5: its double doors go
 
@@ -369,7 +369,8 @@ def assemble(answer_12: bool = True, first_floor: bool = False) -> tuple[dict, l
 
 
 def main() -> int:
-    plan, report = assemble()
+    # First floor answers FF1 to FF8 built (owner: "A", build it; D-050).
+    plan, report = assemble(first_floor=True)
     OUT.write_text(yaml.safe_dump(plan, sort_keys=False, width=100, allow_unicode=False),
                    encoding="utf-8")
     print(f"Wrote {OUT.relative_to(REPO_ROOT)}: {len(plan['ground'])} ground, {len(plan['first'])} first")
