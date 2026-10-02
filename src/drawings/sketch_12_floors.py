@@ -46,10 +46,12 @@ OUT_PNG_DOORS = REPO_ROOT / "output" / "pdf" / "VJH-SK-013_Answer_12_Door_Schedu
 
 # Open joins after answer 12 (no door, no wall): the reference's, with the
 # garden room renamed, plus the new open room and the salon (12c).
-OPEN_GROUND_NEW = ["show_kitchen/living", "living/dining", "salon/dining", "salon/living",
+OPEN_GROUND_NEW = ["show_kitchen/living", "salon/dining", "salon/living",
                    "entrance_foyer/living"]
 
 CAP = 662.99
+TV_WALL_T = 0.15
+TV_W = 1.90          # an 85 inch screen is about 1.9 m wide
 DOUBLE_HEIGHT = {"entrance_foyer", "living", "main_entrance"}
 VOID = "#dfe9f2"
 NEW = "#e8f3ea"
@@ -136,7 +138,10 @@ def apply_answer_12(plan: dict) -> tuple[list, list, list[str]]:
     ground += [
         _r("show_kitchen", "room", k["x0"], k["x1"], y0, y1, True),
         _r("living", "room", k["x1"], split_ld, y0, y1, True),
-        _r("dining", "room", split_ld, m["x1"], sd_line, y1, True),
+        # 12g A: a solid TV wall between the living room and the dining, 0.15 m,
+        # taken from the dining as the D-042 wall was; the living keeps a
+        # 2.25 m opening into the salon.
+        _r("dining", "room", round(split_ld + TV_WALL_T, 3), m["x1"], sd_line, y1, True),
         _r("salon", "room", c["x0"], m["x1"], c["y0"], sd_line, True),
     ]
 
@@ -178,6 +183,31 @@ def measure(ground: list, first: list) -> dict:
     return out
 
 
+def _living_tv(ax, rooms, x0, x1, y0, y1):
+    """The TV wall (12g) at the living room's north end, the TV on it and a
+    sofa facing it. Plot coords: (y, x)."""
+    d = next(r for r in rooms if r["key"] == "dining")
+    wy0, wy1 = d["y0"], d["y1"]
+    ax.add_patch(Rectangle((wy0, x1), wy1 - wy0, TV_WALL_T, fc=WALL, ec=WALL, zorder=6))
+    ty = (wy0 + wy1) / 2
+    ax.add_patch(Rectangle((ty - TV_W / 2, x1 - 0.12), TV_W, 0.08, fc="#333333", ec="none", zorder=6))
+    ax.text(ty, x1 - 0.25, f"TV {TV_W:.1f} m wide\non a {wy1 - wy0:.2f} m wall", ha="center", va="top",
+            fontsize=4.6, color=CHANGED, zorder=6)
+    kw = dict(fill=False, ec="#8a6a3f", lw=0.8, zorder=3)
+    view = 3.40                                   # screen to sofa front
+    sx = x1 - view - 0.9
+    ax.add_patch(Rectangle((ty - 1.6, sx), 3.2, 0.9, **kw))        # sofa facing the TV
+    ax.add_patch(Rectangle((ty - 0.6, sx + 1.3), 1.2, 0.7, **kw))  # coffee table
+    ax.add_patch(Rectangle((y1 - 1.1, sx + 1.0), 0.9, 1.9, **kw))  # side sofa, garden side
+    ax.annotate("", xy=(ty - 1.9, x1 - 0.1), xytext=(ty - 1.9, x1 - view),
+                arrowprops=dict(arrowstyle="<->", color=CHANGED, lw=0.6), zorder=6)
+    ax.text(ty - 2.0, x1 - view / 2, f"viewing {view:.2f} m", fontsize=4.6, color=CHANGED,
+            va="center", ha="right", rotation=90, zorder=6)
+    s = next(r for r in rooms if r["key"] == "salon")
+    ax.text((y0 + s["y1"]) / 2, x1 - 0.25, f"{s['y1'] - y0:.2f} m open\nto the salon", ha="center",
+            va="top", fontsize=4.6, color=CHANGED, zorder=6)
+
+
 def _draw_floor(ax, rooms, outline, labels, title, floor, H):
     for r in rooms:
         x0, x1, y0, y1, kind = r["x0"], r["x1"], r["y0"], r["y1"], r["kind"]
@@ -196,8 +226,10 @@ def _draw_floor(ax, rooms, outline, labels, title, floor, H):
             fc, ls = OTHER, "-"
         ax.add_patch(Rectangle((y0, x0), y1 - y0, x1 - x0, fc=fc, ec=INK if new else MUTED,
                                lw=0.7 if new else 0.5, ls=ls, zorder=2 if new else 1))
-        if floor == "ground" and r["key"] in ("show_kitchen", "living", "dining", "salon"):
+        if floor == "ground" and r["key"] in ("show_kitchen", "dining", "salon"):
             _furniture(ax, r["key"], x0, x1, y0, y1, "B")
+        if floor == "ground" and r["key"] == "living":
+            _living_tv(ax, rooms, x0, x1, y0, y1)
         a = (x1 - x0) * (y1 - y0)
         name = {"show_kitchen": "Island kitchen", "living": "Living room (double height)",
                 "dining": "Dining", "salon": "Salon (majlis)"}.get(r["key"], labels.get(r["key"]))
@@ -208,7 +240,8 @@ def _draw_floor(ax, rooms, outline, labels, title, floor, H):
         big = new and kind != "void" and not small
         h = room_height(r, floor, H)
         txt = name + "\n" + dims_text(x0, x1, y0, y1, h, small=small)
-        ax.text((y0 + y1) / 2, (x0 + x1) / 2, txt, ha="center", va="center",
+        lx = x0 + 1.4 if (floor == "ground" and r["key"] == "living") else (x0 + x1) / 2
+        ax.text((y0 + y1) / 2, lx, txt, ha="center", va="center",
                 fontsize=6.2 if big else (3.6 if small else 4.5),
                 color=INK if big else MUTED, weight="bold" if big else "normal", zorder=6,
                 linespacing=1.25, bbox=dict(fc="white", ec="none", alpha=0.75, pad=0.5))
@@ -301,8 +334,8 @@ def main() -> int:
     s = next(r for r in ground if r["key"] == "salon")
     ax_g.plot([s["y1"], s["y1"]], [s["x0"], s["x1"]], color="white", lw=2.0, zorder=5)
     ax_g.plot([s["y1"], s["y1"]], [s["x0"], s["x1"]], color=MUTED, lw=0.8, ls=(0, (4, 3)), zorder=5)
-    ax_g.text(s["y1"], s["x0"] - 0.15, "open to dining (12c)", ha="center", va="top",
-              fontsize=5, color=CHANGED, zorder=6)
+    ax_g.text(s["y1"] - 0.15, s["x0"] + 0.6, "open to dining (12c)", ha="right", va="bottom",
+              fontsize=4.6, color=CHANGED, zorder=6)
     fam = next(r for r in first if r["key"] == "family_living")
 
     # Doors, and a check that every room can be reached through them.
