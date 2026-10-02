@@ -23,6 +23,15 @@ and the 10.20 m height, as promised at the start of Phase 3. An east west pool
 across the living room's frontage was considered and can be offered if the
 shade check favours it.
 
+**Shade check, same day (VJH-RPT-008, src/analysis/shade_check.py).** On the
+planned footprint at the D-030 heights, the deck in this position is in the
+villa's shadow for 92.0 % of the summer afternoon hours (15:00 to 18:00, June
+and August), against 88.0 % estimated for option C's blocks in Phase 1, and
+gets 58 % winter midday sun. The east west alternative across the living
+room's frontage scores 93.8 % and 56 %: no better in any way that matters, so
+the Phase 1 orientation is kept. At 15:00 in June about a third of the deck is
+still in sun; a pergola at the BBQ end (CLAUDE.md section 4) would cover it.
+
 **Approved by Aiman: no,** Claude's consequence of D-036, for review.
 
 ### D-036 Central hall ground floor

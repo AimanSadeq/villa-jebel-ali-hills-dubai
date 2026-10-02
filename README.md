@@ -54,6 +54,7 @@ pip install -r requirements.txt
 | `python src/model/export_massing.py` | Writes the viewer's data file |
 | `python src/model/layout_gen.py` | Generates the room layout, brief/layouts.yaml |
 | `python src/model/build_model.py` | GFA check, then the IFC model, validation, and the viewer's model data |
+| `python src/analysis/shade_check.py` | Afternoon shade on the pool deck from the planned footprint, VJH-RPT-008 |
 | `npm run dev --prefix viewer` | Massing viewer at http://localhost:5173 |
 | (same server) | Phase 3 IFC model viewer at http://localhost:5173/model.html |
 | `python -m pytest -q` | Setback, GFA, shading, orientation, layout and interior guards, 93 checks |

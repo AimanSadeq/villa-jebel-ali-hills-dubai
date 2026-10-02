@@ -1,0 +1,45 @@
+VJH-RPT-008  SHADE ON THE POOL DECK, AS PLANNED
+CONCEPT DESIGN, NOT FOR CONSTRUCTION
+
+Villa masses from brief/layouts.yaml, heights from brief/massing.yaml (D-030):
+  Two storey wing                           268.21 m2 footprint, 10.20 m to parapet
+  Single storey end of the road wing         13.90 m2 footprint,  6.20 m to parapet
+  SSW wing, kitchens                         45.48 m2 footprint,  6.20 m to parapet
+  Living block, double height                50.37 m2 footprint, 10.20 m to parapet
+
+Summer afternoons ['06-21', '08-21'] at [15, 16, 17, 18] h, winter midday ['12-21'] at [11, 12, 13, 14] h.
+Shade is the fraction of the pool and deck inside the villa's shadow.
+
+Phase 1 reference, option C blocks                        summer pm shade  88.0 %   winter midday sun  64.2 %
+
+D-037, north of the living room, 10 m along the plot
+  The current plan. Deck starts at the living room's north wall.
+  pool u 18.50 to 22.50, v 19.45 to 29.45; deck 100.0 m2 incl. pool
+  summer pm shade  92.0 %   winter midday sun  58.2 %
+    06-21 15:00   65.7 %
+    06-21 16:00   96.2 %
+    06-21 17:00   99.6 %
+    06-21 18:00   98.2 %
+    08-21 15:00   76.5 %
+    08-21 16:00  100.0 %
+    08-21 17:00  100.0 %
+    08-21 18:00  100.0 %
+
+Alternative, east west across the living frontage
+  Pool 10 m along u, 2 m from the living room's glass, reaching toward the landscape plot. Deck inside the envelope.
+  pool u 17.00 to 27.00, v 19.95 to 23.95; deck 99.2 m2 incl. pool
+  summer pm shade  93.8 %   winter midday sun  56.3 %
+    06-21 15:00   71.4 %
+    06-21 16:00   95.0 %
+    06-21 17:00  100.0 %
+    06-21 18:00  100.0 %
+    08-21 15:00   84.6 %
+    08-21 16:00   99.2 %
+    08-21 17:00  100.0 %
+    08-21 18:00  100.0 %
+
+FINDING
+  Best afternoon shade: Alternative, east west across the living frontage.
+  The current plan has 92.0 % against 93.8 % for the alternative.
+  The pool position is the owner's decision (D-037 is for review).
+
