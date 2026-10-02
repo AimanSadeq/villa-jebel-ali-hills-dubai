@@ -183,7 +183,10 @@ CONFIGS = {
         # majlis or the Arabic kitchen.
         "G_EAST": ["arabic_kitchen", "pantry", "hall_link", "majlis"],
         "G_EAST_GROW": "majlis",
-        "G_STAFF": [("maids_room", "outdoor_bathroom"), ("laundry", "plant_room")],
+        # Laundry and plant first, maid and outdoor bathroom at the north end, so
+        # the maid's room gets an outside wall for a window and its own entrance
+        # (CLAUDE.md section 4), and the bathroom keeps its courtyard door.
+        "G_STAFF": [("laundry", "plant_room"), ("maids_room", "outdoor_bathroom")],
         "SSW_KITCHEN": ["show_kitchen", "dining"],
         "F_WEST": ["bedroom_2", "bedroom_3"],
         "F_EAST": ["bedroom_4", "linen_storage", "family_living"],

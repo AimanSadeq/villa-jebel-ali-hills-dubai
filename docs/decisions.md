@@ -6,6 +6,44 @@ Columns: date, decision, reason, approved by Aiman.
 
 ---
 
+## 2026-10-02, Phase 3 section and staff strip
+
+### D-031 Staff strip reordered: maid's room and outdoor bathroom on the north wall
+
+**Decision.** In the staff strip north of the corridor, the maid's room and the
+outdoor bathroom now sit on the external north wall, with the laundry and plant
+room on the corridor side. The plant room keeps its courtyard wall.
+
+**Reason.** CLAUDE.md asks for the maid's room in the staff zone with a separate
+entrance. On the old order it had no external wall, so no window and no outside
+door. Now it has both, and the outdoor bathroom has north and courtyard walls
+for its own door. The laundry is reached from the garage.
+
+**Result, measured:** 656.47 m2, unchanged, 6.52 m2 inside the cap.
+
+**Approved by Aiman: no,** Claude's correction for review at the Phase 3
+checkpoint.
+
+### D-030 Tall section: 5.00 m ground, 4.00 m first, 1.20 m parapet, 10.20 m overall
+
+**Decision.** Floor to floor heights of 5.00 m on the ground floor and 4.00 m on
+the first floor, with a 1.20 m parapet: 9.00 m to the main roof slab and 10.20 m
+overall. The double height living room rises the full 9.00 m.
+
+**Reason.** Owner choice 2026-10-02, for high ceilings. About 4.55 m clear on the
+ground floor and 3.55 m upstairs, inside the clear heights in DDA FAQs Building
+Q28 (up to 6 m ground, up to 4.2 m typical) and above the Q33 minimum of 2.7 m.
+The 1.20 m parapet is DDA FAQs Building Q34.
+
+**Risk.** DDA FAQs Building Q29 gives a metre cap of floors x 4.2 m, 8.40 m for
+G+1, which this exceeds. Whether that cap applies to this plot, which states only
+"G+1", is TO VERIFY, OI-13. The tall ground floor also forces a compact stair
+and lift core, OI-23.
+
+**Approved by Aiman: yes.**
+
+---
+
 ## 2026-10-02, bedrooms restored
 
 ### D-029 Bedrooms 2 to 4 restored to 30 m2

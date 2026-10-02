@@ -177,38 +177,38 @@ floors:
       - 21.309
       - 26.849
       area_m2: 31.3
-    - key: maids_room
-      u:
-      - 9.1
-      - 12.999
-      v:
-      - 21.309
-      - 24.199
-      area_m2: 11.27
-    - key: outdoor_bathroom
-      u:
-      - 13.149
-      - 14.7
-      v:
-      - 21.309
-      - 24.199
-      area_m2: 4.48
     - key: laundry
       u:
       - 9.1
       - 11.825
       v:
-      - 24.349
-      - 26.849
+      - 21.309
+      - 23.809
       area_m2: 6.81
     - key: plant_room
       u:
       - 11.975
       - 14.7
       v:
-      - 24.349
-      - 26.849
+      - 21.309
+      - 23.809
       area_m2: 6.81
+    - key: maids_room
+      u:
+      - 9.1
+      - 12.999
+      v:
+      - 23.959
+      - 26.849
+      area_m2: 11.27
+    - key: outdoor_bathroom
+      u:
+      - 13.149
+      - 14.7
+      v:
+      - 23.959
+      - 26.849
+      area_m2: 4.48
     - key: show_kitchen
       u:
       - 14.95
