@@ -482,11 +482,11 @@ def build() -> Path:
         "Arabic kitchen walled, entered from the island kitchen by an opening with no "
         "door (12m). Front door a 2.40 x 4.50 m pivot door, glass above (12i).",
         "Doors numbered G01 to G23 and F01 to F15 as on the door schedule, sketch VJH-SK-013 "
-        "page 2 (G06, F10, F11 retired by 12h, 12l). Every room is reached; the build checks it.",
-        "First floor: the reference's, a placeholder until it is designed (D-038), with the "
-        "family room above the salon (12b) and the void over the living room",
-        "and island kitchen in place of the pantry and linen store (12l). The 6 m2 linen "
-        "store and the master's coffee station are still to be placed (OI-27).",
+        "page 2 (G06, F10, F11, F13 retired by 12h, 12l, FF5). Every room is reached; the build checks it.",
+        "First floor, answers FF1 to FF8 (D-050): the reference's, adjusted. Family room open "
+        "to the gallery, about 33.7 m2 (363 sq ft), h 3.55 m (FF5).",
+        "No separate linen store, linen in built-in cupboards (FF4). Wall over the TV wall "
+        "lined up; bedroom 4 4.35 x 5.50 m (FF7). Master suite as VJH-SK-015 (FF3).",
         "Heights indicative, brief/massing.yaml (D-030): h is clear height, floor to floor "
         "less 0.30 m slab and 0.15 m ceiling services zone.",
         "Carport, porch, balconies and terraces outside GFA by owner decision D-039, TO VERIFY "
@@ -502,7 +502,7 @@ def build() -> Path:
 
     fig.text(0.975, 0.030, "CONCEPT DESIGN, NOT FOR CONSTRUCTION", fontsize=9,
              color=BAD, ha="right")
-    fig.text(0.975, 0.016, "Drawing VJH-GA-001   Ground floor answer 12   Rev B   A1 landscape   "
+    fig.text(0.975, 0.016, "Drawing VJH-GA-001   Ground floor answer 12, first floor FF1 to FF8   Rev C   A1 landscape   "
              "true 1:100", fontsize=6.5, color=MUTED, ha="right")
 
     OUT.parent.mkdir(parents=True, exist_ok=True)

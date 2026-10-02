@@ -266,8 +266,9 @@ first:
     with_gallery_m2: 33.7
     first_floor_answers: >
       Owner answers 12b and FF5, 2026-10-02 (D-046, D-050): above the salon,
-      4.99 x 5.25 m, open to the 1.49 x 5.04 m gallery, about 33.7 m2 together,
-      looking over the foyer void.
+      4.99 x 5.25 m, 26.2 m2 (282 sq ft), open to the 1.49 x 5.04 m gallery,
+      about 33.7 m2 (363 sq ft) together, clear height 3.55 m, looking over the
+      foyer void.
     target_before_first_floor_m2: 33
     brief_target_m2: 35
     trimmed: trim_t2

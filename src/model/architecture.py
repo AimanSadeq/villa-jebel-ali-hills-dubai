@@ -435,8 +435,10 @@ class Model:
             along_u, (u, v), t, length = s
             lo = max(a.u0, b.u0) if along_u else max(a.v0, b.v0)
             hi = lo + length
-            gap = (box(lo, v - t / 2, hi, v + t / 2) if along_u
-                   else box(u - t / 2, lo, u + t / 2, hi))
+            # 1 micron overlap so the bridge fuses with both rooms (no float seam).
+            h = t / 2 + 1e-6
+            gap = (box(lo, v - h, hi, v + h) if along_u
+                   else box(u - h, lo, u + h, hi))
             out.append((a_key, gap))
         interior = unary_union([r.poly for r in rooms + circ] + [g for _, g in out])
         for i in range(len(out)):

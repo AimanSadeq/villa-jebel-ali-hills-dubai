@@ -103,7 +103,7 @@ Rules for the boundary:
 | Bedroom 3, en-suite | 30 to 35 | |
 | Bedroom 4, en-suite | 30 to 35 | |
 | Family living room | 35 | Acoustically separated from master suite |
-| Linen and general storage | 6 | |
+| Linen and general storage | 6 | REMOVED by owner decision 2026-10-02 (D-050, FF4): linen in built-in cupboards |
 
 Master suite contents: bedroom, private sitting area, his and hers walk-in wardrobes, large bathroom with bathtub and separate shower, coffee / kitchenette station, private balcony. Give it the best upstairs orientation, ideally toward the east landscape plot if the sun study supports it.
 

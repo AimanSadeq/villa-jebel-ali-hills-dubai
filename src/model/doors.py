@@ -73,11 +73,11 @@ FIRST = [
     ("F10", "corridor_first", "pantry_first", 1.00, 2.40, "open", "pantry_first", 12.60,
      "reference: open entry; moved 0.95 m by the living room void"),
     ("F11", "pantry_first", "linen_storage", 0.80, 2.40, "single", "linen_storage", 12.60,
-     "reference: store from the pantry; moved by the void"),
+     "reference: store from the pantry; moved by the void. Retired by 12l, store removed by FF4"),
     ("F12", "lift_first", "lift_lobby", 0.90, 2.10, "lift", "lift_lobby", None,
      "reference: lift door on the lobby face; size TO VERIFY (OI-23)"),
     ("F13", "gallery", "family_living", 1.60, 2.40, "double", "family_living", None,
-     "answer 12b: family room off the gallery; double doors proposed"),
+     "answer 12b: family room off the gallery; double doors proposed. Retired by FF5 (open)"),
 ]
 # External doors: (no, room, wall axis, wall lo, wall hi, centre, width, height,
 # kind, source). Axis "y": the wall spans frame y lo..hi and the door runs

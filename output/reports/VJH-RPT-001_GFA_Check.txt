@@ -10,43 +10,43 @@ Net to gross factor (assumption)             1.22
 NET ROOM AREA BY FLOOR, confirmed GFA areas only
 Floor              Low      High
 ground          263.40    263.40
-first           212.00    239.00
-TOTAL NET       475.40    502.40
+first           199.20    226.20
+TOTAL NET       462.60    489.60
 
 Of which the garage, counted toward GFA by owner decision: 77.30 m2
 Double-height voids, excluded from upper floor area: 60.80 m2
 
 GROSS FLOOR AREA BY SCENARIO, against the 662.99 m2 cap
 Scenario                                Low     High  Head low Head high  Verdict
-All areas confirmed to count         580.94   613.93     82.05     49.06  fits at both ends
-Plus garage                          658.24   691.23      4.75    -28.24  fits at minimum, high end unaffordable
+All areas confirmed to count         565.30   598.29     97.69     64.70  fits at both ends
+Plus garage                          642.60   675.59     20.39    -12.60  fits at minimum, high end unaffordable
 
 HEADROOM AGAINST THE DESIGN TARGET OF 653.00 m2
-All areas confirmed to count          72.06    39.07
-Plus garage                           -5.24   -38.23
+All areas confirmed to count          87.70    54.71
+Plus garage                           10.40   -22.59
 
 Positive means area still available to distribute. Negative means trims
 are needed. Trims are never made without the owner's approval.
 
 RANGE HEADROOM
 CLAUDE.md gives the master suite and bedrooms as ranges. At the
-minimum of every range the program lands at 580.94 m2. This is how much of
+minimum of every range the program lands at 565.30 m2. This is how much of
 that range can then be spent.
 Full range, minimum to maximum                 27.00 m2 net
-Affordable against the cap                     67.15 m2 net
-Affordable against the design target           58.97 m2 net
-Share of the range available                    249 %
+Affordable against the cap                     79.95 m2 net
+Affordable against the design target           71.77 m2 net
+Share of the range available                    296 %
 
 PLAN EFFICIENCY SENSITIVITY
 Lower net to gross means more room area for the same GFA. Headroom is
 against the 662.99 m2 cap, with the garage counted.
 Factor     Gross low  Gross high   Head low  Head high
-1.12          532.45      562.69     130.54     100.30  fits
-1.14          541.96      572.74     121.03      90.25  fits
-1.16          551.46      582.78     111.53      80.21  fits
-1.18          560.97      592.83     102.02      70.16  fits
-1.20          570.48      602.88      92.51      60.11  fits
-1.22          579.99      612.93      83.00      50.06  fits
+1.12          518.11      548.35     144.88     114.64  fits
+1.14          527.36      558.14     135.63     104.85  fits
+1.16          536.62      567.94     126.37      95.05  fits
+1.18          545.87      577.73     117.12      85.26  fits
+1.20          555.12      587.52     107.87      75.47  fits
+1.22          564.37      597.31      98.62      65.68  fits
 
 ADDED BY CLAUDE, needs owner review
   Staircase + Home Elevator (first), 15 m2
@@ -56,9 +56,9 @@ The estimate above uses a net to gross factor. The plan below is drawn
 geometry, and it is the figure the cap is tested against.
 Road wing, ground                          355.58 m2
 SSW wing, ground                             0.00 m2
-First floor, less voids                    306.11 m2
-Total                                      661.69 m2
-Margin to the cap                           +1.30 m2
+First floor, less voids                    305.25 m2
+Total                                      660.82 m2
+Margin to the cap                           +2.17 m2
 
 VERDICT: PASS in every scenario.
 

@@ -13,9 +13,9 @@ Columns: date, decision, reason, approved by Aiman.
 **Date.** 2026-10-02.
 
 **Decision.** The first floor is the reference first floor adjusted by the owner's answers (docs/first-floor-decisions.md):
-- FF2, FF3: the master suite keeps its walls (75.3 m2) and fits the brief's contents as on VJH-SK-015.
+- FF2, FF3: the master suite keeps its walls (75.3 m2, 811 sq ft, clear height 3.55 m) and fits the brief's contents as on VJH-SK-015.
 - FF4: no separate linen store; linen goes into built-in cupboards. brief/program.yaml lists linen_storage as removed. A departure from the brief, the owner's decision.
-- FF5: the family room opens onto the gallery, door F13 retired: one open room of about 33.7 m2 with the gallery, clear height 3.55 m.
+- FF5: the family room opens onto the gallery, door F13 retired: one open room of 4.99 x 5.25 m plus the 1.49 x 5.04 m gallery, about 33.7 m2 (363 sq ft), clear height 3.55 m.
 - FF6: no further GFA trims; the owner accepts the thin margin.
 - FF7: the first floor wall over the TV wall lines up with it; bedroom 4 is 4.35 x 5.50 m, 23.9 m2 (257 sq ft), clear height 3.55 m.
 - GFA measured from the plan 660.82 m2, margin 2.17 m2 to the 662.99 m2 cap (IFC check 660.79 m2).
