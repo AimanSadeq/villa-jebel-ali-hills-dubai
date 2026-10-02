@@ -1,8 +1,8 @@
-"""Sketch of both floors with all of answer 12 applied (12, 12a, 12b, 12c).
+"""Sketch of both floors with all of answer 12 applied (12, 12a, 12b, 12c, 12d).
 
 Ground floor: kitchen, double height living room and dining along the backyard
 (12a option B); the salon in the lawn court's place, fully open to the dining
-(12c). First floor: the void over the living room, the family room above the
+(12c), lined up with the dining's north wall and 6.00 m across (12d). First floor: the void over the living room, the family room above the
 salon off the gallery (12b); everything else is still the reference's
 placeholder first floor.
 
@@ -82,11 +82,16 @@ def apply_answer_12(plan: dict) -> tuple[list, list, list[str]]:
 
     ground = [dict(r) for r in plan["ground"]
               if r["key"] not in {"show_kitchen", "family_sitting", "dining", "majlis", "lawn_court"}]
+    # 12d C: the salon's north wall lines up with the dining's, and the open
+    # salon/dining line moves toward the backyard so the salon is 6.00 m across
+    # (the old 0.25 m wall line between them becomes floor). The dining is
+    # 6.00 x 5.25 m.
+    sd_line = round(c["y0"] + 6.00, 3)
     ground += [
         _r("show_kitchen", "room", k["x0"], k["x1"], y0, y1, True),
         _r("living", "room", k["x1"], split_ld, y0, y1, True),
-        _r("dining", "room", split_ld, m["x1"], y0, y1, True),
-        _r("salon", "room", c["x0"], c["x1"], c["y0"], c["y1"], True),
+        _r("dining", "room", split_ld, m["x1"], sd_line, y1, True),
+        _r("salon", "room", c["x0"], m["x1"], c["y0"], sd_line, True),
     ]
 
     # First floor. The void over the living room keeps the gallery (corridor)
@@ -190,8 +195,9 @@ def main() -> int:
 
     # Ground: the salon is open to the dining (12c): no wall drawn between them.
     s = next(r for r in ground if r["key"] == "salon")
-    ax_g.plot([s["y1"] + 0.12, s["y1"] + 0.12], [s["x0"], s["x1"]], color="white", lw=3.2, zorder=5)
-    ax_g.text(s["y1"] + 0.12, s["x0"] - 0.15, "open to dining (12c)", ha="center", va="top",
+    ax_g.plot([s["y1"], s["y1"]], [s["x0"], s["x1"]], color="white", lw=2.0, zorder=5)
+    ax_g.plot([s["y1"], s["y1"]], [s["x0"], s["x1"]], color=MUTED, lw=0.8, ls=(0, (4, 3)), zorder=5)
+    ax_g.text(s["y1"], s["x0"] - 0.15, "open to dining (12c)", ha="center", va="top",
               fontsize=5, color=CHANGED, zorder=6)
     # First: the family room door off the gallery.
     fam = next(r for r in first if r["key"] == "family_living")
