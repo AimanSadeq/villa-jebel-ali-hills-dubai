@@ -50,6 +50,8 @@ GROUND = [
      "model (D-044): store off the service passage"),
     ("G19", "service_passage", "show_kitchen", 0.80, 2.40, "single", "service_passage", None,
      "reference: door arc from the passage into the island kitchen"),
+    ("G23", "show_kitchen", "arabic_kitchen", 1.20, 2.40, "open", "arabic_kitchen", 19.50,
+     "answer 12m: open entrance from the island kitchen, no door leaf"),
 ]
 FIRST = [
     ("F01", "corridor_first", "master_suite", 1.00, 2.40, "single", "master_suite", 15.67,
