@@ -94,7 +94,9 @@ GROUND_EXT = [
     ("G17", "outdoor_bathroom", "y", 8.99, 9.24, 6.71, 0.80, 2.20, "single",
      "answer 11a: opens onto the carport"),
     ("G20", "living", "y", 21.04, 21.29, 17.11, 3.00, 3.00, "sliding",
-     "reference rear glazing; which panels slide is TO DECIDE"),
+     "answer 12j A: the one garden door of the open room; other rear glass fixed"),
+    ("G21", "arabic_kitchen", "y", 21.04, 21.29, 4.40, 1.00, 2.40, "single",
+     "answer 12j: service door from the Arabic kitchen to the backyard, laundry end; position proposed"),
 ]
 FIRST_EXT = [
     ("F14", "master_suite", "y", 20.55, 20.80, 6.80, 3.00, 2.40, "sliding",
