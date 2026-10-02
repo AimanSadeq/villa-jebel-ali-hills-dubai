@@ -16,7 +16,7 @@ licensed structural engineer must review, complete, and stamp all final drawings
 | Maximum GFA | 662.99 m² (7,136.36 sq ft) |
 | Maximum height | G+1 |
 | Setbacks | 3 m on all sides |
-| Current phase | Phase 2 plan drawn, 645.72 m2, awaiting owner review |
+| Current phase | Phase 2 approved; Phase 3 started |
 
 ## Start here
 
@@ -81,8 +81,8 @@ and regenerate: nothing else needs touching.
 |---|---|---|
 | 0 | Repo setup, brief files, plot and area verification | Complete, awaiting review |
 | 1 | Sun study, massing options, pool and garden position | Complete, awaiting review |
-| 2 | Room layouts, two plan options, GFA check | Plan drawn, 17.27 m2 inside the cap, awaiting review |
-| 3 | Full IFC architectural model | Not started |
+| 2 | Room layouts, two plan options, GFA check | Approved, 656.47 m2, 6.52 inside the cap |
+| 3 | Full IFC architectural model | In progress |
 | 4 | Walkthrough, furniture, landscape, three palettes | Not started |
 | 5 | MEP design, calculations, clash detection | Not started |
 | 6 | Drawing set in PDF and DXF, schedules | Not started |

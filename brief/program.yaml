@@ -179,29 +179,17 @@ first:
       landscape plot if the sun study supports it.
   - key: bedroom_2
     name: "Bedroom 2, En-suite"
-    target_min_m2: 28
-    brief_target_min_m2: 30
-    trimmed: trim_t2
-    trim_note: >
-      Trimmed by owner decision 2026-10-02, D-027, to bring the measured plan inside the GFA cap. Cut upstairs because in massing option C a ground floor cut in the two storey wing only turns into padding under the bedrooms.
+    target_min_m2: 30
     target_max_m2: 35
     gfa: counts
   - key: bedroom_3
     name: "Bedroom 3, En-suite"
-    target_min_m2: 28
-    brief_target_min_m2: 30
-    trimmed: trim_t2
-    trim_note: >
-      Trimmed by owner decision 2026-10-02, D-027, to bring the measured plan inside the GFA cap. Cut upstairs because in massing option C a ground floor cut in the two storey wing only turns into padding under the bedrooms.
+    target_min_m2: 30
     target_max_m2: 35
     gfa: counts
   - key: bedroom_4
     name: "Bedroom 4, En-suite"
-    target_min_m2: 28
-    brief_target_min_m2: 30
-    trimmed: trim_t2
-    trim_note: >
-      Trimmed by owner decision 2026-10-02, D-027, to bring the measured plan inside the GFA cap. Cut upstairs because in massing option C a ground floor cut in the two storey wing only turns into padding under the bedrooms.
+    target_min_m2: 30
     target_max_m2: 35
     gfa: counts
   - key: family_living

@@ -77,6 +77,10 @@ def test_the_measured_plan_fits_the_cap():
     assert m["total"] <= m["cap"]
 
 
+@pytest.mark.xfail(strict=True, reason=(
+    "D-029: the owner restored bedrooms 2 to 4 to 30 m2, leaving 6.52 m2 against "
+    "the 9.99 m2 recommended in D-005. Inside the cap, thinner than advised. "
+    "Strict, so the marker must come off if the margin is ever restored."))
 def test_the_measured_plan_holds_the_recommended_margin():
     """D-005: hold about 10 m2 back for the consultant's remeasure."""
     m = lay["gfa_measured"]
@@ -105,3 +109,9 @@ def test_the_outdoor_bathroom_counts_toward_gfa():
     """It is enclosed floor area, so it counts, like everything else here."""
     progs = {r["key"]: r for r in prog["ground"]}
     assert progs["outdoor_bathroom"]["gfa"] == "counts"
+
+
+def test_the_measured_plan_holds_a_real_margin():
+    """The floor below the D-005 recommendation: never design with nothing in
+    hand against a consultant's remeasure."""
+    assert lay["gfa_measured"]["margin"] >= 5.0

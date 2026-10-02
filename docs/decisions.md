@@ -6,6 +6,31 @@ Columns: date, decision, reason, approved by Aiman.
 
 ---
 
+## 2026-10-02, bedrooms restored
+
+### D-029 Bedrooms 2 to 4 restored to 30 m2
+
+**Decision.** The D-027 trim on bedrooms 2 to 4 is reversed: back to 30 m2,
+their CLAUDE.md minimum. The master stays at 68 and the family room at 33.
+
+**Reason.** Owner decision 2026-10-02, spending the headroom freed when the
+driver's room was removed (D-028).
+
+**Result, measured: 656.47 m2, 6.52 m2 inside the cap.** Thinner than the
+9.99 m2 margin recommended in D-005, and thinner than Claude estimated before the
+change: restoring the three bedrooms cost 10.75 m2 against the cap, not the
+7.5 m2 quoted, because the longer first floor needs a longer ground floor under
+it. The master is 2.27 times the bedrooms at the bottom of the ranges, inside
+the brief's 2.2 to 2.5.
+
+The D-005 margin test is now a strict expected failure, so the shortfall stays
+visible. A floor of 5 m2 is still enforced.
+
+**Approved by Aiman: yes.** Restoring the bedrooms. Accepting the thinner
+margin: not yet asked.
+
+---
+
 ## 2026-10-02, staff zone
 
 ### D-028 No driver's room; an outdoor bathroom instead
