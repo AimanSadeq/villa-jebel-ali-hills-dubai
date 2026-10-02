@@ -763,6 +763,25 @@ class Model:
             s0 = landing + i * going
             steps.append(self._prism(box_l(s0, s0 + going, W - flight_w, W),
                                      z_land, riser * (i + 1)))
+        # Walk zones for the walkthrough (D-049): each flight is a ramp from
+        # its foot to its head, the landing a flat at its level.
+        def pt(s_, t_):
+            c = box_l(s_ - 1e-3, s_ + 1e-3, t_ - 1e-3, t_ + 1e-3).centroid
+            return (c.x, c.y)
+        tm1, tm2 = flight_w / 2, W - flight_w / 2
+        # Under the stair a person stands only where it is at least 2.0 m up:
+        # the low end of flight 1 is solid; the wash and powder room under the
+        # landing stay walkable (their headroom is OI-23).
+        s_head = L - (L - landing) * min(1.0, 2.0 / z_land)
+        self.walk_stair_solid = box_l(s_head, L, 0.0, flight_w)
+        self.walk_stair = [
+            {"name": "stair flight 1", "kind": "ramp", "poly": box_l(landing, L, 0.0, flight_w),
+             "p0": pt(L, tm1), "z0": 0.0, "p1": pt(landing, tm1), "z1": z_land},
+            {"name": "stair landing", "kind": "flat", "poly": box_l(0.0, landing, 0.0, W),
+             "z": z_land},
+            {"name": "stair flight 2", "kind": "ramp", "poly": box_l(landing, L, W - flight_w, W),
+             "p0": pt(landing, tm2), "z0": z_land, "p1": pt(L, tm2), "z1": self.HG},
+        ]
         stair = self.element("IfcStair", "Main stair", "ground", steps,
                              predefined="HALF_TURN_STAIR", material="slab", style="stair")
         ifcopenshell.api.pset.edit_pset(
@@ -1308,6 +1327,68 @@ class Model:
                 self.element("IfcRailing", f"Balustrade, {self.names.get(v.key, v.key)}",
                              "first", [self._prism(band, 0.0, h)], predefined="BALUSTRADE",
                              material="glass")
+
+    def walk_data(self) -> dict:
+        """Where a person can stand, for the walkthrough's collision and floor
+        following (D-049): flat zones per level, the stair as ramps and a flat
+        landing, door openings joining the rooms, and the lift shaft that rides
+        between levels. Grid coordinates (u, v), heights z above the ground
+        floor finish. The outside is the plot, at the ground floor level."""
+        def door_rect(d):
+            w, t = d["width_m"] - 0.10, d["wall_t"] + 0.06
+            if d["along_u"]:
+                return box(d["u"] - w / 2, d["v"] - t / 2, d["u"] + w / 2, d["v"] + t / 2)
+            return box(d["u"] - t / 2, d["v"] - w / 2, d["u"] + t / 2, d["v"] + w / 2)
+
+        def interior(storey, rooms, circ):
+            parts = [r.poly for r in rooms + circ] + [g for _, g in self.bridges[storey]]
+            parts += [door_rect(d) for d in self.lay_doors if d["storey"] == storey]
+            return unary_union(parts)
+
+        stair = getattr(self, "walk_stair", [])
+        solid = getattr(self, "walk_stair_solid", Polygon())
+        plot = site_to_grid(plot_polygon())
+        ground = unary_union([interior("ground", self.g_rooms, self.g_circ),
+                              plot.difference(self.g_fp)]).difference(solid)
+        voids = unary_union([v.poly for v in self.voids]) if self.voids else Polygon()
+        first = unary_union([interior("first", self.f_rooms, self.f_circ)]
+                            + [r.poly for r in self.f_outdoor if "terrace" not in r.key])
+        first = first.difference(voids).difference(self.stairwell)
+
+        def rings(poly):
+            out = []
+            for p in ([poly] if poly.geom_type == "Polygon" else list(getattr(poly, "geoms", []))):
+                if p.area < 0.05:
+                    continue
+                out.append([[[round(x, 3), round(y, 3)] for x, y in p.exterior.coords]]
+                           + [[[round(x, 3), round(y, 3)] for x, y in r.coords]
+                              for r in p.interiors])
+            return out
+
+        zones = []
+        for name, poly, z in (("ground floor and garden", ground, 0.0),
+                              ("first floor", first, self.HG)):
+            for rg in rings(poly):
+                zones.append({"name": name, "kind": "flat", "z": z, "rings": rg})
+        for zdef in stair:
+            for rg in rings(zdef["poly"]):
+                zz = {k: v for k, v in zdef.items() if k != "poly"}
+                for k in ("p0", "p1"):
+                    if k in zz:
+                        zz[k] = [round(zz[k][0], 3), round(zz[k][1], 3)]
+                zz["rings"] = rg
+                zones.append(zz)
+        lift = self.shaft
+        return {
+            "eye_m": 1.60, "radius_m": 0.20, "step_m": 0.45,
+            "zones": zones,
+            "lift": {"rings": rings(lift)[0] if rings(lift) else [], "levels": [0.0, self.HG]},
+            "start": {"u": round(door_rect(next(d for d in self.lay_doors
+                                                if d["no"] == "G01")).centroid.x - 2.5, 3),
+                      "v": round(next(d for d in self.lay_doors if d["no"] == "G01")["v"], 3),
+                      "z": 0.0},
+            "levels": {"ground": 0.0, "first": self.HG},
+        }
 
     def build(self) -> Path:
         self.setup()

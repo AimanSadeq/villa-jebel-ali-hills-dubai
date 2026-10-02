@@ -8,6 +8,23 @@ Columns: date, decision, reason, approved by Aiman.
 
 ## 2026-10-02, the ground floor built from the reference
 
+### D-049 Walkthrough engine, first version
+
+**Date.** 2026-10-02.
+
+**Decision.** The first person walkthrough is built into the existing viewer (viewer/model.html, viewer/src/walk.ts), driven by data the model build exports (walk_data in src/model/architecture.py, published in viewer/public/data/model.json):
+- Walkable zones per level: the rooms, halls, open joins and door openings, the balconies, and the plot outside at ground level; the stair as two ramps and a flat landing; the void edges and walls are not walkable, so walls, glass and balustrades stop the walker (0.20 m clearance, eye height 1.60 m, steps up to 0.45 m).
+- Under the stair a person stands only where the flight is at least 2.0 m up.
+- The lift rides between the ground and first floors (E key or the panel button).
+- Doors are shown open while walking (the leaves hide).
+- Day and night: at night the sun and sky dim and warm lights come on in the rooms near the walker. These are interim fixtures, one per room under its ceiling, until the reflected ceiling plans (Phase 6) place the real ones.
+- A mini-map of the current floor and a readout of the room with its size, area and clear height (rule 9).
+Materials, furniture, landscape and the three palettes follow; the facade after the first floor design (F4).
+
+**Reason.** Owner answers F3 (interactive browser walkthrough) and F4 (A: walkthrough now). CLAUDE.md deliverable 2.
+
+**Approved by Aiman.** Yes for the phase (F3, F4); the engine's details are reviewed in the walkthrough.
+
 ### D-048 Facade after the owner's reference renders
 
 **Date.** 2026-10-02.

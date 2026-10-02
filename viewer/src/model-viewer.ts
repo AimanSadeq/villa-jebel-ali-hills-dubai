@@ -1,8 +1,8 @@
-/** Villa 5130272, Phase 3 model viewer.
+/** Villa 5130272, model viewer and walkthrough (Phase 4, D-049).
  *
  *  Loads the IFC4 model that src/model/build_model.py generates and publishes
  *  (viewer/public/data), converts it to fragments in the browser with That Open
- *  Engine, and shows it in orbit view. Room labels and the area figures come
+ *  Engine, and shows it in orbit view or walks it in first person (walk.ts). Room labels and the area figures come
  *  from data/model.json, written by the same build, so the viewer, the IFC and
  *  the GFA report cannot disagree.
  *
@@ -16,12 +16,13 @@ import type * as FRAGS from '@thatopen/fragments';
 import { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 import workerUrl from '@thatopen/fragments/worker?url';
 import { append, clear, h, icon, tr } from './dom';
+import { Walker, drawMiniMap, type WalkData } from './walk';
 
 interface RoomLabel {
   key: string; name: string; label: string; storey: 'ground' | 'first';
   u: number; v: number; z: number;
   area_m2: number; area_sqft: number; circulation: boolean; sub?: boolean;
-  w_m?: number; l_m?: number; height?: string;
+  w_m?: number; l_m?: number; height?: string; rect?: number[];
 }
 
 interface ModelData {
@@ -37,6 +38,7 @@ interface ModelData {
   core: string;
   counts: Record<string, number>;
   rooms: RoomLabel[];
+  walk?: WalkData;
 }
 
 type Level = 'ground' | 'first' | 'roof';
@@ -281,12 +283,147 @@ async function boot() {
     info.append(t);
   });
 
+  // Walkthrough (D-049) ---------------------------------------------------------
+
+  const doorIds = Object.entries(byCat).filter(([c]) => c === 'IFCDOOR').flatMap(([, l]) => l);
+  const cam = world.camera.three as THREE.PerspectiveCamera;
+  const hud = h('div', { id: 'hud' });
+  const lifted = h('div', { id: 'liftmsg' });
+  const mini = h('canvas', { id: 'minimap', width: '260', height: '220' }) as HTMLCanvasElement;
+  const walkHelp = h('div', { id: 'walkhelp' },
+    'Click the view, then move the mouse to look. W A S D or the arrow keys to walk, Shift to walk faster, E inside the lift to ride it, Esc to free the mouse.');
+  // Overlays sit beside the stage, not in it: the stage sizes every canvas in
+  // it to the full view.
+  app.append(hud, lifted, mini, walkHelp);
+  for (const el of [hud, mini, walkHelp]) el.style.display = 'none';
+  const walker = data.walk
+    ? new Walker(data.walk, cam, stage, (msg) => { lifted.textContent = msg; lifted.style.display = msg ? '' : 'none'; })
+    : null;
+  lifted.style.display = 'none';
+  const roomRects = data.rooms.filter((r) => r.rect && !r.sub)
+    .map((r) => ({ rect: r.rect!, storey: r.storey, label: r.label, room: r }));
+  let orbitView: { pos: THREE.Vector3; target: THREE.Vector3 } | null = null;
+  const walkState = { on: false, night: false };
+
+  function roomAt(u: number, v: number, storey: string) {
+    let best: RoomLabel | null = null;
+    let area = Infinity;
+    for (const { rect: [a, b, c, d], room } of roomRects) {
+      if (room.storey !== storey || u < a || u > b || v < c || v > d) continue;
+      const ar = (b - a) * (d - c);
+      if (ar < area) { area = ar; best = room; }
+    }
+    return best;
+  }
+
+  async function setWalking(on: boolean) {
+    if (!walker) return;
+    walkState.on = on;
+    walker.active = on;
+    for (const el of [hud, mini, walkHelp]) el.style.display = on ? '' : 'none';
+    const hint = document.getElementById('hint');
+    if (hint) hint.style.display = on ? 'none' : '';
+    if (on) {
+      orbitView = { pos: cam.position.clone(),
+                    target: world.camera.controls.getTarget(new THREE.Vector3()) };
+      world.camera.controls.enabled = false;
+      cam.fov = 70; cam.near = 0.05; cam.updateProjectionMatrix();
+      walker.place();
+      state.view = 'whole';
+      for (const [k, el] of viewBtns) el.classList.toggle('on', k === 'whole');
+      await applyVisibility();
+      // Doors are shown open while walking: the openings stay, the leaves hide.
+      if (doorIds.length) await hider.set(false, map(doorIds));
+      for (const { obj } of roomLabels) obj.visible = false;
+    } else {
+      if (document.pointerLockElement) document.exitPointerLock();
+      world.camera.controls.enabled = true;
+      cam.fov = 60; cam.updateProjectionMatrix();
+      if (orbitView) {
+        await world.camera.controls.setLookAt(orbitView.pos.x, orbitView.pos.y, orbitView.pos.z,
+          orbitView.target.x, orbitView.target.y, orbitView.target.z, false);
+      }
+      await applyVisibility();
+    }
+    walkBtn.classList.toggle('on', on);
+    walkBtn.lastChild!.textContent = on ? 'Stop walking' : 'Walk through the house';
+    await fragments.core.update(true);
+  }
+
+  // Night: the sun and sky dim and warm lights come on in the rooms around the
+  // viewer. Interim fixtures at each room's centre under its ceiling; the
+  // reflected ceiling plans (Phase 6) will place the real ones.
+  const sceneLights = world.scene.three.children.filter((o) => (o as THREE.Light).isLight) as THREE.Light[];
+  const baseIntensity = sceneLights.map((l) => l.intensity);
+  const lamps = Array.from({ length: 10 }, () => {
+    const l = new THREE.PointLight(0xffd6a0, 0, 9, 1.6);
+    world.scene.three.add(l);
+    return l;
+  });
+  const dayBg = new THREE.Color(0xf7f5f1);
+  const nightBg = new THREE.Color(0x141b2b);
+  function placeLamps() {
+    if (!walkState.night) return;
+    const at = walkState.on && walker
+      ? new THREE.Vector3(walker.u, walker.z, walker.v)
+      : (() => { const t = world.camera.controls.getTarget(new THREE.Vector3()); return new THREE.Vector3(t.x, t.y, -t.z); })();
+    const ceiling = (r: RoomLabel) => (r.storey === 'first' ? data.heights.ground_m : 0)
+      + (r.height && /8\.55/.test(r.height) && !/elsewhere/.test(r.height) ? 8.2 : r.storey === 'first' ? 3.3 : 4.3);
+    const near = roomRects.map(({ room }) => room)
+      .filter((r) => !r.circulation || r.area_m2 > 6)
+      .map((r) => ({ r, d: Math.hypot(r.u - at.x, r.v - at.z, (r.storey === 'first' ? 5 : 0) - at.y) }))
+      .sort((a, b) => a.d - b.d).slice(0, lamps.length);
+    lamps.forEach((l, i) => {
+      const n = near[i];
+      if (!n) { l.intensity = 0; return; }
+      l.position.copy(toThree(n.r.u, n.r.v, ceiling(n.r)));
+      l.intensity = 9;
+    });
+  }
+  function setNight(on: boolean) {
+    walkState.night = on;
+    sceneLights.forEach((l, i) => { l.intensity = baseIntensity[i] * (on ? 0.12 : 1); });
+    world.scene.three.background = on ? nightBg : dayBg;
+    if (!on) lamps.forEach((l) => { l.intensity = 0; });
+    placeLamps();
+    dayBtn.classList.toggle('on', !on);
+    nightBtn.classList.toggle('on', on);
+  }
+
+  const clock = new THREE.Clock();
+  let sinceFrags = 0;
+  let sinceLamps = 0;
+  world.renderer.onBeforeUpdate.add(() => {
+    const dt = clock.getDelta();
+    if (!walker || !walkState.on) return;
+    walker.update(dt);
+    sinceFrags += dt;
+    sinceLamps += dt;
+    if (sinceFrags > 0.3) { sinceFrags = 0; fragments.core.update(); }
+    if (sinceLamps > 0.5) { sinceLamps = 0; placeLamps(); }
+    const room = roomAt(walker.u, walker.v, walker.level());
+    const where = walker.level() === 'ground' ? 'Ground floor' : 'First floor';
+    hud.textContent = room
+      ? `${room.name}, ${where}: ${room.w_m && room.l_m ? `${fmt(room.w_m)} x ${fmt(room.l_m)} m, ` : ''}${fmt(room.area_m2, 1)} m² (${fmt(room.area_sqft, 0)} sq ft)${room.height ? `, ${room.height.replace(/^h /, 'clear height ')}` : ''}`
+      : `${where}, outside`;
+    drawMiniMap(mini, walker.data, walker, roomRects);
+  });
+
+  const walkBtn = h('button', { class: 'chip wide', type: 'button' }, icon('walk', 'icon tiny'), 'Walk through the house');
+  walkBtn.addEventListener('click', () => setWalking(!walkState.on));
+  const dayBtn = h('button', { class: 'chip on', type: 'button' }, icon('sun', 'icon tiny'), 'Day');
+  const nightBtn = h('button', { class: 'chip', type: 'button' }, icon('moon', 'icon tiny'), 'Night');
+  dayBtn.addEventListener('click', () => setNight(false));
+  nightBtn.addEventListener('click', () => setNight(true));
+  const liftBtn = h('button', { class: 'chip', type: 'button' }, icon('lift', 'icon tiny'), 'Ride the lift');
+  liftBtn.addEventListener('click', () => walker?.rideLift());
+
   // Panel -------------------------------------------------------------------------
 
   panel.append(h('header', {},
     h('h1', {}, `Villa ${data.meta.plot}`),
     h('p', { class: 'sub' }, data.meta.community),
-    h('p', { class: 'phase' }, `Phase ${data.meta.phase} · IFC architectural model`)));
+    h('p', { class: 'phase' }, `Phase ${data.meta.phase} · IFC model and walkthrough`)));
 
   const viewBtns = new Map<View, HTMLButtonElement>();
   const chips = h('div', { class: 'chips' });
@@ -317,6 +454,12 @@ async function boot() {
       toggle('Site, pool and deck', 'site')),
     h('p', { class: 'note' }, icon('ruler', 'icon tiny'),
       'Labels and room volumes show on the floor plan views. The ground floor view cuts away the first floor and the roofs.')));
+
+  panel.append(section('walk', 'Walkthrough',
+    h('div', { class: 'chips' }, walkBtn),
+    h('div', { class: 'chips', style: 'margin-top:8px' }, dayBtn, nightBtn, liftBtn),
+    h('p', { class: 'note' }, icon('warn', 'icon tiny'),
+      'Walls and the balustrades stop you, the stair carries you up and down, the lift rides between floors. Doors are shown open. Night lights are interim, one per room, until the ceiling plans place the fixtures (Phase 6).')));
 
   panel.append(section('check', 'Selection', info));
 
@@ -381,7 +524,7 @@ async function boot() {
 
   // Development only: lets the camera be scripted when checking views.
   if (import.meta.env.DEV) {
-    (window as unknown as Record<string, unknown>).__villa = { world, model, centre };
+    (window as unknown as Record<string, unknown>).__villa = { world, model, centre, walker, setWalking, setNight };
   }
 }
 

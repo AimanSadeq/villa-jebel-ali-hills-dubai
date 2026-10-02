@@ -209,3 +209,26 @@ table td { text-align: right; padding: 4px 0; font-variant-numeric: tabular-nums
 
 .label.sub { padding: 1px 5px; font-size: 9.5px; background: rgba(228, 236, 242, 0.9); }
 .label.sub span { font-size: 9px; }
+
+/* Walkthrough (D-049) */
+#hud {
+  position: fixed; top: 14px; left: calc((100% - var(--panel-w)) / 2); transform: translateX(-50%);
+  background: rgba(255,255,255,0.92); border: 1px solid #d8d3ca; border-radius: 8px;
+  padding: 6px 12px; font-size: 13px; color: #1a1a1a; pointer-events: none; white-space: nowrap;
+}
+#liftmsg {
+  position: fixed; top: 50%; left: calc((100% - var(--panel-w)) / 2); transform: translate(-50%, -50%);
+  background: rgba(20,27,43,0.86); color: #fff; border-radius: 8px; padding: 10px 16px;
+  font-size: 14px; pointer-events: none;
+}
+#minimap {
+  position: fixed; left: 14px; bottom: 44px; width: 260px; height: 220px;
+  border: 1px solid #d8d3ca; border-radius: 8px; pointer-events: none;
+}
+#walkhelp {
+  position: fixed; right: calc(var(--panel-w) + 14px); bottom: 44px; max-width: 300px;
+  background: rgba(255,255,255,0.92); border: 1px solid #d8d3ca; border-radius: 8px;
+  padding: 8px 10px; font-size: 12px; color: #4a463f; pointer-events: none;
+}
+.chip.wide { width: 100%; justify-content: center; }
+.chip .icon.tiny { margin-right: 6px; vertical-align: -2px; }

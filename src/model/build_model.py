@@ -165,6 +165,7 @@ def publish_to_viewer(model, path: Path, lay: dict, ifc_areas: dict) -> None:
                 "area_m2": round(area, 2), "area_sqft": round(sqft(area), 1),
                 # CLAUDE.md rule 9 (D-045): width x length and clear height.
                 "w_m": round(w, 2), "l_m": round(l, 2),
+                "rect": [round(u0, 3), round(u1, 3), round(v0, 3), round(v1, 3)],
                 "height": room_height_text(d, storey, lay, heights),
                 "circulation": d in floor["circulation"],
             })
@@ -187,7 +188,7 @@ def publish_to_viewer(model, path: Path, lay: dict, ifc_areas: dict) -> None:
     data = {
         "meta": {"plot": model.site["plot"]["number"],
                  "community": model.site["plot"]["community"],
-                 "stamp": model.site["meta"]["stamp"], "phase": 3,
+                 "stamp": model.site["meta"]["stamp"], "phase": 4,
                  "ifc": f"data/{path.name}",
                  "built": datetime.now().isoformat(timespec="minutes")},
         "north_uv": [round(-math.sin(bearing), 5), round(math.cos(bearing), 5)],
@@ -205,6 +206,8 @@ def publish_to_viewer(model, path: Path, lay: dict, ifc_areas: dict) -> None:
         "counts": {k: v for k, v in sorted(model.counts.items())
                    if k != "IfcOpeningElement"},
         "rooms": rooms,
+        # The walkthrough (D-049): where a person can stand on each level.
+        "walk": model.walk_data(),
     }
     (VIEWER_DATA / "model.json").write_text(json.dumps(data, indent=1),
                                            encoding="utf-8")
