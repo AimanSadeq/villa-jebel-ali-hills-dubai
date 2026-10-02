@@ -1,0 +1,178 @@
+# facade.yaml: the facade proposal, after the owner's reference renders.
+# Single source of truth for the facade elements. src/model/facade.py turns it
+# into boxes; the sketch VJH-SK-017 draws them over the IFC model, and the
+# facade build (after the owner approves the sketch) puts the same boxes in the
+# IFC. Never hard-code facade geometry in scripts.
+#
+# Coordinates: the plot building grid of brief/massing.yaml, metres.
+#   u from the road (WNW, u about 3.8) to the garden (ESE, u about 21.3)
+#   v from the SSW neighbour (v about 6.1) to the NNE neighbour (v about 30.6)
+#   z up from the ground floor finish (0.00); first floor 5.00, main roof 9.00,
+#   roof parapet top 10.20 (brief/massing.yaml, D-030).
+#
+# Source of the design language: answers F1 and F2 (docs/facade-and-walkthrough-
+# decisions.md), sheets A-02-001 and A-02-101 of the owner's reference set.
+# Pergola: answers R1 and R2. Materials are visual concept finishes, not a
+# specification.
+#
+# CONCEPT DESIGN, NOT FOR CONSTRUCTION.
+
+meta:
+  stamp: "CONCEPT DESIGN, NOT FOR CONSTRUCTION"
+  status: "Proposal for the owner (sketch VJH-SK-017, answer R3). Not approved."
+
+materials:
+  render:  {label: "Beige render", colour: "#dccdb0"}
+  stone:   {label: "Warm split face stone", colour: "#c8ad7f"}
+  timber:  {label: "Timber, soffits, fins and pergola", colour: "#9a643a"}
+  glass:   {label: "Glass in slim dark frames", colour: "#56656f"}
+  frame:   {label: "Dark window frames", colour: "#2e2e2e"}
+  led:     {label: "Linear LED line, warm white", colour: "#ffb84d"}
+
+# Named boxes: u, v, z ranges. kind is what the IFC build will make of it.
+elements:
+  # 1. Road side: a double height stone portal around the entrance porch
+  #    (porch u 6.19 to 9.49, v 18.57 to 21.96; pivot door G01 2.40 x 4.50 m
+  #    with glass above, answer 12i). Its face at u 3.10 stands proud of the
+  #    main roof edge (u 3.29), inside the 3 m setback line (u 3.00). The head
+  #    wraps the roof slab edge; its top stays at the parapet top, +10.20, so
+  #    the portal adds no height (DDA FAQ Q29, OI-13). The north leg stops at
+  #    u 5.80 and v 21.97, clear of the guest bedroom.
+  - {name: "Entrance portal, south leg", material: stone, kind: cladding,
+     u: [3.10, 5.59], v: [18.12, 18.57], z: [-0.15, 10.20]}
+  - {name: "Entrance portal, north leg", material: stone, kind: cladding,
+     u: [3.10, 5.80], v: [21.52, 21.97], z: [-0.15, 10.20]}
+  - {name: "Entrance portal, head", material: stone, kind: cladding,
+     u: [3.10, 9.49], v: [18.12, 21.97], z: [8.70, 10.20]}
+  - {name: "Entrance portal, timber soffit", material: timber, kind: soffit,
+     u: [3.10, 9.49], v: [18.57, 21.52], z: [8.64, 8.70]}
+
+  # 2. Garden side: a stone box framing the tall glass of the double height
+  #    living room (void glass v 14.31 to 23.62), as the render frames its
+  #    upper centre. The bottom band sits in the solid band between the
+  #    ground floor glass (top 4.25) and the void glass (from 5.00) and
+  #    shades the living room glass. Front face u 23.35, 0.30 m proud of the
+  #    roof edge; top at the parapet top, +10.20.
+  - {name: "Garden frame, south leg", material: stone, kind: cladding,
+     u: [20.80, 23.35], v: [13.81, 14.26], z: [4.25, 10.20]}
+  - {name: "Garden frame, north leg", material: stone, kind: cladding,
+     u: [20.80, 23.35], v: [23.67, 24.12], z: [4.25, 10.20]}
+  - {name: "Garden frame, bottom band", material: stone, kind: cladding,
+     u: [21.29, 23.35], v: [13.81, 24.12], z: [4.25, 5.00]}
+  - {name: "Garden frame, top band", material: stone, kind: cladding,
+     u: [20.80, 23.35], v: [13.81, 24.12], z: [8.70, 10.20]}
+  - {name: "Garden frame, timber soffit", material: timber, kind: soffit,
+     u: [20.80, 23.35], v: [14.26, 23.67], z: [8.64, 8.70]}
+  - {name: "Garden frame, timber soffit under the bottom band", material: timber,
+     kind: soffit, u: [21.29, 23.35], v: [14.26, 23.67], z: [4.19, 4.25]}
+
+  # 3. South (SSW) face, hot: deep eaves with timber soffits over both floors.
+  #    Inside the buildable envelope (v at least 3.03); whether DDA lets eaves
+  #    project into the 3 m setback is not assumed (TO VERIFY, OI-29).
+  - {name: "South eave, roof", material: render, kind: canopy,
+     u: [6.09, 20.80], v: [4.56, 6.06], z: [8.70, 9.00]}
+  - {name: "South eave, roof, timber soffit", material: timber, kind: soffit,
+     u: [6.09, 20.80], v: [4.56, 6.06], z: [8.64, 8.70]}
+  - {name: "South canopy, ground floor", material: render, kind: canopy,
+     u: [9.04, 21.29], v: [5.07, 6.07], z: [4.70, 5.00]}
+  - {name: "South canopy, ground floor, timber soffit", material: timber, kind: soffit,
+     u: [9.04, 21.29], v: [5.07, 6.07], z: [4.64, 4.70]}
+
+  # 4. Carport (render sheet A-02-001): the three columns clad in stone.
+  - {name: "Carport pier, road south", material: stone, kind: cladding,
+     u: [0.26, 0.76], v: [3.21, 3.71], z: [-0.45, 3.00]}
+  - {name: "Carport pier, house south", material: stone, kind: cladding,
+     u: [8.59, 9.09], v: [3.21, 3.71], z: [-0.45, 3.00]}
+  - {name: "Carport pier, road north", material: stone, kind: cladding,
+     u: [0.26, 0.76], v: [11.67, 12.17], z: [-0.45, 3.00]}
+
+# 5. Windows on the hot faces (the IFC names them "hot": the road WNW face and
+#    the south SSW face). Each gets a projecting surround so the glass sits in
+#    a deep reveal, and the larger ones get vertical timber fins against the
+#    low west and south sun.
+hot_windows:
+  surround_material: render
+  surround_depth_m: 0.45        # proud of the wall face
+  surround_border_m: 0.15
+  fins_min_width_m: 1.20        # windows narrower than this get no fins
+  fins_on_faces: [W]            # vertical fins on the road (WNW) face only
+  fin_material: timber
+  fin_spacing_m: 0.30
+  fin_thickness_m: 0.05
+  fin_depth_m: 0.30
+
+# 6. Roof pergola, answers R1 (B) and R2 (A): open, for looks only, no stair or
+#    lift to the roof (D-017 stands), above the garden frame. Set back from the
+#    roof edge. Height above the roof TO VERIFY (OI-28).
+pergola:
+  material: timber
+  u: [15.25, 21.25]
+  v: [14.26, 23.67]
+  z_base: 9.00
+  z_top: 11.70                  # 2.70 m above the roof finish, TO VERIFY OI-28, OI-13
+  post_m: 0.20
+  post_spacing_max_m: 4.80
+  beam_depth_m: 0.30
+  louvre_spacing_m: 0.30
+  louvre_thickness_m: 0.05
+  louvre_depth_m: 0.20
+  louvres_run_along: u          # seen end on from the garden, as in the render
+  # Louvres sit on top of the beams, so the slats show above them.
+
+# 7. Linear LED lines, as in the renders: polylines of (u, v, z) points.
+led:
+  - name: "Portal inner edge"
+    points: [[3.10, 18.57, -0.15], [3.10, 18.57, 8.64], [3.10, 21.52, 8.64], [3.10, 21.52, -0.15]]
+  - name: "Garden frame inner edge"
+    points: [[23.35, 14.26, 5.00], [23.35, 14.26, 8.64], [23.35, 23.67, 8.64], [23.35, 23.67, 5.00], [23.35, 14.26, 5.00]]
+  - name: "Roof edge, garden"
+    points: [[23.05, 5.81, 10.20], [23.05, 13.81, 10.20]]
+  - name: "Roof edge, garden north"
+    points: [[23.05, 24.12, 10.20], [23.05, 30.81, 10.20]]
+  - name: "Carport fascia"
+    points: [[0.31, 3.26, 3.00], [0.31, 12.12, 3.00]]
+  - name: "Balcony edges"
+    points: [[22.80, 6.06, 4.70], [22.80, 13.81, 4.70]]
+  - name: "Balcony edges north"
+    points: [[22.80, 24.12, 4.70], [22.80, 30.56, 4.70]]
+
+# Parts of the model the facade removes: (u, v, z) boxes; the facade build
+# deletes the model's elements there, the sketch draws without them.
+cuts:
+  - name: "Wall over the porch, first floor"
+    reason: "Opens the double height porch to the road inside the stone portal, so
+      the portal frames the pivot door and the glass above it, as in render
+      A-02-001 (answer 12i: porch double height, connected to the foyer)."
+    u: [3.20, 3.60]
+    v: [18.57, 21.96]
+    z: [4.99, 8.70]
+  - name: "Parapet on the ledge in front of the living room's tall glass"
+    reason: "The ground floor steps 0.49 m out beyond the first floor here; the
+      1.20 m parapet on that ledge hides the bottom of the tall glass inside the
+      garden frame. The ledge cannot be reached (the glass is fixed); the stone
+      bottom band caps it. Whether a parapet is required on a ledge that cannot
+      be reached is TO VERIFY (OI-29)."
+    u: [20.78, 21.32]
+    v: [13.80, 24.15]
+    z: [4.99, 6.21]
+  - name: "South end of bedroom 4's balcony"
+    reason: "The garden frame's north leg takes its place (changes_to_model)."
+    u: [20.78, 22.82]
+    v: [23.40, 24.12]
+    z: [4.69, 6.21]
+
+# Consequences the facade build will carry out once the sketch is approved.
+changes_to_model:
+  - "The first floor wall across the road side of the porch (u 3.29 to 3.54, v
+     18.57 to 21.96, 3.39 m long, from +5.00 to +8.70) is removed: the porch is
+     open to the road over its full double height, framed by the portal. The
+     glass above the front door stays as the line of the house. No GFA change
+     (the porch and its void are outside GFA)."
+  - "The 1.20 m parapet on the 0.49 m ledge in front of the living room's tall
+     glass (u 20.81 to 21.29, v 13.82 to 23.40) is removed inside the garden
+     frame, so the glass shows in full above the stone band (TO VERIFY, OI-29)."
+  - "Bedroom 4 balcony starts at v 24.12 instead of 23.42, so the garden frame's
+     north leg replaces its south end: 0.70 x 2.00 m, 1.40 m2 (15 sq ft) less
+     balcony (outside GFA, D-039). Bedroom 4 and its balcony door F15 do not move."
+  - "The portal head and the garden frame's top band wrap the main roof slab
+     edge and parapet: the build trims the slab and parapet where they meet."

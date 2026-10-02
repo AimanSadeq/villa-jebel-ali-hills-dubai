@@ -554,7 +554,24 @@ its look only: open on all sides, no roof terrace, no stair or lift to the roof
 open, unreachable roof pergola toward GFA or the G+1 height limit (the DDA FAQ
 Q27 reading in D-017 covers roof enclosures, not open pergolas), any limit on
 its height above the roof, and the roof hatch and parapet rules in the Dubai
-Building Code. No value is assumed.
+Building Code. No value is assumed. The proposal (VJH-SK-017) puts its top at
++11.70, 2.70 m above the roof; see also OI-13 (DDA FAQs Building Q29 may limit
+a G+1 villa to 8.40 m to its last point).
+
+### OI-29 Facade projections into the setback, and the ledge parapet (VJH-SK-017)
+
+| | |
+|---|---|
+| Status | OPEN, TO VERIFY with DDA and the Dubai Building Code through the consultant |
+| Raised | 2026-10-02, answer R3 |
+
+The facade proposal (brief/facade.yaml) keeps every element inside the 3 m
+setback line except the stone cladding of the carport columns, which already
+stand there (D-044). To verify: whether eaves, window surrounds, fins, stone
+cladding and the entrance portal may project toward the setback line or into
+it, and by how much; and whether a parapet is required on the 0.49 m ledge in
+front of the living room's tall glass, which nobody can reach (the proposal
+removes it inside the garden frame). No value is assumed.
 
 ## Owner decisions outstanding
 
