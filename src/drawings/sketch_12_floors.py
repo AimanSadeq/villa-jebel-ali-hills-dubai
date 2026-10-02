@@ -284,7 +284,7 @@ def _name(k):
 
 def door_schedule(doors: list[dict], rooms: list[dict]):
     kind_txt = {"single": "single leaf", "double": "double leaf", "sliding": "sliding glass",
-                "open": "opening, no leaf", "lift": "lift door"}
+                "open": "opening, no leaf", "lift": "lift door", "pivot": "pivot, glass above"}
     fig = plt.figure(figsize=(16.5, 11.7))
     fig.suptitle("Villa 5130272, answer 12: door schedule for sketch VJH-SK-013",
                  x=0.01, ha="left", fontsize=13, weight="bold")

@@ -22,7 +22,7 @@ TAG = "#b3261e"
 
 # Interior doors between two rooms: (no, a, b, width, height, kind, swing_into,
 # centre along the wall or None for the middle of the shared wall, source).
-# Kinds: single, double, sliding, open (an opening without a leaf), lift.
+# Kinds: single, double, pivot, sliding, open (an opening without a leaf), lift.
 GROUND = [
     ("G02", "entrance_foyer", "home_office", 0.90, 2.70, "single", "home_office", None,
      "reference: door in the office's foyer wall"),
@@ -83,8 +83,8 @@ FIRST = [
 # kind, source). Axis "y": the wall spans frame y lo..hi and the door runs
 # along x; axis "x": the wall spans frame x lo..hi and the door runs along y.
 GROUND_EXT = [
-    ("G01", "entrance_foyer", "y", 9.49, 9.74, 17.05, 2.40, 3.00, "double",
-     "reference: main double door at the back of the porch"),
+    ("G01", "entrance_foyer", "y", 9.49, 9.74, 17.05, 2.40, 4.50, "pivot",
+     "answer 12i: tall pivot door at the back of the porch, fixed glass above to full height"),
     ("G10", "service_steps", "y", 8.94, 9.04, 8.26, 1.20, 0.0, "open",
      "reference: opening from the carport, no leaf"),
     ("G15", "laundry", "x", 2.81, 3.06, 16.68, 0.90, 2.40, "single",
@@ -147,6 +147,12 @@ def draw_door(ax, axis, lo, hi, c, w, kind, s, tag):
     elif kind == "double":
         _leaf(ax, axis, e, c - w / 2, c, s, w / 2)
         _leaf(ax, axis, e, c + w / 2, c, s, w / 2)
+    elif kind == "pivot":
+        # Pivot about a fifth of the way along: the long part swings in, the
+        # short part out.
+        tp = c - w / 2 + w / 5
+        _leaf(ax, axis, e, tp, c + w / 2, s, 0.8 * w)
+        _leaf(ax, axis, lo if s > 0 else hi, tp, c - w / 2, -s, 0.2 * w)
     elif kind in ("sliding", "lift"):
         m = (lo + hi) / 2
         for dn, t0, t1 in ((-0.04, c - w / 2, c + 0.05), (0.04, c - 0.05, c + w / 2)):
@@ -156,7 +162,7 @@ def draw_door(ax, axis, lo, hi, c, w, kind, s, tag):
         for t in (c - w / 2, c + w / 2):
             p0, p1 = _p(axis, lo, t), _p(axis, hi, t)
             ax.plot([p0[0], p1[0]], [p0[1], p1[1]], color=DOOR, lw=0.6, zorder=8)
-    off = 0.55 if kind in ("single", "double") else 0.35
+    off = 0.55 if kind in ("single", "double", "pivot") else 0.35
     tx, ty = _p(axis, e + s * off, c + (0.0 if kind != "single" else 0.0))
     ax.text(tx, ty, tag, fontsize=4.6, color="white", ha="center", va="center", weight="bold",
             zorder=9, bbox=dict(boxstyle="round,pad=0.18", fc=TAG, ec="none"))
