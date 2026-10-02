@@ -527,6 +527,20 @@ are kept as the reference draws them and listed in tests/test_layout.py so no
 new one can appear unnoticed. Widening the service passage to 1.5 m would take
 about 0.5 m from the store or the prep kitchen.
 
+### OI-27 First floor design: what answer 12 leaves open
+
+| | |
+|---|---|
+| Status | OPEN, for the owner, with the first floor design (D-038) |
+| Raised | 2026-10-02, D-046 |
+
+- The 6 m2 linen store (brief) has no place since answer 12l; brief/program.yaml marks it deferred.
+- The master suite's coffee station (brief) was the reference pantry's; it needs a place in the suite.
+- The family room above the salon is 26.2 m2 against the brief's 35 m2 (program target 33).
+- GFA margin 1.30 m2: the first floor design has to restore at least 5 m2, and the D-005 reserve if the owner approves it (two strict expected failures in tests/test_layout.py).
+- The first floor wall at the void's end stands 0.21 m forward of the TV wall below, so the 8.55 m TV wall face is not flush.
+- The guest powder room is about 12 m from the salon; the brief puts it next to the salon.
+
 ## Owner decisions outstanding
 
 ### OI-07 Pool and main garden position
@@ -578,7 +592,7 @@ serves ground, first, and roof. A first floor landing is physically required, so
 20 m² was added and flagged. It is included in the GFA figures above. Confirm the
 allowance, or set a different one.
 
-### OI-10 Room label wording, majlis or salon
+### OI-10 Room label wording, majlis or salon (CLOSED 2026-10-02, D-047: salon)
 
 | | |
 |---|---|

@@ -553,6 +553,11 @@ class Model:
                                              and v.poly.intersects(self.open_sky.buffer(0.5))])
         main_roof = main_roof.difference(sky)
         self.low_road = self.low_road.difference(sky)
+        # The balconies stand on the strip where the ground floor reaches past
+        # the first floor: no separate roof or parapet under them (review,
+        # D-046), so the balcony doors open onto the balcony.
+        if not balconies.is_empty:
+            self.low_road = self.low_road.difference(balconies.buffer(0.01, join_style=2))
         roofs = [
             ("Main roof", "roof", main_roof, 0.0, [self.living_block]),
             ("Roof over the garage and service end", "first",
@@ -591,7 +596,8 @@ class Model:
             self.element("IfcSlab", f"Covered balcony slab, {r.key}", "first",
                          [self._prism(r.poly, -S, S)], predefined="FLOOR", material="deck")
             ring = r.poly.difference(r.poly.buffer(-T_EXT, join_style=2))
-            ring = ring.difference(self.first_fp.buffer(0.02, join_style=2))
+            # No parapet on the house side, where the balcony door is.
+            ring = ring.difference(self.first_fp.buffer(T_EXT + 0.02, join_style=2))
             for q in clean(ring):
                 self.element("IfcWall", f"Balcony parapet, {r.key}", "first",
                              [self._prism(q, 0.0, self.PAR)], predefined="PARAPET",
@@ -813,9 +819,23 @@ class Model:
                 shape = unary_union([it.main if it else r.poly]
                                     + [g for k, g in self.bridges[storey] if k == r.key])
                 parts = [shape] if isinstance(shape, Polygon) else list(shape.geoms)
+                items = [self._prism(q, 0.0, h) for q in parts]
+                if storey == "ground" and self.voids:
+                    # With a first floor over the room, its double height is
+                    # only where a void is above (D-046: the foyer, the living
+                    # room and about half the island kitchen).
+                    void_u = unary_union([v.poly for v in self.voids])
+                    tall = clean(shape.intersection(void_u))
+                    low = clean(shape.difference(void_u))
+                    if tall:
+                        items = ([self._prism(q, 0.0, clear_living) for q in tall]
+                                 + [self._prism(q, 0.0, clear) for q in low])
+                        h = clear_living if sum(q.area for q in tall) > 0.5 * shape.area else clear
+                    else:
+                        items = [self._prism(q, 0.0, clear) for q in parts]
+                        h = clear
                 sp = self.element("IfcSpace", self.names.get(r.key, r.key), storey,
-                                  [self._prism(q, 0.0, h) for q in parts],
-                                  predefined="INTERNAL", container=False,
+                                  items, predefined="INTERNAL", container=False,
                                   style="space")
                 sp.LongName = r.key
                 ifcopenshell.api.aggregate.assign_object(
@@ -936,6 +956,11 @@ class Model:
             ifcopenshell.api.pset.edit_pset(self.f, pset=pset, properties={
                 "Number": d["no"], "Kind": d["kind"], "Source": d["source"]})
             if d["kind"] == "pivot" and st == "ground":
+                top = self.HG - self.SLAB
+                if top - height > 0.05:
+                    self.opening("ground", "window", f"Glass above front door {d['no']}, lower",
+                                 d["u"], d["v"], d["along_u"], d["width_m"], height,
+                                 top - height, d["wall_t"])
                 # 12i: fixed glass above the front door to the full double height.
                 host = self.host("first", Point(d["u"], d["v"]))
                 if host is not None:
@@ -1220,8 +1245,10 @@ class Model:
                     wdt = min(wdt, length - 0.60)
                     if wdt < 0.5:
                         continue
+                    face_name = ("garden" if kind == "courtyard" and self.lay_doors
+                                 and self.open_sky.is_empty else kind)
                     self.opening(storey, "window",
-                                 f"Window, {self.names.get(r.key, r.key)}, {kind}",
+                                 f"Window, {self.names.get(r.key, r.key)}, {face_name}",
                                  u_c, v_c, along_u, wdt, sill, hgt, T_EXT)
 
     # Site, pool, deck ------------------------------------------------------

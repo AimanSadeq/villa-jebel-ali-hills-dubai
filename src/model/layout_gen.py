@@ -865,7 +865,7 @@ def to_yaml(lay: dict) -> dict:
             "ssw_wing_ground": round(g["ssw"], 2),
             "living_block_ground": round(g.get("living", 0.0), 2),
             "first_floor_less_void": round(g["first"], 2),
-            "void_over_foyer": round(g["void"], 2),
+            "first_floor_voids": round(g["void"], 2),
             "total": round(g["total"], 2),
             "cap": t["cap_m2"],
             "margin": round(t["cap_m2"] - g["total"], 2),
@@ -930,7 +930,7 @@ def main() -> int:
               f"{o['lawn_court_m2']:.2f}, first floor outdoor {o['first_floor_balconies_terrace_m2']:.2f} m2")
     print(f"  GFA measured: road {g['road_wing_ground']:.2f} + SSW "
           f"{g['ssw_wing_ground']:.2f} + living {g['living_block_ground']:.2f} + first "
-          f"{g['first_floor_less_void']:.2f} (void {g['void_over_foyer']:.2f} "
+          f"{g['first_floor_less_void']:.2f} (void {g['first_floor_voids']:.2f} "
           f"excluded) = {g['total']:.2f} m2")
     print(f"  cap {g['cap']:.2f}, margin {g['margin']:+.2f} m2")
     print(f"  stair cores stack to within {lay['stair_offset']:.3f} m")

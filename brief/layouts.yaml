@@ -42,7 +42,7 @@ gfa_measured:
   ssw_wing_ground: 0.0
   living_block_ground: 0.0
   first_floor_less_void: 306.11
-  void_over_foyer: 80.87
+  first_floor_voids: 80.87
   total: 661.69
   cap: 662.99
   margin: 1.3

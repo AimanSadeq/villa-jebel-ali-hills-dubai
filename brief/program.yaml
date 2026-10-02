@@ -75,8 +75,9 @@ ground:
     target_before_restart_m2: 22
     gfa: counts
     notes: >
-      Owner confirmed 2026-10-01 that dining is on the ground floor.
-      Size still indicative. Placement to be proposed at checkpoint 2.
+      Owner confirmed 2026-10-01 that dining is on the ground floor. Placed
+      by answers 12a B, 12e and 12g (D-046): north corner on the backyard,
+      open to the salon, a TV wall to the living room.
   - key: show_kitchen
     name: "Show Kitchen"
     target_m2: 24.6
@@ -147,10 +148,8 @@ ground:
       house.
     notes: >
       Owner decision 2026-10-02, D-028. Its own external door and no internal
-      connection to the villa. Opens onto the courtyard at the north end of the
-      pool, beside the garage, so it serves swimmers and garden use as well as
-      a non-resident driver or outdoor staff. Size is a Claude assumption for a
-      WC and shower, flagged for owner review.
+      connection to the villa. Opens onto the carport (answers 11 and 11a,
+      D-043), for garden use and a non-resident driver or outdoor staff.
   - key: plant_room
     name: "MEP Plant Room"
     target_m2: 6.7
