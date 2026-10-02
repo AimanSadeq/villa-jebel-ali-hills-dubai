@@ -65,9 +65,12 @@ def test_the_stair_cores_stack():
 
 
 def test_corridors_are_the_dda_width():
+    """Width is the narrow dimension: the main corridors run along the plan and
+    the link hall runs across it."""
     for floor in ("ground", "first"):
         for c in lay["floors"][floor]["circulation"]:
-            assert abs((c["u"][1] - c["u"][0]) - lay["meta"]["corridor_m"]) < 1e-6
+            width = min(c["u"][1] - c["u"][0], c["v"][1] - c["v"][0])
+            assert abs(width - lay["meta"]["corridor_m"]) < 1e-6, c["key"]
 
 
 def test_the_measured_plan_fits_the_cap():
