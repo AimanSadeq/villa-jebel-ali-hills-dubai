@@ -6,6 +6,40 @@ Columns: date, decision, reason, approved by Aiman.
 
 ---
 
+## 2026-10-02, Phase 2 plan fits
+
+### D-027 Option C confirmed; foyer single height; upstairs trims
+
+**Decision.** Massing option C stands. The living room is double height in the
+single storey wing. The foyer is single height, taking its height from a tall
+ground floor rather than a void. Upstairs trims, recorded in
+`brief/program.yaml` with their brief figures:
+
+| Room | Brief | Now |
+|---|---|---|
+| Master suite, minimum | 70 | 68 |
+| Bedrooms 2 to 4, minimum | 30 | 28 |
+| Family living | 35 | 33 |
+
+**Reason.** Owner decision 2026-10-02, after option A was measured at 698.86 m2,
+35.87 over, because a double height living room in a two storey bar takes plate
+the bedrooms need. Option C puts the living room where a high ceiling costs no
+plate. The owner wants high ceilings; ceiling height is not GFA, and DDA FAQ Q28
+allows a ground floor clear height up to 6 m, subject to OI-13.
+
+The cuts are upstairs because in option C a ground floor cut in the two storey
+wing only turns into padding under the bedrooms. The master stays 2.43 times the
+bedrooms at the bottom of the ranges and 2.29 at the top, inside the brief's
+2.2 to 2.5.
+
+**Result, measured from the drawn plan: 651.22 m2, 11.77 m2 inside the cap**,
+above the 9.99 m2 margin recommended in D-005. The majlis comes out at 44.3 m2
+against its 35 m2 brief, because it fills the ground floor under the bedrooms.
+
+**Approved by Aiman: yes.** Chose option C and the master to 68 directly.
+
+---
+
 ## 2026-10-02, design basis settled by the owner
 
 ### D-026 Garage counts toward GFA, and corridors are 1.80 m

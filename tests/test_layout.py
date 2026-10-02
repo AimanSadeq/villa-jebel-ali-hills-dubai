@@ -70,10 +70,14 @@ def test_corridors_are_the_dda_width():
             assert abs((c["u"][1] - c["u"][0]) - lay["meta"]["corridor_m"]) < 1e-6
 
 
-@pytest.mark.xfail(strict=True, reason=(
-    "OI-22: the drawn plan measures 669.29 m2 against the 662.99 m2 cap. Strict, "
-    "so this test fails the suite the moment the plan fits, prompting removal of "
-    "the marker rather than leaving a stale expectation."))
 def test_the_measured_plan_fits_the_cap():
+    """The hard limit, tested on drawn geometry. Strict xfail until 2026-10-02,
+    when trim D-027 brought the plan inside the cap and the marker came off."""
     m = lay["gfa_measured"]
     assert m["total"] <= m["cap"]
+
+
+def test_the_measured_plan_holds_the_recommended_margin():
+    """D-005: hold about 10 m2 back for the consultant's remeasure."""
+    m = lay["gfa_measured"]
+    assert m["margin"] >= 9.99 - 1e-6, f"only {m['margin']:.2f} m2 held back"

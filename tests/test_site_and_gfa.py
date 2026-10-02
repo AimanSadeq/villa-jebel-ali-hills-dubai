@@ -204,18 +204,19 @@ def test_every_room_declares_its_gfa_treatment():
 
 
 def test_master_suite_is_much_larger_than_the_other_bedrooms():
-    """CLAUDE.md section 4: 2.2 to 2.5 times the other bedrooms."""
+    """CLAUDE.md section 4: 2.2 to 2.5 times the other bedrooms, compared like
+    with like, the bottom of each range against the bottom, the top against the
+    top."""
     by_key = {r.key: r for r in rooms()}
     master = by_key["master_suite"]
     others = [by_key[k] for k in ("bedroom_2", "bedroom_3", "bedroom_4")]
-
-    ratio_low = master.low_m2 / max(o.high_m2 for o in others)
-    ratio_high = master.high_m2 / min(o.low_m2 for o in others)
-    assert ratio_low >= 2.0, (
-        f"Master suite at its minimum is only {ratio_low:.2f} times the largest "
-        "other bedroom. The brief asks for 2.2 to 2.5."
-    )
-    assert ratio_high <= 2.7
+    for end, m, o in (("minimum", master.low_m2, max(b.low_m2 for b in others)),
+                      ("maximum", master.high_m2, max(b.high_m2 for b in others))):
+        ratio = m / o
+        assert 2.2 - 1e-9 <= ratio <= 2.5 + 1e-9, (
+            f"At the {end} of the ranges the master is {ratio:.2f} times the "
+            "largest bedroom; the brief asks for 2.2 to 2.5"
+        )
 
 
 def test_majlis_has_its_own_guest_powder_room():
@@ -309,13 +310,17 @@ def test_every_trim_records_the_brief_figure_it_came_from():
     trimmed = _trimmed()
     assert trimmed, "No trims recorded in brief/program.yaml"
     for room in trimmed:
-        assert "brief_target_m2" in room, f"{room['key']} lost its brief figure"
-        assert room["target_m2"] < room["brief_target_m2"]
+        if "target_min_m2" in room:          # a ranged room, trimmed at its floor
+            assert "brief_target_min_m2" in room, f"{room['key']} lost its brief figure"
+            assert room["target_min_m2"] < room["brief_target_min_m2"]
+        else:
+            assert "brief_target_m2" in room, f"{room['key']} lost its brief figure"
+            assert room["target_m2"] < room["brief_target_m2"]
         assert room.get("trim_note"), f"{room['key']} has no reason recorded"
 
 
 def test_every_trim_names_which_decision_it_came_from():
-    known = {"route_b", "owner_2_cars"}
+    known = {"route_b", "owner_2_cars", "trim_t2"}
     for room in _trimmed():
         assert room["trimmed"] in known, (
             f"{room['key']} is tagged '{room['trimmed']}', which is not a "

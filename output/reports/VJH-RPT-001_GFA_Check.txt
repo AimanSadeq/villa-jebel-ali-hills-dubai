@@ -10,41 +10,41 @@ Net to gross factor (assumption)             1.22
 NET ROOM AREA BY FLOOR, confirmed GFA areas only
 Floor              Low      High
 ground          308.00    308.00
-first           216.00    241.00
-TOTAL NET       524.00    549.00
+first           206.00    239.00
+TOTAL NET       514.00    547.00
 
 Of which the garage, counted toward GFA by owner decision: 38.00 m2
 Double-height voids, excluded from upper floor area: 65.00 m2
 
 GROSS FLOOR AREA BY SCENARIO, against the 662.99 m2 cap
 Scenario                                Low     High  Head low Head high  Verdict
-All areas confirmed to count         631.89   662.44     31.10      0.55  fits at both ends
+All areas confirmed to count         619.67   660.00     43.32      2.99  fits at both ends
 
 HEADROOM AGAINST THE DESIGN TARGET OF 653.00 m2
-All areas confirmed to count          21.11    -9.44
+All areas confirmed to count          33.33    -7.00
 
 Positive means area still available to distribute. Negative means trims
 are needed. Trims are never made without the owner's approval.
 
 RANGE HEADROOM
 CLAUDE.md gives the master suite and bedrooms as ranges. At the
-minimum of every range the program lands at 631.89 m2. This is how much of
+minimum of every range the program lands at 619.67 m2. This is how much of
 that range can then be spent.
-Full range, minimum to maximum                 25.00 m2 net
-Affordable against the cap                     25.45 m2 net
-Affordable against the design target           17.27 m2 net
-Share of the range available                    102 %
+Full range, minimum to maximum                 33.00 m2 net
+Affordable against the cap                     35.45 m2 net
+Affordable against the design target           27.27 m2 net
+Share of the range available                    107 %
 
 PLAN EFFICIENCY SENSITIVITY
 Lower net to gross means more room area for the same GFA. Headroom is
 against the 662.99 m2 cap, with the garage counted.
 Factor     Gross low  Gross high   Head low  Head high
-1.12          582.32      610.32      80.67      52.67  fits
-1.14          592.04      620.54      70.95      42.45  fits
-1.16          601.76      630.76      61.23      32.23  fits
-1.18          611.48      640.98      51.51      22.01  fits
-1.20          621.20      651.20      41.79      11.79  fits
-1.22          630.92      661.42      32.07       1.57  fits
+1.12          571.12      608.08      91.87      54.91  fits
+1.14          580.64      618.26      82.35      44.73  fits
+1.16          590.16      628.44      72.83      34.55  fits
+1.18          599.68      638.62      63.31      24.37  fits
+1.20          609.20      648.80      53.79      14.19  fits
+1.22          618.72      658.98      44.27       4.01  fits
 
 ADDED BY CLAUDE, needs owner review
   Staircase + Home Elevator (first), 15 m2
@@ -52,12 +52,12 @@ ADDED BY CLAUDE, needs owner review
 MEASURED FROM THE PLAN, brief/layouts.yaml
 The estimate above uses a net to gross factor. The plan below is drawn
 geometry, and it is the figure the cap is tested against.
-Road wing, ground                          292.26 m2
+Road wing, ground                          285.55 m2
 SSW wing, ground                           102.20 m2
-First floor, less voids                    274.84 m2
-Total                                      669.29 m2
-Margin to the cap                           -6.30 m2
+First floor, less voids                    263.47 m2
+Total                                      651.22 m2
+Margin to the cap                          +11.77 m2
 
-VERDICT: FAIL. The drawn plan exceeds the DDA cap by 6.30 m2. See docs/open-items.md OI-22.
+VERDICT: PASS in every scenario.
 
 CONCEPT DESIGN, NOT FOR CONSTRUCTION

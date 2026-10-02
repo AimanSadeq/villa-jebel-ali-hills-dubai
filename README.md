@@ -16,14 +16,13 @@ licensed structural engineer must review, complete, and stamp all final drawings
 | Maximum GFA | 662.99 m² (7,136.36 sq ft) |
 | Maximum height | G+1 |
 | Setbacks | 3 m on all sides |
-| Current phase | Phase 1 complete, awaiting owner review |
+| Current phase | Phase 2 plan drawn, 651.22 m2, awaiting owner review |
 
 ## Start here
 
 - `CLAUDE.md` is the project brief. Read it first.
 - `SETUP.md` is the laptop setup guide.
-- `docs/open-items.md` is everything unresolved. **OI-01, whether the garage
-  counts toward GFA, blocks Phase 2.**
+- `docs/open-items.md` is everything unresolved.
 - `docs/decisions.md` is every design decision and its reason.
 - `docs/assumptions.md` is every number not taken from an authority document.
 
@@ -54,7 +53,7 @@ pip install -r requirements.txt
 | `python src/drawings/option_c_wing.py` | Option C wing, indicative plan |
 | `python src/model/export_massing.py` | Writes the viewer's data file |
 | `npm run dev --prefix viewer` | Massing viewer at http://localhost:5173 |
-| `python -m pytest -q` | Setback, GFA, shading, orientation and layout guards, 70 checks |
+| `python -m pytest -q` | Setback, GFA, shading, orientation and layout guards, 71 checks |
 
 ## Where things live
 
@@ -82,7 +81,7 @@ and regenerate: nothing else needs touching.
 |---|---|---|
 | 0 | Repo setup, brief files, plot and area verification | Complete, awaiting review |
 | 1 | Sun study, massing options, pool and garden position | Complete, awaiting review |
-| 2 | Room layouts, two plan options, GFA check | Plan drawn, 6.30 m2 over, OI-22 |
+| 2 | Room layouts, two plan options, GFA check | Plan drawn, 11.77 m2 inside the cap, awaiting review |
 | 3 | Full IFC architectural model | Not started |
 | 4 | Walkthrough, furniture, landscape, three palettes | Not started |
 | 5 | MEP design, calculations, clash detection | Not started |

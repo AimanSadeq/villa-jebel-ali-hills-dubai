@@ -220,9 +220,14 @@ def build() -> Path:
              color=MUTED)
     fig.text(0.025, 0.910, "FLOOR PLANS", fontsize=15, color=INK)
     fig.text(0.025, 0.893,
-             "Massing option C, plan direction 2, trim package 2, two car garage, "
+             "Massing option C, two car garage, trims route B, package 2 and D-027, "
              f"corridors {lay['meta']['corridor_m']:.2f} m. Plot up, not north up.",
              fontsize=8, color=MUTED)
+    if not over:
+        fig.text(0.60, 0.950, f"INSIDE THE GFA CAP BY {g['margin']:.2f} m2",
+                 fontsize=15, color=GOOD)
+        fig.text(0.60, 0.930, "Measured from the drawn plan. Phase 2 checkpoint, "
+                 "for owner review.", fontsize=8, color=MUTED)
     if over:
         fig.text(0.60, 0.950, f"OVER THE GFA CAP BY {-g['margin']:.2f} m2",
                  fontsize=15, color=BAD)
@@ -291,16 +296,16 @@ def build() -> Path:
     x1 = 0.255
     fig.text(x1, y, "NOTES", fontsize=9, color=INK)
     notes = [
-        "Rooms shaded orange came out larger than their brief target. They are "
-        "padding: the first floor above",
-        "needs that much ground floor beneath it, and in option C there are not "
-        "enough ground floor rooms in the",
-        "two storey wing to fill it, because the single storey SSW wing holds 92 m2 "
-        "of them. See OI-22.",
-        "Corridors at 1.80 m per DDA FAQs Building Q12. Whether that applies "
-        "inside a private villa is TO VERIFY, OI-21.",
-        "Garage counted toward GFA by owner decision, D-018. Its exclusion would "
-        "return 38 m2, OI-01.",
+        "Rooms shaded orange came out larger than their brief target. The first "
+        "floor needs that much ground floor beneath it, and in option C the two",
+        "storey wing has fewer ground rooms than that, because the single storey "
+        "wing holds 92 m2 of them. The majlis and garage take up the difference.",
+        "Living room double height, in the single storey wing with nothing above "
+        "it. Foyer single height, its height coming from a tall ground floor,",
+        "which DDA FAQ Q28 allows up to 6 m clear, subject to the overall height "
+        "rule in OI-13. Ceiling height is not GFA.",
+        "Corridors 1.80 m and garage counted toward GFA, both by owner decision "
+        "D-026. Upstairs trims D-027: master 68, bedrooms 28, family 33.",
         "Walls: external 0.25 m, internal 0.15 m, indicative. Structure by a "
         "licensed structural engineer, not in scope.",
     ]

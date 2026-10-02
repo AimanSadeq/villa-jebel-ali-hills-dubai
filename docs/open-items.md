@@ -6,7 +6,7 @@ names the document that must answer it.
 
 Status key: OPEN, ASKED (sent to a third party), CLOSED.
 
-Last updated: 2026-10-02 (plan drawn and measured; it is 6.30 m2 over)
+Last updated: 2026-10-02 (plan inside the cap by 11.77 m2)
 
 ## Critical. Blocks Phase 2 room layouts
 
@@ -81,9 +81,9 @@ Plan 1 remains over the cap and is not available.
 
 | | |
 |---|---|
-| Status | **OPEN, blocks the Phase 2 checkpoint** |
+| Status | **CLOSED 2026-10-02 by D-027: 651.22 m2, 11.77 m2 inside the cap** |
 | Raised | 2026-10-02, Phase 2 |
-| Decided by | Aiman, or answered by DDA through OI-01 and OI-21 |
+| Decided by | Aiman |
 
 Drawn on `output/pdf/VJH-GA-001_Floor_Plans.pdf` and measured from the geometry:
 **669.29 m2 against the 662.99 m2 cap, 6.30 m2 over.**
