@@ -55,6 +55,7 @@ from shapely.ops import unary_union
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
+from model.interiors import HUBS, plan as plan_interiors  # noqa: E402
 from model.massing import load_massing, site_to_grid  # noqa: E402
 from model.site import load_site, plot_polygon  # noqa: E402
 
@@ -91,6 +92,7 @@ STYLES = [
     ("stair", "Stair, stone", (0.83, 0.80, 0.75), 0.0),
     ("lift", "Lift car and shaft", (0.40, 0.42, 0.45), 0.0),
     ("space", "Room volume", (0.55, 0.78, 0.62), 0.8),
+    ("joinery", "Joinery, light oak", (0.80, 0.70, 0.55), 0.0),
 ]
 
 # Open plan, D-033 (owner's must-rule): shared spaces join with no partition
@@ -108,7 +110,8 @@ OPEN_JOINS = {
 # Where private rooms take their doors from, in order of preference. On the
 # first floor there is no corridor: rooms open off the landing, the family hall
 # or the family room itself (D-032).
-HUBS = ["corridor", "entrance_foyer", "hall_arm", "family_hall", "family_living"]
+# HUBS, the rooms private rooms take their doors from, lives in
+# src/model/interiors.py so the interiors planner uses the same list.
 
 # Deliberate connections beyond "every room opens off the corridor".
 ROOM_LINKS = [
@@ -118,13 +121,14 @@ ROOM_LINKS = [
     ("garage", "laundry", 0.90, "door"),
     ("laundry", "maids_room", 0.90, "door"),     # the maid's way into the house
 ]
-# External doors: room, face, width, height.
+# External doors: room, face, width, height, material. The master suite's
+# terrace door (D-035) is added from brief/program.yaml.
 EXTERNAL_DOORS = [
-    ("entrance_foyer", "W", 1.40, 3.00),     # front door, road side
-    ("garage", "W", 5.00, 2.60),             # two car overhead door
-    ("outdoor_bathroom", "E", 0.90, 2.40),   # opens to the courtyard, D-028
-    ("maids_room", "N", 0.90, 2.40),         # staff entrance, CLAUDE.md s4
-    ("plant_room", "E", 0.90, 2.40),         # service access
+    ("entrance_foyer", "W", 1.40, 3.00, "door"),     # front door, road side
+    ("garage", "W", 5.00, 2.60, "door"),             # two car overhead door
+    ("outdoor_bathroom", "E", 0.90, 2.40, "door"),   # opens to the courtyard, D-028
+    ("maids_room", "N", 0.90, 2.40, "door"),         # staff entrance, CLAUDE.md s4
+    ("plant_room", "E", 0.90, 2.40, "door"),         # service access
 ]
 
 
@@ -177,6 +181,13 @@ class Model:
         self.walls: dict[str, list] = {"ground": [], "first": []}
         self.bridges: dict[str, list] = {"ground": [], "first": []}
         self.no_hub_door: list[tuple[str, str, str]] = []
+        # Interiors, D-034 and D-035: en-suites, wardrobes, the master suite.
+        self.icfg = self.prog["interiors"]
+        self.interiors = plan_interiors(self.lay, self.prog)
+        terrace = self.icfg["master_suite"]["terrace"]
+        self.external_doors = EXTERNAL_DOORS + [
+            ("master_suite", "E", terrace["door_width_m"], terrace["door_height_m"],
+             "glass")]
         self.counts: dict[str, int] = {}
 
     # Setup -----------------------------------------------------------------
@@ -429,6 +440,16 @@ class Model:
         self.ext_ring_f = self.walls_for(
             "first", self.first_fp, self.f_rooms, self.f_circ, self.voids,
             z_top=self.HF - self.SLAB)
+        # Interior partitions, full height to the slab above.
+        for it in self.interiors.values():
+            top = (self.HG if it.storey == "ground" else self.HF) - self.SLAB
+            for g in it.partitions:
+                for poly in clean(g):
+                    w = self.element("IfcWall",
+                                     f"Partition, {self.names.get(it.room, it.room)}",
+                                     it.storey, [self._prism(poly, 0.0, top)],
+                                     predefined="PARTITIONING", material="int")
+                    self.walls[it.storey].append((w, poly, False))
 
     # Slabs, roofs, parapets ------------------------------------------------
 
@@ -457,7 +478,8 @@ class Model:
             ("Main roof", "roof", self.first_fp, 0.0, [], ),
             ("Roof over the garage and service end", "first",
              self.low_road, 0.0, [self.first_fp]),
-            ("Roof over the kitchen and dining", "first", self.kitchen_block, 0.0,
+            ("Roof terrace over the kitchen and dining, master suite terrace",
+             "first", self.kitchen_block, 0.0,
              [self.first_fp, self.living_block]),
             ("Roof over the double height living room", "roof", self.living_block,
              0.0, []),
@@ -468,7 +490,8 @@ class Model:
                 continue
             self.element("IfcSlab", name, storey,
                          [self._prism(p, -S, S) for p in parts],
-                         predefined="ROOF", material="slab", style="roof")
+                         predefined="ROOF", material="slab",
+                         style="deck" if "terrace" in name else "roof")
             ring = unary_union(parts)
             ring = ring.difference(ring.buffer(-T_EXT, join_style=2, mitre_limit=10))
             for t in taller:
@@ -546,8 +569,9 @@ class Model:
                                            ("first", self.f_rooms, self.f_circ, clear_f)):
             for r in rooms + circ:
                 h = clear_living if r.key == "living" else clear
-                shape = unary_union([r.poly] + [g for k, g in self.bridges[storey]
-                                                if k == r.key])
+                it = self.interiors.get(r.key)
+                shape = unary_union([it.main if it else r.poly]
+                                    + [g for k, g in self.bridges[storey] if k == r.key])
                 parts = [shape] if isinstance(shape, Polygon) else list(shape.geoms)
                 sp = self.element("IfcSpace", self.names.get(r.key, r.key), storey,
                                   [self._prism(q, 0.0, h) for q in parts],
@@ -559,7 +583,22 @@ class Model:
                 qto = ifcopenshell.api.pset.add_qto(self.f, product=sp,
                                                     name="Qto_SpaceBaseQuantities")
                 ifcopenshell.api.pset.edit_qto(self.f, qto=qto, properties={
-                    "NetFloorArea": round(r.area, 3), "Height": round(h, 3)})
+                    "NetFloorArea": round(it.main.area if it else r.area, 3),
+                    "Height": round(h, 3)})
+                for part in (it.parts if it else []):
+                    if part.kind != "space":
+                        continue
+                    sub = self.element("IfcSpace", part.name, storey,
+                                       [self._prism(part.poly, 0.0, h)],
+                                       predefined="INTERNAL", container=False,
+                                       style="space")
+                    sub.LongName = part.key
+                    ifcopenshell.api.aggregate.assign_object(
+                        self.f, products=[sub], relating_object=self.storeys[storey][0])
+                    q = ifcopenshell.api.pset.add_qto(self.f, product=sub,
+                                                      name="Qto_SpaceBaseQuantities")
+                    ifcopenshell.api.pset.edit_qto(self.f, qto=q, properties={
+                        "NetFloorArea": round(part.poly.area, 3), "Height": round(h, 3)})
 
     # Openings ----------------------------------------------------------------
 
@@ -570,7 +609,7 @@ class Model:
         return None
 
     def opening(self, storey, kind, name, u_c, v_c, along_u, width, sill, height,
-                wall_t):
+                wall_t, material=None):
         """Cut an opening through the host wall and fill it."""
         if along_u:   # wall runs along u, so the opening spans u
             cut = box(u_c - width / 2, v_c - wall_t / 2 - 0.05,
@@ -591,7 +630,7 @@ class Model:
             return op
         cls = "IfcDoor" if kind == "door" else "IfcWindow"
         fill = self.element(cls, name, storey, [self._prism(pane, sill, height)],
-                            material="door" if cls == "IfcDoor" else "glass")
+                            material=material or ("door" if cls == "IfcDoor" else "glass"))
         fill.OverallWidth = width
         fill.OverallHeight = height
         ifcopenshell.api.feature.add_filling(self.f, opening=op, element=fill)
@@ -625,6 +664,16 @@ class Model:
                     continue      # open plan, or reached from outside
                 if r.key in HUBS or any(r.key in p for p in open_pairs):
                     continue      # part of the open space
+                it = self.interiors.get(r.key)
+                if it:
+                    for d in it.doors:
+                        self.opening(storey, "door", d.name, d.u, d.v, d.along_u,
+                                     d.width, 0.0, min(door_h, 2.40), d.wall_t)
+                    if it.entry:
+                        e = it.entry
+                        self.opening(storey, "door", e.name, e.u, e.v, e.along_u,
+                                     e.width, 0.0, door_h, e.wall_t)
+                        continue
                 for hub in hubs:
                     s = self._shared(r, hub)
                     if s and s[3] >= 1.0:
@@ -666,6 +715,54 @@ class Model:
                 out[face] = (along_u, length, wall_line)
         return out
 
+    def _face_segments(self, r: R, face: str, along_u: bool):
+        """Split an external face by what lies behind it: the room itself
+        ("main"), an en-suite or master bathroom ("bath"), or a walk-in
+        wardrobe ("wir"). Partitions are taken out of the main stretches."""
+        w0, w1 = (r.u0, r.u1) if along_u else (r.v0, r.v1)
+        it = self.interiors.get(r.key)
+        if not it:
+            return [("main", w0, w1)]
+        p = self.icfg["partition_m"]
+        line = {"W": r.u0, "E": r.u1, "S": r.v0, "N": r.v1}[face]
+        idx = {"W": 0, "S": 1, "E": 2, "N": 3}[face]
+        out, taken = [], []
+        for part in it.parts:
+            if part.kind != "space":
+                continue
+            b = part.poly.bounds
+            if abs(b[idx] - line) > 1e-3:
+                continue
+            a0, a1 = (b[0], b[2]) if along_u else (b[1], b[3])
+            out.append(("bath" if part.key.endswith("bathroom") else "wir", a0, a1))
+            taken.append((a0 - p, a1 + p))
+        free = [(w0, w1)]
+        for a, b2 in taken:
+            nxt = []
+            for x, y in free:
+                if b2 <= x or a >= y:
+                    nxt.append((x, y))
+                    continue
+                if a > x:
+                    nxt.append((x, a))
+                if b2 < y:
+                    nxt.append((b2, y))
+            free = nxt
+        return out + [("main", x, y) for x, y in free if y - x > 0.3]
+
+    def build_furniture(self):
+        """Built-in wardrobes and the master's coffee station."""
+        for it in self.interiors.values():
+            for part in it.parts:
+                if part.kind not in ("wardrobe", "furniture"):
+                    continue
+                self.element("IfcFurniture", part.name, it.storey,
+                             [self._prism(part.poly, 0.0, part.height)],
+                             predefined="USERDEFINED",
+                             object_type=("Built-in wardrobe" if part.kind == "wardrobe"
+                                          else part.name),
+                             style="joinery")
+
     def _face_kind(self, r: R, face: str) -> str:
         in_ssw = self.ssw.buffer(0.01).contains(r.poly)
         if in_ssw:
@@ -678,21 +775,36 @@ class Model:
                                     ("first", self.f_rooms + lived_in, self.ext_ring_f)):
             ground = storey == "ground"
             clear = (self.HG if ground else self.HF) - self.SLAB - self.SERV
-            ext_doors = {(k, face): (w, h) for k, face, w, h in EXTERNAL_DOORS}
+            ext_doors = {(k, face): (w, h, m) for k, face, w, h, m in self.external_doors}
             for r in rooms:
                 faces = self._external_faces(storey, r, ring)
                 for face, (along_u, length, wall_line) in faces.items():
-                    centre = (r.u0 + r.u1) / 2 if along_u else (r.v0 + r.v1) / 2
+                    segs = self._face_segments(r, face, along_u)
+                    for kind_s, a0, a1 in segs:
+                        if kind_s == "bath" and a1 - a0 >= 0.9:
+                            mid = (a0 + a1) / 2
+                            ub, vb = ((mid, wall_line) if along_u else (wall_line, mid))
+                            self.opening(storey, "window",
+                                         f"Window, {self.names.get(r.key, r.key)}, bathroom",
+                                         ub, vb, along_u, 0.60, 1.80, 0.60, T_EXT)
+                    mains = [x for x in segs if x[0] == "main"]
+                    if not mains:
+                        continue
+                    _, s0, s1 = max(mains, key=lambda x: x[2] - x[1])
+                    length = s1 - s0
+                    centre = (s0 + s1) / 2
                     u_c, v_c = ((centre, wall_line) if along_u else (wall_line, centre))
-                    door = ext_doors.get((r.key, face)) if ground else None
+                    door = ext_doors.get((r.key, face))
                     if door:
-                        wdt, hgt = door
+                        wdt, hgt, mat = door
                         name = ("Front door" if r.key == "entrance_foyer" else
+                                "Terrace door, Master Suite" if mat == "glass" else
                                 f"External door, {self.names.get(r.key, r.key)}")
                         # Share the face with a window when the room has one.
-                        if r.key in PRINCIPAL | SERVICE_WINDOWS and length > wdt + 2.0:
-                            centre_d = (r.u0 if along_u else r.v0) + length / 3
-                            centre_w = (r.u0 if along_u else r.v0) + 2 * length / 3
+                        if (r.key in PRINCIPAL | SERVICE_WINDOWS and length > wdt + 2.0
+                                and mat != "glass"):
+                            centre_d = s0 + length / 3
+                            centre_w = s0 + 2 * length / 3
                             ud, vd = ((centre_d, wall_line) if along_u else (wall_line, centre_d))
                             self.opening(storey, "door", name, ud, vd, along_u, wdt,
                                          0.0, hgt, T_EXT)
@@ -702,7 +814,7 @@ class Model:
                                          along_u, min(0.9, length / 3 - 0.3), 1.0, 1.4, T_EXT)
                         else:
                             self.opening(storey, "door", name, u_c, v_c, along_u, wdt,
-                                         0.0, hgt, T_EXT)
+                                         0.0, hgt, T_EXT, material=mat)
                         continue
                     if r.key in NO_WINDOWS or r.key == "entrance_foyer":
                         continue
@@ -773,6 +885,7 @@ class Model:
         self.build_spaces()
         self.build_doors()
         self.build_windows_and_external_doors()
+        self.build_furniture()
         self.build_site()
         OUT.parent.mkdir(parents=True, exist_ok=True)
         self.f.write(str(OUT))

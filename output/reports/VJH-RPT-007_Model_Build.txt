@@ -6,28 +6,30 @@ CONCEPT DESIGN, NOT FOR CONSTRUCTION
 2. IFC generated: output/ifc/VJH-ARCH-001_Villa_5130272.ifc
    Schema IFC4. Stair and lift core: 28 risers of 179 mm, going 280 mm, two flights 0.90 m wide, half landing 1.41 m, lift 1.00 x 1.00 m
    IfcBuildingElementProxy       1
-   IfcDoor                      20
+   IfcDoor                      29
+   IfcFurniture                  5
    IfcGeographicElement          1
-   IfcOpeningElement            45
+   IfcOpeningElement            54
    IfcSlab                       7
-   IfcSpace                     28
+   IfcSpace                     36
    IfcStair                      1
    IfcTransportElement           1
-   IfcWall                      18
+   IfcWall                      24
    IfcWindow                    25
 
 3. Schema validation: PASS, 0 issue(s)
 
-4. Geometry: 102 elements tessellated, 0 failed
+4. Geometry: 130 elements tessellated, 0 failed
    IfcBuildingElementProxy       1       22.69 m3
-   IfcDoor                      20        3.59 m3
+   IfcDoor                      29        4.94 m3
+   IfcFurniture                  5       16.61 m3
    IfcGeographicElement          1      305.99 m3
    IfcSlab                       7      317.78 m3
-   IfcSpace                     28     2676.22 m3
+   IfcSpace                     36     2661.46 m3
    IfcStair                      1        8.71 m3
    IfcTransportElement           1        8.70 m3
-   IfcWall                      18      285.59 m3
-   IfcWindow                    25       10.13 m3
+   IfcWall                      24      301.23 m3
+   IfcWindow                    25        9.26 m3
 
 5. Floor area, IFC against the plan (walls and spaces in plan; tolerance 0.10 m2)
    Ground Floor   IFC   384.22   plan   384.21   PASS

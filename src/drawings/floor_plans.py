@@ -29,6 +29,7 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from drawings.massing_sheets import GRID_BEARING, _g, _side_badge  # noqa: E402
 from model.massing import load_massing  # noqa: E402
+from model.interiors import plan as plan_interiors  # noqa: E402
 from model.site import SQM_TO_SQFT, buildable_envelope, plot_polygon, sides  # noqa: E402
 
 LAYOUTS = REPO_ROOT / "brief" / "layouts.yaml"
@@ -42,6 +43,8 @@ SCALE = 100
 INK = "#1a1a1a"
 MUTED = "#6b6b6b"
 WALL = "#262626"
+BATH = "#e4ecf2"
+DOOR = "#8a6a3f"
 ROOM = "#f7f5f1"
 SERVICE = "#eeebe5"
 STAFF = "#e9e6f0"
@@ -75,6 +78,43 @@ SHORT = {
     "linen_storage": "LINEN",
     "outdoor_bathroom": "OUTDOOR WC + SHOWER\nexternal door",
 }
+
+
+def _interiors(ax, interiors, storey):
+    """En-suites, wardrobes and the master suite plan (D-034, D-035)."""
+    for it in interiors.values():
+        if it.storey != storey:
+            continue
+        for g in it.partitions:
+            for poly in ([g] if g.geom_type == "Polygon" else list(g.geoms)):
+                xs, ys = poly.exterior.xy
+                _poly(ax, list(zip(xs, ys)), facecolor=WALL, edgecolor="none", zorder=6)
+        for part in it.parts:
+            b = part.poly.bounds
+            w, l = b[2] - b[0], b[3] - b[1]
+            if part.kind == "space":
+                # Above the partitions: a sub-room enclosed on all sides is a
+                # hole in the partition polygon, which _poly cannot draw.
+                _poly(ax, list(part.poly.exterior.coords), facecolor=BATH,
+                      edgecolor=WALL, lw=0.4, zorder=6.5)
+                short = ("BATH" if "bathroom" in part.key or "shower" in part.name.lower()
+                         else "WIR HERS" if "hers" in part.key else "WIR HIS")
+                ax.text((b[0] + b[2]) / 2, (b[1] + b[3]) / 2,
+                        f"{short}\n{part.poly.area:.1f} m2", ha="center", va="center",
+                        fontsize=4.2, color=MUTED, zorder=7, rotation=90 if l > 1.6 * w else 0)
+            else:
+                _poly(ax, list(part.poly.exterior.coords), facecolor="none",
+                      edgecolor=MUTED, lw=0.4, hatch="////", zorder=5)
+                ax.text((b[0] + b[2]) / 2, (b[1] + b[3]) / 2,
+                        "WR" if part.kind == "wardrobe" else "COFFEE",
+                        ha="center", va="center", fontsize=3.8, color=MUTED, zorder=7,
+                        rotation=90 if l > w else 0)
+        for d in [it.entry] + it.doors if it.entry else it.doors:
+            half = d.width / 2
+            if d.along_u:
+                ax.plot([d.u - half, d.u + half], [d.v, d.v], color=DOOR, lw=1.4, zorder=8)
+            else:
+                ax.plot([d.u, d.u], [d.v - half, d.v + half], color=DOOR, lw=1.4, zorder=8)
 
 
 def load() -> tuple[dict, dict]:
@@ -120,7 +160,7 @@ def _badges(ax):
                 bbox=dict(boxstyle="round,pad=0.35", fc="white", ec=col, lw=0.6))
 
 
-def _room(ax, r, targets, padding_keys):
+def _room(ax, r, targets, padding_keys, centre=None):
     key = r["key"]
     fill = (PAD if key in padding_keys else
             STAFF if key in STAFF_KEYS else
@@ -128,7 +168,7 @@ def _room(ax, r, targets, padding_keys):
     _rect(ax, r, facecolor=fill, edgecolor=WALL, lw=0.7, zorder=4)
     (u0, u1), (v0, v1) = r["u"], r["v"]
     w, l = u1 - u0, v1 - v0
-    cx, cy = (u0 + u1) / 2, (v0 + v1) / 2
+    cx, cy = centre or ((u0 + u1) / 2, (v0 + v1) / 2)
     if key in STAIR_KEYS:
         n = max(int(l / 0.28), 4)
         for i in range(1, n):
@@ -237,13 +277,18 @@ def build() -> Path:
                  "Shown so the owner can see the plan. Not a valid design until "
                  "this is closed.", fontsize=8, color=BAD)
 
+    interiors = plan_interiors(lay)
+    centres = {k: (it.main.representative_point().x, it.main.representative_point().y)
+               for k, it in interiors.items()}
+
     # Ground floor
     axg = plan_axes(fig, 15, 70, 380, 420)
     _context(axg)
     clash = _pool(axg, lay["plates"]["road"]["u"][1])
     _circulation(axg, lay["floors"]["ground"]["circulation"])
     for r in lay["floors"]["ground"]["rooms"]:
-        _room(axg, r, targets, pad_keys)
+        _room(axg, r, targets, pad_keys, centre=centres.get(r["key"]))
+    _interiors(axg, interiors, "ground")
     _outline(axg, lay["outlines"]["road_ground"])
     _rect_outline(axg, lay["plates"]["ssw"])
     _badges(axg)
@@ -259,8 +304,9 @@ def build() -> Path:
     _rect_outline(axf, lay["plates"]["ssw"], lw=0.6)
     axf.text(*[(lay["plates"]["ssw"]["u"][0] + lay["plates"]["ssw"]["u"][1]) / 2,
                (lay["plates"]["ssw"]["v"][0] + lay["plates"]["ssw"]["v"][1]) / 2],
-             "ROOF OVER\nSINGLE STOREY\nWING", ha="center", va="center", fontsize=6,
-             color=MUTED, zorder=6)
+             "MASTER TERRACE\non the kitchen roof, D-035\nnot GFA (DDA Q25)\n\n"
+             "ROOF OVER THE\nDOUBLE HEIGHT LIVING ROOM", ha="center", va="center",
+             fontsize=6, color=MUTED, zorder=6)
     _circulation(axf, lay["floors"]["first"]["circulation"])
     for v in lay["floors"]["first"].get("voids", []):
         if v["area_m2"] < 0.01:
@@ -272,7 +318,8 @@ def build() -> Path:
         axf.text((u0 + u1) / 2, (v0 + v1) / 2, f"VOID OVER FOYER\n{v['area_m2']:.1f} m2",
                  ha="center", va="center", fontsize=5.4, color=MUTED, zorder=6)
     for r in lay["floors"]["first"]["rooms"]:
-        _room(axf, r, targets, pad_keys)
+        _room(axf, r, targets, pad_keys, centre=centres.get(r["key"]))
+    _interiors(axf, interiors, "first")
     _outline(axf, lay["outlines"]["first"])
     _badges(axf)
     _north(axf, 31.0, 33.0)
@@ -313,6 +360,10 @@ def build() -> Path:
         "kitchen, dining and living join with no partitions. Boxes show room areas.",
         "First floor around a central family hall with no corridor, D-032: "
         "bedrooms open off the family room, the master and bedroom 4 off the landing.",
+        "Interiors D-034, D-035: en-suite bath and wardrobe (WR) beside each bedroom "
+        "door; master with dressing gallery, his and hers walk-in wardrobes, bath,",
+        "coffee station and a terrace on the kitchen roof (DDA Q25, not GFA). "
+        "Partitions 0.10 m. Bathroom ventilation TO VERIFY, OI-25.",
         "Walls: external 0.25 m, internal 0.15 m, indicative. Structure by a "
         "licensed structural engineer, not in scope.",
     ]

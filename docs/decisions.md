@@ -6,6 +6,51 @@ Columns: date, decision, reason, approved by Aiman.
 
 ---
 
+## 2026-10-02, interiors drawn in Phase 3
+
+### D-035 Master suite plan, with its terrace on the kitchen roof
+
+**Decision.** The master's private balcony is a terrace on the flat roof of the
+single storey kitchen and dining block, outside the master's east wall, about
+45 m2, reached through a 3.00 m glazed sliding door. Inside, a 5.00 m service
+zone on the road side holds the bathroom (about 13 m2: bathtub, separate
+shower, double basin, WC) and his and hers walk-in wardrobes (5 m2 each),
+reached along a 1.40 m dressing gallery from the landing door. The bedroom and
+sitting area (about 47 m2) take the terrace side, with the coffee station by
+the terrace door.
+
+**Reason.** Owner choice 2026-10-02 from three balcony options. The roof is
+there already with its 1.20 m parapet (DDA FAQs Building Q34); the two storey
+wing shades it in the afternoon; it looks north over the pool; and open
+terraces are excluded from GFA (DDA FAQs Building Q25), so it costs nothing
+against the cap. The tall living room wall closes its east side, so it has no
+direct view of the landscape plot. The service zone goes on the road side so
+the bedroom keeps the quiet, shaded terrace side. Waterproofing and the
+terrace finish are for the consultant.
+
+**Approved by Aiman: yes,** the terrace position. The internal plan: Claude's
+proposal, for review.
+
+### D-034 En-suite bedrooms: bath and wardrobe beside the door
+
+**Decision.** In bedrooms 2 to 4 and the guest bedroom, a 2.40 x 2.40 m
+bathroom (walk-in shower, WC, basin) and a 0.65 m deep built-in wardrobe sit
+beside the door, forming an entry lobby, so the bedroom keeps its facade and
+windows. The bathroom takes the end of the door wall away from the facade. The
+bathrooms are internal, with mechanical extract. Partitions 0.10 m. The maid's
+room gets a 1.20 m wide shower room across its far end, beside the outdoor
+bathroom so the two share drainage.
+
+**Reason.** Owner choice 2026-10-02 from three en-suite layouts, and the
+owner's instruction to draw interiors in Phase 3 rather than Phase 4. Each
+bedroom keeps 23.75 m2 (guest 25.75 m2) for the bed area. Sizes are Claude
+proposals, recorded in brief/program.yaml under interiors.
+
+**Approved by Aiman: yes,** the layout principle. The sizes and the maid's
+shower room: for review.
+
+---
+
 ## 2026-10-02, open plan and the family hall
 
 ### D-033 Owner rule: open space maximization, read as open-plan interiors

@@ -5,7 +5,7 @@
   "stamp": "CONCEPT DESIGN, NOT FOR CONSTRUCTION",
   "phase": 3,
   "ifc": "data/VJH-ARCH-001_Villa_5130272.ifc",
-  "built": "2026-10-02T11:07"
+  "built": "2026-10-02T11:21"
  },
  "north_uv": [
   -0.50272,
@@ -34,13 +34,14 @@
  "core": "28 risers of 179 mm, going 280 mm, two flights 0.90 m wide, half landing 1.41 m, lift 1.00 x 1.00 m",
  "counts": {
   "IfcBuildingElementProxy": 1,
-  "IfcDoor": 20,
+  "IfcDoor": 29,
+  "IfcFurniture": 5,
   "IfcGeographicElement": 1,
   "IfcSlab": 7,
-  "IfcSpace": 28,
+  "IfcSpace": 36,
   "IfcStair": 1,
   "IfcTransportElement": 1,
-  "IfcWall": 18,
+  "IfcWall": 24,
   "IfcWindow": 25
  },
  "rooms": [
@@ -367,6 +368,110 @@
    "area_m2": 20.27,
    "area_sqft": 218.2,
    "circulation": true
+  },
+  {
+   "key": "guest_bedroom.bathroom",
+   "name": "Guest Bedroom, en-suite bathroom",
+   "label": "Bath",
+   "storey": "ground",
+   "u": 7.2,
+   "v": 8.725,
+   "z": 1.2,
+   "area_m2": 5.76,
+   "area_sqft": 62.0,
+   "circulation": false,
+   "sub": true
+  },
+  {
+   "key": "maids_room.bathroom",
+   "name": "Maid's Room, shower room",
+   "label": "Bath",
+   "storey": "ground",
+   "u": 12.399,
+   "v": 25.404,
+   "z": 1.2,
+   "area_m2": 3.47,
+   "area_sqft": 37.3,
+   "circulation": false,
+   "sub": true
+  },
+  {
+   "key": "master_suite.bathroom",
+   "name": "Master bathroom",
+   "label": "Bath",
+   "storey": "first",
+   "u": 5.8,
+   "v": 4.967,
+   "z": 6.2,
+   "area_m2": 13.17,
+   "area_sqft": 141.8,
+   "circulation": false,
+   "sub": true
+  },
+  {
+   "key": "master_suite.wir_hers",
+   "name": "Walk-in Wardrobe, Hers",
+   "label": "WIR",
+   "storey": "first",
+   "u": 4.525,
+   "v": 7.405,
+   "z": 6.2,
+   "area_m2": 5.0,
+   "area_sqft": 53.8,
+   "circulation": false,
+   "sub": true
+  },
+  {
+   "key": "master_suite.wir_his",
+   "name": "Walk-in Wardrobe, His",
+   "label": "WIR",
+   "storey": "first",
+   "u": 7.075,
+   "v": 7.405,
+   "z": 6.2,
+   "area_m2": 5.0,
+   "area_sqft": 53.8,
+   "circulation": false,
+   "sub": true
+  },
+  {
+   "key": "bedroom_4.bathroom",
+   "name": "Bedroom 4, en-suite bathroom",
+   "label": "Bath",
+   "storey": "first",
+   "u": 11.7,
+   "v": 11.275,
+   "z": 6.2,
+   "area_m2": 5.76,
+   "area_sqft": 62.0,
+   "circulation": false,
+   "sub": true
+  },
+  {
+   "key": "bedroom_2.bathroom",
+   "name": "Bedroom 2, en-suite bathroom",
+   "label": "Bath",
+   "storey": "first",
+   "u": 7.725,
+   "v": 21.612,
+   "z": 6.2,
+   "area_m2": 5.76,
+   "area_sqft": 62.0,
+   "circulation": false,
+   "sub": true
+  },
+  {
+   "key": "bedroom_3.bathroom",
+   "name": "Bedroom 3, en-suite bathroom",
+   "label": "Bath",
+   "storey": "first",
+   "u": 10.275,
+   "v": 21.612,
+   "z": 6.2,
+   "area_m2": 5.76,
+   "area_sqft": 62.0,
+   "circulation": false,
+   "sub": true
   }
  ]
 }

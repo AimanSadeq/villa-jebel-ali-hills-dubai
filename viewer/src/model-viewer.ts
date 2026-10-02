@@ -20,7 +20,7 @@ import { append, clear, h, icon, tr } from './dom';
 interface RoomLabel {
   key: string; name: string; label: string; storey: 'ground' | 'first';
   u: number; v: number; z: number;
-  area_m2: number; area_sqft: number; circulation: boolean;
+  area_m2: number; area_sqft: number; circulation: boolean; sub?: boolean;
 }
 
 interface ModelData {
@@ -196,7 +196,7 @@ async function boot() {
 
   const roomLabels: { obj: CSS2DObject; room: RoomLabel }[] = [];
   for (const r of data.rooms) {
-    const el = h('div', { class: r.circulation ? 'label circ' : 'label' },
+    const el = h('div', { class: r.circulation ? 'label circ' : r.sub ? 'label sub' : 'label' },
       h('b', {}, r.label),
       r.circulation ? null : h('span', {}, `${fmt(r.area_m2, 1)} m²`));
     el.title = `${r.name}, ${fmt(r.area_m2, 1)} m², ${fmt(r.area_sqft, 0)} sq ft`;

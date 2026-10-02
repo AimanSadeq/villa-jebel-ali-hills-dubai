@@ -56,7 +56,7 @@ pip install -r requirements.txt
 | `python src/model/build_model.py` | GFA check, then the IFC model, validation, and the viewer's model data |
 | `npm run dev --prefix viewer` | Massing viewer at http://localhost:5173 |
 | (same server) | Phase 3 IFC model viewer at http://localhost:5173/model.html |
-| `python -m pytest -q` | Setback, GFA, shading, orientation and layout guards, 77 checks |
+| `python -m pytest -q` | Setback, GFA, shading, orientation, layout and interior guards, 91 checks |
 
 ## Where things live
 

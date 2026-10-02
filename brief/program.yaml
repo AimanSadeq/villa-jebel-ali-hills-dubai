@@ -175,7 +175,8 @@ first:
       Excludes balcony. Must be 2.2 to 2.5 times the other bedrooms. Contains
       bedroom, private sitting area, his and hers walk-in wardrobes, large
       bathroom with bathtub and separate shower, coffee / kitchenette station,
-      private balcony. Best upstairs orientation, ideally toward the east
+      private balcony. The balcony is a terrace on the kitchen roof, D-035; see
+      interiors.master_suite. Best upstairs orientation, ideally toward the east
       landscape plot if the sun study supports it.
   - key: bedroom_2
     name: "Bedroom 2, En-suite"
@@ -234,6 +235,65 @@ first:
 #    behind a low screen, which needs no enclosure and adds no floor, or at
 #    ground level in the service zone. Decided in Phase 5. See OI-17.
 roof: []
+
+# Room interiors, drawn in Phase 3 by owner decision 2026-10-02 (D-034, D-035).
+# src/model/interiors.py plans them from these figures, and both the IFC model
+# and the floor plans read that plan. Sizes are Claude proposals for owner
+# review, not regulatory values. Room areas above include their interiors.
+interiors:
+  partition_m: 0.10            # internal subdivision, indicative
+  ensuite:
+    decision: "D-034"
+    rooms: [guest_bedroom, bedroom_2, bedroom_3, bedroom_4]
+    layout: >
+      Owner choice 2026-10-02: bathroom and built-in wardrobe beside the door,
+      forming an entry lobby, so the bedroom keeps the facade and its windows.
+      The bathroom goes in the corner away from the facade, back to back with
+      the next en-suite where possible.
+    bathroom:
+      width_m: 2.40            # along the door wall
+      depth_m: 2.40
+      fittings: [walk-in shower, WC, basin]
+      ventilation: "Internal, mechanical extract. Rate TO VERIFY, OI-25."
+    entry_m: 1.00              # clear entry beside the bathroom, holds the door
+    wardrobe:
+      depth_m: 0.65
+      min_length_m: 1.80
+      max_length_m: 3.00
+      height_m: 2.40
+    bedroom_min_m2: 18.0       # left for the bed area, wardrobe included
+  staff_ensuite:
+    decision: "D-034"
+    rooms: [maids_room]
+    door_from: laundry         # the maid's internal door, see ROOM_LINKS
+    layout: >
+      CLAUDE.md section 4 asks for a maid's room with bathroom. A compact
+      shower room across the end of the room away from its door, beside the
+      outdoor bathroom so the two share drainage. Claude proposal, for review.
+    bathroom:
+      width_m: 1.20            # across the full depth of the room
+      fittings: [shower, WC, basin]
+    bedroom_min_m2: 7.0
+  master_suite:
+    decision: "D-035"
+    layout: >
+      Service zone on the road side (bathroom, his and hers walk-in wardrobes),
+      reached along a dressing gallery from the landing door. Bedroom and
+      sitting area on the terrace side, with the coffee station by the terrace.
+    service_zone_width_m: 5.00
+    gallery_depth_m: 1.40
+    bathroom:
+      min_m2: 12.0
+      fittings: [bathtub, separate shower, double basin, WC]
+    walk_in_wardrobes:
+      - {key: wir_hers, name: "Walk-in Wardrobe, Hers", target_m2: 5.0}
+      - {key: wir_his, name: "Walk-in Wardrobe, His", target_m2: 5.0}
+    coffee_station: {length_m: 1.80, depth_m: 0.60, height_m: 0.90}
+    terrace:
+      on: "roof of the single storey kitchen and dining block"
+      door_width_m: 3.00       # glazed sliding door from the master
+      door_height_m: 2.40
+      gfa: excluded            # DDA FAQs Building Q25: balconies excluded from GFA, included in BUA
 
 # Rooms removed from the CLAUDE.md section 4 program, kept on record so the
 # removal is visible and reversible rather than silent.

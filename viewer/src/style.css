@@ -206,3 +206,6 @@ table td { text-align: right; padding: 4px 0; font-variant-numeric: tabular-nums
 
 /* The That Open logo sits bottom left of the canvas. */
 #stamp.clear-logo { left: 112px; }
+
+.label.sub { padding: 1px 5px; font-size: 9.5px; background: rgba(228, 236, 242, 0.9); }
+.label.sub span { font-size: 9px; }

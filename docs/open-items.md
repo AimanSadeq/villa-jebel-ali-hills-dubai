@@ -476,6 +476,21 @@ Safety Code and Dubai Civil Defence approval (DDA FAQs Building Q42, OI-16).
 No requirement is assumed here. If a wall or a fire-rated door is required, it
 will be flagged to the owner rather than added silently.
 
+### OI-25 Ventilation of internal bathrooms
+
+| | |
+|---|---|
+| Status | OPEN, TO VERIFY |
+| Raised | 2026-10-02, D-034 |
+
+The en-suite bathrooms of bedrooms 2 to 4 and the guest bedroom have no
+external wall, by the owner's choice of layout, and rely on mechanical
+extract. The required extract rate and whether an internal bathroom is
+permitted without a window are for the Dubai Building Code (mechanical
+ventilation) and will be sized in the Phase 5 MEP design. No rate is assumed
+here. The master bathroom and the maid's shower room have external walls and
+get a high window.
+
 ## Owner decisions outstanding
 
 ### OI-07 Pool and main garden position

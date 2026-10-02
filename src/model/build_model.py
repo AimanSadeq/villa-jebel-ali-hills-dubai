@@ -145,6 +145,21 @@ def publish_to_viewer(model, path: Path, lay: dict, ifc_areas: dict) -> None:
                 "area_m2": round(area, 2), "area_sqft": round(sqft(area), 1),
                 "circulation": d in floor["circulation"],
             })
+    # Sub-rooms from the interiors: small labels, picked by their LongName.
+    for key, it in model.interiors.items():
+        for part in it.parts:
+            if part.kind != "space":
+                continue
+            c = part.poly.representative_point()
+            rooms.append({
+                "key": part.key, "name": part.name,
+                "label": ("Bath" if "bathroom" in part.key or "shower" in part.name.lower()
+                          else "WIR"),
+                "storey": it.storey, "u": round(c.x, 3), "v": round(c.y, 3),
+                "z": elev[it.storey] + 1.2, "area_m2": round(part.poly.area, 2),
+                "area_sqft": round(sqft(part.poly.area), 1), "circulation": False,
+                "sub": True,
+            })
     bearing = math.radians(float(model.m["grid"]["bearing_deg"]))
     data = {
         "meta": {"plot": model.site["plot"]["number"],
