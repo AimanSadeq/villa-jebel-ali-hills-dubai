@@ -55,6 +55,11 @@ U_EAST_LIMIT = 27.35             # buildable envelope, east side
 
 GARAGE_DEPTH = 5.65              # 5.5 m car plus clearance, entered from the road
 GARAGE_INTERNAL = 31.3           # 38 m2 gross footprint, see brief/program.yaml
+# The first floor core must hold the dog-leg stair and the home lift side by
+# side: two 0.90 m flights with 0.05 m between them, then 0.05 m and a 1.00 m
+# lift shaft. Indicative sizes, TO VERIFY, OI-23. src/model/architecture.py
+# builds the stair to the same figures and checks the fit again.
+CORE_MIN_DEPTH = 2 * 0.90 + 0.05 + 0.05 + 1.00
 MIN_VOID_LENGTH = 2.40           # below this a void reads as a slot, not a volume
 
 
@@ -192,6 +197,28 @@ CONFIGS = {
         "F_EAST": ["bedroom_4", "linen_storage", "family_living"],
         "foyer_void": False,
     },
+    # As c_outdoor_bathroom, with the first floor planned around a central
+    # family hall (D-032) under the owner's open-plan rule (D-033): no corridor
+    # upstairs, every bedroom door opens off the hall. F_WEST and F_EAST are
+    # not used by this first floor layout.
+    "c_family_hall": {
+        "G_WEST": ["guest_bedroom", "stair_lift_ground", "entrance_foyer",
+                   ("home_office", "guest_powder")],
+        "G_WEST_GROW": "home_office",
+        "G_EAST": ["arabic_kitchen", "pantry", "hall_link", "majlis"],
+        "G_EAST_GROW": "majlis",
+        "G_STAFF": [("laundry", "plant_room"), ("maids_room", "outdoor_bathroom")],
+        "SSW_KITCHEN": ["show_kitchen", "dining"],
+        "F_WEST": [],
+        "F_EAST": [],
+        "first_layout": "family_hall",
+        "foyer_void": False,
+        # Band widths held at the plan approved in Phase 2 (5.10 west, 4.20
+        # east), so the first floor change does not reshape the ground floor.
+        # Left free, the search narrows the east band to 3.70 m to save area,
+        # which makes the majlis a 3.7 m wide gallery.
+        "bands": (5.10, 4.20),
+    },
     "original_double_height_foyer": {
         "G_WEST": ["guest_bedroom", "stair_lift_ground", "entrance_foyer",
                    ("home_office", "guest_powder")],
@@ -244,12 +271,47 @@ CONFIGS = {
         "u_east_max": 18.50,
     },
 }
-ACTIVE = "c_outdoor_bathroom"
+ACTIVE = "c_family_hall"
 
 F_WEST = ["stair_lift_first", "bedroom_2"]
 F_EAST = ["bedroom_4", "linen_storage", "family_living"]
 F_OVER_GARAGE = "bedroom_3"
 SSW_LIVING = "living"
+
+
+def family_hall_first(a: dict, uw: tuple, uc: tuple, ue: tuple, v1: float,
+                      stair: "Rect") -> tuple[list, list, float]:
+    """First floor around a central family hall, D-032.
+
+    South to north, after the master suite:
+      * the stair core (fixed: it stacks on the ground floor core), linen
+        behind it, and a 1.80 m landing east of it where the top flight arrives;
+        the master suite is entered from this landing, not from the family room;
+      * bedroom 4 east of the landing, on the line it has today;
+      * the family hall: open circulation over the stair and linen, then the
+        family room itself across the full width, with the road facade on one
+        side and the courtyard and pool on the other. No walls between them;
+      * bedrooms 2 and 3 side by side across the rear, doors onto the hall.
+    Every size comes from the program: the family room's depth is its target
+    area over the full width, and the bedrooms' depth is theirs over half.
+    """
+    full = ue[1] - uw[0]
+    linen = Rect("linen_storage", uw[0], uw[1], stair.v1 + T_INT,
+                 stair.v1 + T_INT + a["linen_storage"] / (uw[1] - uw[0]))
+    hall_v0 = linen.v1 + T_INT
+    arm = Rect("hall_arm", uc[0], uc[1], v1, hall_v0)
+    bed4 = Rect("bedroom_4", ue[0], ue[1], v1, v1 + a["bedroom_4"] / (ue[1] - ue[0]))
+    fam_v0 = bed4.v1 + T_INT
+    if fam_v0 - hall_v0 < CORRIDOR:
+        raise ValueError("family hall too short beside bedroom 4")
+    hall = Rect("family_hall", uw[0], uc[1], hall_v0, fam_v0)
+    fam = Rect("family_living", uw[0], ue[1], fam_v0, fam_v0 + a["family_living"] / full)
+    half = (full - T_INT) / 2
+    r0 = fam.v1 + T_INT
+    depth = max(a["bedroom_2"], a["bedroom_3"]) / half
+    bed2 = Rect("bedroom_2", uw[0], uw[0] + half, r0, r0 + depth)
+    bed3 = Rect("bedroom_3", uw[0] + half + T_INT, ue[1], r0, r0 + depth)
+    return [linen, bed4, fam, bed2, bed3], [arm, hall], r0 + depth
 
 
 def build(dw: float, de: float, a: dict | None = None,
@@ -339,6 +401,8 @@ def build(dw: float, de: float, a: dict | None = None,
     foyer = next(r for r in g_west if r.key == "entrance_foyer")
 
     f_stair, s_end = pack(["stair_lift_first"], uw, v1, a)
+    if f_stair[0].v1 - f_stair[0].v0 < CORE_MIN_DEPTH - 1e-9:
+        raise ValueError("first floor core too shallow for the stair and lift")
     if cfg.get("foyer_void", True):
         if foyer.v0 < s_end:
             raise ValueError("foyer must follow the stair core")
@@ -355,25 +419,31 @@ def build(dw: float, de: float, a: dict | None = None,
         # Single height foyer: the first floor runs straight over it.
         void = Rect("void_over_foyer", uw[0], uw[0], s_end, s_end)   # zero area
         west_start = s_end + T_INT
-    f_west_rest, w_end = pack(cfg["F_WEST"], uw, west_start, a)
-    f_east, e_end = pack(cfg["F_EAST"], ue, v1, a)
-    f_end = max(w_end, e_end)
-    if f_end > road_int_end + 1e-9:
-        raise ValueError("first floor overruns the road wing")
-
-    # The first floor steps back where a band ends early, leaving the roof of
-    # what is below as open roof. Only what is built counts.
     from shapely.geometry import box
     from shapely.ops import unary_union
     half = T_INT / 2
-    pieces = [
-        box(U0, V0, ue[1] + T_EXT, vi + L1 + half),                    # master
-        box(U0, vi + L1, uw[1] + half, w_end + T_EXT),                 # west band
-        box(uw[1], vi + L1, ue[0], f_end + T_EXT),                     # corridor
-        box(ue[0] - half, vi + L1, ue[1] + T_EXT, e_end + T_EXT),      # east band
-    ]
-    first_poly = unary_union(pieces)
-    f_corr = Rect("corridor", uc[0], uc[1], v1, f_end)
+    if cfg.get("first_layout") == "family_hall":
+        f_west_rest, f_circ, f_end = family_hall_first(a, uw, uc, ue, v1, f_stair[0])
+        f_east = []
+        if f_end > road_int_end + 1e-9:
+            raise ValueError("first floor overruns the road wing")
+        first_poly = box(U0, V0, ue[1] + T_EXT, f_end + T_EXT)
+    else:
+        f_west_rest, w_end = pack(cfg["F_WEST"], uw, west_start, a)
+        f_east, e_end = pack(cfg["F_EAST"], ue, v1, a)
+        f_end = max(w_end, e_end)
+        if f_end > road_int_end + 1e-9:
+            raise ValueError("first floor overruns the road wing")
+        # The first floor steps back where a band ends early, leaving the roof
+        # of what is below as open roof. Only what is built counts.
+        pieces = [
+            box(U0, V0, ue[1] + T_EXT, vi + L1 + half),                    # master
+            box(U0, vi + L1, uw[1] + half, w_end + T_EXT),                 # west band
+            box(uw[1], vi + L1, ue[0], f_end + T_EXT),                     # corridor
+            box(ue[0] - half, vi + L1, ue[1] + T_EXT, e_end + T_EXT),      # east band
+        ]
+        first_poly = unary_union(pieces)
+        f_circ = [Rect("corridor", uc[0], uc[1], v1, f_end)]
     g_corr = Rect("corridor", uc[0], uc[1], vi, B_end)
 
     def plate(e):
@@ -401,7 +471,7 @@ def build(dw: float, de: float, a: dict | None = None,
         "first": f_rooms,
         "first_outline": [[round(x, 3), round(y, 3)] for x, y in first_poly.exterior.coords],
         "ground_outline": [[round(x, 3), round(y, 3)] for x, y in road_poly.exterior.coords],
-        "first_circulation": [f_corr],
+        "first_circulation": f_circ,
         "voids": [void],
         "plates": {"road": road_ext, "ssw": ssw_ext, "first": first_ext},
         "gfa": {"road": road_g, "ssw": ssw_g, "first": first_g,
@@ -540,6 +610,9 @@ def build_bar(dw: float, de: float, a: dict, cfg: dict) -> dict:
 
 
 def search(step: float = 0.05, cfg: dict | None = None) -> dict:
+    cfg = cfg or CONFIGS[ACTIVE]
+    if "bands" in cfg:
+        return build(*cfg["bands"], cfg=cfg)
     best = None
     for i in range(int((6.40 - 3.80) / step) + 1):
         dw = round(3.80 + i * step, 3)

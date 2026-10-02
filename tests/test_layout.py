@@ -64,13 +64,41 @@ def test_the_stair_cores_stack():
     assert abs(g["v"][0] - f["v"][0]) < 1e-6
 
 
+OPEN_HALLS = {"family_hall"}
+
+
 def test_corridors_are_the_dda_width():
     """Width is the narrow dimension: the main corridors run along the plan and
-    the link hall runs across it."""
+    the link hall runs across it. Corridors are exactly the DDA width; open
+    halls (D-032, D-033) are wider by design and must be at least it."""
     for floor in ("ground", "first"):
         for c in lay["floors"][floor]["circulation"]:
             width = min(c["u"][1] - c["u"][0], c["v"][1] - c["v"][0])
-            assert abs(width - lay["meta"]["corridor_m"]) < 1e-6, c["key"]
+            if c["key"] in OPEN_HALLS:
+                assert width >= lay["meta"]["corridor_m"] - 1e-6, c["key"]
+            else:
+                assert abs(width - lay["meta"]["corridor_m"]) < 1e-6, c["key"]
+
+
+def test_every_first_floor_room_opens_off_the_family_hall():
+    """D-032: no upstairs corridor. Each bedroom, the linen store and the stair
+    shares a wall with the hall, its landing, or the family room. The master is
+    entered from the landing, so it shares no wall with the family room."""
+    f = lay["floors"]["first"]
+    hubs = list(f["circulation"]) + [r for r in f["rooms"] if r["key"] == "family_living"]
+    fam = next(r for r in f["rooms"] if r["key"] == "family_living")
+    for r in f["rooms"]:
+        if r["key"] == "family_living":
+            continue
+        # A shared partition at least a door wide (1.0 m).
+        touching = []
+        for h in hubs:
+            i = _box(r).buffer(0.151, join_style=2).intersection(_box(h))
+            if not i.is_empty and max(i.bounds[2] - i.bounds[0], i.bounds[3] - i.bounds[1]) >= 1.0:
+                touching.append(h["key"])
+        assert touching, f"{r['key']} has no wall on the hall"
+    master = next(r for r in f["rooms"] if r["key"] == "master_suite")
+    assert _box(master).distance(_box(fam)) > 1.0
 
 
 def test_the_measured_plan_fits_the_cap():
@@ -81,8 +109,8 @@ def test_the_measured_plan_fits_the_cap():
 
 
 @pytest.mark.xfail(strict=True, reason=(
-    "D-029: the owner restored bedrooms 2 to 4 to 30 m2, leaving 6.52 m2 against "
-    "the 9.99 m2 recommended in D-005. Inside the cap, thinner than advised. "
+    "D-029 left 6.52 m2 against the 9.99 m2 recommended in D-005; the family hall, "
+    "D-032, brought it to 9.89 m2. Inside the cap, 0.10 m2 thinner than advised. "
     "Strict, so the marker must come off if the margin is ever restored."))
 def test_the_measured_plan_holds_the_recommended_margin():
     """D-005: hold about 10 m2 back for the consultant's remeasure."""

@@ -122,6 +122,7 @@ Master suite contents: bedroom, private sitting area, his and hers walk-in wardr
 ## 5. Architectural style
 
 - Minimalist white modern: clean cubic volumes, white render, large glass.
+- Must-rule (Aiman, 2026-10-02, D-033): open space maximization, meaning open-plan interiors. Shared spaces (foyer, stair hall, circulation, kitchen, dining, living, family hall) join with as few walls and corridors as possible. Private rooms (bedrooms, bathrooms, majlis, office, Arabic kitchen, staff, services) stay enclosed.
 - Because large glass drives cooling loads in Dubai, use deep overhangs and recessed glazing on south and west faces. Report the solar exposure of each facade.
 - Interior: propose three distinct palettes (flooring, walls, accents, fixtures). These become switchable options in the walkthrough.
 - Drawings in English, metric units, with room areas shown in both m² and sq ft.

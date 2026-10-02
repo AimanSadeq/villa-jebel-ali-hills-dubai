@@ -6,6 +6,59 @@ Columns: date, decision, reason, approved by Aiman.
 
 ---
 
+## 2026-10-02, open plan and the family hall
+
+### D-033 Owner rule: open space maximization, read as open-plan interiors
+
+**Decision.** A must-rule for the whole villa: shared spaces flow together with
+as few walls and corridors as possible. On the ground floor the foyer, stair
+hall, corridor and link hall are one open entrance hall, and the show kitchen,
+dining and living are one open space. Where they open into the double height
+living room a bulkhead stays above 4.70 m to mark the edge of the double height.
+Private rooms stay enclosed with doors: bedrooms, bathrooms, majlis (formal, with
+its own powder room), office, Arabic kitchen, staff rooms and services.
+
+**Reason.** Owner instruction 2026-10-02, "the villa must be built on the open
+space maximization rule". Claude asked which open space was meant; the owner
+chose open-plan interiors, not a smaller footprint for more garden. The massing,
+footprint and GFA are unchanged by the rule itself.
+
+**Risk.** An open stair joining two floors and an open kitchen may meet fire
+separation requirements under the UAE Fire and Life Safety Code, approved by
+Dubai Civil Defence (DDA FAQs Building Q42). TO VERIFY, OI-24.
+
+**Approved by Aiman: yes,** the rule and its reading. The list of which spaces
+join: Claude's application, for review.
+
+### D-032 First floor around a central family hall
+
+**Decision.** The upstairs corridor is removed. The family room spans the full
+width of the first floor in its middle, with the road facade on one side and the
+courtyard and pool on the other, and is open to a family hall over the stair and
+linen. Bedrooms 2 and 3 sit side by side across the rear and open onto the
+family room. The stair arrives on a 1.80 m landing, from which the master suite
+and bedroom 4 are entered, so the master shares no wall with the family room
+(acoustic separation, CLAUDE.md section 4).
+
+**Reason.** Owner request 2026-10-02: the family room central with the bedrooms
+around it. Two arrangements were offered; the owner chose this one. Bedroom 4
+cannot sit directly beside the stair because the stair's top flight arrives at
+its east end, which must be circulation.
+
+**Result, measured: 653.10 m2, 9.89 m2 inside the cap,** up from 6.52 m2. The
+first floor is 3.37 m2 smaller because the 30 m2 corridor became family hall.
+The ground floor is unchanged: the band widths are held at the approved 5.10 m
+and 4.20 m. Left free, the search would narrow the east band to 3.70 m (648.50
+m2), making the majlis a 3.7 m wide gallery; not done without the owner.
+
+Two gaps in the earlier Phase 3 model came to light and are fixed: the home
+office had no door (it now opens off the foyer) and the maid's room had only its
+outside door (it now also opens into the laundry).
+
+**Approved by Aiman: yes,** the arrangement. The measured result: for review.
+
+---
+
 ## 2026-10-02, Phase 3 section and staff strip
 
 ### D-031 Staff strip reordered: maid's room and outdoor bathroom on the north wall

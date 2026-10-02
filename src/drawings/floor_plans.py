@@ -228,7 +228,7 @@ def build() -> Path:
     if not over:
         fig.text(0.60, 0.950, f"INSIDE THE GFA CAP BY {g['margin']:.2f} m2",
                  fontsize=15, color=GOOD)
-        fig.text(0.60, 0.930, "Measured from the drawn plan. Phase 2 checkpoint, "
+        fig.text(0.60, 0.930, "Measured from the drawn plan. Phase 3, "
                  "for owner review.", fontsize=8, color=MUTED)
     if over:
         fig.text(0.60, 0.950, f"OVER THE GFA CAP BY {-g['margin']:.2f} m2",
@@ -306,9 +306,13 @@ def build() -> Path:
         "it. Foyer single height, its height coming from a tall ground floor,",
         "which DDA FAQ Q28 allows up to 6 m clear, subject to the overall height "
         "rule in OI-13. Ceiling height is not GFA.",
-        "Corridors 1.80 m and garage counted toward GFA, both by owner decision "
-        "D-026. Upstairs trims D-027: master 68, bedrooms 28, family 33. No "
-        "driver's room; outdoor WC and shower opening to the courtyard, D-028.",
+        "Corridors 1.80 m and garage counted toward GFA, owner decision D-026. "
+        "Master 68 (D-027), bedrooms 30 (D-029), family 33. No driver's room; "
+        "outdoor WC and shower to the courtyard, D-028.",
+        "Open plan, owner rule D-033: foyer, stair hall, corridor, link hall, "
+        "kitchen, dining and living join with no partitions. Boxes show room areas.",
+        "First floor around a central family hall with no corridor, D-032: "
+        "bedrooms open off the family room, the master and bedroom 4 off the landing.",
         "Walls: external 0.25 m, internal 0.15 m, indicative. Structure by a "
         "licensed structural engineer, not in scope.",
     ]

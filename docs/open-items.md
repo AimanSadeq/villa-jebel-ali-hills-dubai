@@ -6,7 +6,7 @@ names the document that must answer it.
 
 Status key: OPEN, ASKED (sent to a third party), CLOSED.
 
-Last updated: 2026-10-02 (plan inside the cap by 11.77 m2)
+Last updated: 2026-10-02 (Phase 3 model; open plan; plan inside the cap by 9.89 m2)
 
 ## Critical. Blocks Phase 2 room layouts
 
@@ -235,7 +235,7 @@ home. Either on the flat roof behind a low screen, which needs no enclosure and
 adds no floor, or at ground level in the service zone. Roof mounting is normally
 preferable for noise and for refrigerant pipe runs. Decided in Phase 5.
 
-## Important. Blocks Phase 1 or Phase 3## Important. Blocks Phase 1 or Phase 3
+## Important. Blocks Phase 1 or Phase 3
 
 ### OI-03 Demarcation Certificate coordinates
 
@@ -442,7 +442,41 @@ Noted for the consultant handover package in Phase 8.
 
 Source: DDA FAQs - Building, retrieved 2026-10-01 from https://webzoning.dda.gov.ae/Zoning/Content/dda/FAQs.pdf
 
-## Owner decisions outstanding## Owner decisions outstanding
+### OI-23 Stair and lift core dimensions
+
+| | |
+|---|---|
+| Status | OPEN, TO VERIFY |
+| Raised | 2026-10-02, Phase 3 |
+
+The 5.00 m ground floor needs 28 risers of 179 mm with a 280 mm going. In the
+stacked 5.10 x 2.94 m core that only fits as a dog-leg with 0.90 m flights, a
+1.41 m half landing, and a compact 1.00 x 1.00 m home lift shaft. None of these
+figures is checked against a code. The flight width, riser, going, landing and
+headroom must be confirmed against the Dubai Building Code and the UAE Fire and
+Life Safety Code, and the lift against the chosen manufacturer's shaft size. The
+layout generator refuses any core shallower than 2.90 m, so a different stair
+or lift changes CORE_MIN_DEPTH in src/model/layout_gen.py.
+
+Also open: whether full-height glazing upstairs needs guarding below the DDA FAQ
+Q35 sill heights (0.9 or 1.2 m). The model uses a 0.90 m sill upstairs.
+
+### OI-24 Fire separation in the open plan
+
+| | |
+|---|---|
+| Status | OPEN, TO VERIFY |
+| Raised | 2026-10-02, D-033 |
+
+The open-plan rule leaves the stair open to the entrance hall on the ground
+floor and to the landing and family hall upstairs, and the show kitchen open to
+dining and living. Whether a two storey private villa may have an unenclosed
+stair, and whether the kitchen needs separation, is for the UAE Fire and Life
+Safety Code and Dubai Civil Defence approval (DDA FAQs Building Q42, OI-16).
+No requirement is assumed here. If a wall or a fire-rated door is required, it
+will be flagged to the owner rather than added silently.
+
+## Owner decisions outstanding
 
 ### OI-07 Pool and main garden position
 

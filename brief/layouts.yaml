@@ -33,15 +33,15 @@ plates:
     - 14.95
     v:
     - 3.4
-    - 27.053
+    - 25.995
 gfa_measured:
   road_wing_ground: 282.01
   ssw_wing_ground: 102.2
-  first_floor_less_void: 272.26
+  first_floor_less_void: 268.89
   void_over_foyer: 0.0
-  total: 656.47
+  total: 653.1
   cap: 662.99
-  margin: 6.52
+  margin: 9.89
 outlines:
   road_ground:
   - - 10.425
@@ -72,31 +72,15 @@ outlines:
     - 3.4
   first:
   - - 14.95
-    - 9.925
+    - 3.4
+  - - 14.95
+    - 25.995
+  - - 3.05
+    - 25.995
+  - - 3.05
+    - 3.4
   - - 14.95
     - 3.4
-  - - 3.05
-    - 3.4
-  - - 3.05
-    - 9.925
-  - - 3.05
-    - 10.0
-  - - 3.05
-    - 25.33
-  - - 8.4
-    - 25.33
-  - - 8.4
-    - 27.053
-  - - 10.425
-    - 27.053
-  - - 10.5
-    - 27.053
-  - - 14.95
-    - 27.053
-  - - 14.95
-    - 10.0
-  - - 14.95
-    - 9.925
 padding:
 - key: majlis
   over_target_m2: 9.09
@@ -268,22 +252,14 @@ floors:
       - 10.075
       - 13.016
       area_m2: 15.0
-    - key: bedroom_2
+    - key: linen_storage
       u:
       - 3.3
       - 8.4
       v:
       - 13.166
-      - 19.048
-      area_m2: 30.0
-    - key: bedroom_3
-      u:
-      - 3.3
-      - 8.4
-      v:
-      - 19.198
-      - 25.08
-      area_m2: 30.0
+      - 14.342
+      area_m2: 6.0
     - key: bedroom_4
       u:
       - 10.5
@@ -292,31 +268,47 @@ floors:
       - 10.075
       - 17.217
       area_m2: 30.0
-    - key: linen_storage
+    - key: family_living
       u:
-      - 10.5
+      - 3.3
       - 14.7
       v:
       - 17.367
-      - 18.796
-      area_m2: 6.0
-    - key: family_living
+      - 20.262
+      area_m2: 33.0
+    - key: bedroom_2
       u:
-      - 10.5
+      - 3.3
+      - 8.925
+      v:
+      - 20.412
+      - 25.745
+      area_m2: 30.0
+    - key: bedroom_3
+      u:
+      - 9.075
       - 14.7
       v:
-      - 18.946
-      - 26.803
-      area_m2: 33.0
+      - 20.412
+      - 25.745
+      area_m2: 30.0
     circulation:
-    - key: corridor
+    - key: hall_arm
       u:
       - 8.55
       - 10.35
       v:
       - 10.075
-      - 26.803
-      area_m2: 30.11
+      - 14.492
+      area_m2: 7.95
+    - key: family_hall
+      u:
+      - 3.3
+      - 10.35
+      v:
+      - 14.492
+      - 17.367
+      area_m2: 20.27
     voids:
     - key: void_over_foyer
       u:

@@ -16,7 +16,7 @@ licensed structural engineer must review, complete, and stamp all final drawings
 | Maximum GFA | 662.99 m² (7,136.36 sq ft) |
 | Maximum height | G+1 |
 | Setbacks | 3 m on all sides |
-| Current phase | Phase 2 approved; Phase 3 started |
+| Current phase | Phase 3 model built, 653.10 m2, awaiting owner review |
 
 ## Start here
 
@@ -52,8 +52,11 @@ pip install -r requirements.txt
 | `python src/drawings/massing_sheets.py` | Massing and sun study PDF sheets |
 | `python src/drawings/option_c_wing.py` | Option C wing, indicative plan |
 | `python src/model/export_massing.py` | Writes the viewer's data file |
+| `python src/model/layout_gen.py` | Generates the room layout, brief/layouts.yaml |
+| `python src/model/build_model.py` | GFA check, then the IFC model, validation, and the viewer's model data |
 | `npm run dev --prefix viewer` | Massing viewer at http://localhost:5173 |
-| `python -m pytest -q` | Setback, GFA, shading, orientation and layout guards, 74 checks |
+| (same server) | Phase 3 IFC model viewer at http://localhost:5173/model.html |
+| `python -m pytest -q` | Setback, GFA, shading, orientation and layout guards, 77 checks |
 
 ## Where things live
 
@@ -82,7 +85,7 @@ and regenerate: nothing else needs touching.
 | 0 | Repo setup, brief files, plot and area verification | Complete, awaiting review |
 | 1 | Sun study, massing options, pool and garden position | Complete, awaiting review |
 | 2 | Room layouts, two plan options, GFA check | Approved, 656.47 m2, 6.52 inside the cap |
-| 3 | Full IFC architectural model | In progress |
+| 3 | Full IFC architectural model | Built and in the viewer, awaiting review |
 | 4 | Walkthrough, furniture, landscape, three palettes | Not started |
 | 5 | MEP design, calculations, clash detection | Not started |
 | 6 | Drawing set in PDF and DXF, schedules | Not started |

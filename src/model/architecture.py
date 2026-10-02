@@ -65,7 +65,7 @@ OUT = REPO_ROOT / "output" / "ifc" / "VJH-ARCH-001_Villa_5130272.ifc"
 T_EXT = 0.25
 T_INT = 0.15
 
-PRINCIPAL = {"living", "dining", "show_kitchen", "majlis", "master_suite",
+PRINCIPAL = {"living", "dining", "show_kitchen", "majlis", "master_suite", "family_hall",
              "family_living", "bedroom_2", "bedroom_3", "bedroom_4",
              "guest_bedroom"}
 SERVICE_WINDOWS = {"home_office", "arabic_kitchen", "maids_room", "laundry",
@@ -93,12 +93,30 @@ STYLES = [
     ("space", "Room volume", (0.55, 0.78, 0.62), 0.8),
 ]
 
+# Open plan, D-033 (owner's must-rule): shared spaces join with no partition
+# between them. Private rooms keep walls and doors. Where an open join meets the
+# double height living room, a bulkhead stays above the lower ceiling to mark
+# the edge of the double height.
+OPEN_JOINS = {
+    "ground": [("entrance_foyer", "corridor"), ("stair_lift_ground", "corridor"),
+               ("hall_link", "corridor"), ("hall_link", "dining"),
+               ("show_kitchen", "dining"), ("dining", "living"),
+               ("show_kitchen", "living")],
+    "first": [("stair_lift_first", "hall_arm"), ("hall_arm", "family_hall"),
+              ("family_hall", "family_living")],
+}
+# Where private rooms take their doors from, in order of preference. On the
+# first floor there is no corridor: rooms open off the landing, the family hall
+# or the family room itself (D-032).
+HUBS = ["corridor", "entrance_foyer", "hall_arm", "family_hall", "family_living"]
+
 # Deliberate connections beyond "every room opens off the corridor".
 ROOM_LINKS = [
     ("arabic_kitchen", "show_kitchen", 0.90, "door"),
     ("show_kitchen", "dining", 2.40, "opening"),
     ("dining", "living", 3.00, "opening"),
     ("garage", "laundry", 0.90, "door"),
+    ("laundry", "maids_room", 0.90, "door"),     # the maid's way into the house
 ]
 # External doors: room, face, width, height.
 EXTERNAL_DOORS = [
@@ -152,10 +170,13 @@ class Model:
         self.SERV = float(h.get("services_zone_m", 0.15))
         self.names = {r["key"]: r["name"]
                       for f in ("ground", "first") for r in self.prog[f]}
-        self.names.update({"corridor": "Corridor", "hall_link": "Link hall"})
+        self.names.update({"corridor": "Corridor", "hall_link": "Link hall",
+                           "family_hall": "Family hall", "hall_arm": "Stair landing"})
         self.f = ifcopenshell.file(schema="IFC4")
         self.b = ShapeBuilder(self.f)
         self.walls: dict[str, list] = {"ground": [], "first": []}
+        self.bridges: dict[str, list] = {"ground": [], "first": []}
+        self.no_hub_door: list[tuple[str, str, str]] = []
         self.counts: dict[str, int] = {}
 
     # Setup -----------------------------------------------------------------
@@ -262,6 +283,9 @@ class Model:
     # Element helpers -------------------------------------------------------
 
     def _prism(self, poly: Polygon, z0: float, h: float):
+        # Drop zero length edges left where unions meet (a repeated vertex
+        # makes the profile invalid and the solid fails to build).
+        poly = poly.simplify(0.0005)
         outer = self.b.polyline([tuple(c) for c in list(poly.exterior.coords)[:-1]],
                                 closed=True)
         inners = [self.b.polyline([tuple(c) for c in list(i.coords)[:-1]], closed=True)
@@ -322,10 +346,57 @@ class Model:
 
     # Walls -------------------------------------------------------------------
 
+    def open_bridges(self, storey, rooms, circ):
+        """The partitions removed by the open joins, as (owner key, polygon).
+
+        Each bridge is the gap between two rooms over their shared length. Where
+        bridges meet at a T, the small square of partition left between them is
+        bridged too, so no stub of wall stands in the open space.
+        """
+        by_key = {r.key: r for r in rooms + circ}
+        out = []
+        for a_key, b_key in OPEN_JOINS[storey]:
+            a, b = by_key.get(a_key), by_key.get(b_key)
+            if not a or not b:
+                continue
+            if a.poly.touches(b.poly) or a.poly.intersects(b.poly):
+                continue                       # already one open space
+            s = self._shared(a, b)
+            if not s:
+                raise ValueError(f"open join {a_key} / {b_key}: no shared wall")
+            along_u, (u, v), t, length = s
+            lo = max(a.u0, b.u0) if along_u else max(a.v0, b.v0)
+            hi = lo + length
+            gap = (box(lo, v - t / 2, hi, v + t / 2) if along_u
+                   else box(u - t / 2, lo, u + t / 2, hi))
+            out.append((a_key, gap))
+        interior = unary_union([r.poly for r in rooms + circ] + [g for _, g in out])
+        for i in range(len(out)):
+            for j in range(i + 1, len(out)):
+                (ka, ga), (_, gb) = out[i], out[j]
+                if ga.distance(gb) > T_EXT:
+                    continue
+                hull = unary_union([ga, gb]).envelope
+                stub = hull.difference(interior)
+                if 0 < stub.area < 0.05:
+                    out.append((ka, stub))
+                    interior = interior.union(stub)
+        return out
+
     def walls_for(self, storey, footprint, rooms, circ, voids, z_top,
                   tall_zone=None, tall_top=None):
-        interior = unary_union([r.poly for r in rooms + circ + voids])
+        bridges = self.open_bridges(storey, rooms, circ)
+        self.bridges[storey] = bridges
+        interior = unary_union([r.poly for r in rooms + circ + voids]
+                               + [g for _, g in bridges])
         wall_zone = footprint.difference(interior)
+        if tall_zone is not None:
+            for _, g in bridges:
+                for poly in clean(g.intersection(tall_zone), tol=0.001):
+                    self.element("IfcWall", "Bulkhead, edge of the double height",
+                                 storey, [self._prism(poly, self.HG - self.SLAB,
+                                                      tall_top - (self.HG - self.SLAB))],
+                                 predefined="PARTITIONING", material="int")
         ext_ring = footprint.difference(footprint.buffer(-T_EXT, join_style=2,
                                                          mitre_limit=10))
         internal = wall_zone.difference(ext_ring)
@@ -475,8 +546,11 @@ class Model:
                                            ("first", self.f_rooms, self.f_circ, clear_f)):
             for r in rooms + circ:
                 h = clear_living if r.key == "living" else clear
+                shape = unary_union([r.poly] + [g for k, g in self.bridges[storey]
+                                                if k == r.key])
+                parts = [shape] if isinstance(shape, Polygon) else list(shape.geoms)
                 sp = self.element("IfcSpace", self.names.get(r.key, r.key), storey,
-                                  [self._prism(r.poly, 0.0, h)],
+                                  [self._prism(q, 0.0, h) for q in parts],
                                   predefined="INTERNAL", container=False,
                                   style="space")
                 sp.LongName = r.key
@@ -543,52 +617,42 @@ class Model:
         for storey, rooms, circ in (("ground", self.g_rooms, self.g_circ),
                                     ("first", self.f_rooms, self.f_circ)):
             door_h = 2.70 if storey == "ground" else 2.40
-            corridor = [c for c in circ if c.key == "corridor"]
+            open_pairs = {frozenset(p) for p in OPEN_JOINS[storey]}
+            everything = {r.key: r for r in rooms + circ}
+            hubs = [everything[k] for k in HUBS if k in everything]
             for r in rooms:
                 if r.key in ("living", "dining", "show_kitchen", "outdoor_bathroom"):
-                    continue      # reached through the link and its own wing
-                for c in corridor:
-                    s = self._shared(r, c)
+                    continue      # open plan, or reached from outside
+                if r.key in HUBS or any(r.key in p for p in open_pairs):
+                    continue      # part of the open space
+                for hub in hubs:
+                    s = self._shared(r, hub)
                     if s and s[3] >= 1.0:
                         along_u, (u, v), t, length = s
                         wdt = min(DOOR_WIDTH.get(r.key, 0.90), length - 0.2)
                         self.opening(storey, "door", f"Door, {self.names.get(r.key, r.key)}",
                                      u, v, along_u, wdt, 0.0, door_h, t)
-            # The link hall: open to the corridor, a door to the dining room.
-            for link in [c for c in circ if c.key == "hall_link"]:
-                for c in corridor:
-                    s = self._shared(link, c)
-                    if s:
-                        along_u, (u, v), t, length = s
-                        self.opening(storey, "opening", "Archway, link hall", u, v,
-                                     along_u, min(1.80, length), 0.0, door_h, t)
-                dining = next((r for r in rooms if r.key == "dining"), None)
-                if dining:
-                    s = self._shared(link, dining)
-                    if s:
-                        along_u, (u, v), t, length = s
-                        self.opening(storey, "door", "Door, link to dining", u, v,
-                                     along_u, min(1.60, length - 0.2), 0.0, door_h, t)
-            by_key = {r.key: r for r in rooms}
+                        break
+                else:
+                    # Acceptable only when the room is reached another way: a
+                    # deliberate link (the garage through the laundry) or its
+                    # own external door. Anything else is a room with no way in.
+                    linked = any(r.key in (x, y) for x, y, _, _ in ROOM_LINKS)
+                    outside = any(r.key == k for k, *_ in EXTERNAL_DOORS)
+                    if not (linked or outside):
+                        raise ValueError(f"{r.key} on the {storey} floor has no door")
+                    self.no_hub_door.append((storey, r.key, "link" if linked else "external door"))
             for a_key, b_key, wdt, kind in ROOM_LINKS:
-                if a_key in by_key and b_key in by_key:
-                    s = self._shared(by_key[a_key], by_key[b_key])
-                    if s:
-                        along_u, (u, v), t, length = s
-                        self.opening(storey, kind,
-                                     f"{'Door' if kind == 'door' else 'Opening'}, "
-                                     f"{self.names[a_key]} to {self.names[b_key]}",
-                                     u, v, along_u, min(wdt, length - 0.2), 0.0,
-                                     door_h, t)
-            if storey == "first":
-                # The stair arrives in the first floor core, open to the corridor.
-                core = by_key.get("stair_lift_first")
-                for c in corridor:
-                    if core and (s := self._shared(core, c)):
-                        along_u, (u, v), t, length = s
-                        self.opening(storey, "opening", "Stair landing to corridor",
-                                     u, v, along_u, min(1.80, length - 0.2), 0.0,
-                                     door_h, t)
+                a, b = everything.get(a_key), everything.get(b_key)
+                if not a or not b or frozenset((a_key, b_key)) in open_pairs:
+                    continue
+                s = self._shared(a, b)
+                if s:
+                    along_u, (u, v), t, length = s
+                    self.opening(storey, kind,
+                                 f"{'Door' if kind == 'door' else 'Opening'}, "
+                                 f"{self.names[a_key]} to {self.names[b_key]}",
+                                 u, v, along_u, min(wdt, length - 0.2), 0.0, door_h, t)
 
     def _external_faces(self, storey, r: R, ring):
         """Which faces of a room sit against the external wall."""
@@ -609,8 +673,9 @@ class Model:
         return {"E": "courtyard", "W": "hot", "S": "hot", "N": "north"}[face]
 
     def build_windows_and_external_doors(self):
+        lived_in = [c for c in self.f_circ if c.key == "family_hall"]
         for storey, rooms, ring in (("ground", self.g_rooms, self.ext_ring_g),
-                                    ("first", self.f_rooms, self.ext_ring_f)):
+                                    ("first", self.f_rooms + lived_in, self.ext_ring_f)):
             ground = storey == "ground"
             clear = (self.HG if ground else self.HF) - self.SLAB - self.SERV
             ext_doors = {(k, face): (w, h) for k, face, w, h in EXTERNAL_DOORS}

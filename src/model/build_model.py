@@ -57,6 +57,8 @@ LABEL = {
     "dining": "Dining", "living": "Living", "master_suite": "Master suite",
     "family_living": "Family room", "linen_storage": "Linen",
     "hall_link": "Link hall", "corridor": "Corridor",
+    "family_hall": "Family hall", "hall_arm": "Landing",
+    "bedroom_2": "Bedroom 2", "bedroom_3": "Bedroom 3", "bedroom_4": "Bedroom 4",
 }
 AREA_TOLERANCE_M2 = 0.10
 

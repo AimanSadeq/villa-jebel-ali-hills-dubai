@@ -5,7 +5,7 @@
   "stamp": "CONCEPT DESIGN, NOT FOR CONSTRUCTION",
   "phase": 3,
   "ifc": "data/VJH-ARCH-001_Villa_5130272.ifc",
-  "built": "2026-10-02T10:48"
+  "built": "2026-10-02T11:07"
  },
  "north_uv": [
   -0.50272,
@@ -21,27 +21,27 @@
  "gfa": {
   "road_wing_ground": 282.01,
   "ssw_wing_ground": 102.2,
-  "first_floor_less_void": 272.26,
-  "total": 656.47,
+  "first_floor_less_void": 268.89,
+  "total": 653.1,
   "cap": 662.99,
-  "margin": 6.52
+  "margin": 9.89
  },
  "gfa_from_ifc": {
   "Ground Floor": 384.22,
-  "First Floor": 272.25,
+  "First Floor": 268.88,
   "Roof": 0.0
  },
  "core": "28 risers of 179 mm, going 280 mm, two flights 0.90 m wide, half landing 1.41 m, lift 1.00 x 1.00 m",
  "counts": {
   "IfcBuildingElementProxy": 1,
-  "IfcDoor": 23,
+  "IfcDoor": 20,
   "IfcGeographicElement": 1,
   "IfcSlab": 7,
-  "IfcSpace": 27,
+  "IfcSpace": 28,
   "IfcStair": 1,
   "IfcTransportElement": 1,
-  "IfcWall": 10,
-  "IfcWindow": 23
+  "IfcWall": 18,
+  "IfcWindow": 25
  },
  "rooms": [
   {
@@ -285,33 +285,21 @@
    "circulation": false
   },
   {
-   "key": "bedroom_2",
-   "name": "Bedroom 2, En-suite",
-   "label": "Bedroom 2, En-suite",
+   "key": "linen_storage",
+   "name": "Linen and General Storage",
+   "label": "Linen",
    "storey": "first",
    "u": 5.85,
-   "v": 16.107,
+   "v": 13.754,
    "z": 6.2,
-   "area_m2": 30.0,
-   "area_sqft": 322.9,
-   "circulation": false
-  },
-  {
-   "key": "bedroom_3",
-   "name": "Bedroom 3, En-suite",
-   "label": "Bedroom 3, En-suite",
-   "storey": "first",
-   "u": 5.85,
-   "v": 22.139,
-   "z": 6.2,
-   "area_m2": 30.0,
-   "area_sqft": 322.9,
+   "area_m2": 6.0,
+   "area_sqft": 64.6,
    "circulation": false
   },
   {
    "key": "bedroom_4",
    "name": "Bedroom 4, En-suite",
-   "label": "Bedroom 4, En-suite",
+   "label": "Bedroom 4",
    "storey": "first",
    "u": 12.6,
    "v": 13.646,
@@ -321,39 +309,63 @@
    "circulation": false
   },
   {
-   "key": "linen_storage",
-   "name": "Linen and General Storage",
-   "label": "Linen",
-   "storey": "first",
-   "u": 12.6,
-   "v": 18.081,
-   "z": 6.2,
-   "area_m2": 6.0,
-   "area_sqft": 64.6,
-   "circulation": false
-  },
-  {
    "key": "family_living",
    "name": "Family Living Room",
    "label": "Family room",
    "storey": "first",
-   "u": 12.6,
-   "v": 22.875,
+   "u": 9.0,
+   "v": 18.815,
    "z": 6.2,
    "area_m2": 33.0,
    "area_sqft": 355.2,
    "circulation": false
   },
   {
-   "key": "corridor",
-   "name": "Corridor",
-   "label": "Corridor",
+   "key": "bedroom_2",
+   "name": "Bedroom 2, En-suite",
+   "label": "Bedroom 2",
+   "storey": "first",
+   "u": 6.113,
+   "v": 23.078,
+   "z": 6.2,
+   "area_m2": 30.0,
+   "area_sqft": 322.9,
+   "circulation": false
+  },
+  {
+   "key": "bedroom_3",
+   "name": "Bedroom 3, En-suite",
+   "label": "Bedroom 3",
+   "storey": "first",
+   "u": 11.887,
+   "v": 23.078,
+   "z": 6.2,
+   "area_m2": 30.0,
+   "area_sqft": 322.9,
+   "circulation": false
+  },
+  {
+   "key": "hall_arm",
+   "name": "Stair landing",
+   "label": "Landing",
    "storey": "first",
    "u": 9.45,
-   "v": 18.439,
+   "v": 12.284,
    "z": 6.2,
-   "area_m2": 30.11,
-   "area_sqft": 324.1,
+   "area_m2": 7.95,
+   "area_sqft": 85.6,
+   "circulation": true
+  },
+  {
+   "key": "family_hall",
+   "name": "Family hall",
+   "label": "Family hall",
+   "storey": "first",
+   "u": 6.825,
+   "v": 15.93,
+   "z": 6.2,
+   "area_m2": 20.27,
+   "area_sqft": 218.2,
    "circulation": true
   }
  ]
