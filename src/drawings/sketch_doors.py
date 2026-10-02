@@ -172,12 +172,15 @@ def draw_door(ax, axis, lo, hi, c, w, kind, s, tag):
             zorder=9, bbox=dict(boxstyle="round,pad=0.18", fc=TAG, ec="none"))
 
 
-def place(rooms: list, floor: str) -> list[dict]:
+def place(rooms: list, floor: str, removed: frozenset = frozenset()) -> list[dict]:
     """Resolve every door on a floor to wall geometry. Raises if a listed
-    door has no shared wall, so the sketch cannot silently drop a door."""
+    door has no shared wall, so the sketch cannot silently drop a door. Doors
+    of rooms named in `removed` (taken out on purpose) are left out."""
     by = {r["key"]: r for r in rooms}
     out = []
     for no, a, b, w, h, kind, into, at, src in (GROUND if floor == "ground" else FIRST):
+        if a in removed or b in removed:
+            continue
         sw = shared_wall(by[a], by[b])
         if sw is None:
             raise ValueError(f"{no}: {a} and {b} share no wall")
