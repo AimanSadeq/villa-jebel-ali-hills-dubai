@@ -119,8 +119,10 @@ ground:
     gfa: counts
     added_by_owner: "2026-10-02"
     placement: >
-      Owner answer 9, 2026-10-02: on the garden side of the house, entered from
-      the garden only, no door into the house.
+      Owner answers 11 and 11a, 2026-10-02 (replacing answer 9's garden side):
+      attached to the carport, in the reference villa's driver's toilet slot
+      (about 1.5 x 2.4 m), its door opening onto the carport, no door into the
+      house.
     notes: >
       Owner decision 2026-10-02, D-028. Its own external door and no internal
       connection to the villa. Opens onto the courtyard at the north end of the
@@ -137,8 +139,10 @@ ground:
       approved trim route B, 2026-10-01.
     gfa: counts
     placement: >
-      Owner answer 9, 2026-10-02: in the reference villa's driver's slot beside
-      the carport (driver's room and toilet), with its own outside door.
+      Owner answers 9 and 11a, 2026-10-02: in the reference villa's driver's
+      room beside the carport (about 2.8 x 2.4 m, 6.7 m2, 0.3 m2 under the
+      7 m2 target), with its own outside door. The driver's toilet beside it is
+      the outdoor bathroom.
     notes: "Water tanks, filtration, controls, low-current rack."
   - key: stair_lift_ground
     name: "Staircase + Home Elevator"

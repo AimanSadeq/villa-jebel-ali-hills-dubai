@@ -8,6 +8,21 @@ Columns: date, decision, reason, approved by Aiman.
 
 ## 2026-10-02, restart from the ground floor on the owner's reference
 
+### D-043 Plant room and outdoor bathroom in the old driver's slot by the carport
+
+**Decision.** The reference villa's driver's room and toilet, at the back of
+the carport, become the MEP plant room (about 2.8 x 2.4 m, 6.7 m2) and the
+outdoor bathroom (WC and shower, about 1.5 x 2.4 m), the bathroom opening onto
+the carport. Neither has a door into the house.
+
+**Reason.** Owner answers 2026-10-02 to ground floor questions 9, 11 and 11a:
+the plant room in the driver's slot; the outdoor bathroom "attached to the
+carport", replacing the garden side placement first chosen; the slot split
+between them rather than a new block. No GFA beyond the reference. The plant
+room is 0.3 m2 under its 7 m2 target; to be confirmed in the MEP phase.
+
+**Approved by Aiman: yes.**
+
 ### D-042 Majlis inside the house, entered from the main door, closed off from the dining
 
 **Decision.** The majlis is the reference villa's formal lounge, at the end of
