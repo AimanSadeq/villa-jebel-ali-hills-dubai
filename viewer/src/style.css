@@ -167,3 +167,42 @@ table td { text-align: right; padding: 4px 0; font-variant-numeric: tabular-nums
      top of the panel. Move it into the 3D area instead. */
   #stamp { bottom: auto; top: 52px; }
 }
+
+/* Phase 3 model viewer */
+
+#labels { position: absolute; inset: 0; pointer-events: none; }
+.label {
+  display: grid; justify-items: center; gap: 1px;
+  padding: 3px 7px; border-radius: 6px;
+  background: rgba(255, 254, 251, 0.88); border: 1px solid var(--line);
+  font-size: 11px; line-height: 1.25; color: var(--ink); white-space: nowrap;
+}
+.label b { font-weight: 600; }
+.label span { font-size: 10px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.label.circ { background: transparent; border: none; font-size: 10px; color: var(--muted); }
+.label.circ b { font-weight: 400; }
+
+#compass {
+  position: fixed; right: calc(var(--panel-w) + 18px); top: 14px;
+  width: 46px; height: 46px; pointer-events: none;
+}
+.north { width: 100%; height: 100%; transition: transform .05s linear; }
+.north circle { fill: rgba(255, 255, 255, 0.85); stroke: var(--faint); }
+.north polygon { fill: var(--ink); }
+.north text { font-size: 8px; font-weight: 700; fill: var(--muted); }
+
+#progress {
+  position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  padding: 10px 16px; border-radius: 8px; background: #fff; border: 1px solid var(--line);
+  font-size: 13px; color: var(--muted);
+}
+
+.pick table td { text-align: right; }
+#panel a { color: var(--accent); }
+
+@media (max-width: 960px) {
+  #compass { right: 16px; }
+}
+
+/* The That Open logo sits bottom left of the canvas. */
+#stamp.clear-logo { left: 112px; }
