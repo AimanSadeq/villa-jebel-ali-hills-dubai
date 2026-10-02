@@ -44,12 +44,6 @@ gfa_measured:
   margin: 6.52
 outlines:
   road_ground:
-  - - 14.95
-    - 21.159
-  - - 14.95
-    - 3.4
-  - - 10.5
-    - 3.4
   - - 10.425
     - 3.4
   - - 8.475
@@ -70,6 +64,12 @@ outlines:
     - 21.409
   - - 14.95
     - 21.159
+  - - 14.95
+    - 3.4
+  - - 10.5
+    - 3.4
+  - - 10.425
+    - 3.4
   first:
   - - 14.95
     - 9.925
@@ -99,7 +99,7 @@ outlines:
     - 9.925
 padding:
 - key: majlis
-  over_target_m2: 17.28
+  over_target_m2: 9.09
 - key: master_suite
   over_target_m2: 3.53
 floors:
@@ -166,9 +166,9 @@ floors:
       - 10.5
       - 14.7
       v:
-      - 8.712
+      - 10.662
       - 21.159
-      area_m2: 52.28
+      area_m2: 44.09
     - key: garage
       u:
       - 3.3
@@ -242,6 +242,14 @@ floors:
       - 3.65
       - 21.159
       area_m2: 31.52
+    - key: hall_link
+      u:
+      - 10.5
+      - 14.7
+      v:
+      - 8.712
+      - 10.512
+      area_m2: 7.56
   first:
     rooms:
     - key: master_suite

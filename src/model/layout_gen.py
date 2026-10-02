@@ -178,7 +178,10 @@ CONFIGS = {
         "G_WEST": ["guest_bedroom", "stair_lift_ground", "entrance_foyer",
                    ("home_office", "guest_powder")],
         "G_WEST_GROW": "home_office",
-        "G_EAST": ["arabic_kitchen", "pantry", "majlis"],
+        # The link hall connects the corridor straight to the dining room in the
+        # single storey wing, so nobody reaches the family rooms through the
+        # majlis or the Arabic kitchen.
+        "G_EAST": ["arabic_kitchen", "pantry", "hall_link", "majlis"],
         "G_EAST_GROW": "majlis",
         "G_STAFF": [("maids_room", "outdoor_bathroom"), ("laundry", "plant_room")],
         "SSW_KITCHEN": ["show_kitchen", "dining"],
@@ -255,6 +258,9 @@ def build(dw: float, de: float, a: dict | None = None,
     SSW_KITCHEN = cfg["SSW_KITCHEN"]
     a = dict(a or areas())
     a["garage"] = GARAGE_INTERNAL
+    # A link hall is circulation, not a room: it takes exactly one corridor
+    # width of the band's length, whatever the band depth.
+    a["hall_link"] = CORRIDOR * de
     W = dw + de + CORRIDOR + 2 * T_INT
 
     uw = (U0 + T_EXT, U0 + T_EXT + dw)
@@ -285,6 +291,10 @@ def build(dw: float, de: float, a: dict | None = None,
                                 grow_key=cfg.get("G_WEST_GROW", "entrance_foyer"))
         g_east, east_end = pack(G_EAST, ue, vi, a, grow_to=B_end,
                                 grow_key=cfg.get("G_EAST_GROW", "majlis"))
+
+    # The link hall belongs with the circulation, not the rooms.
+    links = [r for r in g_east if r.key == "hall_link"]
+    g_east = [r for r in g_east if r.key != "hall_link"]
 
     # North block, single storey: garage beside the staff strip.
     vN = B_end + T_INT
@@ -384,7 +394,7 @@ def build(dw: float, de: float, a: dict | None = None,
     return {
         "params": {"dw": dw, "de": de, "W": W, "corridor": CORRIDOR},
         "ground": g_west + g_east + g_garage + g_staff + ssw_kitchen + ssw_living,
-        "ground_circulation": [g_corr],
+        "ground_circulation": [g_corr] + links,
         "first": f_rooms,
         "first_outline": [[round(x, 3), round(y, 3)] for x, y in first_poly.exterior.coords],
         "ground_outline": [[round(x, 3), round(y, 3)] for x, y in road_poly.exterior.coords],

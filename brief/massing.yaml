@@ -50,11 +50,14 @@ grid:
 # https://webzoning.dda.gov.ae/Zoning/Content/dda/FAQs.pdf (FAQs - Building).
 # Question numbers are DDA's own.
 heights:
-  ground_floor_m: 4.00
-  first_floor_m: 3.80
+  # Owner decision 2026-10-02, D-030: the tall basis, for high ceilings.
+  ground_floor_m: 5.00     # floor to floor; about 4.55 m clear. DDA Q28: up to 6 m clear
+  first_floor_m: 4.00      # floor to floor; about 3.55 m clear. DDA Q28: up to 4.2 m
   parapet_m: 1.20          # DDA FAQ Building Q34: minimum parapet 1.2 m from FFL
-  roof_slab_m: 7.80        # ground + first, top of the first floor slab
-  overall_m: 9.00          # including parapet, the shadow-casting height
+  roof_slab_m: 9.00        # ground + first, top of the first floor slab
+  overall_m: 10.20         # including parapet, the shadow-casting height
+  slab_m: 0.30             # structural slab plus finishes, indicative
+  services_zone_m: 0.15    # ceiling void for services, indicative
   parapet_source: >
     DDA FAQs - Building, Q34: "What is the minimum parapet and balcony handrail
     height?" Answer: "1.2m from the floor finish level." Previously assumed
@@ -69,6 +72,16 @@ heights:
 
 # Two height cases, so the cost of the stricter one is visible rather than argued.
 height_scenarios:
+  tall_chosen:
+    label: "Tall, chosen by the owner for high ceilings, D-030"
+    ground_floor_m: 5.00
+    first_floor_m: 4.00
+    parapet_m: 1.20
+    overall_m: 10.20
+    note: >
+      Valid only if DDA limits the number of floors rather than the height in
+      metres. If DDA FAQ Q29's floors times 4.2 m rule applies, the cap is
+      8.40 m and this section must come down before submission. OI-13.
   as_designed:
     label: "As designed, generous floor to floor"
     ground_floor_m: 4.00

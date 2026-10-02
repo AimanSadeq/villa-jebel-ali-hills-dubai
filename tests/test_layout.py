@@ -115,3 +115,20 @@ def test_the_measured_plan_holds_a_real_margin():
     """The floor below the D-005 recommendation: never design with nothing in
     hand against a consultant's remeasure."""
     assert lay["gfa_measured"]["margin"] >= 5.0
+
+
+def test_the_family_rooms_are_reached_without_crossing_the_majlis():
+    """A link hall must run from the corridor to the dining room, so the
+    kitchen, dining and living wing is never reached through the majlis or the
+    Arabic kitchen. Found while placing doors in Phase 3."""
+    g = lay["floors"]["ground"]
+    corridor = next(c for c in g["circulation"] if c["key"] == "corridor")
+    link = next(c for c in g["circulation"] if c["key"] == "hall_link")
+    dining = next(r for r in g["rooms"] if r["key"] == "dining")
+    # The link starts across one partition from the corridor...
+    assert abs(link["u"][0] - corridor["u"][1] - 0.15) < 1e-3
+    # ...and ends across one external wall thickness from the dining room...
+    assert abs(dining["u"][0] - link["u"][1] - lay["meta"]["wall_external_m"]) < 1e-3
+    # ...with enough shared length for a door.
+    overlap = min(link["v"][1], dining["v"][1]) - max(link["v"][0], dining["v"][0])
+    assert overlap >= 1.2
