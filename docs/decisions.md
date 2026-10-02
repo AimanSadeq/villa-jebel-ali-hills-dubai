@@ -8,6 +8,23 @@ Columns: date, decision, reason, approved by Aiman.
 
 ## 2026-10-02, restart from the ground floor on the owner's reference
 
+### D-042 Majlis inside the house, entered from the main door, closed off from the dining
+
+**Decision.** The majlis is the reference villa's formal lounge, at the end of
+the long garden room. Guests come in through the main door and the foyer;
+there is no separate majlis entrance. Unlike the reference, where the lounge
+is open to the dining, a wall with wide double doors separates the majlis
+from the dining, the doors placed by the foyer so guests step in after about
+2 m. The powder room stays off the foyer by the stair, as in the reference.
+
+**Reason.** Owner answers 2026-10-02 to ground floor questions 10 and 10a.
+Claude had described the lounge in question 5 as beside the garden room; the
+reference sheet shows it as the fourth zone of the same open room. The owner
+was told and chose to close it off. It keeps the open-plan rule (D-033), under
+which the majlis is a private room.
+
+**Approved by Aiman: yes.**
+
 ### D-041 No swimming pool
 
 **Decision.** The villa has no swimming pool. CLAUDE.md section 4 asked for a
