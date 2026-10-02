@@ -70,47 +70,9 @@ def label(ax, r, name, h, outside=False):
     return txt
 
 
-def main() -> int:
-    plan = yaml.safe_load(PLAN.read_text(encoding="utf-8"))
-    lay = yaml.safe_load(LAYOUTS.read_text(encoding="utf-8"))
-    H = clear_heights(lay)
-    first = plan["first"]
-    by = {r["key"]: r for r in first}
+def draw_master_furniture(ax, by: dict):
+    """The master suite's furniture as approved (FF2, FF3), in the plan frame."""
     m, dr, ba, bal = by["master_suite"], by["master_dress"], by["master_toilet"], by["balcony_master"]
-
-    fig = plt.figure(figsize=(16.5, 11.7))
-    ax = fig.add_axes([0.02, 0.17, 0.70, 0.74])
-
-    # Context: the first floor as built, grey; the suite coloured.
-    for r in first:
-        x0, x1, y0, y1 = r["x0"], r["x1"], r["y0"], r["y1"]
-        if r["kind"] in ("balcony", "terrace"):
-            fc, ls = OUT, "--"
-        elif r["kind"] == "void":
-            fc, ls = "#dfe9f2", "--"
-        elif r["key"] in ("master_suite", "master_dress"):
-            fc, ls = SUITE, "-"
-        elif r["key"] == "master_toilet":
-            fc, ls = BATH, "-"
-        else:
-            fc, ls = OTHER, "-"
-        ax.add_patch(Rectangle((y0, x0), y1 - y0, x1 - x0, fc=fc, ec=MUTED, lw=0.5, ls=ls, zorder=1))
-    body = _outline([box(r["x0"], r["y0"], r["x1"], r["y1"]) for r in first
-                     if r["kind"] in ("room", "circulation", "void")])
-    xs, ys = body.exterior.xy
-    ax.plot(list(ys), list(xs), color=WALL, lw=2.6, zorder=5)
-    for key, name in (("bedroom_2", "Bedroom 2"), ("bedroom_2_dress", "Dress"),
-                      ("bedroom_2_toilet", "WC"), ("stair_lift_first", "Stair"),
-                      ("corridor_first", "Corridor"), ("void_over_living", "Void over living")):
-        r = by.get(key)
-        if r:
-            T(ax, (r["x0"] + r["x1"]) / 2, (r["y0"] + r["y1"]) / 2, name, 6, MUTED)
-
-    # Doors as built, from the schedule.
-    doors = resolve(first, [d for d in plan["doors"] if d["storey"] == "first"])
-    for d in doors:
-        draw_door(ax, d["axis"], d["lo"], d["hi"], d["c"], d["w"], d["kind"], d["s"], d["no"])
-
     # Bedroom: bed zone toward the north wall, sitting area by the balcony.
     xb = m["x1"]
     R(ax, xb - 2.13, xb, 16.85, 18.78)                       # king bed 1.93 x 2.13
@@ -158,6 +120,50 @@ def main() -> int:
     for xc in (4.3, 5.6):
         R(ax, xc - 0.35, xc + 0.35, bal["y0"] + 0.25, bal["y0"] + 1.75)
     T(ax, 4.95, bal["y0"] + 1.0, "loungers", 5.0, rotation=90)
+
+
+def main() -> int:
+    plan = yaml.safe_load(PLAN.read_text(encoding="utf-8"))
+    lay = yaml.safe_load(LAYOUTS.read_text(encoding="utf-8"))
+    H = clear_heights(lay)
+    first = plan["first"]
+    by = {r["key"]: r for r in first}
+    m, dr, ba, bal = by["master_suite"], by["master_dress"], by["master_toilet"], by["balcony_master"]
+
+    fig = plt.figure(figsize=(16.5, 11.7))
+    ax = fig.add_axes([0.02, 0.17, 0.70, 0.74])
+
+    # Context: the first floor as built, grey; the suite coloured.
+    for r in first:
+        x0, x1, y0, y1 = r["x0"], r["x1"], r["y0"], r["y1"]
+        if r["kind"] in ("balcony", "terrace"):
+            fc, ls = OUT, "--"
+        elif r["kind"] == "void":
+            fc, ls = "#dfe9f2", "--"
+        elif r["key"] in ("master_suite", "master_dress"):
+            fc, ls = SUITE, "-"
+        elif r["key"] == "master_toilet":
+            fc, ls = BATH, "-"
+        else:
+            fc, ls = OTHER, "-"
+        ax.add_patch(Rectangle((y0, x0), y1 - y0, x1 - x0, fc=fc, ec=MUTED, lw=0.5, ls=ls, zorder=1))
+    body = _outline([box(r["x0"], r["y0"], r["x1"], r["y1"]) for r in first
+                     if r["kind"] in ("room", "circulation", "void")])
+    xs, ys = body.exterior.xy
+    ax.plot(list(ys), list(xs), color=WALL, lw=2.6, zorder=5)
+    for key, name in (("bedroom_2", "Bedroom 2"), ("bedroom_2_dress", "Dress"),
+                      ("bedroom_2_toilet", "WC"), ("stair_lift_first", "Stair"),
+                      ("corridor_first", "Corridor"), ("void_over_living", "Void over living")):
+        r = by.get(key)
+        if r:
+            T(ax, (r["x0"] + r["x1"]) / 2, (r["y0"] + r["y1"]) / 2, name, 6, MUTED)
+
+    # Doors as built, from the schedule.
+    doors = resolve(first, [d for d in plan["doors"] if d["storey"] == "first"])
+    for d in doors:
+        draw_door(ax, d["axis"], d["lo"], d["hi"], d["c"], d["w"], d["kind"], d["s"], d["no"])
+
+    draw_master_furniture(ax, by)
 
     # Labels (rule 9).
     for r, name, hh, out in ((m, "MASTER BEDROOM AND SITTING", H["first"], False),

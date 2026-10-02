@@ -228,6 +228,32 @@ def apply_answer_12(ground: list, first: list, report: list[str]) -> tuple[list,
     return out_g, out_f
 
 
+# First floor answers (docs/first-floor-decisions.md, FF1 to FF7). Off until
+# the owner approves the first floor build; the decision sketch VJH-SK-016
+# draws them from here so the sketch and the build cannot differ.
+FIRST_FLOOR_JOINS = ["gallery/family_living"]        # FF5: the family room open to the gallery
+FIRST_FLOOR_RETIRED_DOORS = {"F13"}                  # FF5: its double doors go
+
+
+def apply_first_floor_answers(ground: list, first: list, report: list[str]) -> list:
+    """FF7: the first floor wall at the end of the living room void stands on
+    the TV wall (12g), so the void and the corridor reach the TV wall's
+    living room face and bedroom 4 starts at its dining face. FF2 to FF4 and
+    FF6 change no walls (the master suite's furniture, linen in cupboards,
+    the margin kept)."""
+    g = {r["key"]: r for r in ground}
+    living, dining = g["living"], g["dining"]
+    out = [dict(r) for r in first]
+    for r in out:
+        if r["key"] in ("void_over_living", "corridor_first"):
+            r["x1"] = living["x1"]
+        if r["key"] == "bedroom_4":
+            r["x0"] = dining["x0"]
+            r["decision"] = "FF7: its wall stands on the TV wall below"
+    report.append("first floor answers: FF5 family room open to the gallery, FF7 wall over the TV wall")
+    return out
+
+
 def door_table(placed: set) -> list[dict]:
     """The door schedule as plan data, frame coordinates."""
     from model.doors import FIRST, FIRST_EXT, GROUND, GROUND_EXT  # noqa: PLC0415
@@ -246,7 +272,7 @@ def door_table(placed: set) -> list[dict]:
     return sorted(out, key=lambda d: d["no"])
 
 
-def assemble(answer_12: bool = True) -> tuple[dict, list[str]]:
+def assemble(answer_12: bool = True, first_floor: bool = False) -> tuple[dict, list[str]]:
     """answer_12=False gives the plan as it stood before answer 12, which the
     decision sketches VJH-SK-012 to VJH-SK-014 start from."""
     from model.reference_plan import Placement  # noqa: PLC0415
@@ -309,6 +335,9 @@ def assemble(answer_12: bool = True) -> tuple[dict, list[str]]:
     if answer_12:
         ground, first = apply_answer_12(ground, first, report)
         plan["ground"], plan["first"] = ground, first
+    if answer_12 and first_floor:
+        first = apply_first_floor_answers(ground, first, report)
+        plan["first"] = first
 
     placed = {r["key"] for r in ground + first}
     table = OPEN_JOINS if answer_12 else OPEN_JOINS_BEFORE_12
@@ -320,7 +349,10 @@ def assemble(answer_12: bool = True) -> tuple[dict, list[str]]:
                 report.append(f"{f}: open join {j} skipped, a room is missing")
     plan["open_joins"] = joins
     if answer_12:
-        plan["doors"] = door_table(placed)
+        plan["doors"] = [d for d in door_table(placed)
+                         if not (first_floor and d["no"] in FIRST_FLOOR_RETIRED_DOORS)]
+    if answer_12 and first_floor:
+        joins["first"] = joins["first"] + FIRST_FLOOR_JOINS
     plan["room_links"] = []
     plan["external_doors"] = []
     plan["levels"] = {"ground_ffl_above_gate_m": 0.45, "carport_ffl_above_gate_m": 0.15,
