@@ -94,7 +94,9 @@ GROUND_EXT = [
     ("G17", "outdoor_bathroom", "y", 8.99, 9.24, 6.71, 0.80, 2.20, "single",
      "answer 11a: opens onto the carport"),
     ("G20", "living", "y", 21.04, 21.29, 17.11, 3.00, 3.00, "sliding",
-     "answer 12j A: the one garden door of the open room; other rear glass fixed"),
+     "answer 12j: garden door of the living room; kitchen rear glass fixed"),
+    ("G22", "dining", "y", 21.04, 21.29, 23.74, 3.00, 3.00, "sliding",
+     "answer 12k: garden door of the dining, as the living room's, centred on its back wall"),
     ("G21", "arabic_kitchen", "y", 21.04, 21.29, 4.40, 1.00, 2.40, "single",
      "answer 12j: service door from the Arabic kitchen to the backyard, laundry end; position proposed"),
 ]
