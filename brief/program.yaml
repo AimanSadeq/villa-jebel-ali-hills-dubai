@@ -18,69 +18,90 @@ meta:
 ground:
   - key: entrance_foyer
     name: "Entrance Foyer"
-    target_m2: 19
+    target_m2: 35.2
+    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
+    target_before_restart_m2: 19
     brief_target_m2: 20
-    trimmed: route_b
+    trim_superseded: "route_b, replaced by owner answer 6 (reference sizes), 2026-10-02"
     trim_note: >
       Trimmed from the CLAUDE.md section 4 target of 20 m2 to 19 m2. Owner
       approved trim route B, 2026-10-01. Still double height.
     gfa: counts
     double_height: true
     notes: "Double height."
-  - key: living
-    name: "Living Room"
-    target_m2: 45
+  - key: family_sitting
+    name: "Family Sitting"
+    target_m2: 21.9
     gfa: counts
-    double_height: true
-    notes: "Double height. Connects to garden and pool."
+    added_by_owner: "2026-10-02"
+    notes: >
+      Owner answer 5, 2026-10-02: the middle zone of the reference villa's open
+      garden room, between the island kitchen and the dining, open to both.
+      Target set from the reference plan (answer 6, reference sizes kept).
   - key: majlis
     name: "Majlis (Salon)"
-    target_m2: 35
+    target_m2: 36.0
+    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
+    target_before_restart_m2: 35
     gfa: counts
     notes: >
       Formal reception, close to entrance, with its own guest powder room.
       Owner confirmed 2026-10-01 that majlis and salon are the same room.
   - key: guest_powder
     name: "Guest Powder Room"
-    target_m2: 4
+    target_m2: 3.4
+    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
+    target_before_restart_m2: 4
     gfa: counts
     notes: "Next to the majlis."
   - key: guest_bedroom
     name: "Guest Bedroom, En-suite"
-    target_m2: 32
+    target_m2: 24.7
+    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
+    target_before_restart_m2: 32
     gfa: counts
     notes: "Only bedroom on the ground floor."
   - key: dining
     name: "Dining"
-    target_m2: 22
+    target_m2: 19.9
+    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
+    target_before_restart_m2: 22
     gfa: counts
     notes: >
       Owner confirmed 2026-10-01 that dining is on the ground floor.
       Size still indicative. Placement to be proposed at checkpoint 2.
   - key: show_kitchen
     name: "Show Kitchen"
-    target_m2: 25
+    target_m2: 24.6
+    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
+    target_before_restart_m2: 25
     gfa: counts
     notes: "Open to dining or living."
   - key: arabic_kitchen
     name: "Arabic (Dirty) Kitchen"
-    target_m2: 15
+    target_m2: 14.8
+    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
+    target_before_restart_m2: 15
     gfa: counts
     notes: "Behind the show kitchen, service access."
   - key: pantry
     name: "Pantry / Storage"
-    target_m2: 5
+    target_m2: 4.8
+    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
+    target_before_restart_m2: 5
     brief_target_m2: 6
-    trimmed: route_b
+    trim_superseded: "route_b, replaced by owner answer 6 (reference sizes), 2026-10-02"
     trim_note: >
       Trimmed from the CLAUDE.md section 4 target of 6 m2 to 5 m2. Owner
       approved trim route B, 2026-10-01.
     gfa: counts
   - key: laundry
     name: "Laundry"
-    target_m2: 7
+    target_m2: 6.0
+    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
+    target_before_restart_m2: 7
     brief_target_m2: 8
-    trimmed: route_b
+    trim_superseded: "route_b, replaced by owner answer 6 (reference sizes), 2026-10-02"
     trim_note: >
       Trimmed from the CLAUDE.md section 4 target of 8 m2 to 7 m2. Owner
       approved trim route B, 2026-10-01.
@@ -88,14 +109,18 @@ ground:
     notes: "Near the staff and service zone."
   - key: home_office
     name: "Home Office"
-    target_m2: 14
+    target_m2: 14.8
+    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
+    target_before_restart_m2: 14
     gfa: counts
     notes: "Quiet, near entrance."
   - key: maids_room
     name: "Maid's Room with Bathroom"
-    target_m2: 11
+    target_m2: 8.8
+    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
+    target_before_restart_m2: 11
     brief_target_m2: 12
-    trimmed: route_b
+    trim_superseded: "route_b, replaced by owner answer 6 (reference sizes), 2026-10-02"
     trim_note: >
       Trimmed from the CLAUDE.md section 4 target of 12 m2 to 11 m2. Owner
       approved trim route B, 2026-10-01.
@@ -115,7 +140,9 @@ ground:
       formal lounge, lighting the middle of a 17.5 m deep plan.
   - key: outdoor_bathroom
     name: "Outdoor Bathroom, WC and Shower"
-    target_m2: 4.5
+    target_m2: 3.6
+    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
+    target_before_restart_m2: 4.5
     gfa: counts
     added_by_owner: "2026-10-02"
     placement: >
@@ -131,9 +158,11 @@ ground:
       WC and shower, flagged for owner review.
   - key: plant_room
     name: "MEP Plant Room"
-    target_m2: 7
+    target_m2: 6.7
+    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
+    target_before_restart_m2: 7
     brief_target_m2: 8
-    trimmed: route_b
+    trim_superseded: "route_b, replaced by owner answer 6 (reference sizes), 2026-10-02"
     trim_note: >
       Trimmed from the CLAUDE.md section 4 target of 8 m2 to 7 m2. Owner
       approved trim route B, 2026-10-01.
@@ -146,9 +175,11 @@ ground:
     notes: "Water tanks, filtration, controls, low-current rack."
   - key: stair_lift_ground
     name: "Staircase + Home Elevator"
-    target_m2: 18
+    target_m2: 6.9
+    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
+    target_before_restart_m2: 18
     brief_target_m2: 20
-    trimmed: route_b
+    trim_superseded: "route_b, replaced by owner answer 6 (reference sizes), 2026-10-02"
     trim_note: >
       Trimmed from the CLAUDE.md section 4 target of 20 m2 to 18 m2. Owner
       approved trim route B, 2026-10-01. Tightened with the first floor
@@ -159,7 +190,9 @@ ground:
       decision on 2026-10-01.
   - key: garage
     name: "Carport, Open, 3 Cars"
-    target_m2: 78
+    target_m2: 77.3
+    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
+    target_before_restart_m2: 78
     brief_target_m2: 55
     cars: 3
     gfa: unverified
@@ -180,14 +213,27 @@ ground:
 # own (D-040, 2026-10-02). They count toward GFA and are placed with the room
 # they serve. Sizes are the reference's internal dimensions.
 ancillary:
-  - {key: guest_dress, name: "Guest Bedroom, Dress", serves: guest_bedroom, target_m2: 6.0, gfa: counts}
-  - {key: guest_toilet, name: "Guest Bedroom, Toilet", serves: guest_bedroom, target_m2: 5.0, gfa: counts}
-  - {key: office_toilet, name: "Office, Toilet", serves: home_office, target_m2: 3.0, gfa: counts}
-  - {key: maids_toilet, name: "Maid's Room, Toilet", serves: maids_room, target_m2: 3.5, gfa: counts}
-  - {key: wash, name: "Wash", serves: entrance_foyer, target_m2: 9.0, gfa: counts, notes: "Ablution and wash room beside the powder room, as the reference draws it."}
-  - {key: powder_toilet, name: "Powder Room, Toilet", serves: guest_powder, target_m2: 3.0, gfa: counts}
-  - {key: lift, name: "Home Lift", serves: stair_lift_ground, target_m2: 3.9, gfa: counts}
-  - {key: main_entrance, name: "Main Entrance Lobby", serves: entrance_foyer, target_m2: 11.2, gfa: counts, circulation: true}
+  # Ground floor, decided (D-038 to D-043). Internal sizes from the reference.
+  - {floor: ground, key: guest_dress, name: "Guest Bedroom, Dress", serves: guest_bedroom, target_m2: 6.0, gfa: counts}
+  - {floor: ground, key: guest_toilet, name: "Guest Bedroom, Toilet", serves: guest_bedroom, target_m2: 7.2, gfa: counts}
+  - {floor: ground, key: office_toilet, name: "Office, Toilet", serves: home_office, target_m2: 7.0, gfa: counts}
+  - {floor: ground, key: maids_toilet, name: "Maid's Room, Toilet", serves: maids_room, target_m2: 4.2, gfa: counts}
+  - {floor: ground, key: wash, name: "Wash", serves: guest_powder, target_m2: 4.4, gfa: counts, notes: "The powder room's basin room, entered from the stair hall."}
+  - {floor: ground, key: lift, name: "Home Lift", serves: stair_lift_ground, target_m2: 3.9, gfa: counts}
+  - {floor: ground, key: main_entrance, name: "Main Entrance Porch", serves: entrance_foyer, target_m2: 11.2, gfa: unverified, notes: "Open, recessed, double height porch. Designed outside GFA with the carport (D-039), TO VERIFY."}
+  - {floor: ground, key: arabic_kitchen_bay, name: "Arabic Kitchen, front bay", serves: arabic_kitchen, target_m2: 2.2, gfa: counts}
+  - {floor: ground, key: laundry_bay, name: "Laundry, bay", serves: laundry, target_m2: 1.9, gfa: counts}
+  # First floor PLACEHOLDER from the reference, until the owner decides that floor.
+  - {floor: first, key: master_dress, name: "Master Dress", serves: master_suite, target_m2: 18.0, gfa: counts, placeholder: true}
+  - {floor: first, key: master_toilet, name: "Master Bathroom", serves: master_dress, target_m2: 16.0, gfa: counts, placeholder: true}
+  - {floor: first, key: bedroom_2_dress, name: "Bedroom 2, Dress", serves: bedroom_2, target_m2: 7.3, gfa: counts, placeholder: true}
+  - {floor: first, key: bedroom_2_toilet, name: "Bedroom 2, Bathroom", serves: bedroom_2_dress, target_m2: 7.5, gfa: counts, placeholder: true}
+  - {floor: first, key: bedroom_3_dress, name: "Bedroom 3, Dress", serves: bedroom_3, target_m2: 6.0, gfa: counts, placeholder: true}
+  - {floor: first, key: bedroom_3_toilet, name: "Bedroom 3, Bathroom", serves: bedroom_3_dress, target_m2: 7.2, gfa: counts, placeholder: true}
+  - {floor: first, key: bedroom_4_dress, name: "Bedroom 4, Dress", serves: bedroom_4, target_m2: 6.0, gfa: counts, placeholder: true}
+  - {floor: first, key: bedroom_4_toilet, name: "Bedroom 4, Bathroom", serves: bedroom_4_dress, target_m2: 7.2, gfa: counts, placeholder: true}
+  - {floor: first, key: pantry_first, name: "First Floor Pantry", serves: family_living, target_m2: 7.2, gfa: counts, placeholder: true}
+  - {floor: first, key: lift_first, name: "Home Lift, first floor", serves: stair_lift_first, target_m2: 3.9, gfa: counts, placeholder: true}
 
 first:
   - key: master_suite
@@ -326,6 +372,16 @@ interiors:
 # Rooms removed from the CLAUDE.md section 4 program, kept on record so the
 # removal is visible and reversible rather than silent.
 removed:
+  - key: living
+    name: "Living Room"
+    brief_target_m2: 45
+    removed_on: "2026-10-02"
+    decision: "D-040"
+    reason: >
+      Owner answer 4, 2026-10-02, "keep as per attached reference": no separate
+      double height living room. The ground floor sitting space is the family
+      sitting in the open garden room and the majlis; the double height is the
+      entrance foyer.
   - key: pool
     name: "Swimming Pool"
     brief_target_m2: 40

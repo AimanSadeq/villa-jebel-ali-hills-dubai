@@ -6,6 +6,56 @@ Columns: date, decision, reason, approved by Aiman.
 
 ---
 
+## 2026-10-02, the ground floor built from the reference
+
+### D-044 Ground floor built: the reference villa, mirrored, with the owner's answers
+
+**Decision.** The ground floor is built from a measured transcription of the
+owner's reference set (sheet A-07-001; three independent readings, reconciled
+and checked, filed in reference/owner/transcription/), placed facing our road
+and mirrored so the carport takes the south end (answer 7). The owner's answers
+are applied as an explicit table in src/model/assemble_reference.py: formal
+lounge to majlis, closed off from the dining by a wall with 1.6 m double doors
+by the foyer (D-042, the 0.15 m wall taken from the dining); driver's room to
+plant room and driver's toilet to outdoor bathroom opening onto the carport
+(D-043); no pool (D-041); 3 car open carport and lawn court kept (D-040). Room
+sizes are the reference's (answer 6); program.yaml targets follow them, each
+with its earlier figure on record, and the route B trims on those rooms are
+marked superseded. The first floor is the reference's, a PLACEHOLDER until the
+owner decides it, trimmed 0.6 m where its bedroom wing would cross the north
+setback line.
+
+**Result, measured: 645.07 m2 GFA, 17.92 m2 inside the cap**
+(ground 324.37, first floor placeholder 320.70).
+Outside GFA by D-039, TO VERIFY: carport 77.35 m2, the open
+lawn court 27.47 m2, the open entrance porch, and the first
+floor's balconies and terrace 104.11 m2. The
+IFC model measures back to the plan within 0.03 m2.
+
+**Placement.** The reference's carport and porch stand forward of the main front
+wall; to keep them on the plot the main front wall sits 0.8 m behind our 3 m
+setback line and the carport roof reaches to within about 0.3 m of the road
+boundary (TO VERIFY, as in the reference). Along the road the ground floor has
+0.39 m to spare inside the side setbacks, measured at its full depth
+(the side setback lines are not square to the road; the 0.8 m first reported
+in VJH-RF-001 was the bounding box, corrected). The rear garden is about 9.2 m
+deep to the boundary.
+
+**Flagged, not changed:** the stair room as transcribed is 4.80 m long, where
+the reference's stated 300 mm treads and 1.5 m landing need 5.45 m; the model
+fits the going to the room (253 mm), OI-23. Three circulation spaces are
+narrower than the owner's 1.80 m: the service passage 1.0 m and the stair hall
+1.5 m on the ground floor, and two 1.5 m corridors on the first floor
+placeholder, OI-26.
+
+The interiors planner's en-suite and master suite layouts (D-034, D-035) give
+way where the reference draws its own dress rooms and toilets.
+
+**Approved by Aiman: yes,** the instruction to build ("build", 2026-10-02) and
+every answer applied. The flagged items: for review.
+
+---
+
 ## 2026-10-02, restart from the ground floor on the owner's reference
 
 ### D-043 Plant room and outdoor bathroom in the old driver's slot by the carport

@@ -98,15 +98,15 @@ def config(prog: dict | None = None) -> dict:
 
 def shared(a: Rect, b: Rect):
     """The wall room a shares with b: (side of a, lo, hi, wall thickness)."""
-    for gap in (T_INT, T_EXT):
-        for side, ok, lo, hi in (
-            ("E", abs(b.u0 - a.u1 - gap) < 2e-3, max(a.v0, b.v0), min(a.v1, b.v1)),
-            ("W", abs(a.u0 - b.u1 - gap) < 2e-3, max(a.v0, b.v0), min(a.v1, b.v1)),
-            ("N", abs(b.v0 - a.v1 - gap) < 2e-3, max(a.u0, b.u0), min(a.u1, b.u1)),
-            ("S", abs(a.v0 - b.v1 - gap) < 2e-3, max(a.u0, b.u0), min(a.u1, b.u1)),
-        ):
-            if ok and hi - lo > 0:
-                return side, lo, hi, gap
+    lo_t, hi_t = 0.05 - 2e-3, 0.35 + 2e-3
+    for side, gap, lo, hi in (
+        ("E", b.u0 - a.u1, max(a.v0, b.v0), min(a.v1, b.v1)),
+        ("W", a.u0 - b.u1, max(a.v0, b.v0), min(a.v1, b.v1)),
+        ("N", b.v0 - a.v1, max(a.u0, b.u0), min(a.u1, b.u1)),
+        ("S", a.v0 - b.v1, max(a.u0, b.u0), min(a.u1, b.u1)),
+    ):
+        if lo_t <= gap <= hi_t and hi - lo > 0:
+            return side, lo, hi, gap
     return None
 
 
@@ -299,7 +299,12 @@ def plan(lay: dict | None = None, prog: dict | None = None) -> dict[str, Interio
         floor = lay["floors"][storey]
         rects = {d["key"]: Rect.of(d) for d in floor["rooms"] + floor["circulation"]}
         hubs = [rects[k] for k in HUBS if k in rects]
+        # Rooms whose dress rooms and toilets the plan already draws (the
+        # reference villa, D-040) are not planned again.
+        served = {a["serves"] for a in prog.get("ancillary", []) or [] if a["key"] in rects}
         for key, r in rects.items():
+            if key in served:
+                continue
             if key in cfg["staff_ensuite"]["rooms"]:
                 s = shared(r, rects[cfg["staff_ensuite"]["door_from"]])
                 if s is None:

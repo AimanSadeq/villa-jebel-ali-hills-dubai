@@ -59,7 +59,10 @@ GOOD = "#2e7d4f"
 BAD = "#b3261e"
 DIM = "#1f6f8b"
 
-SERVICE_KEYS = {"arabic_kitchen", "pantry", "laundry", "plant_room", "garage",
+SERVICE_KEYS = {"arabic_kitchen", "pantry", "laundry", "plant_room", "garage", "wash",
+                "guest_toilet", "office_toilet", "maids_toilet", "powder_toilet", "lift",
+                "lift_first", "pantry_first", "master_toilet", "bedroom_2_toilet",
+                "bedroom_3_toilet", "bedroom_4_toilet",
                 "outdoor_bathroom",
                 "stair_lift_ground", "stair_lift_first", "linen_storage",
                 "guest_powder"}
@@ -72,11 +75,18 @@ SHORT = {
     "arabic_kitchen": "ARABIC KIT", "pantry": "PANTRY", "laundry": "LAUNDRY",
     "home_office": "OFFICE", "maids_room": "MAID", "drivers_room": "DRIVER",
     "plant_room": "PLANT", "stair_lift_ground": "STAIR + LIFT",
-    "stair_lift_first": "STAIR + LIFT", "garage": "GARAGE, 2 CARS",
+    "stair_lift_first": "STAIR + LIFT", "garage": "CARPORT, 3 CARS",
     "living": "LIVING", "master_suite": "MASTER SUITE", "bedroom_2": "BED 2",
     "bedroom_3": "BED 3", "bedroom_4": "BED 4", "family_living": "FAMILY",
     "linen_storage": "LINEN",
     "outdoor_bathroom": "OUTDOOR WC + SHOWER\nexternal door",
+    "lawn_court": "LAWN COURT\nopen to the sky", "wash": "WASH", "lift": "LIFT",
+    "main_entrance": "MAIN\nENTRANCE", "guest_dress": "DRESS", "guest_toilet": "WC",
+    "office_toilet": "WC", "maids_toilet": "WC", "powder_toilet": "WC",
+    "master_dress": "DRESS", "master_toilet": "BATH", "bedroom_2_dress": "DRESS",
+    "bedroom_2_toilet": "BATH", "bedroom_3_dress": "DRESS", "bedroom_3_toilet": "BATH",
+    "bedroom_4_dress": "DRESS", "bedroom_4_toilet": "BATH", "pantry_first": "PANTRY",
+    "lift_first": "LIFT", "family_sitting": "FAMILY\nSITTING",
 }
 
 
@@ -124,7 +134,8 @@ def load() -> tuple[dict, dict]:
     for floor in ("ground", "first"):
         for r in prog.get(floor, []) or []:
             targets[r["key"]] = r.get("target_m2") or r.get("target_min_m2")
-    targets["garage"] = 31.3          # internal, see src/model/layout_gen.py
+    if "garage" not in targets or targets["garage"] is None:
+        targets["garage"] = 31.3      # the generated plans' internal garage
     return lay, targets
 
 
@@ -215,6 +226,9 @@ def _rect_outline(ax, plate, lw=2.2):
 
 
 def _pool(ax, road_east, lay=None):
+    prog = yaml.safe_load(PROGRAM.read_text(encoding="utf-8"))
+    if any(r["key"] == "pool" for r in prog.get("removed", []) or []) and not (lay and lay.get("pool")):
+        return False      # no pool, owner decision D-041
     spec = (lay if lay and lay.get("pool") else
             next(o for o in load_massing()["options"] if o["key"] == "C"))
     clash = spec["deck"]["u"][0] < road_east
@@ -292,9 +306,12 @@ def build() -> Path:
         _room(axg, r, targets, pad_keys, centre=centres.get(r["key"]))
     _interiors(axg, interiors, "ground")
     _outline(axg, lay["outlines"]["road_ground"])
-    _rect_outline(axg, lay["plates"]["ssw"])
+    if "ssw" in lay["plates"]:
+        _rect_outline(axg, lay["plates"]["ssw"])
     if "living" in lay["plates"]:
         _rect_outline(axg, lay["plates"]["living"])
+    if "carport" in lay["plates"]:
+        _rect_outline(axg, lay["plates"]["carport"], lw=1.2)
     _badges(axg)
     axg.text(0.0, 1.005, "GROUND FLOOR", transform=axg.transAxes, fontsize=12,
              color=INK)
@@ -305,17 +322,24 @@ def build() -> Path:
     axf = plan_axes(fig, 405, 70, 380, 420)
     _context(axf)
     _outline(axf, lay["outlines"]["road_ground"], lw=0.6)          # ground, ghosted
-    _rect_outline(axf, lay["plates"]["ssw"], lw=0.6)
+    if "ssw" in lay["plates"]:
+        _rect_outline(axf, lay["plates"]["ssw"], lw=0.6)
+    for o in lay["floors"]["first"].get("outdoor", []) or []:
+        _rect(axf, o, facecolor=DECK, edgecolor=WALL, lw=0.6, ls="--", zorder=3)
+        axf.text((o["u"][0] + o["u"][1]) / 2, (o["v"][0] + o["v"][1]) / 2,
+                 o["key"].replace("_", " ").upper() + f"\n{o['area_m2']:.1f} m2, not GFA",
+                 ha="center", va="center", fontsize=4.6, color=MUTED, zorder=6)
     if "living" in lay["plates"]:
         lv = lay["plates"]["living"]
         _rect_outline(axf, lv, lw=0.6)
         axf.text((lv["u"][0] + lv["u"][1]) / 2, (lv["v"][0] + lv["v"][1]) / 2,
                  "ROOF OVER THE\nDOUBLE HEIGHT\nLIVING ROOM", ha="center",
                  va="center", fontsize=6, color=MUTED, zorder=6)
-    axf.text(*[(lay["plates"]["ssw"]["u"][0] + lay["plates"]["ssw"]["u"][1]) / 2,
-               (lay["plates"]["ssw"]["v"][0] + lay["plates"]["ssw"]["v"][1]) / 2],
-             "MASTER TERRACE\non the kitchen roof, D-035\nnot GFA (DDA Q25)",
-             ha="center", va="center", fontsize=6, color=MUTED, zorder=6)
+    if "ssw" in lay["plates"]:
+        axf.text(*[(lay["plates"]["ssw"]["u"][0] + lay["plates"]["ssw"]["u"][1]) / 2,
+                   (lay["plates"]["ssw"]["v"][0] + lay["plates"]["ssw"]["v"][1]) / 2],
+                 "MASTER TERRACE\non the kitchen roof, D-035\nnot GFA (DDA Q25)",
+                 ha="center", va="center", fontsize=6, color=MUTED, zorder=6)
     _circulation(axf, lay["floors"]["first"]["circulation"])
     for v in lay["floors"]["first"].get("voids", []):
         if v["area_m2"] < 0.01:
@@ -341,6 +365,8 @@ def build() -> Path:
     rows = [("Road wing, ground", g["road_wing_ground"]),
             ("SSW wing, ground, single storey", g["ssw_wing_ground"]),
             ("Living block, ground, double height", g.get("living_block_ground", 0.0)),
+            ("Carport, outside GFA, TO VERIFY", g.get("outside_gfa_to_verify", {}).get("carport_m2", 0.0)),
+            ("Lawn court, open, outside GFA, TO VERIFY", g.get("outside_gfa_to_verify", {}).get("lawn_court_m2", 0.0)),
             ("First floor, less the void", g["first_floor_less_void"]),
             ("Total", g["total"]),
             ("DDA cap", g["cap"])]

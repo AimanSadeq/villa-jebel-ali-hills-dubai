@@ -332,11 +332,16 @@ def test_every_trim_names_which_decision_it_came_from():
         )
 
 
-def test_route_b_trims_still_in_force_total_twelve_square_metres():
-    """Route B saved 13 m2 net. One of those was the driver's room, 12 to 11,
-    and that room was removed outright by D-028, so 12 m2 of route B remains."""
-    saved = sum(r["brief_target_m2"] - r["target_m2"] for r in _trimmed("route_b"))
-    assert saved == 12, f"Route B trims still in force should total 12 m2, not {saved}"
+def test_route_b_survives_only_where_the_restart_kept_the_room():
+    """Route B trimmed six rooms. After the restart (D-038) the ground floor
+    rooms take the reference villa's sizes (owner answer 6), so their route B
+    trims are marked superseded; what remains in force is on the first floor,
+    which the owner has not yet decided."""
+    program = load_program()
+    ground_b = [r["key"] for r in program["ground"] if r.get("trimmed") == "route_b"]
+    assert ground_b == [], f"ground floor rooms still carry route B: {ground_b}"
+    for r in _trimmed("route_b"):
+        assert r["key"] in {x["key"] for x in program["first"]}
 
 
 def test_the_two_car_trim_is_withdrawn():
@@ -396,11 +401,15 @@ def test_the_net_to_gross_factor_is_measured_not_assumed():
 
 
 def test_the_carport_is_sized_for_three_cars():
-    """Owner decision 2026-10-02, D-040: an open carport like the reference
-    villa's, 78 m2 gross, outside GFA pending DDA (D-039)."""
-    garage = next(r for r in rooms() if r.key == "garage")
-    assert garage.low_m2 == 78
+    """Owner decision 2026-10-02, D-040: the reference villa's open carport,
+    outside GFA pending DDA (D-039). Three bays of 2.5 x 5.5 m (DDA FAQs
+    Building Q5) must fit inside it."""
     program = load_program()
     spec = next(r for r in program["ground"] if r["key"] == "garage")
     assert spec["cars"] == 3
     assert spec["brief_target_m2"] == 55
+    import yaml as _yaml
+    lay = _yaml.safe_load((REPO_ROOT / "brief" / "layouts.yaml").read_text(encoding="utf-8"))
+    c = next(r for r in lay["floors"]["ground"]["rooms"] if r["key"] == "garage")
+    w, d = sorted((c["u"][1] - c["u"][0], c["v"][1] - c["v"][0]))
+    assert w >= 5.5 and d >= 3 * 2.5, f"carport {w:.2f} x {d:.2f} m cannot take three bays"

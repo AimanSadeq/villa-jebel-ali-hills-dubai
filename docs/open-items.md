@@ -6,7 +6,7 @@ names the document that must answer it.
 
 Status key: OPEN, ASKED (sent to a third party), CLOSED.
 
-Last updated: 2026-10-02 (Phase 3 model; central hall plan; inside the cap by 18.17 m2)
+Last updated: 2026-10-02 (ground floor built from the owner's reference; inside the cap by 17.92 m2)
 
 ## Critical. Blocks Phase 2 room layouts
 
@@ -473,6 +473,13 @@ or lift changes CORE_MIN_DEPTH in src/model/layout_gen.py.
 Also open: whether full-height glazing upstairs needs guarding below the DDA FAQ
 Q35 sill heights (0.9 or 1.2 m). The model uses a 0.90 m sill upstairs.
 
+**Update 2026-10-02, D-044.** The reference stair replaces Claude's: a dog leg
+with 1.5 m flights in its own room and the lift in a separate 2.15 x 1.80 m
+shaft, 28 risers over 5.00 m. As transcribed the stair room is 4.80 m long;
+the reference's 300 mm treads and 1.5 m landing need 5.45 m, so the model fits
+a 253 mm going. To confirm on the reference's own stair detail or with the
+consultant.
+
 ### OI-24 Fire separation in the open plan
 
 | | |
@@ -502,6 +509,23 @@ permitted without a window are for the Dubai Building Code (mechanical
 ventilation) and will be sized in the Phase 5 MEP design. No rate is assumed
 here. The master bathroom and the maid's shower room have external walls and
 get a high window.
+
+### OI-26 Circulation narrower than 1.80 m in the reference plan
+
+| | |
+|---|---|
+| Status | OPEN, for the owner |
+| Raised | 2026-10-02, D-044 |
+
+The owner set 1.80 m for corridors inside the villa (D-026, DDA FAQs Building
+Q12, which gives 1.8 m for residential corridors and 1.5 m for service ones).
+The reference villa, built as drawn, has narrower circulation: on the ground
+floor the service passage behind the store (1.0 m, from the prep kitchen and
+laundry to the island kitchen) and the stair hall (1.5 m, between the lift and
+the stair); on the first floor placeholder, the 1.5 m corridor and gallery. They
+are kept as the reference draws them and listed in tests/test_layout.py so no
+new one can appear unnoticed. Widening the service passage to 1.5 m would take
+about 0.5 m from the store or the prep kitchen.
 
 ## Owner decisions outstanding
 

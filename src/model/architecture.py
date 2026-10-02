@@ -71,8 +71,12 @@ PRINCIPAL = {"living", "dining", "show_kitchen", "majlis", "master_suite", "fami
              "guest_bedroom"}
 SERVICE_WINDOWS = {"home_office", "arabic_kitchen", "maids_room", "laundry",
                    "stair_lift_ground", "stair_lift_first"}
-HIGH_WINDOWS = {"guest_powder", "outdoor_bathroom"}
-NO_WINDOWS = {"garage", "pantry", "plant_room", "linen_storage"}
+HIGH_WINDOWS = {"guest_powder", "outdoor_bathroom", "guest_toilet", "office_toilet",
+                "maids_toilet", "powder_toilet", "wash", "master_toilet", "bedroom_2_toilet",
+                "bedroom_3_toilet", "bedroom_4_toilet"}
+NO_WINDOWS = {"garage", "pantry", "plant_room", "linen_storage", "lift", "main_entrance",
+              "lawn_court", "guest_dress", "master_dress", "bedroom_2_dress", "bedroom_3_dress",
+              "bedroom_4_dress", "pantry_first", "stair_lift_ground", "stair_lift_first"}
 
 DOOR_WIDTH = {"majlis": 1.20, "master_suite": 1.00, "family_living": 1.20,
               "garage": 0.90, "dining": 1.60}
@@ -192,6 +196,15 @@ class Model:
         self.external_doors = EXTERNAL_DOORS + [
             ("master_suite", "E", terrace["door_width_m"], terrace["door_height_m"],
              "glass")]
+        if self.lay.get("external_doors"):
+            self.external_doors = []
+        for d in self.lay.get("external_doors") or []:
+            if isinstance(d, dict):
+                self.external_doors.append((d["room"], d["face"], float(d.get("width_m", 0.9)),
+                                            float(d.get("height_m", 2.4)), d.get("material", "door")))
+        placed = {r["key"] for f in ("ground", "first")
+                  for r in self.lay["floors"][f]["rooms"] + self.lay["floors"][f]["circulation"]}
+        self.external_doors = [d for d in self.external_doors if d[0] in placed]
         self.counts: dict[str, int] = {}
 
     # Setup -----------------------------------------------------------------
@@ -339,18 +352,31 @@ class Model:
     def footprints(self):
         lay = self.lay
         self.road = Polygon(lay["outlines"]["road_ground"])
-        p = lay["plates"]["ssw"]
-        self.ssw = box(p["u"][0], p["v"][0], p["u"][1], p["v"][1])
+        plates = lay["plates"]
+        self.ssw = (box(plates["ssw"]["u"][0], plates["ssw"]["v"][0], plates["ssw"]["u"][1],
+                        plates["ssw"]["v"][1]) if "ssw" in plates else Polygon())
+        self.carport = (box(plates["carport"]["u"][0], plates["carport"]["v"][0],
+                            plates["carport"]["u"][1], plates["carport"]["v"][1])
+                        if "carport" in plates else None)
         self.first_fp = Polygon(lay["outlines"]["first"])
+        self.double_height = list(lay.get("double_height", []) or [])
+        self.open_sky_keys = set(lay.get("open_to_sky", []) or [])
+        self.porch_keys = {d["key"] for d in lay.get("porches", []) or []}
+        self.f_outdoor = [R.of(d) for d in lay["floors"]["first"].get("outdoor", []) or []]
         self.g_rooms = [R.of(d) for d in lay["floors"]["ground"]["rooms"]]
         self.f_rooms = [R.of(d) for d in lay["floors"]["first"]["rooms"]]
         self.g_circ = [R.of(d) for d in lay["floors"]["ground"]["circulation"]]
         self.f_circ = [R.of(d) for d in lay["floors"]["first"]["circulation"]]
         self.voids = [R.of(d) for d in lay["floors"]["first"].get("voids", [])
                       if d["area_m2"] > 0.01]
-        living = next(r for r in self.g_rooms if r.key == "living")
+        living = next((r for r in self.g_rooms if r.key == "living"), None)
         self.living = living
-        if "living" in lay["plates"]:
+        self.open_sky = unary_union([r.poly for r in self.g_rooms if r.key in self.open_sky_keys]) \
+            if self.open_sky_keys else Polygon()
+        if self.ssw.is_empty:
+            self.living_block = Polygon()
+            self.kitchen_block = Polygon()
+        elif "living" in lay["plates"]:
             # Central hall plan, D-036: the living room is a tall block of its
             # own, sharing the SSW wing's north wall.
             p = lay["plates"]["living"]
@@ -364,9 +390,17 @@ class Model:
                                      self.ssw.bounds[3])
             self.living_block = box(cut, self.ssw.bounds[1], self.ssw.bounds[2],
                                     self.ssw.bounds[3])
-        self.g_fp = unary_union([self.road, self.ssw, self.living_block])
+        self.g_fp = unary_union([g for g in (self.road, self.ssw, self.living_block) if not g.is_empty])
 
     # Walls -------------------------------------------------------------------
+
+    def _joins(self, storey) -> list[tuple[str, str]]:
+        """Open joins for a storey: the plan's own when it lists them (the
+        reference villa, D-038), otherwise the generated plans' table."""
+        lay_joins = (self.lay.get("open_joins") or {}).get(storey)
+        if lay_joins is None:
+            return list(OPEN_JOINS[storey])
+        return [tuple(j.split("/")) if isinstance(j, str) else tuple(j) for j in lay_joins]
 
     def open_bridges(self, storey, rooms, circ):
         """The partitions removed by the open joins, as (owner key, polygon).
@@ -377,7 +411,7 @@ class Model:
         """
         by_key = {r.key: r for r in rooms + circ}
         out = []
-        for a_key, b_key in OPEN_JOINS[storey]:
+        for a_key, b_key in self._joins(storey):
             a, b = by_key.get(a_key), by_key.get(b_key)
             if not a or not b:
                 continue
@@ -443,10 +477,16 @@ class Model:
         return ext_ring
 
     def build_walls(self):
-        tall = self.living.poly.buffer(0.30, join_style=2)
+        dh_keys = set(self.double_height) or ({"living"} if "living" not in self.lay["plates"]
+                                              and self.living and not self.ssw.is_empty else set())
+        if "living" in self.lay["plates"]:
+            dh_keys.add("living")
+        tall_rooms = [r.poly for r in self.g_rooms if r.key in dh_keys]
+        tall = unary_union(tall_rooms).buffer(0.30, join_style=2) if tall_rooms else Polygon()
+        tall = tall.difference(self.first_fp.buffer(0.01, join_style=2))
         self.ext_ring_g = self.walls_for(
             "ground", self.g_fp, self.g_rooms, self.g_circ, [],
-            z_top=self.HG - self.SLAB, tall_zone=tall,
+            z_top=self.HG - self.SLAB, tall_zone=None if tall.is_empty else tall,
             tall_top=self.HG + self.HF - self.SLAB)
         self.ext_ring_f = self.walls_for(
             "first", self.first_fp, self.f_rooms, self.f_circ, self.voids,
@@ -468,7 +508,7 @@ class Model:
         S = self.SLAB
         top = self.HG + self.HF
         self.element("IfcSlab", "Ground bearing slab", "ground",
-                     [self._prism(p, -S, S) for p in clean(self.g_fp)],
+                     [self._prism(p, -S, S) for p in clean(self.g_fp.difference(self.open_sky))],
                      predefined="BASESLAB", material="slab")
         # Where the first floor ends a few centimetres short of the ground floor
         # (packer rounding), the slab runs on over the strip rather than leaving
@@ -485,8 +525,17 @@ class Model:
                      [self._prism(p, -S, S) for p in clean(first_floor)],
                      predefined="FLOOR", material="slab")
 
+        balconies = unary_union([r.poly for r in self.f_outdoor if "terrace" not in r.key]) \
+            if self.f_outdoor else Polygon()
+        main_roof = unary_union([self.first_fp, balconies.buffer(T_EXT, join_style=2)]) \
+            if not balconies.is_empty else self.first_fp
+        sky = unary_union([self.open_sky] + [v.poly for v in self.voids
+                                             if not self.open_sky.is_empty
+                                             and v.poly.intersects(self.open_sky.buffer(0.5))])
+        main_roof = main_roof.difference(sky)
+        self.low_road = self.low_road.difference(sky)
         roofs = [
-            ("Main roof", "roof", self.first_fp, 0.0, [self.living_block]),
+            ("Main roof", "roof", main_roof, 0.0, [self.living_block]),
             ("Roof over the garage and service end", "first",
              self.low_road, 0.0, [self.first_fp]),
             ("Roof terrace over the kitchen, master suite terrace",
@@ -496,7 +545,7 @@ class Model:
              0.0, [self.first_fp]),
         ]
         for name, storey, poly, _, taller in roofs:
-            parts = clean(poly)
+            parts = clean(poly) if not poly.is_empty else []
             if not parts:
                 continue
             self.element("IfcSlab", name, storey,
@@ -506,25 +555,88 @@ class Model:
             ring = unary_union(parts)
             ring = ring.difference(ring.buffer(-T_EXT, join_style=2, mitre_limit=10))
             for t in taller:
-                ring = ring.difference(t.buffer(0.01, join_style=2))
+                if not t.is_empty:
+                    ring = ring.difference(t.buffer(0.01, join_style=2))
             for p in clean(ring):
                 self.element("IfcWall", f"Parapet, {name.lower()}", storey,
                              [self._prism(p, 0.0, self.PAR)],
                              predefined="PARAPET", material="ext")
 
+    def build_outdoor(self):
+        """Covered balconies at first floor level, the carport roof terrace and
+        its columns. All outside GFA by D-039, TO VERIFY."""
+        S = self.SLAB
+        for r in self.f_outdoor:
+            if "terrace" in r.key:
+                continue
+            self.element("IfcSlab", f"Covered balcony slab, {r.key}", "first",
+                         [self._prism(r.poly, -S, S)], predefined="FLOOR", material="deck")
+            ring = r.poly.difference(r.poly.buffer(-T_EXT, join_style=2))
+            ring = ring.difference(self.first_fp.buffer(0.02, join_style=2))
+            for q in clean(ring):
+                self.element("IfcWall", f"Balcony parapet, {r.key}", "first",
+                             [self._prism(q, 0.0, self.PAR)], predefined="PARAPET",
+                             material="ext")
+            sp = self.element("IfcSpace", f"Covered balcony, {r.key}", "first",
+                              [self._prism(r.poly, 0.0, self.HF - S - self.SERV)],
+                              predefined="EXTERNAL", container=False, style="space")
+            sp.LongName = r.key
+            ifcopenshell.api.aggregate.assign_object(
+                self.f, products=[sp], relating_object=self.storeys["first"][0])
+        if self.carport is not None:
+            # Levels on the reference sheets are above the gate; the ground
+            # storey's zero is the house FFL, 0.45 m above it (A-09-001).
+            lv = self.lay.get("levels", {}) or {}
+            ffl = float(lv.get("ground_ffl_above_gate_m", 0.45))
+            floor = float(lv.get("carport_ffl_above_gate_m", 0.15)) - ffl
+            top = float(lv.get("carport_roof_m", 3.75)) - ffl
+            roof = self.carport.difference(self.g_fp.buffer(0.01, join_style=2))
+            self.element("IfcSlab", "Carport roof, open terrace above", "ground",
+                         [self._prism(q, top - S, S) for q in clean(roof)],
+                         predefined="ROOF", material="slab", style="deck")
+            ring = roof.difference(roof.buffer(-T_EXT, join_style=2))
+            ring = ring.difference(self.g_fp.buffer(0.02, join_style=2))
+            for q in clean(ring):
+                self.element("IfcWall", "Carport terrace parapet", "ground",
+                             [self._prism(q, top, self.PAR)], predefined="PARAPET",
+                             material="ext")
+            # A column at each free corner of the carport roof, 0.40 m square.
+            b, c = roof.bounds, 0.40
+            for cu0 in (b[0], b[2] - c):
+                for cv0 in (b[1], b[3] - c):
+                    col = box(cu0, cv0, cu0 + c, cv0 + c)
+                    if self.g_fp.buffer(0.05).intersects(col):
+                        continue
+                    self.element("IfcColumn", "Carport column", "ground",
+                                 [self._prism(col, floor, top - S - floor)],
+                                 predefined="COLUMN", material="ext")
+            sp = self.element("IfcSpace", "Carport", "ground",
+                              [self._prism(roof, floor, top - S - floor)],
+                              predefined="EXTERNAL", container=False, style="space")
+            sp.LongName = "garage"
+            ifcopenshell.api.aggregate.assign_object(
+                self.f, products=[sp], relating_object=self.storeys["ground"][0])
+            self.element("IfcSlab", "Carport paving", "ground",
+                         [self._prism(q, floor - 0.15, 0.15) for q in clean(roof)],
+                         predefined="BASESLAB", material="deck")
+
     # Stair and lift core ---------------------------------------------------
 
     def build_core(self):
         g = next(r for r in self.g_rooms if r.key == "stair_lift_ground")
+        lift_room = next((r for r in self.g_rooms if r.key == "lift"), None)
         u0, u1, v0 = g.u0, g.u1, g.v0
-        flight_w, lift = 0.90, 1.00
+        lift = 1.00
         rise_total = self.HG
         risers = math.ceil(rise_total / 0.18)
         if risers % 2:
             risers += 1
         riser = rise_total / risers
         per_flight = risers // 2
-        going = 0.28
+        if lift_room is not None:
+            self._build_reference_stair(g, lift_room, risers, riser, per_flight)
+            return
+        flight_w, going = 0.90, 0.28
         run = (per_flight - 1) * going
         landing = (u1 - u0) - run - 0.05
         self.core_note = (f"{risers} risers of {riser * 1000:.0f} mm, going "
@@ -559,13 +671,88 @@ class Model:
             properties={"NumberOfRiser": risers, "RiserHeight": riser,
                         "TreadLength": going})
         self.stairwell = box(u0, v0, u1, v0 + 2 * flight_w + 0.05)
-
         self.shaft = box(u1 - lift, v0 + 2 * flight_w + 0.10, u1,
                          v0 + 2 * flight_w + 0.10 + lift)
         first_core = next(r for r in self.f_rooms if r.key == "stair_lift_first")
         for room in (g, first_core):
-            if not room.poly.contains(self.stairwell.union(self.shaft)):
+            if not room.poly.buffer(0.01).contains(self.stairwell.union(self.shaft)):
                 raise ValueError(f"stair and lift do not fit {room.key}")
+        self.element("IfcTransportElement", "Home lift", "ground",
+                     [self._prism(self.shaft, 0.0, self.HG + self.HF - self.SLAB)],
+                     predefined="ELEVATOR", style="lift")
+
+    def _build_reference_stair(self, g, lift_room, risers, riser, per_flight):
+        """The reference villa's stair (A-07-001, A-07-002, A-09-001): a dog leg
+        of two flights side by side in the stair room drawn on the first floor,
+        the first flight rising from the foyer end in the lane of the ground
+        floor stair, a half landing at the far end, the return flight arriving
+        at the first floor stair head over the stair hall. The lift has its own
+        shaft beside it. The reference states 28 risers, 300 mm treads, 1.5 m
+        flights and a 1.5 x 3.0 m landing; the stair room as transcribed is
+        shorter than that needs, so the going is fitted to the room and the
+        difference is reported (OI-23, TO VERIFY)."""
+        F = next((r for r in self.f_rooms if r.key == "stair_lift_first"), None) or g
+        foyer = next((r for r in self.g_rooms if r.key == "entrance_foyer"), None)
+        long_u = (F.u1 - F.u0) >= (F.v1 - F.v0)
+        L = (F.u1 - F.u0) if long_u else (F.v1 - F.v0)
+        W = (F.v1 - F.v0) if long_u else (F.u1 - F.u0)
+        flight_w = min(1.50, (W - 0.05) / 2)
+        # The landing goes at the end away from the foyer.
+        fc = foyer.poly.centroid if foyer else F.poly.centroid
+        mid = (F.u0 + F.u1) / 2 if long_u else (F.v0 + F.v1) / 2
+        landing_low = (fc.x if long_u else fc.y) > mid
+        # Flight 1 takes the lane on the ground floor stair's side.
+        gc = g.poly.centroid
+        across_mid = (F.v0 + F.v1) / 2 if long_u else (F.u0 + F.u1) / 2
+        lane1_high = (gc.y if long_u else gc.x) > across_mid
+        going = min(0.30, (L - 0.05 - flight_w) / (per_flight - 1))
+        if going < 0.22:
+            raise ValueError(f"stair room too short: going would be {going:.3f} m")
+        run = (per_flight - 1) * going
+        landing = L - run - 0.05
+        z_land = riser * per_flight
+
+        def box_l(s0, s1, t0, t1):
+            """Local s along the run from the landing end, t across from lane 1."""
+            if landing_low:
+                a0, a1 = s0, s1
+            else:
+                a0, a1 = L - s1, L - s0
+            if lane1_high:
+                b0, b1 = W - t1, W - t0
+            else:
+                b0, b1 = t0, t1
+            if long_u:
+                return box(F.u0 + a0, F.v0 + b0, F.u0 + a1, F.v0 + b1)
+            return box(F.u0 + b0, F.v0 + a0, F.u0 + b1, F.v0 + a1)
+
+        steps = []
+        # Flight 1: from the stair head end down toward the landing, rising.
+        for i in range(per_flight - 1):
+            s1 = L - 0.05 - i * going
+            steps.append(self._prism(box_l(s1 - going, s1, 0.0, flight_w), 0.0, riser * (i + 1)))
+        # Landing across both lanes.
+        steps.append(self._prism(box_l(0.0, landing, 0.0, W), z_land - 0.20, 0.20))
+        # Flight 2: from the landing back to the stair head, rising.
+        for i in range(per_flight - 1):
+            s0 = landing + i * going
+            steps.append(self._prism(box_l(s0, s0 + going, W - flight_w, W),
+                                     z_land, riser * (i + 1)))
+        stair = self.element("IfcStair", "Main stair", "ground", steps,
+                             predefined="HALF_TURN_STAIR", material="slab", style="stair")
+        ifcopenshell.api.pset.edit_pset(
+            self.f, pset=ifcopenshell.api.pset.add_pset(self.f, product=stair,
+                                                        name="Pset_StairCommon"),
+            properties={"NumberOfRiser": risers, "RiserHeight": riser, "TreadLength": going})
+        need = (per_flight - 1) * 0.30 + 1.50 + 0.05
+        self.core_note = (f"reference stair: {risers} risers of {riser * 1000:.0f} mm, going "
+                          f"{going * 1000:.0f} mm, two flights {flight_w:.2f} m wide, half "
+                          f"landing {landing:.2f} m, in a {L:.2f} x {W:.2f} m stair room; the "
+                          f"reference's 300 mm treads and 1.5 m landing need {need:.2f} m "
+                          f"(OI-23, TO VERIFY); lift in its own shaft "
+                          f"{lift_room.u1 - lift_room.u0:.2f} x {lift_room.v1 - lift_room.v0:.2f} m")
+        self.stairwell = F.poly
+        self.shaft = lift_room.poly.buffer(-0.10, join_style=2)
         self.element("IfcTransportElement", "Home lift", "ground",
                      [self._prism(self.shaft, 0.0, self.HG + self.HF - self.SLAB)],
                      predefined="ELEVATOR", style="lift")
@@ -579,7 +766,30 @@ class Model:
         for storey, rooms, circ, clear in (("ground", self.g_rooms, self.g_circ, clear_g),
                                            ("first", self.f_rooms, self.f_circ, clear_f)):
             for r in rooms + circ:
-                h = clear_living if r.key == "living" else clear
+                tall_key = r.key in self.double_height or (r.key == "living" and not self.ssw.is_empty)
+                h = clear_living if tall_key else clear
+                if r.key == "garage" and self.carport is not None:
+                    continue      # the open carport's space is built with the carport
+                if r.key in self.porch_keys:
+                    self.element("IfcSlab", f"Paving, {self.names.get(r.key, r.key)}", storey,
+                                 [self._prism(r.poly.buffer(0.10, join_style=2), -self.SLAB, self.SLAB)],
+                                 predefined="USERDEFINED", object_type="Porch paving",
+                                 material="deck")
+                    sp = self.element("IfcSpace", self.names.get(r.key, r.key), storey,
+                                      [self._prism(r.poly, 0.0, h)],
+                                      predefined="EXTERNAL", container=False, style="space")
+                    sp.LongName = r.key
+                    ifcopenshell.api.aggregate.assign_object(
+                        self.f, products=[sp], relating_object=self.storeys[storey][0])
+                    continue
+                if r.key in self.open_sky_keys:
+                    sp = self.element("IfcSpace", self.names.get(r.key, r.key), storey,
+                                      [self._prism(r.poly, -0.15, 0.10)],
+                                      predefined="EXTERNAL", container=False, style="terrain")
+                    sp.LongName = r.key
+                    ifcopenshell.api.aggregate.assign_object(
+                        self.f, products=[sp], relating_object=self.storeys[storey][0])
+                    continue
                 it = self.interiors.get(r.key)
                 shape = unary_union([it.main if it else r.poly]
                                     + [g for k, g in self.bridges[storey] if k == r.key])
@@ -647,18 +857,22 @@ class Model:
         ifcopenshell.api.feature.add_filling(self.f, opening=op, element=fill)
         return fill
 
-    @staticmethod
-    def _shared(a: R, b: R):
+    # A wall between two rooms is anything from 0.05 to 0.35 m thick: the
+    # generated plans use 0.15 and 0.25, the owner's reference 0.10 to 0.25.
+    WALL_MIN, WALL_MAX = 0.05, 0.35
+
+    @classmethod
+    def _shared(cls, a: R, b: R):
         """Shared wall between two rectangles: (along_u, centre, wall_t, length)."""
-        for gap in (T_INT, T_EXT):
-            if abs(b.u0 - a.u1 - gap) < 2e-3 or abs(a.u0 - b.u1 - gap) < 2e-3:
+        lo_t, hi_t = cls.WALL_MIN - 2e-3, cls.WALL_MAX + 2e-3
+        for gap, u in ((b.u0 - a.u1, (a.u1 + b.u0) / 2), (a.u0 - b.u1, (b.u1 + a.u0) / 2)):
+            if lo_t <= gap <= hi_t:
                 lo, hi = max(a.v0, b.v0), min(a.v1, b.v1)
-                u = (a.u1 + b.u0) / 2 if abs(b.u0 - a.u1 - gap) < 2e-3 else (b.u1 + a.u0) / 2
                 if hi - lo > 0:
                     return False, (u, (lo + hi) / 2), gap, hi - lo
-            if abs(b.v0 - a.v1 - gap) < 2e-3 or abs(a.v0 - b.v1 - gap) < 2e-3:
+        for gap, v in ((b.v0 - a.v1, (a.v1 + b.v0) / 2), (a.v0 - b.v1, (b.v1 + a.v0) / 2)):
+            if lo_t <= gap <= hi_t:
                 lo, hi = max(a.u0, b.u0), min(a.u1, b.u1)
-                v = (a.v1 + b.v0) / 2 if abs(b.v0 - a.v1 - gap) < 2e-3 else (b.v1 + a.v0) / 2
                 if hi - lo > 0:
                     return True, ((lo + hi) / 2, v), gap, hi - lo
         return None
@@ -667,14 +881,39 @@ class Model:
         for storey, rooms, circ in (("ground", self.g_rooms, self.g_circ),
                                     ("first", self.f_rooms, self.f_circ)):
             door_h = 2.70 if storey == "ground" else 2.40
-            open_pairs = {frozenset(p) for p in OPEN_JOINS[storey]}
+            open_pairs = {frozenset(p) for p in self._joins(storey)}
             everything = {r.key: r for r in rooms + circ}
-            hubs = [everything[k] for k in HUBS if k in everything]
+            hub_keys = list(HUBS) + [c.key for c in circ if c.key not in HUBS]
+            hub_keys += [k for k in ("main_entrance", "garden_room") if k in everything and k not in hub_keys]
+            hub_keys = [k for k in hub_keys if k not in self.porch_keys and k not in self.open_sky_keys]
+            hubs = [everything[k] for k in hub_keys if k in everything]
+            # A plan that lists its own doors (the reference, D-038) uses only
+            # those; the generated plans use the standard links and the doors
+            # of their ancillary rooms. One door per pair of rooms.
+            if self.lay.get("room_links"):
+                raw = [tuple(x) for x in self.lay["room_links"]]
+            else:
+                raw = list(ROOM_LINKS) + [(an["serves"], an["key"], 0.80, "door")
+                                          for an in self.prog.get("ancillary", []) or []]
+            links, pairs = [], set()
+            for l in raw:
+                pair = frozenset(l[:2])
+                if pair not in pairs:
+                    pairs.add(pair)
+                    links.append(l)
+            # A room a link opens into takes its door from that link only.
+            link_targets = {l[1] for l in links if len(l) > 3 and l[3] == "door"}
             for r in rooms:
                 if r.key in ("living", "dining", "show_kitchen", "outdoor_bathroom"):
                     continue      # open plan, or reached from outside
-                if r.key in HUBS or any(r.key in p for p in open_pairs):
+                if r.key in hub_keys or any(r.key in p for p in open_pairs):
                     continue      # part of the open space
+                if r.key in self.open_sky_keys or r.key in self.porch_keys:
+                    continue      # open areas: the court is glazed from the foyer
+                if r.key in link_targets:
+                    continue      # its door comes from its link
+                if r.key == "garage" and self.carport is not None:
+                    continue      # an open carport has no door (D-040)
                 it = self.interiors.get(r.key)
                 if it:
                     for d in it.doors:
@@ -697,22 +936,33 @@ class Model:
                     # Acceptable only when the room is reached another way: a
                     # deliberate link (the garage through the laundry) or its
                     # own external door. Anything else is a room with no way in.
-                    linked = any(r.key in (x, y) for x, y, _, _ in ROOM_LINKS)
-                    outside = any(r.key == k for k, *_ in EXTERNAL_DOORS)
+                    linked = any(r.key in tuple(l[:2]) for l in links)
+                    outside = any(r.key == k for k, *_ in self.external_doors)
                     if not (linked or outside):
                         raise ValueError(f"{r.key} on the {storey} floor has no door")
                     self.no_hub_door.append((storey, r.key, "link" if linked else "external door"))
-            for a_key, b_key, wdt, kind in ROOM_LINKS:
+            for link in links:
+                a_key, b_key, wdt, kind = link[:4]
+                at = link[4] if len(link) > 4 else None
                 a, b = everything.get(a_key), everything.get(b_key)
                 if not a or not b or frozenset((a_key, b_key)) in open_pairs:
                     continue
                 s = self._shared(a, b)
                 if s:
                     along_u, (u, v), t, length = s
+                    width = min(wdt, length - 0.2)
+                    if at is not None:
+                        # Measured from the end of the shared wall nearer the road.
+                        lo = max(a.u0, b.u0) if along_u else max(a.v0, b.v0)
+                        if along_u:
+                            u = max(a.u0, b.u0) + max(at, width / 2 + 0.1)
+                        else:
+                            v = lo + max(at, width / 2 + 0.1)
+                    label = {"door": "Door", "window": "Glazed screen"}.get(kind, "Opening")
                     self.opening(storey, kind,
-                                 f"{'Door' if kind == 'door' else 'Opening'}, "
-                                 f"{self.names[a_key]} to {self.names[b_key]}",
-                                 u, v, along_u, min(wdt, length - 0.2), 0.0, door_h, t)
+                                 f"{label}, {self.names.get(a_key, a_key)} to "
+                                 f"{self.names.get(b_key, b_key)}",
+                                 u, v, along_u, width, 0.0, door_h, t)
 
     def _external_faces(self, storey, r: R, ring):
         """Which faces of a room sit against the external wall."""
@@ -832,6 +1082,10 @@ class Model:
                     if r.key in NO_WINDOWS or r.key == "entrance_foyer":
                         continue
                     kind = self._face_kind(r, face)
+                    out_pt = {"W": Point(u_c - 0.6, v_c), "E": Point(u_c + 0.6, v_c),
+                              "S": Point(u_c, v_c - 0.6), "N": Point(u_c, v_c + 0.6)}[face]
+                    if not self.open_sky.is_empty and self.open_sky.buffer(0.3).contains(out_pt):
+                        kind = "courtyard"
                     if kind == "inner":
                         continue
                     if r.key in HIGH_WINDOWS:
@@ -860,9 +1114,13 @@ class Model:
 
     def build_site(self):
         plot = site_to_grid(plot_polygon())
+        ground_level = -float((self.lay.get("levels", {}) or {}).get("ground_ffl_above_gate_m", 0.15))
         self.element("IfcGeographicElement", "Plot terrain", None,
-                     [self._prism(plot, -0.45, 0.30)], predefined="TERRAIN",
+                     [self._prism(plot, ground_level - 0.30, 0.30)], predefined="TERRAIN",
                      container=True, style="terrain")
+        removed = {r["key"] for r in self.prog.get("removed", []) or []}
+        if "pool" in removed and not self.lay.get("pool"):
+            return        # no pool, owner decision D-041
         spec = self.lay if self.lay.get("pool") else next(
             o for o in self.m["options"] if o["key"] == "C")
         (pu0, pu1), (pv0, pv1) = spec["pool"]["u"], spec["pool"]["v"]
@@ -870,7 +1128,8 @@ class Model:
         pool = box(pu0, pv0, pu1, pv1)
         shell = pool.buffer(T_EXT, join_style=2)
         depth = 1.50
-        if self.g_fp.buffer(-0.01).intersects(box(du0, dv0, du1, dv1)):
+        if self.g_fp.buffer(-0.01).intersects(box(du0, dv0, du1, dv1)) or (
+                self.carport is not None and self.carport.buffer(-0.01).intersects(box(du0, dv0, du1, dv1))):
             raise ValueError("pool deck clashes with the building")
         self.element("IfcBuildingElementProxy", "Swimming pool shell", None,
                      [self._prism(shell.difference(pool), -depth - T_EXT, depth + T_EXT),
@@ -900,6 +1159,7 @@ class Model:
         self.build_doors()
         self.build_windows_and_external_doors()
         self.build_furniture()
+        self.build_outdoor()
         self.build_site()
         OUT.parent.mkdir(parents=True, exist_ok=True)
         self.f.write(str(OUT))

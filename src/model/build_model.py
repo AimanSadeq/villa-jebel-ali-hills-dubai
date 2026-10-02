@@ -48,7 +48,7 @@ VIEWER_DATA = REPO_ROOT / "viewer" / "public" / "data"
 
 # Short names for the viewer's room labels; the full name shows on selection.
 LABEL = {
-    "garage": "Garage", "outdoor_bathroom": "Outdoor WC", "maids_room": "Maid",
+    "outdoor_bathroom": "Outdoor WC", "maids_room": "Maid",
     "laundry": "Laundry", "plant_room": "Plant", "home_office": "Office",
     "guest_powder": "Powder",
     "stair_lift_ground": "Stair + lift", "stair_lift_first": "Stair + lift",
@@ -60,6 +60,12 @@ LABEL = {
     "family_hall": "Family hall", "hall_arm": "Landing",
     "entrance_foyer": "Hall", "corridor": "Gallery",
     "bedroom_2": "Bedroom 2", "bedroom_3": "Bedroom 3", "bedroom_4": "Bedroom 4",
+    "lawn_court": "Lawn court", "wash": "Wash", "lift": "Lift", "main_entrance": "Entrance",
+    "guest_dress": "Dress", "guest_toilet": "Toilet", "office_toilet": "WC",
+    "maids_toilet": "WC", "powder_toilet": "WC", "master_dress": "Dress",
+    "master_toilet": "Bath", "bedroom_2_dress": "Dress", "bedroom_2_toilet": "Bath",
+    "bedroom_3_dress": "Dress", "bedroom_3_toilet": "Bath", "bedroom_4_dress": "Dress",
+    "bedroom_4_toilet": "Bath", "pantry_first": "Pantry", "garage": "Carport",
 }
 AREA_TOLERANCE_M2 = 0.10
 
@@ -117,7 +123,8 @@ def measured_from_ifc(f, meshes) -> dict:
             parent = ifcopenshell.util.element.get_aggregate(el)
             if storey not in (container, parent):
                 continue
-            if el.is_a("IfcSpace") or (el.is_a("IfcWall") and el.PredefinedType != "PARAPET"):
+            if (el.is_a("IfcSpace") and el.PredefinedType != "EXTERNAL") or (
+                    el.is_a("IfcWall") and el.PredefinedType != "PARAPET"):
                 items.append((el, verts, faces))
         out[storey.Name] = plan_area(items)
     return out
@@ -172,6 +179,8 @@ def publish_to_viewer(model, path: Path, lay: dict, ifc_areas: dict) -> None:
         "heights": {"ground_m": model.HG, "first_m": model.HF,
                     "parapet_m": model.PAR, "roof_m": model.HG + model.HF,
                     "overall_m": model.HG + model.HF + model.PAR},
+        "outside_gfa": lay["gfa_measured"].get("outside_gfa_to_verify", {}),
+        "reference": lay.get("reference", ""),
         "gfa": {k: lay["gfa_measured"][k] for k in
                 ("road_wing_ground", "ssw_wing_ground", "living_block_ground",
                  "first_floor_less_void",

@@ -31,6 +31,8 @@ interface ModelData {
          first_floor_less_void: number;
          total: number; cap: number; margin: number };
   gfa_from_ifc: Record<string, number>;
+  outside_gfa?: Record<string, number>;
+  reference?: string;
   core: string;
   counts: Record<string, number>;
   rooms: RoomLabel[];
@@ -321,6 +323,9 @@ async function boot() {
     tr('', sqft(g.total), 'adj'),
     tr('DDA cap', `${fmt(g.cap)} m²`),
     tr('Margin', `+${fmt(g.margin)} m²`, g.margin >= 0 ? 'good' : 'bad'));
+  for (const [k, v] of Object.entries(data.outside_gfa ?? {})) {
+    if (v > 0) area.append(tr(`${k.replace(/_m2$/, '').replace(/_/g, ' ')} (outside GFA, TO VERIFY)`, `${fmt(v)} m²`, 'adj'));
+  }
   const ifcTotal = Object.values(data.gfa_from_ifc).reduce((a, b) => a + b, 0);
   panel.append(section('ruler', 'Area', area,
     h('p', { class: 'note' }, icon('check', 'icon tiny'),

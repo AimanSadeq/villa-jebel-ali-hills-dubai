@@ -16,7 +16,7 @@ licensed structural engineer must review, complete, and stamp all final drawings
 | Maximum GFA | 662.99 m² (7,136.36 sq ft) |
 | Maximum height | G+1 |
 | Setbacks | 3 m on all sides |
-| Current phase | Phase 3 model built, central hall plan, 644.82 m2, awaiting owner review |
+| Current phase | Restarted floor by floor (D-038); ground floor built from the owner's reference, 645.07 m2, awaiting owner review |
 
 ## Start here
 
@@ -57,7 +57,7 @@ pip install -r requirements.txt
 | `python src/analysis/shade_check.py` | Afternoon shade on the pool deck from the planned footprint, VJH-RPT-008 |
 | `npm run dev --prefix viewer` | Massing viewer at http://localhost:5173 |
 | (same server) | Phase 3 IFC model viewer at http://localhost:5173/model.html |
-| `python -m pytest -q` | Setback, GFA, shading, orientation, layout and interior guards, 93 checks |
+| `python -m pytest -q` | Setback, GFA, shading, orientation, layout and interior guards, 88 checks |
 
 ## Where things live
 
