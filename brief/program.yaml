@@ -118,6 +118,9 @@ ground:
     target_m2: 4.5
     gfa: counts
     added_by_owner: "2026-10-02"
+    placement: >
+      Owner answer 9, 2026-10-02: on the garden side of the house, entered from
+      the garden only, no door into the house.
     notes: >
       Owner decision 2026-10-02, D-028. Its own external door and no internal
       connection to the villa. Opens onto the courtyard at the north end of the
@@ -133,6 +136,9 @@ ground:
       Trimmed from the CLAUDE.md section 4 target of 8 m2 to 7 m2. Owner
       approved trim route B, 2026-10-01.
     gfa: counts
+    placement: >
+      Owner answer 9, 2026-10-02: in the reference villa's driver's slot beside
+      the carport (driver's room and toilet), with its own outside door.
     notes: "Water tanks, filtration, controls, low-current rack."
   - key: stair_lift_ground
     name: "Staircase + Home Elevator"
