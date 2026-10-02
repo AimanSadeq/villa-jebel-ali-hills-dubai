@@ -37,10 +37,12 @@ from drawings.sketch_12a import (CHANGED, INK, MUTED, OPEN, SALON, SQFT, WALL,  
 from model.reference_plan import _outline  # noqa: E402
 
 PLAN = REPO_ROOT / "brief" / "reference_plan.yaml"
+MASSING = REPO_ROOT / "brief" / "massing.yaml"
 OUT_PDF = REPO_ROOT / "output" / "pdf" / "VJH-SK-013_Answer_12_Both_Floors.pdf"
 OUT_PNG = REPO_ROOT / "output" / "pdf" / "VJH-SK-013_Answer_12_Both_Floors.png"
 
 CAP = 662.99
+DOUBLE_HEIGHT = {"entrance_foyer", "living", "main_entrance"}
 VOID = "#dfe9f2"
 NEW = "#e8f3ea"
 OTHER = "#f4f2ee"
@@ -49,7 +51,7 @@ G_LABELS = {
     "garage": "Carport, 3 cars", "guest_bedroom": "Guest bed", "guest_toilet": "WC",
     "guest_dress": "Dress", "office_toilet": "WC", "home_office": "Office",
     "main_entrance": "Porch", "plant_room": "Plant", "outdoor_bathroom": "Out. bath",
-    "service_lobby": "Serv. lobby", "entrance_foyer": "Foyer\n(double height)",
+    "service_lobby": "Serv. lobby", "entrance_foyer": "Foyer (double height)",
     "lift": "Lift", "maids_toilet": "WC", "wash": "Wash", "stair_hall": "Stair hall",
     "maids_room": "Maid", "guest_powder": "Powder", "stair_lift_ground": "Stair",
     "pantry": "Store", "laundry": "Laundry", "arabic_kitchen": "Arabic kitchen",
@@ -67,6 +69,41 @@ F_LABELS = {
     "terrace_over_carport": "Terrace over carport", "terrace_over_carport_side": "Terr.",
     "family_living": "Family room", "void_over_living": "Void over living\n(double height)",
 }
+
+
+def clear_heights(plan: dict) -> dict:
+    """Indicative clear heights (floor finish to ceiling), from brief/massing.yaml
+    (D-030) and the reference levels. Not regulatory values."""
+    h = yaml.safe_load(MASSING.read_text(encoding="utf-8"))["heights"]
+    hg, hf = float(h["ground_floor_m"]), float(h["first_floor_m"])
+    slab, serv = float(h["slab_m"]), float(h["services_zone_m"])
+    lv = plan["levels"]
+    return {"ground": hg - slab - serv, "first": hf - slab - serv,
+            "double": hg + hf - slab - serv,
+            "carport": float(lv["carport_roof_m"]) - float(lv["carport_ffl_above_gate_m"]) - slab,
+            "ff_ground": hg, "ff_first": hf}
+
+
+def room_height(r: dict, floor: str, H: dict) -> float | None:
+    if r["kind"] in ("void", "balcony", "terrace"):
+        return None
+    if r["kind"] == "carport":
+        return H["carport"]
+    if floor == "ground" and r["key"] in DOUBLE_HEIGHT:
+        return H["double"]
+    return H[floor]
+
+
+def dims_text(x0, x1, y0, y1, h=None, small=False) -> str:
+    """Width x length (shorter side first), area in m2 and sq ft, clear height."""
+    w, l = sorted((x1 - x0, y1 - y0))
+    a = w * l
+    if small:
+        return f"{w:.2f} x {l:.2f} m\n{a:.1f} m\u00b2"
+    out = f"{w:.2f} x {l:.2f} m\n{a:.1f} m\u00b2 ({a * SQFT:,.0f} sq ft)"
+    if h is not None:
+        out += f"\nclear height {h:.2f} m"
+    return out
 
 
 def _r(key, kind, x0, x1, y0, y1, new=False):
@@ -132,7 +169,7 @@ def measure(ground: list, first: list) -> dict:
     return out
 
 
-def _draw_floor(ax, rooms, outline, labels, title, floor):
+def _draw_floor(ax, rooms, outline, labels, title, floor, H):
     for r in rooms:
         x0, x1, y0, y1, kind = r["x0"], r["x1"], r["y0"], r["y1"], r["kind"]
         new = r.get("new", False)
@@ -153,15 +190,19 @@ def _draw_floor(ax, rooms, outline, labels, title, floor):
         if floor == "ground" and r["key"] in ("show_kitchen", "living", "dining", "salon"):
             _furniture(ax, r["key"], x0, x1, y0, y1, "B")
         a = (x1 - x0) * (y1 - y0)
-        name = {"show_kitchen": "Island kitchen", "living": "Living room\n(double height)",
+        name = {"show_kitchen": "Island kitchen", "living": "Living room (double height)",
                 "dining": "Dining", "salon": "Salon (majlis)"}.get(r["key"], labels.get(r["key"]))
         if not name:
             continue
+        name = name.replace("\n", " ")
         small = a < 9
-        big = new and kind != "void"
-        _label(ax, x0, x1, y0, y1, name, size=6.8 if big else (4.4 if small else 5.2),
-               area=not small and kind not in ("carport",), weight="bold" if big else "normal",
-               color=INK if big else MUTED)
+        big = new and kind != "void" and not small
+        h = room_height(r, floor, H)
+        txt = name + "\n" + dims_text(x0, x1, y0, y1, h, small=small)
+        ax.text((y0 + y1) / 2, (x0 + x1) / 2, txt, ha="center", va="center",
+                fontsize=6.2 if big else (3.6 if small else 4.5),
+                color=INK if big else MUTED, weight="bold" if big else "normal", zorder=6,
+                linespacing=1.25, bbox=dict(fc="white", ec="none", alpha=0.75, pad=0.5))
 
     xs, ys = outline.exterior.xy
     ax.plot(list(ys), list(xs), color=WALL, lw=2.6, zorder=4)
@@ -183,15 +224,18 @@ def _draw_floor(ax, rooms, outline, labels, title, floor):
 def main() -> int:
     plan = yaml.safe_load(PLAN.read_text(encoding="utf-8"))
     ground, first, notes = apply_answer_12(plan)
+    H = clear_heights(plan)
     before = measure([dict(r) for r in plan["ground"]], [dict(r) for r in plan["first"]])
     after = measure(ground, first)
 
     fig = plt.figure(figsize=(16.5, 11.7))  # A3 landscape
     ax_g = fig.add_axes([0.01, 0.20, 0.48, 0.70])
     ax_f = fig.add_axes([0.50, 0.20, 0.48, 0.70])
-    _draw_floor(ax_g, ground, after["g_poly"], G_LABELS, "GROUND FLOOR", "ground")
-    _draw_floor(ax_f, first, after["f_poly"], F_LABELS, "FIRST FLOOR (placeholder except the changes in colour)",
-                "first")
+    _draw_floor(ax_g, ground, after["g_poly"], G_LABELS,
+                f"GROUND FLOOR   clear height {H['ground']:.2f} m, double height {H['double']:.2f} m", "ground", H)
+    _draw_floor(ax_f, first, after["f_poly"], F_LABELS,
+                f"FIRST FLOOR   clear height {H['first']:.2f} m   (placeholder except the coloured rooms)",
+                "first", H)
 
     # Ground: the salon is open to the dining (12c): no wall drawn between them.
     s = next(r for r in ground if r["key"] == "salon")
@@ -207,7 +251,6 @@ def main() -> int:
     over = after["total"] - CAP
     verdict = (f"{over:.2f} m² ({over * SQFT:,.0f} sq ft) OVER the cap"
                if over > 0 else f"{-over:.2f} m² inside the cap")
-    fam_a = (fam["x1"] - fam["x0"]) * (fam["y1"] - fam["y0"])
     lines = [
         "GFA, measured the way the build measures it (carport, balconies, terraces outside, D-039, TO VERIFY):",
         f"   Today (built, commit 6322806):  ground {before['ground']:.2f} + first {before['first']:.2f} "
@@ -215,13 +258,19 @@ def main() -> int:
         f"   With answer 12:                 ground {after['ground']:.2f} + first {after['first']:.2f} "
         f"= {after['total']:.2f} m² ({after['total'] * SQFT:,.0f} sq ft): {verdict} of {CAP} m²",
         "",
-        f"Family room above the salon: {fam_a:.1f} m² ({fam_a * SQFT:,.0f} sq ft); "
+        "Family room above the salon: "
+        + dims_text(fam["x0"], fam["x1"], fam["y0"], fam["y1"], H["first"]).replace("\n", ", ") + "; "
         "the brief's target is 35 m².",
         "The gallery (corridor) along the void stays the route from the stair to bedroom 4; "
         "the living room is double height beyond it.",
     ] + notes
-    fig.text(0.03, 0.185, "\n".join(lines), ha="left", va="top", fontsize=8.4, color=INK,
-             linespacing=1.55, family="DejaVu Sans Mono")
+    lines += ["",
+              f"Heights (indicative, brief/massing.yaml, D-030): ground floor {H['ff_ground']:.2f} m floor to floor, "
+              f"{H['ground']:.2f} m clear; first floor {H['ff_first']:.2f} m floor to floor, {H['first']:.2f} m clear;",
+              f"double height (foyer, porch, living room) {H['double']:.2f} m clear; carport {H['carport']:.2f} m clear. "
+              "Clear = floor to floor less 0.30 m slab and 0.15 m ceiling services zone."]
+    fig.text(0.03, 0.185, "\n".join(lines), ha="left", va="top", fontsize=7.6, color=INK,
+             linespacing=1.45, family="DejaVu Sans Mono")
 
     fig.suptitle("Villa 5130272, answer 12 on both floors: for review before the build",
                  x=0.01, ha="left", fontsize=13, weight="bold")

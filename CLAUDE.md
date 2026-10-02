@@ -16,6 +16,7 @@ Working rules (mandatory):
 6. Commit to Git at the end of every working session with a clear message. Never rewrite history on `main`.
 7. Log every design decision and its reason in `docs/decisions.md` (date, decision, reason, approved by Aiman: yes/no).
 8. Every drawing and model export carries the stamp: `CONCEPT DESIGN, NOT FOR CONSTRUCTION`.
+9. Whenever room sizes are shown (drawings, sketches, reports, schedules, viewer labels, chat), give width x length in metres, then the area in m2 and sq ft, and the room's clear height (on the label, or in a heights note on the same sheet). Aiman, 2026-10-02, D-045.
 
 ## 2. Site data (from DDA Plot Details, `reference/5130272_-_Plot_Details.pdf`)
 

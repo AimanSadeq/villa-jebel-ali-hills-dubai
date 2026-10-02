@@ -8,6 +8,16 @@ Columns: date, decision, reason, approved by Aiman.
 
 ## 2026-10-02, the ground floor built from the reference
 
+### D-045 Room sizes always shown as width x length, area and height
+
+**Date.** 2026-10-02.
+
+**Decision.** Anywhere room measurements are shown, they read width x length (metres), area in m2 and sq ft, and clear height. Heights are the indicative D-030 values from brief/massing.yaml: ground floor 5.00 m floor to floor, 4.55 m clear; first floor 4.00 m, 3.55 m clear; double height 8.55 m clear; carport 3.30 m clear (reference levels, sheet A-09-001). Clear height is floor to floor less the 0.30 m slab and the 0.15 m services zone, both indicative.
+
+**Reason.** Aiman: "Anytime you're showing the measurements of rooms ... show me the width multiplied by the length and also show the height somewhere." Applied first on sketch VJH-SK-013; added to CLAUDE.md working rule 9. The formal floor plans (src/drawings/floor_plans.py) take it at the next build.
+
+**Approved by Aiman.** Yes (his instruction).
+
 ### D-044 Ground floor built: the reference villa, mirrored, with the owner's answers
 
 **Decision.** The ground floor is built from a measured transcription of the
