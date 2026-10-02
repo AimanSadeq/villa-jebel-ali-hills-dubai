@@ -1,8 +1,8 @@
-"""Sketch of both floors with all of answer 12 applied (12, 12a, 12b, 12c, 12d).
+"""Sketch of both floors with all of answer 12 applied (12, 12a to 12e).
 
 Ground floor: kitchen, double height living room and dining along the backyard
 (12a option B); the salon in the lawn court's place, fully open to the dining
-(12c), lined up with the dining's north wall and 6.00 m across (12d). First floor: the void over the living room, the family room above the
+(12c), lined up with the dining's north wall (12d) and 7.50 m across (12e). First floor: the void over the living room, the family room above the
 salon off the gallery (12b); everything else is still the reference's
 placeholder first floor.
 
@@ -121,9 +121,10 @@ def apply_answer_12(plan: dict) -> tuple[list, list, list[str]]:
               if r["key"] not in {"show_kitchen", "family_sitting", "dining", "majlis", "lawn_court"}]
     # 12d C: the salon's north wall lines up with the dining's, and the open
     # salon/dining line moves toward the backyard so the salon is 6.00 m across
-    # (the old 0.25 m wall line between them becomes floor). The dining is
-    # 6.00 x 5.25 m.
-    sd_line = round(c["y0"] + 6.00, 3)
+    # (the old 0.25 m wall line between them becomes floor). 12e: the salon
+    # takes 1.50 m more from the dining, so it is 7.50 m across and the dining
+    # 3.75 m. The line is open (12c), so GFA does not change.
+    sd_line = round(c["y0"] + 6.00 + 1.50, 3)
     ground += [
         _r("show_kitchen", "room", k["x0"], k["x1"], y0, y1, True),
         _r("living", "room", k["x1"], split_ld, y0, y1, True),

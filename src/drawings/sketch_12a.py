@@ -110,18 +110,18 @@ def _furniture(ax, key, x0, x1, y0, y1, opt):
         ax.add_patch(Rectangle((y1 - 0.65, x0 + 0.3), 0.65, w - 0.6, **kw))   # counter
         ax.add_patch(Rectangle((cy - 0.5, cx - 1.2), 1.0, 2.4, **kw))         # island
     elif key == "dining":
-        # Table for 12 (about 1.1 x 3.8 m), long side across the 6 m depth.
+        # Table for 12 (about 1.1 x 3.8 m), long side along the room's longer side.
         tl, tw = 3.8, 1.1
-        if w >= 5.0:
+        if d >= w:  # long side across the depth (plot x)
             ax.add_patch(Rectangle((cy - tl / 2, cx - tw / 2), tl, tw, **kw))
             seats = [(cy - tl / 2 + 0.35 + i * 0.62, cx + s * (tw / 2 + 0.3))
                      for i in range(5) for s in (-1, 1)]
             seats += [(cy - tl / 2 - 0.3, cx), (cy + tl / 2 + 0.3, cx)]
-        else:
-            ax.add_patch(Rectangle((cy - tl / 2, cx - tw / 2), tl, tw, **kw))
-            seats = [(cy - tl / 2 + 0.35 + i * 0.62, cx + s * (tw / 2 + 0.3))
+        else:       # long side along the road (plot y)
+            ax.add_patch(Rectangle((cy - tw / 2, cx - tl / 2), tw, tl, **kw))
+            seats = [(cy + s * (tw / 2 + 0.3), cx - tl / 2 + 0.35 + i * 0.62)
                      for i in range(5) for s in (-1, 1)]
-            seats += [(cy - tl / 2 - 0.3, cx), (cy + tl / 2 + 0.3, cx)]
+            seats += [(cy, cx - tl / 2 - 0.3), (cy, cx + tl / 2 + 0.3)]
         for sy, sx in seats:
             ax.add_patch(Circle((sy, sx), 0.2, **kw))
     elif key == "living":
