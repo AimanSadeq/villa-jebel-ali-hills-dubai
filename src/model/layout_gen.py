@@ -145,7 +145,7 @@ CONFIGS = {
     "ssw_kitchen_dining_living": {
         "G_WEST": ["guest_bedroom", "stair_lift_ground", "home_office",
                    "entrance_foyer"],
-        "G_EAST": ["arabic_kitchen", ("pantry", "laundry"), "majlis",
+        "G_EAST": ["arabic_kitchen", ("pantry", "laundry"), "salon",
                    ("plant_room", "guest_powder")],
         "G_STAFF": ["drivers_room", "maids_room"],
         "SSW_KITCHEN": ["show_kitchen", "dining"],
@@ -158,7 +158,7 @@ CONFIGS = {
     "foyer_after_stair": {
         "G_WEST": ["guest_bedroom", "stair_lift_ground", "entrance_foyer",
                    "home_office"],
-        "G_EAST": ["arabic_kitchen", "pantry", "majlis",
+        "G_EAST": ["arabic_kitchen", "pantry", "salon",
                    ("plant_room", "guest_powder")],
         "G_STAFF": ["drivers_room", "maids_room", "laundry"],
         "SSW_KITCHEN": ["show_kitchen", "dining"],
@@ -168,7 +168,7 @@ CONFIGS = {
     "foyer_after_stair_laundry_east": {
         "G_WEST": ["guest_bedroom", "stair_lift_ground", "entrance_foyer",
                    "home_office"],
-        "G_EAST": ["arabic_kitchen", ("pantry", "laundry"), "majlis",
+        "G_EAST": ["arabic_kitchen", ("pantry", "laundry"), "salon",
                    ("plant_room", "guest_powder")],
         "G_STAFF": ["drivers_room", "maids_room"],
         "SSW_KITCHEN": ["show_kitchen", "dining"],
@@ -181,8 +181,8 @@ CONFIGS = {
         "G_WEST": ["guest_bedroom", "stair_lift_ground", "entrance_foyer",
                    ("home_office", "guest_powder")],
         "G_WEST_GROW": "home_office",
-        "G_EAST": ["arabic_kitchen", "pantry", "majlis"],
-        "G_EAST_GROW": "majlis",
+        "G_EAST": ["arabic_kitchen", "pantry", "salon"],
+        "G_EAST_GROW": "salon",
         "G_STAFF": ["drivers_room", "maids_room", ("laundry", "plant_room")],
         "SSW_KITCHEN": ["show_kitchen", "dining"],
         "F_WEST": ["bedroom_2", "bedroom_3"],
@@ -198,9 +198,9 @@ CONFIGS = {
         "G_WEST_GROW": "home_office",
         # The link hall connects the corridor straight to the dining room in the
         # single storey wing, so nobody reaches the family rooms through the
-        # majlis or the Arabic kitchen.
-        "G_EAST": ["arabic_kitchen", "pantry", "hall_link", "majlis"],
-        "G_EAST_GROW": "majlis",
+        # salon or the Arabic kitchen.
+        "G_EAST": ["arabic_kitchen", "pantry", "hall_link", "salon"],
+        "G_EAST_GROW": "salon",
         # Laundry and plant first, maid and outdoor bathroom at the north end, so
         # the maid's room gets an outside wall for a window and its own entrance
         # (CLAUDE.md section 4), and the bathroom keeps its courtyard door.
@@ -218,8 +218,8 @@ CONFIGS = {
         "G_WEST": ["guest_bedroom", "stair_lift_ground", "entrance_foyer",
                    ("home_office", "guest_powder")],
         "G_WEST_GROW": "home_office",
-        "G_EAST": ["arabic_kitchen", "pantry", "hall_link", "majlis"],
-        "G_EAST_GROW": "majlis",
+        "G_EAST": ["arabic_kitchen", "pantry", "hall_link", "salon"],
+        "G_EAST_GROW": "salon",
         "G_STAFF": [("laundry", "plant_room"), ("maids_room", "outdoor_bathroom")],
         "SSW_KITCHEN": ["show_kitchen", "dining"],
         "F_WEST": [],
@@ -229,7 +229,7 @@ CONFIGS = {
         # Band widths held at the plan approved in Phase 2 (5.10 west, 4.20
         # east), so the first floor change does not reshape the ground floor.
         # Left free, the search narrows the east band to 3.70 m to save area,
-        # which makes the majlis a 3.7 m wide gallery.
+        # which makes the salon a 3.7 m wide gallery.
         "bands": (5.10, 4.20),
     },
     # The owner's reference villa (D-038), transcribed in brief/reference_plan.yaml
@@ -237,7 +237,7 @@ CONFIGS = {
     # (answer 7). Built by src/model/reference_plan.py; nothing is packed.
     "reference_mirrored": {"source": "reference_plan"},
     # Central hall plan, owner instruction 2026-10-02 (D-036): a big foyer in
-    # the middle of the road wing, the majlis north of it (left on entering),
+    # the middle of the road wing, the salon north of it (left on entering),
     # the dining south of it (right), the double height living room straight
     # ahead as a tall single storey block in the courtyard, and the kitchens in
     # the SSW wing beyond the dining. The first floor is the family hall plan.
@@ -265,8 +265,8 @@ CONFIGS = {
         "G_WEST": ["guest_bedroom", "stair_lift_ground", "entrance_foyer",
                    ("home_office", "guest_powder")],
         "G_WEST_GROW": "home_office",
-        "G_EAST": ["arabic_kitchen", "pantry", "majlis"],
-        "G_EAST_GROW": "majlis",
+        "G_EAST": ["arabic_kitchen", "pantry", "salon"],
+        "G_EAST_GROW": "salon",
         "G_STAFF": ["drivers_room", "maids_room", ("laundry", "plant_room")],
         "SSW_KITCHEN": ["show_kitchen", "dining"],
         "F_WEST": ["bedroom_2", "bedroom_3"],
@@ -284,8 +284,8 @@ CONFIGS = {
                    ("home_office", "guest_powder")],
         "G_WEST_GROW": "home_office",
         "G_EAST": [("arabic_kitchen", "pantry"), "show_kitchen", "dining",
-                   "majlis"],
-        "G_EAST_GROW": "majlis",
+                   "salon"],
+        "G_EAST_GROW": "salon",
         "G_STAFF": ["drivers_room", "maids_room", ("laundry", "plant_room")],
         "SSW_KITCHEN": [],
         "F_WEST": ["bedroom_2", "bedroom_3"],
@@ -294,14 +294,14 @@ CONFIGS = {
     # Massing option A. One two storey bar on the road edge, garden and pool on
     # the ESE side facing landscape plot 5130274. Living room and foyer are
     # both double height for the owner's high ceilings. Reception rooms face the
-    # garden; the majlis sits on the road face beside the foyer, near the
+    # garden; the salon sits on the road face beside the foyer, near the
     # entrance as CLAUDE.md asks; the master suite takes the south end full
     # width, over the guest bedroom and the kitchens.
     "A_bar": {
         "massing": "A",
         "G_WEST": ["guest_bedroom", "stair_lift_ground", "entrance_foyer",
-                   "majlis", ("home_office", "guest_powder")],
-        "G_WEST_GROW": "majlis",
+                   "salon", ("home_office", "guest_powder")],
+        "G_WEST_GROW": "salon",
         "G_EAST": [("arabic_kitchen", "pantry"), "show_kitchen", "dining",
                    "living"],
         "G_EAST_GROW": "dining",
@@ -399,9 +399,9 @@ def build_central_hall(dw: float, de: float, a: dict, cfg: dict) -> dict:
         raise ValueError("office beside the stair is below its target")
     spine = Rect("corridor", uc[0], uc[1], vi, stair.v1)
 
-    # Majlis zone north of the hall: the majlis across the width, the guest
+    # Salon zone north of the hall: the salon across the width, the guest
     # powder room at its road end, both opening off the hall.
-    Ln = (a["majlis"] + a["guest_powder"]) / (W - T_INT)
+    Ln = (a["salon"] + a["guest_powder"]) / (W - T_INT)
     pw = a["guest_powder"] / Ln
 
     # North block, single storey: garage beside the staff strip.
@@ -425,7 +425,7 @@ def build_central_hall(dw: float, de: float, a: dict, cfg: dict) -> dict:
     vN = road_int_end - N
     hall = Rect("entrance_foyer", uw[0], ue[1], stair.v1 + T_INT, vN - T_INT - Ln - T_INT)
     powder = Rect("guest_powder", uw[0], uw[0] + pw, hall.v1 + T_INT, vN - T_INT)
-    majlis = Rect("majlis", uw[0] + pw + T_INT, ue[1], hall.v1 + T_INT, vN - T_INT)
+    salon = Rect("salon", uw[0] + pw + T_INT, ue[1], hall.v1 + T_INT, vN - T_INT)
     g_garage = [Rect("garage", u_gar[0], u_gar[1], vN, vN + N)]
     g_staff, _ = pack(cfg["G_STAFF"], u_staff, vN, a, grow_to=vN + N, grow_key="maids_room")
     road_ext = (U0, ue[1] + T_EXT, V0, road_int_end + T_EXT)
@@ -486,7 +486,7 @@ def build_central_hall(dw: float, de: float, a: dict, cfg: dict) -> dict:
 
     return {
         "params": {"dw": dw, "de": de, "W": W, "corridor": CORRIDOR},
-        "ground": ([guest] + south_east + [stair, office, hall, powder, majlis]
+        "ground": ([guest] + south_east + [stair, office, hall, powder, salon]
                    + g_garage + g_staff + ssw_rooms + [living]),
         "ground_circulation": [spine],
         "first": f_master + f_stair + f_rest,
@@ -550,7 +550,7 @@ def build(dw: float, de: float, a: dict | None = None,
         g_west, west_end = pack(G_WEST, uw, vi, a_g, grow_to=B_end,
                                 grow_key=cfg.get("G_WEST_GROW", "entrance_foyer"))
         g_east, east_end = pack(G_EAST, ue, vi, a, grow_to=B_end,
-                                grow_key=cfg.get("G_EAST_GROW", "majlis"))
+                                grow_key=cfg.get("G_EAST_GROW", "salon"))
 
     # The link hall belongs with the circulation, not the rooms.
     links = [r for r in g_east if r.key == "hall_link"]

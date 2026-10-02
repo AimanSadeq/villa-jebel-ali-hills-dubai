@@ -73,7 +73,7 @@ STAFF_KEYS = {"maids_room", "drivers_room"}
 STAIR_KEYS = {"stair_lift_ground", "stair_lift_first"}
 
 SHORT = {
-    "entrance_foyer": "FOYER", "guest_bedroom": "GUEST BED", "majlis": "MAJLIS (SALON)",
+    "entrance_foyer": "FOYER", "guest_bedroom": "GUEST BED", "salon": "SALON",
     "guest_powder": "WC", "dining": "DINING", "show_kitchen": "KITCHEN",
     "arabic_kitchen": "ARABIC KIT", "pantry": "PANTRY", "laundry": "LAUNDRY",
     "home_office": "OFFICE", "maids_room": "MAID", "drivers_room": "DRIVER",
@@ -157,12 +157,16 @@ def _open_joins(ax, lay, storey):
                 lo, hi = max(a[ko][0], b[ko][0]), min(a[ko][1], b[ko][1])
                 if hi - lo < 0.3:
                     continue
-                g0, g1 = p_[ka][1], q_[ka][0]
+                # Grown by 0.05 m so the solid room outlines either side are
+                # covered too: two open rooms that touch (the salon and the
+                # dining) must not show a line that reads as a wall.
+                g0, g1 = p_[ka][1] - 0.05, q_[ka][0] + 0.05
+                lo, hi = lo + 0.02, hi - 0.02
                 if ka == "u":
-                    rect = Rectangle((g0, lo), max(g1 - g0, 0.0), hi - lo)
+                    rect = Rectangle((g0, lo), g1 - g0, hi - lo)
                     line = ([(g0 + g1) / 2] * 2, [lo, hi])
                 else:
-                    rect = Rectangle((lo, g0), hi - lo, max(g1 - g0, 0.0))
+                    rect = Rectangle((lo, g0), hi - lo, g1 - g0)
                     line = ([lo, hi], [(g0 + g1) / 2] * 2)
                 rect.set(facecolor=ROOM, edgecolor="none", zorder=4.5)
                 ax.add_patch(rect)
@@ -260,6 +264,8 @@ def _room(ax, r, targets, padding_keys, centre=None, height=""):
     lines.append(f"{min(w, l):.2f} x {max(w, l):.2f} m")
     if small:
         lines.append(f"{r['area_m2']:.1f} m2")
+        lines.append(f"({r['area_m2'] * SQM_TO_SQFT:,.0f} sq ft)")
+        fs = 4.0
     else:
         lines.append(f"{r['area_m2']:.1f} m2 ({r['area_m2'] * SQM_TO_SQFT:,.0f} sq ft)")
     if height:
@@ -278,10 +284,12 @@ def _circulation(ax, items):
               zorder=3)
         (u0, u1), (v0, v1) = r["u"], r["v"]
         w, l = u1 - u0, v1 - v0
+        a = w * l
         ax.text((u0 + u1) / 2, (v0 + v1) / 2,
                 f"{CIRC_NAMES.get(r['key'], r['key'].upper())} "
-                f"{min(w, l):.2f} x {max(w, l):.2f} m", ha="center", va="center",
-                fontsize=4.4, color=MUTED, rotation=90 if l > w else 0, zorder=7)
+                f"{min(w, l):.2f} x {max(w, l):.2f} m, {a:.1f} m2 ({a * SQM_TO_SQFT:,.0f} sq ft)",
+                ha="center", va="center", fontsize=4.0, color=MUTED,
+                rotation=90 if l > w else 0, zorder=7)
 
 
 def _outline(ax, coords, lw=2.2):
@@ -401,8 +409,10 @@ def build() -> Path:
         _rect_outline(axf, lay["plates"]["ssw"], lw=0.6)
     for o in lay["floors"]["first"].get("outdoor", []) or []:
         _rect(axf, o, facecolor=DECK, edgecolor=WALL, lw=0.6, ls="--", zorder=3)
+        ow, ol = sorted((o["u"][1] - o["u"][0], o["v"][1] - o["v"][0]))
         axf.text((o["u"][0] + o["u"][1]) / 2, (o["v"][0] + o["v"][1]) / 2,
-                 o["key"].replace("_", " ").upper() + f"\n{o['area_m2']:.1f} m2, not GFA",
+                 o["key"].replace("_", " ").upper() + f"\n{ow:.2f} x {ol:.2f} m\n{o['area_m2']:.1f} m2 "
+                 f"({o['area_m2'] * SQM_TO_SQFT:,.0f} sq ft)\nopen, not GFA",
                  ha="center", va="center", fontsize=4.6, color=MUTED, zorder=6)
     if "living" in lay["plates"]:
         lv = lay["plates"]["living"]
@@ -425,7 +435,8 @@ def build() -> Path:
         axf.plot([u0, u1], [v1, v0], color=MUTED, lw=0.4, zorder=5)
         axf.text((u0 + u1) / 2, (v0 + v1) / 2,
                  f"{VOID_NAMES.get(v['key'], 'VOID')}\n{min(u1 - u0, v1 - v0):.2f} x "
-                 f"{max(u1 - u0, v1 - v0):.2f} m, {v['area_m2']:.1f} m2",
+                 f"{max(u1 - u0, v1 - v0):.2f} m, {v['area_m2']:.1f} m2 "
+                 f"({v['area_m2'] * SQM_TO_SQFT:,.0f} sq ft)",
                  ha="center", va="center", fontsize=5.4, color=MUTED, zorder=6)
     for r in lay["floors"]["first"]["rooms"]:
         _room(axf, r, targets, pad_keys, centre=centres.get(r["key"]),
@@ -449,27 +460,29 @@ def build() -> Path:
             ("Total", g["total"]),
             ("DDA cap", g["cap"]),
             ("Carport, outside GFA, TO VERIFY", ogv.get("carport_m2", 0.0)),
+            ("Total if DDA counts the carport" + (", OVER THE CAP" if g["total"] + ogv.get(
+                "carport_m2", 0.0) > g["cap"] else ""), g["total"] + ogv.get("carport_m2", 0.0)),
             ("Balconies, terraces, outside GFA, TO VERIFY",
              ogv.get("first_floor_balconies_terrace_m2", 0.0))]
     for i, (label, val) in enumerate(rows):
         fig.text(x0, y - 0.012 * (i + 1), label, fontsize=7.4, color=INK)
         fig.text(x0 + 0.19, y - 0.012 * (i + 1), f"{val:8.2f} m2", fontsize=7.4,
                  color=INK, ha="right", family="monospace")
-    fig.text(x0, y - 0.012 * 7.4, "Margin to the cap", fontsize=8, color=BAD if over else GOOD)
-    fig.text(x0 + 0.19, y - 0.012 * 7.4, f"{g['margin']:+8.2f} m2", fontsize=8,
+    fig.text(x0, y - 0.012 * 8.4, "Margin to the cap", fontsize=8, color=BAD if over else GOOD)
+    fig.text(x0 + 0.19, y - 0.012 * 8.4, f"{g['margin']:+8.2f} m2", fontsize=8,
              color=BAD if over else GOOD, ha="right", family="monospace")
 
     x1 = 0.255
     fig.text(x1, y, "NOTES", fontsize=9, color=INK)
     notes = [
-        "Ground floor, owner answer 12 (D-046): the salon (majlis) takes the old lawn court's "
+        "Ground floor, owner answer 12 (D-046): the salon takes the old lawn court's "
         "place, open to the foyer, the living room and the dining (12c, 12h).",
         "Island kitchen, double height living room and dining along the backyard (12a B); "
         "a solid TV wall between the living room and the dining (12g).",
         "Arabic kitchen walled, entered from the island kitchen by an opening with no "
         "door (12m). Front door a 2.40 x 4.50 m pivot door, glass above (12i).",
         "Doors numbered G01 to G23 and F01 to F15 as on the door schedule, sketch VJH-SK-013 "
-        "page 2. Every room is reached; the build checks it.",
+        "page 2 (G06, F10, F11 retired by 12h, 12l). Every room is reached; the build checks it.",
         "First floor: the reference's, a placeholder until it is designed (D-038), with the "
         "family room above the salon (12b) and the void over the living room",
         "and island kitchen in place of the pantry and linen store (12l). The 6 m2 linen "

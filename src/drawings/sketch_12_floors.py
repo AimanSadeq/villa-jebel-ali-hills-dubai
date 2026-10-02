@@ -49,7 +49,7 @@ OPEN_GROUND_CLOSED = {"arabic_kitchen_bay/service_passage"}
 
 # Open joins after answer 12 (no door, no wall): the reference's, with the
 # garden room renamed, plus the new open room and the salon (12c).
-OPEN_GROUND_NEW = ["show_kitchen/living", "majlis/dining", "majlis/living", "entrance_foyer/majlis",
+OPEN_GROUND_NEW = ["show_kitchen/living", "salon/dining", "salon/living", "entrance_foyer/salon",
                    "entrance_foyer/living"]
 
 CAP = 662.99
@@ -134,12 +134,12 @@ def _r(key, kind, x0, x1, y0, y1, new=False):
 def apply_answer_12(plan: dict) -> tuple[list, list, list[str]]:
     g = {r["key"]: r for r in plan["ground"]}
     f = {r["key"]: r for r in plan["first"]}
-    k, m, c = g["show_kitchen"], g["majlis"], g["lawn_court"]
+    k, m, c = g["show_kitchen"], g["salon"], g["lawn_court"]
     y0, y1 = k["y0"], k["y1"]
     split_ld = round(m["x1"] - 6.00, 2)  # 12a B: dining 6 x 6 in the north corner
 
     ground = [dict(r) for r in plan["ground"]
-              if r["key"] not in {"show_kitchen", "family_sitting", "dining", "majlis", "lawn_court"}]
+              if r["key"] not in {"show_kitchen", "family_sitting", "dining", "salon", "lawn_court"}]
     # 12d C: the salon's north wall lines up with the dining's, and the open
     # salon/dining line moves toward the backyard so the salon is 6.00 m across
     # (the old 0.25 m wall line between them becomes floor). 12e: the salon
@@ -153,7 +153,7 @@ def apply_answer_12(plan: dict) -> tuple[list, list, list[str]]:
         # taken from the dining as the D-042 wall was; the living keeps a
         # 2.25 m opening into the salon.
         _r("dining", "room", round(split_ld + TV_WALL_T, 3), m["x1"], sd_line, y1, True),
-        _r("majlis", "room", c["x0"], m["x1"], c["y0"], sd_line, True),
+        _r("salon", "room", c["x0"], m["x1"], c["y0"], sd_line, True),
     ]
 
     # First floor. The void over the living room keeps the gallery (corridor)
@@ -224,7 +224,7 @@ def _living_tv(ax, rooms, x0, x1, y0, y1):
                 arrowprops=dict(arrowstyle="<->", color=CHANGED, lw=0.6), zorder=6)
     ax.text(ty - 2.0, x1 - view / 2, f"viewing {view:.2f} m", fontsize=4.6, color=CHANGED,
             va="center", ha="right", rotation=90, zorder=6)
-    s = next(r for r in rooms if r["key"] == "majlis")
+    s = next(r for r in rooms if r["key"] == "salon")
     ax.text((y0 + s["y1"]) / 2, x1 - 0.25, f"{s['y1'] - y0:.2f} m open\nto the salon", ha="center",
             va="top", fontsize=4.6, color=CHANGED, zorder=6)
 
@@ -237,7 +237,7 @@ def _draw_floor(ax, rooms, outline, labels, title, floor, H):
             fc, ls = VOID, "--"
         elif kind in ("carport", "porch", "balcony", "terrace"):
             fc, ls = "#ffffff", "--"
-        elif r["key"] == "majlis":
+        elif r["key"] == "salon":
             fc, ls = SALON, (0, (4, 3))  # 12c and 12h: open to the dining and the foyer
         elif new and r["key"] in ("show_kitchen", "living", "dining"):
             fc, ls = OPEN, (0, (4, 3))  # one open room: no walls between (D-033)
@@ -247,13 +247,13 @@ def _draw_floor(ax, rooms, outline, labels, title, floor, H):
             fc, ls = OTHER, "-"
         ax.add_patch(Rectangle((y0, x0), y1 - y0, x1 - x0, fc=fc, ec=INK if new else MUTED,
                                lw=0.7 if new else 0.5, ls=ls, zorder=2 if new else 1))
-        if floor == "ground" and r["key"] in ("show_kitchen", "dining", "majlis"):
+        if floor == "ground" and r["key"] in ("show_kitchen", "dining", "salon"):
             _furniture(ax, r["key"], x0, x1, y0, y1, "B")
         if floor == "ground" and r["key"] == "living":
             _living_tv(ax, rooms, x0, x1, y0, y1)
         a = (x1 - x0) * (y1 - y0)
         name = {"show_kitchen": "Island kitchen", "living": "Living room (double height)",
-                "dining": "Dining", "majlis": "Salon (majlis)"}.get(r["key"], labels.get(r["key"]))
+                "dining": "Dining", "salon": "Salon"}.get(r["key"], labels.get(r["key"]))
         if not name:
             continue
         name = name.replace("\n", " ")
@@ -290,7 +290,7 @@ def _draw_floor(ax, rooms, outline, labels, title, floor, H):
 
 
 NAMES = {"show_kitchen": "Island kitchen", "living": "Living room", "dining": "Dining",
-         "majlis": "Salon (majlis)", "outside": "outside", "family_living": "Family room",
+         "salon": "Salon", "outside": "outside", "family_living": "Family room",
          "corridor_first": "Gallery / corridor", "pantry": "Store",
          "service_steps": "Service steps", "service_passage": "Service passage",
          "guest_dress": "Guest dress", "guest_toilet": "Guest WC", "office_toilet": "Office WC",
@@ -364,7 +364,7 @@ def main() -> int:
                 "first", H)
 
     # Ground: the salon is open to the dining (12c): no wall drawn between them.
-    s = next(r for r in ground if r["key"] == "majlis")
+    s = next(r for r in ground if r["key"] == "salon")
     ax_g.plot([s["y1"], s["y1"]], [s["x0"], s["x1"]], color="white", lw=2.0, zorder=5)
     ax_g.plot([s["y1"], s["y1"]], [s["x0"], s["x1"]], color=MUTED, lw=0.8, ls=(0, (4, 3)), zorder=5)
     ax_g.text(s["y1"] - 0.15, s["x0"] + 0.6, "open to dining (12c)\nand foyer (12h)", ha="right", va="bottom",

@@ -174,23 +174,23 @@ def _room(floor, key):
 def test_the_plan_is_the_reference_mirrored_with_the_carport_south():
     """D-038, answer 7: the reference villa facing the road, mirrored, so the
     carport takes the south (low v) end. Answer 12a B: the dining takes the
-    north rear corner, the majlis (salon) the old lawn court beside it."""
+    north rear corner, the salon the old lawn court beside it."""
     rooms = lay["floors"]["ground"]["rooms"]
     car, dining = _room("ground", "garage"), _room("ground", "dining")
-    majlis = _room("ground", "majlis")
+    salon = _room("ground", "salon")
     assert car["v"][0] <= min(r["v"][0] for r in rooms) + 1e-6
     assert dining["v"][1] >= max(r["v"][1] for r in rooms) - 0.6
     assert dining["u"][1] >= max(r["u"][1] for r in rooms) - 1e-6
-    assert abs(majlis["v"][1] - dining["v"][1]) < 0.01, "12d: the majlis lines up with the dining"
+    assert abs(salon["v"][1] - dining["v"][1]) < 0.01, "12d: the salon lines up with the dining"
     assert lay["meta"]["massing_option"] == "R"
 
 
 def test_answer_12_open_plan_with_a_tv_wall():
-    """D-046: the majlis (salon) is open to the foyer, the living room and the
+    """D-046: the salon is open to the foyer, the living room and the
     dining (12c, 12h); the island kitchen opens to the living room; a solid
     wall stands between the living room and the dining for the TV (12g)."""
     joins = {frozenset(j.split("/")) for j in lay["open_joins"]["ground"]}
-    for pair in (("majlis", "dining"), ("majlis", "entrance_foyer"), ("majlis", "living"),
+    for pair in (("salon", "dining"), ("salon", "entrance_foyer"), ("salon", "living"),
                  ("show_kitchen", "living"), ("entrance_foyer", "living")):
         assert frozenset(pair) in joins, f"{pair} should be open"
     assert frozenset(("living", "dining")) not in joins

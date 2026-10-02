@@ -290,7 +290,7 @@ ground:
   reference_name: ''
   confidence: owner answer
   decision: 'answers 12a B, 12e, 12g: dining in the north corner, faces the backyard'
-- key: majlis
+- key: salon
   kind: room
   x0: 20.716
   x1: 26.661
@@ -546,9 +546,9 @@ open_joins:
   ground:
   - show_kitchen/living
   - entrance_foyer/living
-  - entrance_foyer/majlis
-  - majlis/dining
-  - majlis/living
+  - entrance_foyer/salon
+  - salon/dining
+  - salon/living
   - entrance_foyer/stair_lift_ground
   - entrance_foyer/stair_hall
   - stair_lift_ground/stair_hall

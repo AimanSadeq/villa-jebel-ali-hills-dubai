@@ -78,8 +78,8 @@ Rules for the boundary:
 |---|---|---|
 | Entrance foyer | 20 | Double height |
 | Living room | 45 | Double height, connects to garden and pool |
-| Majlis | 35 | Formal reception, close to entrance, with its own guest powder room |
-| Guest powder room | 4 | Next to majlis |
+| Salon | 35 | Formal reception, close to entrance, with its own guest powder room. Always called the salon, never majlis (Aiman, 2026-10-02, D-047) |
+| Guest powder room | 4 | Next to the salon |
 | Guest bedroom, en-suite | 32 | Only bedroom on ground floor |
 | Dining | 22 | Not specified by owner: propose placement at checkpoint 2 |
 | Show kitchen | 25 | Open to dining or living |
@@ -123,7 +123,7 @@ Master suite contents: bedroom, private sitting area, his and hers walk-in wardr
 ## 5. Architectural style
 
 - Minimalist white modern: clean cubic volumes, white render, large glass.
-- Must-rule (Aiman, 2026-10-02, D-033): open space maximization, meaning open-plan interiors. Shared spaces (foyer, stair hall, circulation, kitchen, dining, living, family hall) join with as few walls and corridors as possible. Private rooms (bedrooms, bathrooms, majlis, office, Arabic kitchen, staff, services) stay enclosed.
+- Must-rule (Aiman, 2026-10-02, D-033): open space maximization, meaning open-plan interiors. Shared spaces (foyer, stair hall, circulation, kitchen, dining, living, family hall) join with as few walls and corridors as possible. Private rooms (bedrooms, bathrooms, office, Arabic kitchen, staff, services) stay enclosed. The salon is open to the foyer, living room and dining by owner decision (D-046); the Arabic kitchen is walled with an open entrance from the island kitchen.
 - Because large glass drives cooling loads in Dubai, use deep overhangs and recessed glazing on south and west faces. Report the solar exposure of each facade.
 - Interior: propose three distinct palettes (flooring, walls, accents, fixtures). These become switchable options in the walkthrough.
 - Drawings in English, metric units, with room areas shown in both m² and sq ft.
@@ -195,7 +195,7 @@ villa-5130272/
    - Door and window schedules
    - Room finishes schedule
 4. Reports: GFA report, sun study, cooling load, electrical load, clash report.
-5. Photo-realistic still renders (Blender): entrance, double-height living, majlis, master suite, pool at sunset, aerial view.
+5. Photo-realistic still renders (Blender): entrance, double-height living, salon, master suite, garden at sunset (no pool, D-041), aerial view.
 6. Consultant handover package: IFC + DXF + PDF + reports + `docs/open-items.md`.
 
 ## 11. Phases and review checkpoints

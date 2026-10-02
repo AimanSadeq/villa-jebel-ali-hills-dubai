@@ -40,7 +40,7 @@ SOURCE = ("reference/owner/Reference_villa_plot_5131627_Paradise_Home_2025-07.pd
 GROUND_MAP = {
     "ent_foyer": ("entrance_foyer", "room", "reference, double height"),
     "main_entrance": ("main_entrance", "porch", "reference: open, recessed, double height porch"),
-    "formal_lounge": ("majlis", "room", "reference formal lounge; replaced by answer 12"),
+    "formal_lounge": ("salon", "room", "reference formal lounge; replaced by answer 12"),
     "island_kitchen": ("show_kitchen", "room", "reference"),
     "family_sitting": ("family_sitting", "room", "answer 5"),
     "dining": ("dining", "room", "reference"),
@@ -107,13 +107,13 @@ FIRST_MAP = {
 FIRST_DROP = {"bedroom_1_dress_strip"}
 
 # Open joins, by our keys (no wall, no door). Ground: answer 12 (D-046): the
-# island kitchen, living room, majlis (salon), dining and foyer are one open
+# island kitchen, living room, salon, dining and foyer are one open
 # space, except the TV wall between the living room and the dining (12g); the
 # Arabic kitchen is walled from the service passage (12m).
 OPEN_JOINS = {
     "ground": [
-        "show_kitchen/living", "entrance_foyer/living", "entrance_foyer/majlis",
-        "majlis/dining", "majlis/living",
+        "show_kitchen/living", "entrance_foyer/living", "entrance_foyer/salon",
+        "salon/dining", "salon/living",
         "entrance_foyer/stair_lift_ground", "entrance_foyer/stair_hall",
         "stair_lift_ground/stair_hall", "stair_lift_ground/show_kitchen",
         "guest_bedroom/guest_dress",
@@ -175,12 +175,12 @@ def _rect(d: dict, key: str, kind: str) -> dict:
 # Answer 12, owner decisions 2026-10-02 (docs/ground-floor-decisions.md, 12 and
 # 12a to 12m; D-046). Sizes come from the reference rectangles they replace.
 DINING_ALONG_ROAD = 6.00    # 12a B: the dining in the north corner, 6.00 m along the road
-MAJLIS_ACROSS = 7.50        # 12d, 12e: the salon 6.00 m across, then 1.50 m more from the dining
+SALON_ACROSS = 7.50        # 12d, 12e: the salon 6.00 m across, then 1.50 m more from the dining
 TV_WALL_T = 0.15            # 12g: the TV wall, taken from the dining as the D-042 wall was
 
 
 def apply_answer_12(ground: list, first: list, report: list[str]) -> tuple[list, list]:
-    """Ground: the salon (majlis) takes the lawn court's place, lined up with
+    """Ground: the salon takes the lawn court's place, lined up with
     the dining and open to the foyer, the living room and the dining; the
     island kitchen, a double height living room and the dining run along the
     backyard; a solid TV wall stands between the living room and the dining.
@@ -189,27 +189,27 @@ def apply_answer_12(ground: list, first: list, report: list[str]) -> tuple[list,
     linen store (12b, 12l)."""
     g = {r["key"]: r for r in ground}
     f = {r["key"]: r for r in first}
-    k, m, c = g["show_kitchen"], g["majlis"], g["lawn_court"]
+    k, m, c = g["show_kitchen"], g["salon"], g["lawn_court"]
     split = round(m["x1"] - DINING_ALONG_ROAD, 3)
-    line = round(c["y0"] + MAJLIS_ACROSS, 3)
+    line = round(c["y0"] + SALON_ACROSS, 3)
 
     def room(key, x0, x1, y0, y1, ref, why):
         return {"key": key, "kind": "room", "x0": round(x0, 3), "x1": round(x1, 3),
                 "y0": round(y0, 3), "y1": round(y1, 3), "reference_key": ref,
                 "reference_name": "", "confidence": "owner answer", "decision": why}
 
-    out_g = [r for r in ground if r["key"] not in ("family_sitting", "dining", "majlis", "lawn_court")]
+    out_g = [r for r in ground if r["key"] not in ("family_sitting", "dining", "salon", "lawn_court")]
     out_g += [
         room("living", k["x1"], split, k["y0"], k["y1"], "family_sitting+dining",
              "answers 12, 12a B, 12g: double height living room, TV wall to the dining"),
         room("dining", split + TV_WALL_T, m["x1"], line, k["y1"], "formal_lounge",
              "answers 12a B, 12e, 12g: dining in the north corner, faces the backyard"),
-        room("majlis", c["x0"], m["x1"], c["y0"], line, "lawn_court+formal_lounge",
+        room("salon", c["x0"], m["x1"], c["y0"], line, "lawn_court+formal_lounge",
              "answers 12, 12c, 12d, 12e, 12h: the salon in the lawn court's place, open "
              "to the foyer, the living room and the dining"),
     ]
     report.append(f"answer 12: living {split - k['x1']:.2f} x {k['y1'] - k['y0']:.2f}, dining "
-                  f"{m['x1'] - split - TV_WALL_T:.2f} x {k['y1'] - line:.2f}, majlis "
+                  f"{m['x1'] - split - TV_WALL_T:.2f} x {k['y1'] - line:.2f}, salon "
                   f"{m['x1'] - c['x0']:.2f} x {line - c['y0']:.2f}")
 
     fam, court, pantry, corr = (f["family_living"], f["lawn_court_open"], f["pantry_first"],

@@ -41,15 +41,16 @@ ground:
       returns, 6.00 x 7.10 m, double height, along the backyard between the
       island kitchen and the dining. A solid TV wall separates it from the
       dining; it stays open to the kitchen, the foyer and the salon.
-  - key: majlis
-    name: "Majlis (Salon)"
+  - key: salon
+    name: "Salon"
     target_m2: 44.6
     reference_size: "owner answers 12d and 12e, 2026-10-02: 5.95 x 7.50 m in the lawn court's place"
     target_before_restart_m2: 35
     gfa: counts
     notes: >
       Formal reception, close to entrance, with its own guest powder room.
-      Owner confirmed 2026-10-01 that majlis and salon are the same room.
+      Owner confirmed 2026-10-01 that this formal reception room is the salon, and on
+      2026-10-02 that it is always called the salon (D-047).
       Answers 12, 12c and 12h (D-046): it takes the lawn court's place and is
       open to the foyer, the living room and the dining, by the owner's
       decision (it was a closed room under D-042).
@@ -59,7 +60,7 @@ ground:
     reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
     target_before_restart_m2: 4
     gfa: counts
-    notes: "Next to the majlis."
+    notes: "Next to the salon."
   - key: guest_bedroom
     name: "Guest Bedroom, En-suite"
     target_m2: 24.7

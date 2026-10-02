@@ -44,7 +44,7 @@ CARPORT = "#ffffff"
 FURN = "#8a6a3f"
 
 # Rooms answer 12 changes; everything else is drawn as built.
-REPLACED = {"show_kitchen", "family_sitting", "dining", "majlis", "lawn_court"}
+REPLACED = {"show_kitchen", "family_sitting", "dining", "salon", "lawn_court"}
 
 LABELS = {
     "garage": "Carport, 3 cars", "guest_bedroom": "Guest bed", "guest_toilet": "WC",
@@ -63,10 +63,10 @@ def _area(x0, x1, y0, y1):
 
 def options(g: dict) -> dict:
     """The back strip, x along the road (south to north), y0..y1 its depth."""
-    k, m, c = g["show_kitchen"], g["majlis"], g["lawn_court"]
+    k, m, c = g["show_kitchen"], g["salon"], g["lawn_court"]
     y0, y1 = k["y0"], k["y1"]
     xk0, xk1, xend = k["x0"], k["x1"], m["x1"]
-    salon = ("salon", "Salon (majlis)", c["x0"], c["x1"], c["y0"], c["y1"])
+    salon = ("salon", "Salon", c["x0"], c["x1"], c["y0"], c["y1"])
     a_split = round(xk1 + 3.60, 2)
     b_split = round(xend - 6.00, 2)
     return {
@@ -132,7 +132,7 @@ def _furniture(ax, key, x0, x1, y0, y1, opt):
         if w >= 8.0:
             ax.add_patch(Rectangle((y0 + 1.0, x1 - 3.6), 0.9, 2.8, **kw))
             ax.add_patch(Rectangle((y0 + 3.6, x1 - 3.6), 0.9, 2.8, **kw))
-    elif key in ("salon", "majlis"):
+    elif key == "salon":
         ax.add_patch(Rectangle((y0 + 0.4, x0 + 0.4), 0.8, w - 0.8, **kw))
         ax.add_patch(Rectangle((y1 - 1.2, x0 + 0.4), 0.8, w - 0.8, **kw))
         ax.add_patch(Rectangle((y0 + 1.2, x1 - 1.2), d - 2.4, 0.8, **kw))
@@ -196,7 +196,7 @@ def draw_option(ax, plan: dict, opt: dict, letter: str):
     # Garden glass along the back.
     k = g["show_kitchen"]
     yb = k["y1"] + T_EXT / 2
-    ax.plot([yb, yb], [k["x0"] + 0.3, g["majlis"]["x1"] - 0.3], color="#2a7fb8", lw=2.0, zorder=5)
+    ax.plot([yb, yb], [k["x0"] + 0.3, g["salon"]["x1"] - 0.3], color="#2a7fb8", lw=2.0, zorder=5)
 
     # Dimensions of the back strip.
     yd = k["y1"] + 1.1
@@ -205,7 +205,7 @@ def draw_option(ax, plan: dict, opt: dict, letter: str):
                     arrowprops=dict(arrowstyle="<->", color=CHANGED, lw=0.7))
         ax.text(yd + 0.25, (x0 + x1) / 2, f"{x1 - x0:.2f} m", rotation=90, ha="left",
                 va="center", fontsize=5.6, color=CHANGED)
-    xn = g["majlis"]["x1"] + T_EXT + 0.6
+    xn = g["salon"]["x1"] + T_EXT + 0.6
     ax.annotate("", xy=(k["y0"], xn), xytext=(k["y1"], xn),
                 arrowprops=dict(arrowstyle="<->", color=CHANGED, lw=0.7))
     ax.text((k["y0"] + k["y1"]) / 2, xn + 0.2, "6.00 m deep", ha="center", va="bottom",
@@ -260,7 +260,7 @@ def main() -> int:
     fig.suptitle("Villa 5130272, ground floor, question 12a: arranging the back after answer 12",
                  x=0.02, ha="left", fontsize=13, weight="bold")
     fig.text(0.02, 0.935,
-             f"Same in both: the salon (majlis) takes the lawn court's place, "
+             f"Same in both: the salon takes the lawn court's place, "
              f"{ca:.1f} m² ({ca * SQFT:,.0f} sq ft), closed, entered from the foyer. "
              "Kitchen, dining and living form one open room along the backyard (D-033). "
              "GFA is the same for both options; enclosing the court is question 12b.",

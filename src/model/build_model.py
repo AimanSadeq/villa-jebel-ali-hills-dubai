@@ -53,7 +53,7 @@ LABEL = {
     "laundry": "Laundry", "plant_room": "Plant", "home_office": "Office",
     "guest_powder": "Powder",
     "stair_lift_ground": "Stair + lift", "stair_lift_first": "Stair + lift",
-    "majlis": "Majlis", "guest_bedroom": "Guest bedroom", "pantry": "Pantry",
+    "salon": "Salon", "guest_bedroom": "Guest bedroom", "pantry": "Pantry",
     "arabic_kitchen": "Arabic kitchen", "show_kitchen": "Show kitchen",
     "dining": "Dining", "living": "Living", "master_suite": "Master suite",
     "family_living": "Family room", "linen_storage": "Linen",

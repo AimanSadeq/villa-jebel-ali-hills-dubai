@@ -90,7 +90,7 @@ def cost(areas: dict[str, float], corridor_w: float, right_size_ssw: bool) -> di
 PACKAGES = [
     Package("0", "Right-size the SSW wing only, no room cut", {}),
     Package("1", "Spread thin, no room loses more than 2 m2", {
-        "majlis": 33, "guest_bedroom": 30, "sunroom": 18, "home_office": 12,
+        "salon": 33, "guest_bedroom": 30, "sunroom": 18, "home_office": 12,
         "entrance_foyer": 17, "family_living": 33, "bedroom_2": 29,
         "bedroom_3": 29, "bedroom_4": 29, "master_suite": 68,
         "living": 44, "dining": 21, "show_kitchen": 24,
@@ -99,8 +99,8 @@ PACKAGES = [
         "sunroom": "Removed. The courtyard and the double height living room "
                    "already give the house its garden room.",
     }),
-    Package("3", "Smaller guest suite, majlis and sunroom", {
-        "guest_bedroom": 26, "majlis": 30, "sunroom": 15, "home_office": 12,
+    Package("3", "Smaller guest suite, salon and sunroom", {
+        "guest_bedroom": 26, "salon": 30, "sunroom": 15, "home_office": 12,
     }),
     Package("4", "Shave the bedroom floor", {
         "master_suite": 64, "bedroom_2": 27, "bedroom_3": 27, "bedroom_4": 27,

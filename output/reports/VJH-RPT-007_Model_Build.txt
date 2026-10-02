@@ -13,20 +13,20 @@ CONCEPT DESIGN, NOT FOR CONSTRUCTION
    IfcSpace                     50
    IfcStair                      1
    IfcTransportElement           1
-   IfcWall                      16
+   IfcWall                      15
    IfcWindow                    36
 
 3. Schema validation: PASS, 0 issue(s)
 
-4. Geometry: 148 elements tessellated, 0 failed
+4. Geometry: 147 elements tessellated, 0 failed
    IfcColumn                     3        1.58 m3
    IfcDoor                      31        5.84 m3
    IfcGeographicElement          1      305.99 m3
    IfcSlab                       9      372.00 m3
-   IfcSpace                     50     3134.92 m3
+   IfcSpace                     50     3135.36 m3
    IfcStair                      1       12.92 m3
    IfcTransportElement           1       27.14 m3
-   IfcWall                      16      323.82 m3
+   IfcWall                      15      323.58 m3
    IfcWindow                    36        7.46 m3
 
 5. Floor area, IFC against the plan (walls and spaces in plan; tolerance 0.10 m2)

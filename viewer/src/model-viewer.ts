@@ -200,15 +200,15 @@ async function boot() {
 
   // CLAUDE.md rule 9 (D-045): width x length, then the area.
   const size = (r: RoomLabel) => (r.w_m && r.l_m
-    ? `${fmt(r.w_m)} x ${fmt(r.l_m)} m, ${fmt(r.area_m2, 1)} m²`
-    : `${fmt(r.area_m2, 1)} m²`);
+    ? `${fmt(r.w_m)} x ${fmt(r.l_m)} m, ${fmt(r.area_m2, 1)} m² (${fmt(r.area_sqft, 0)} sq ft)`
+    : `${fmt(r.area_m2, 1)} m² (${fmt(r.area_sqft, 0)} sq ft)`);
   const roomLabels: { obj: CSS2DObject; room: RoomLabel }[] = [];
   for (const r of data.rooms) {
     const el = h('div', { class: r.circulation ? 'label circ' : r.sub ? 'label sub' : 'label' },
       h('b', {}, r.label),
       r.circulation ? null : h('span', {}, size(r)),
       r.circulation || !r.height ? null : h('span', {}, r.height));
-    el.title = `${r.name}, ${size(r)}, ${fmt(r.area_sqft, 0)} sq ft${r.height ? `, ${r.height}` : ''}`;
+    el.title = `${r.name}, ${size(r)}${r.height ? `, ${r.height}` : ''}`;
     const obj = new CSS2DObject(el);
     obj.position.copy(toThree(r.u, r.v, r.z));
     world.scene.three.add(obj);
@@ -323,16 +323,22 @@ async function boot() {
   const g = data.gfa;
   const sqft = (v: number) => `${fmt(v * SQFT, 0)} sq ft`;
   const area = h('table', { class: 'metrics' },
-    tr('Ground, road wing', `${fmt(g.road_wing_ground)} m²`),
-    tr('Ground, SSW wing', `${fmt(g.ssw_wing_ground)} m²`),
-    tr('Ground, living block', `${fmt(g.living_block_ground ?? 0)} m²`),
-    tr('First floor, less void', `${fmt(g.first_floor_less_void)} m²`),
+    tr('Ground floor', `${fmt(g.road_wing_ground + g.ssw_wing_ground + (g.living_block_ground ?? 0))} m²`),
+    tr('First floor, less voids', `${fmt(g.first_floor_less_void)} m²`),
     tr('Total GFA', `${fmt(g.total)} m²`),
     tr('', sqft(g.total), 'adj'),
     tr('DDA cap', `${fmt(g.cap)} m²`),
-    tr('Margin', `+${fmt(g.margin)} m²`, g.margin >= 0 ? 'good' : 'bad'));
+    tr('Margin', `${g.margin >= 0 ? '+' : ''}${fmt(g.margin)} m²`, g.margin >= 0 ? 'good' : 'bad'));
+  const outsideNames: Record<string, string> = {
+    carport_m2: 'Carport', first_floor_balconies_terrace_m2: 'Balconies and terraces' };
   for (const [k, v] of Object.entries(data.outside_gfa ?? {})) {
-    if (v > 0) area.append(tr(`${k.replace(/_m2$/, '').replace(/_/g, ' ')} (outside GFA, TO VERIFY)`, `${fmt(v)} m²`, 'adj'));
+    if (v > 0) area.append(tr(`${outsideNames[k] ?? k.replace(/_m2$/, '').replace(/_/g, ' ')} (outside GFA, TO VERIFY)`, `${fmt(v)} m²`, 'adj'));
+  }
+  // CLAUDE.md section 3: the total both with and without the carport.
+  const carport = (data.outside_gfa ?? {})['carport_m2'] ?? 0;
+  if (carport > 0) {
+    const withCar = g.total + carport;
+    area.append(tr('Total if DDA counts the carport', `${fmt(withCar)} m²`, withCar <= g.cap ? 'good' : 'bad'));
   }
   const ifcTotal = Object.values(data.gfa_from_ifc).reduce((a, b) => a + b, 0);
   panel.append(section('ruler', 'Area', area,

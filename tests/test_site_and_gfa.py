@@ -222,9 +222,9 @@ def test_master_suite_is_much_larger_than_the_other_bedrooms():
         )
 
 
-def test_majlis_has_its_own_guest_powder_room():
+def test_salon_has_its_own_guest_powder_room():
     keys = {r.key for r in rooms()}
-    assert {"majlis", "guest_powder"} <= keys
+    assert {"salon", "guest_powder"} <= keys
 
 
 def test_guest_bedroom_is_the_only_bedroom_on_the_ground_floor():
@@ -353,7 +353,7 @@ def test_route_b_touched_no_principal_room():
     """Route B was chosen precisely because it touches no principal room. The
     garage is excluded from this check: the owner reduced it separately and
     deliberately on 2026-10-02."""
-    principal = {"living", "majlis", "dining", "show_kitchen", "guest_bedroom",
+    principal = {"living", "salon", "dining", "show_kitchen", "guest_bedroom",
                  "sunroom", "home_office", "master_suite", "bedroom_2",
                  "bedroom_3", "bedroom_4", "family_living"}
     trimmed = {r["key"] for r in _trimmed("route_b")}

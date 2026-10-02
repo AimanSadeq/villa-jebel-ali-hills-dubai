@@ -66,7 +66,7 @@ OUT = REPO_ROOT / "output" / "ifc" / "VJH-ARCH-001_Villa_5130272.ifc"
 T_EXT = 0.25
 T_INT = 0.15
 
-PRINCIPAL = {"living", "dining", "show_kitchen", "majlis", "master_suite", "family_hall",
+PRINCIPAL = {"living", "dining", "show_kitchen", "salon", "master_suite", "family_hall",
              "family_living", "bedroom_2", "bedroom_3", "bedroom_4",
              "guest_bedroom"}
 SERVICE_WINDOWS = {"home_office", "arabic_kitchen", "maids_room", "laundry",
@@ -82,7 +82,7 @@ NO_WINDOWS = {"garage", "pantry", "plant_room", "linen_storage", "lift", "main_e
 # full height (D-046). The porch void is outdoor space and stays open.
 VOID_GLAZING = {"void_over_living"}
 
-DOOR_WIDTH = {"majlis": 1.20, "master_suite": 1.00, "family_living": 1.20,
+DOOR_WIDTH = {"salon": 1.20, "master_suite": 1.00, "family_living": 1.20,
               "garage": 0.90, "dining": 1.60}
 
 # key, name, RGB, transparency. Neutral concept colours, not finishes.
@@ -446,7 +446,9 @@ class Model:
                     continue
                 hull = unary_union([ga, gb]).envelope
                 stub = hull.difference(interior)
-                if 0 < stub.area < 0.05:
+                # 0.10 m2: the pier where the foyer, living room and salon meet
+                # (0.20 x 0.26 m, D-046) is open space, not a wall.
+                if 0 < stub.area < 0.10:
                     out.append((ka, stub))
                     interior = interior.union(stub)
         return out
