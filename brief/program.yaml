@@ -101,16 +101,17 @@ ground:
       approved trim route B, 2026-10-01.
     gfa: counts
     notes: "In the staff zone with a separate entrance."
-  - key: drivers_room
-    name: "Driver's Room with Bathroom"
-    target_m2: 11
-    brief_target_m2: 12
-    trimmed: route_b
-    trim_note: >
-      Trimmed from the CLAUDE.md section 4 target of 12 m2 to 11 m2. Owner
-      approved trim route B, 2026-10-01.
+  - key: outdoor_bathroom
+    name: "Outdoor Bathroom, WC and Shower"
+    target_m2: 4.5
     gfa: counts
-    notes: "In the staff zone, can open to outside or garage."
+    added_by_owner: "2026-10-02"
+    notes: >
+      Owner decision 2026-10-02, D-028. Its own external door and no internal
+      connection to the villa. Opens onto the courtyard at the north end of the
+      pool, beside the garage, so it serves swimmers and garden use as well as
+      a non-resident driver or outdoor staff. Size is a Claude assumption for a
+      WC and shower, flagged for owner review.
   - key: plant_room
     name: "MEP Plant Room"
     target_m2: 7
@@ -249,6 +250,14 @@ roof: []
 # Rooms removed from the CLAUDE.md section 4 program, kept on record so the
 # removal is visible and reversible rather than silent.
 removed:
+  - key: drivers_room
+    name: "Driver's Room with Bathroom"
+    brief_target_m2: 12
+    removed_on: "2026-10-02"
+    decision: "D-028"
+    reason: >
+      Owner decision: no driver's room. Replaced by an outdoor bathroom with
+      its own external door.
   - key: sunroom
     name: "Sunroom"
     brief_target_m2: 20

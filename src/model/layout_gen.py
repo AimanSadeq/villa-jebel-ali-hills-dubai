@@ -171,6 +171,21 @@ CONFIGS = {
         "F_EAST": ["bedroom_4", "linen_storage", "family_living"],
         "foyer_void": False,
     },
+    # As original_single_height_foyer, with no driver's room (D-028). The maid's
+    # room is paired with the outdoor bathroom across the staff strip, so the
+    # bathroom lands on the courtyard face and takes its door from outside.
+    "c_outdoor_bathroom": {
+        "G_WEST": ["guest_bedroom", "stair_lift_ground", "entrance_foyer",
+                   ("home_office", "guest_powder")],
+        "G_WEST_GROW": "home_office",
+        "G_EAST": ["arabic_kitchen", "pantry", "majlis"],
+        "G_EAST_GROW": "majlis",
+        "G_STAFF": [("maids_room", "outdoor_bathroom"), ("laundry", "plant_room")],
+        "SSW_KITCHEN": ["show_kitchen", "dining"],
+        "F_WEST": ["bedroom_2", "bedroom_3"],
+        "F_EAST": ["bedroom_4", "linen_storage", "family_living"],
+        "foyer_void": False,
+    },
     "original_double_height_foyer": {
         "G_WEST": ["guest_bedroom", "stair_lift_ground", "entrance_foyer",
                    ("home_office", "guest_powder")],
@@ -223,7 +238,7 @@ CONFIGS = {
         "u_east_max": 18.50,
     },
 }
-ACTIVE = "original_single_height_foyer"
+ACTIVE = "c_outdoor_bathroom"
 
 F_WEST = ["stair_lift_first", "bedroom_2"]
 F_EAST = ["bedroom_4", "linen_storage", "family_living"]

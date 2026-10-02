@@ -6,6 +6,35 @@ Columns: date, decision, reason, approved by Aiman.
 
 ---
 
+## 2026-10-02, staff zone
+
+### D-028 No driver's room; an outdoor bathroom instead
+
+**Decision.** The driver's room is removed from the program and kept on record
+under `removed:` in `brief/program.yaml`. An outdoor bathroom, WC and shower,
+4.5 m2, is added. It has its own external door and no internal connection to
+the villa, and sits on the courtyard face of the staff strip beside the garage,
+facing the north end of the pool deck.
+
+**Reason.** Owner decisions 2026-10-02: first to move the driver's room outside
+the villa, then to drop it and make sure there is a bathroom outside. Placing the
+bathroom on the courtyard face lets one room serve swimmers, garden use, and a
+non-resident driver or outdoor staff by the garage. The 4.5 m2 size and the
+placement are Claude's reading of the instruction, flagged for owner review.
+
+A standalone driver's outbuilding was tried first and rejected by the geometry:
+north of the garage there is not enough room inside the 3 m setback for it.
+
+**Result, measured: 645.72 m2, 17.27 m2 inside the cap.** Removing the driver's
+room shortened the staff strip, so the garage no longer carries padding and is
+exactly its 31.3 m2 internal target. The majlis absorbs the floor under the
+bedrooms instead and measures 50.1 m2 against its 35 m2 brief.
+
+**Approved by Aiman: yes,** the removal and the outdoor bathroom. The size and
+placement of the bathroom: not yet.
+
+---
+
 ## 2026-10-02, Phase 2 plan fits
 
 ### D-027 Option C confirmed; foyer single height; upstairs trims

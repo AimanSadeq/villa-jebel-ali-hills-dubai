@@ -328,9 +328,11 @@ def test_every_trim_names_which_decision_it_came_from():
         )
 
 
-def test_route_b_trims_total_thirteen_square_metres():
+def test_route_b_trims_still_in_force_total_twelve_square_metres():
+    """Route B saved 13 m2 net. One of those was the driver's room, 12 to 11,
+    and that room was removed outright by D-028, so 12 m2 of route B remains."""
     saved = sum(r["brief_target_m2"] - r["target_m2"] for r in _trimmed("route_b"))
-    assert saved == 13, f"Route B should save 13 m2 net, not {saved}"
+    assert saved == 12, f"Route B trims still in force should total 12 m2, not {saved}"
 
 
 def test_the_two_car_garage_saves_seventeen_square_metres():

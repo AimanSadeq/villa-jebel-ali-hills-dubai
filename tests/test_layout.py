@@ -81,3 +81,27 @@ def test_the_measured_plan_holds_the_recommended_margin():
     """D-005: hold about 10 m2 back for the consultant's remeasure."""
     m = lay["gfa_measured"]
     assert m["margin"] >= 9.99 - 1e-6, f"only {m['margin']:.2f} m2 held back"
+
+
+def test_there_is_no_drivers_room_and_its_removal_is_on_record():
+    """Owner decision 2026-10-02, D-028."""
+    placed = {r["key"] for f in ("ground", "first") for r in lay["floors"][f]["rooms"]}
+    assert "drivers_room" not in placed
+    assert any(r["key"] == "drivers_room" for r in prog.get("removed", []))
+
+
+def test_the_outdoor_bathroom_sits_on_an_external_wall():
+    """It takes its door from outside, so one face must be the building's
+    external wall: the courtyard face of the two storey wing."""
+    bath = next(r for r in lay["floors"]["ground"]["rooms"] if r["key"] == "outdoor_bathroom")
+    road = lay["plates"]["road"]
+    t_ext = lay["meta"]["wall_external_m"]
+    assert abs(bath["u"][1] - (road["u"][1] - t_ext)) < 1e-3, (
+        "the outdoor bathroom does not reach the courtyard wall"
+    )
+
+
+def test_the_outdoor_bathroom_counts_toward_gfa():
+    """It is enclosed floor area, so it counts, like everything else here."""
+    progs = {r["key"]: r for r in prog["ground"]}
+    assert progs["outdoor_bathroom"]["gfa"] == "counts"

@@ -57,6 +57,7 @@ BAD = "#b3261e"
 DIM = "#1f6f8b"
 
 SERVICE_KEYS = {"arabic_kitchen", "pantry", "laundry", "plant_room", "garage",
+                "outdoor_bathroom",
                 "stair_lift_ground", "stair_lift_first", "linen_storage",
                 "guest_powder"}
 STAFF_KEYS = {"maids_room", "drivers_room"}
@@ -72,6 +73,7 @@ SHORT = {
     "living": "LIVING", "master_suite": "MASTER SUITE", "bedroom_2": "BED 2",
     "bedroom_3": "BED 3", "bedroom_4": "BED 4", "family_living": "FAMILY",
     "linen_storage": "LINEN",
+    "outdoor_bathroom": "OUTDOOR WC + SHOWER\nexternal door",
 }
 
 
@@ -305,7 +307,8 @@ def build() -> Path:
         "which DDA FAQ Q28 allows up to 6 m clear, subject to the overall height "
         "rule in OI-13. Ceiling height is not GFA.",
         "Corridors 1.80 m and garage counted toward GFA, both by owner decision "
-        "D-026. Upstairs trims D-027: master 68, bedrooms 28, family 33.",
+        "D-026. Upstairs trims D-027: master 68, bedrooms 28, family 33. No "
+        "driver's room; outdoor WC and shower opening to the courtyard, D-028.",
         "Walls: external 0.25 m, internal 0.15 m, indicative. Structure by a "
         "licensed structural engineer, not in scope.",
     ]
