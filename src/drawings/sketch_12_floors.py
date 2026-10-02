@@ -46,7 +46,7 @@ OUT_PNG_DOORS = REPO_ROOT / "output" / "pdf" / "VJH-SK-013_Answer_12_Door_Schedu
 
 # Open joins after answer 12 (no door, no wall): the reference's, with the
 # garden room renamed, plus the new open room and the salon (12c).
-OPEN_GROUND_NEW = ["show_kitchen/living", "salon/dining", "salon/living",
+OPEN_GROUND_NEW = ["show_kitchen/living", "salon/dining", "salon/living", "entrance_foyer/salon",
                    "entrance_foyer/living"]
 
 CAP = 662.99
@@ -217,7 +217,7 @@ def _draw_floor(ax, rooms, outline, labels, title, floor, H):
         elif kind in ("carport", "porch", "balcony", "terrace"):
             fc, ls = "#ffffff", "--"
         elif r["key"] == "salon":
-            fc, ls = SALON, "-"
+            fc, ls = SALON, (0, (4, 3))  # 12c and 12h: open to the dining and the foyer
         elif new and r["key"] in ("show_kitchen", "living", "dining"):
             fc, ls = OPEN, (0, (4, 3))  # one open room: no walls between (D-033)
         elif new:
@@ -334,7 +334,7 @@ def main() -> int:
     s = next(r for r in ground if r["key"] == "salon")
     ax_g.plot([s["y1"], s["y1"]], [s["x0"], s["x1"]], color="white", lw=2.0, zorder=5)
     ax_g.plot([s["y1"], s["y1"]], [s["x0"], s["x1"]], color=MUTED, lw=0.8, ls=(0, (4, 3)), zorder=5)
-    ax_g.text(s["y1"] - 0.15, s["x0"] + 0.6, "open to dining (12c)", ha="right", va="bottom",
+    ax_g.text(s["y1"] - 0.15, s["x0"] + 0.6, "open to dining (12c)\nand foyer (12h)", ha="right", va="bottom",
               fontsize=4.6, color=CHANGED, zorder=6)
     fam = next(r for r in first if r["key"] == "family_living")
 
