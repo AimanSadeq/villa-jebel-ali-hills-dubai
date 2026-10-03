@@ -22,13 +22,20 @@
 
 meta:
   stamp: "CONCEPT DESIGN, NOT FOR CONSTRUCTION"
-  status: "Proposed to the owner on VJH-SK-018 Rev B (answers P1, P2 C, P3 C). Not approved."
+  status: "Approved by the owner (answer P4: A, 2026-10-03, D-052). Built into the walkthrough."
   count: 3
+
+# Feature walls (walls.feature): the TV wall between the living room and the
+# dining (answer 12g), both faces, and the salon's long solid wall.
+feature_walls:
+  - {room: living, side: N}
+  - {room: dining, side: S}
+  - {room: salon, side: W}
 
 palettes:
   - key: palette_1
     name: "White, Black and Beige"
-    status: proposed
+    status: approved
     replaces: "Sand and Oak (answers P2 C and P3 C, 2026-10-03)"
     idea: >
       The owner's direction: white walls and joinery, warm beige floors and
@@ -58,7 +65,7 @@ palettes:
 
   - key: palette_2
     name: "Marble and Walnut"
-    status: proposed
+    status: approved
     idea: >
       Formal and rich, for receiving guests: white marble look floors in the
       public rooms, greige walls, dark walnut joinery, champagne bronze. The
@@ -86,7 +93,7 @@ palettes:
 
   - key: palette_3
     name: "Stone and Charcoal"
-    status: proposed
+    status: approved
     idea: >
       Crisp and contemporary, in contrast with the warm facade: grey terrazzo
       and concrete look floors, white walls, charcoal and smoked oak, matt

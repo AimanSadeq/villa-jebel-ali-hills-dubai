@@ -17,6 +17,7 @@ import { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRe
 import workerUrl from '@thatopen/fragments/worker?url';
 import { append, clear, h, icon, tr } from './dom';
 import { Walker, drawMiniMap, type WalkData } from './walk';
+import { PaletteLayer, type Finishes } from './palettes';
 
 interface RoomLabel {
   key: string; name: string; label: string; storey: 'ground' | 'first';
@@ -39,6 +40,7 @@ interface ModelData {
   counts: Record<string, number>;
   rooms: RoomLabel[];
   walk?: WalkData;
+  finishes?: Finishes;
 }
 
 type Level = 'ground' | 'first' | 'roof';
@@ -182,12 +184,15 @@ async function boot() {
   ids.forEach((id, i) => {
     const cat = catOf.get(id)!;
     const b = boxes[i];
-    const level: Level = b.min.y < g1 ? 'ground' : b.min.y < g2 ? 'first' : 'roof';
     const name = nameOf.get(id)?.name ?? '';
+    // Facade parts (D-051) span the storeys: sort them by their middle.
+    const facadePart = /^IFC(COVERING|LIGHTFIXTURE|SHADINGDEVICE)$/.test(cat) || name === 'Roof pergola';
+    const y = facadePart ? (b.min.y + b.max.y) / 2 : b.min.y;
+    const level: Level = y < g1 ? 'ground' : y < g2 ? 'first' : 'roof';
     if (cat === 'IFCSPACE') {
       if (name === 'Swimming pool water') groups.site.push(id);
       else { groups.spaces.push(id); spaceLevel.set(id, level); }
-    } else if (cat === 'IFCGEOGRAPHICELEMENT' || cat === 'IFCBUILDINGELEMENTPROXY' || name === 'Pool deck') {
+    } else if (cat === 'IFCGEOGRAPHICELEMENT' || (cat === 'IFCBUILDINGELEMENTPROXY' && !facadePart) || name === 'Pool deck') {
       groups.site.push(id);
     } else {
       groups[level].push(id);
@@ -217,9 +222,14 @@ async function boot() {
     roomLabels.push({ obj, room: r });
   }
 
+  // Interior palettes (D-052): floors, wall faces and ceilings per room.
+  const finishes = data.finishes && data.finishes.quads.length ? new PaletteLayer(data.finishes) : null;
+  if (finishes) { world.scene.three.add(finishes.group); finishes.set(0); }
+
   async function applyVisibility() {
     const shown: Level[] = state.view === 'whole' ? ['ground', 'first', 'roof']
       : state.view === 'first' ? ['ground', 'first'] : ['ground'];
+    finishes?.show(shown, walkState.on);
     await hider.set(true, map(ids));
     const hide: number[] = [];
     for (const lv of ['ground', 'first', 'roof'] as Level[]) if (!shown.includes(lv)) hide.push(...groups[lv]);
@@ -461,6 +471,31 @@ async function boot() {
     h('p', { class: 'note' }, icon('warn', 'icon tiny'),
       'Walls and the balustrades stop you, the stair carries you up and down, the lift rides between floors. Doors are shown open. Night lights are interim, one per room, until the ceiling plans place the fixtures (Phase 6).')));
 
+  if (finishes) {
+    const palBtns: HTMLButtonElement[] = [];
+    const palNote = h('p', { class: 'note' });
+    const choose = (i: number) => {
+      finishes.set(i);
+      palBtns.forEach((b, k) => b.classList.toggle('on', k - 1 === i));
+      const p = i >= 0 ? finishes.data.palettes[i] : null;
+      palNote.textContent = p
+        ? `Floors ${p.flooring.public.name.toLowerCase()}; walls ${p.walls.main.name.toLowerCase()}; feature walls ${p.walls.feature.name.toLowerCase()}. Visual concept finishes, not a specification.`
+        : 'The model without finishes.';
+    };
+    const chipsP = h('div', { class: 'chips' });
+    const bare = h('button', { class: 'chip', type: 'button' }, 'No finishes');
+    bare.addEventListener('click', () => choose(-1));
+    palBtns.push(bare);
+    finishes.data.palettes.forEach((p, i) => {
+      const b = h('button', { class: 'chip', type: 'button' }, `${i + 1} ${p.name}`);
+      b.addEventListener('click', () => choose(i));
+      palBtns.push(b);
+    });
+    chipsP.append(...palBtns.slice(1), bare);
+    panel.append(section('palette', 'Interior palette', chipsP, palNote));
+    choose(0);
+  }
+
   panel.append(section('check', 'Selection', info));
 
   const g = data.gfa;
@@ -524,7 +559,7 @@ async function boot() {
 
   // Development only: lets the camera be scripted when checking views.
   if (import.meta.env.DEV) {
-    (window as unknown as Record<string, unknown>).__villa = { world, model, centre, walker, setWalking, setNight };
+    (window as unknown as Record<string, unknown>).__villa = { world, model, centre, walker, setWalking, setNight, finishes };
   }
 }
 

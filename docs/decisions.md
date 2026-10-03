@@ -8,6 +8,21 @@ Columns: date, decision, reason, approved by Aiman.
 
 ## 2026-10-02, the ground floor built from the reference
 
+### D-052 Three interior palettes in the walkthrough (answers P1 to P4)
+
+**Date.** 2026-10-03.
+
+**Decision.** brief/palettes.yaml holds the three palettes the owner approved on VJH-SK-018 Rev B:
+1. White, Black and Beige (the owner's direction, replacing Sand and Oak, P2 C, P3 C): white walls and joinery, beige floors and soft furnishings, a black marble look feature wall, black worktops, matt black metal.
+2. Marble and Walnut: white marble look floors, greige walls, walnut joinery and bedroom floors, champagne bronze.
+3. Stone and Charcoal: grey terrazzo look floors, white walls, charcoal feature wall, smoked oak, matt black.
+
+The model build exports every room's floor, wall faces (leaving doors, windows and open joins clear) and ceiling as finish surfaces tagged with a palette slot (src/model/finishes.py); the viewer colours them from the chosen palette and switches with one button (viewer/src/palettes.ts). Feature walls: both faces of the TV wall (12g) and the salon's long solid wall. Textures are drawn in the browser from the palette's pattern, so no image assets or licences are involved. Joinery, worktop, textile and fixture colours apply when the furniture is modelled. Visual concept finishes, not a specification.
+
+**Reason.** CLAUDE.md section 5 and deliverable 2 (switchable interior palettes); owner's answers P1 to P4.
+
+**Approved by Aiman.** Yes (P4: A, 2026-10-03).
+
 ### D-051 Facade built, after the owner's renders (answers R1 to R4)
 
 **Date.** 2026-10-02.

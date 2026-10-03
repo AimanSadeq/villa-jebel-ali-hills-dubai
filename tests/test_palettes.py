@@ -29,3 +29,21 @@ def test_three_distinct_palettes_fill_every_slot():
                 assert sw["name"] and "—" not in sw["name"]
     floors = [tuple(p["flooring"][k]["colour"] for k in ("public", "bedrooms")) for p in pals]
     assert len(set(floors)) == 3
+
+
+def test_the_walkthrough_finishes_use_the_palettes():
+    """P4, D-052: the model build exports floor, wall and ceiling finishes per
+    room; every slot exists in every palette; the feature walls are placed."""
+    import json
+    data = json.loads((REPO_ROOT / "viewer" / "public" / "data" / "model.json").read_text(encoding="utf-8"))
+    fin = data["finishes"]
+    assert len(fin["palettes"]) == 3 and len(fin["quads"]) > 100
+    for q in fin["quads"]:
+        grp, key = q["slot"].split(".")
+        assert len(q["p"]) == 4
+        for p in fin["palettes"]:
+            assert key in p[grp], (q["slot"], p["key"])
+    feature = {q["room"] for q in fin["quads"] if q["slot"] == "walls.feature"}
+    assert feature == {f["room"] for f in SPEC["feature_walls"]}
+    floored = {q["room"] for q in fin["quads"] if q["slot"].startswith("flooring.")}
+    assert {"living", "salon", "master_suite", "family_living", "master_toilet"} <= floored

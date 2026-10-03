@@ -41,6 +41,7 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from analysis import gfa_check  # noqa: E402
 from model import architecture  # noqa: E402
+from model.finishes import finish_data  # noqa: E402
 from model.heights import clear_heights, room_height_text  # noqa: E402
 from model.site import sqft  # noqa: E402
 
@@ -208,6 +209,7 @@ def publish_to_viewer(model, path: Path, lay: dict, ifc_areas: dict) -> None:
         "rooms": rooms,
         # The walkthrough (D-049): where a person can stand on each level.
         "walk": model.walk_data(),
+        "finishes": finish_data(model),
     }
     (VIEWER_DATA / "model.json").write_text(json.dumps(data, indent=1),
                                            encoding="utf-8")

@@ -230,6 +230,7 @@ class Model:
         self.elev = {"ground": 0.0, "first": self.HG, "roof": self.HG + self.HF}
         self.window_boxes: list[dict] = []
         self.facade_obstacles: list[Polygon] = []
+        self.opening_boxes: list[tuple] = []      # (storey, 2D cut, z0, z1), for finishes
 
     # Setup -----------------------------------------------------------------
 
@@ -927,6 +928,7 @@ class Model:
         if w is None:
             self.counts["unhosted"] = self.counts.get("unhosted", 0) + 1
             return None
+        self.opening_boxes.append((storey, cut, sill, sill + height))
         op = self.element("IfcOpeningElement", f"Opening for {name}", storey,
                           [self._prism(cut, sill, height)], container=False)
         ifcopenshell.api.feature.add_feature(self.f, feature=op, element=w)
