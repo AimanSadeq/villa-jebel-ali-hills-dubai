@@ -161,8 +161,8 @@ def main() -> int:
             y -= 0.006
 
     notes = [
-        "Palette 1 is the owner's white, black and beige direction, replacing Sand and Oak (P2 C, P3 C). "
-        "All three sit with the facade as built (D-048, D-051).",
+        "Palette 1 Sand and Oak, restored by the owner (D-053) in place of White, Black and Beige, "
+        "is the walkthrough's default. All three sit with the facade as built (D-048, D-051).",
         "Colours and patterns are visual concept finishes, not a specification. Products, slip "
         "resistance in wet areas and fire ratings are for the interior designer and the consultant.",
         "In the walkthrough the palettes switch with one button; textures will come from free CC0 "
@@ -176,7 +176,7 @@ def main() -> int:
         y -= 0.013
     fig.text(0.975, 0.030, "CONCEPT DESIGN, NOT FOR CONSTRUCTION", fontsize=11, color=RED,
              ha="right", fontweight="bold")
-    fig.text(0.975, 0.016, "Sketch VJH-SK-018   Interior palettes, answers P1 to P3   Rev B   A2 landscape",
+    fig.text(0.975, 0.016, "Sketch VJH-SK-018   Interior palettes, answers P1 to P4, D-053   Rev C   A2 landscape",
              fontsize=7.5, color=MUTED, ha="right")
     OUT_PDF.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(OUT_PDF, facecolor="white", dpi=200)

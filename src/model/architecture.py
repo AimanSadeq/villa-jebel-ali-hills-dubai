@@ -107,6 +107,9 @@ STYLES = [
     ("lift", "Lift car and shaft", (0.40, 0.42, 0.45), 0.0),
     ("space", "Room volume", (0.55, 0.78, 0.62), 0.8),
     ("joinery", "Joinery, light oak", (0.80, 0.70, 0.55), 0.0),
+    ("textile", "Upholstery", (0.84, 0.80, 0.72), 0.0),
+    ("sanitary", "Sanitary ware", (0.96, 0.96, 0.95), 0.0),
+    ("metal", "Metal, dark", (0.20, 0.20, 0.20), 0.0),
 ]
 
 # Open plan, D-033 (owner's must-rule): shared spaces join with no partition
@@ -1156,18 +1159,26 @@ class Model:
             free = nxt
         return out + [("main", x, y) for x, y in free if y - x > 0.3]
 
+    FURN_STYLE = {"accents.joinery": "joinery", "accents.worktop": "joinery",
+                  "fixtures.sanitary": "sanitary", "fixtures.metal": "metal"}
+
     def build_furniture(self):
-        """Built-in wardrobes and the master's coffee station."""
-        for it in self.interiors.values():
-            for part in it.parts:
-                if part.kind not in ("wardrobe", "furniture"):
-                    continue
-                self.element("IfcFurniture", part.name, it.storey,
-                             [self._prism(part.poly, 0.0, part.height)],
-                             predefined="USERDEFINED",
-                             object_type=("Built-in wardrobe" if part.kind == "wardrobe"
-                                          else part.name),
-                             style="joinery")
+        """Furniture in every room (answer P5, src/model/furniture.py): one
+        IfcFurniture or IfcSanitaryTerminal per piece. Indicative."""
+        from model import furniture as furniture_mod  # noqa: PLC0415
+        self.furniture, self.furniture_report = furniture_mod.layout(self)
+        for p in self.furniture:
+            e = self.elev[p.storey]
+            items = [self._prism(box(q[1], q[3], q[2], q[4]), q[5], q[6] - q[5]) for q in p.parts
+                     if q[2] - q[1] > 0.005 and q[4] - q[3] > 0.005 and q[6] - q[5] > 0.005]
+            if not items:
+                continue
+            slot = max(p.parts, key=lambda q: (q[2] - q[1]) * (q[4] - q[3]) * (q[6] - q[5]))[0]
+            el = self.element(p.ifc, f"{p.name}, {self.names.get(p.room, p.room)}", p.storey, items,
+                              predefined="NOTDEFINED", object_type="Furniture, indicative",
+                              style=self.FURN_STYLE.get(slot, "textile"))
+            el.Description = "Indicative furniture, src/model/furniture.py. CONCEPT DESIGN, NOT FOR CONSTRUCTION."
+            del e
 
     def _face_kind(self, r: R, face: str) -> str:
         if r.key == "living" and "living" in self.lay["plates"]:
@@ -1432,10 +1443,18 @@ class Model:
         # Facade parts standing on the ground (portal legs, carport piers).
         for ob in self.facade_obstacles:
             ground = ground.difference(ob)
+        # Furniture the walker cannot pass (beds, sofas, tables, counters).
+        blocks = {"ground": [], "first": []}
+        for p in getattr(self, "furniture", []):
+            if p.block and not p.footprint().is_empty:
+                blocks[p.storey].append(p.footprint().buffer(-0.03, join_style=2))
+        ground = ground.difference(unary_union(blocks["ground"])) if blocks["ground"] else ground
         voids = unary_union([v.poly for v in self.voids]) if self.voids else Polygon()
         first = unary_union([interior("first", self.f_rooms, self.f_circ)]
                             + [r.poly for r in self.f_outdoor if "terrace" not in r.key])
         first = first.difference(voids).difference(self.stairwell)
+        if blocks["first"]:
+            first = first.difference(unary_union(blocks["first"]))
 
         def rings(poly):
             out = []

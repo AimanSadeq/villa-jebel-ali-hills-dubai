@@ -47,3 +47,21 @@ def test_the_walkthrough_finishes_use_the_palettes():
     assert feature == {f["room"] for f in SPEC["feature_walls"]}
     floored = {q["room"] for q in fin["quads"] if q["slot"].startswith("flooring.")}
     assert {"living", "salon", "master_suite", "family_living", "master_toilet"} <= floored
+
+
+def test_palette_1_is_sand_and_oak_again():
+    """D-053: the owner restored Sand and Oak as palette 1, the default."""
+    assert SPEC["palettes"][0]["name"] == "Sand and Oak"
+
+
+def test_the_rooms_are_furnished():
+    """P5, D-054: furniture in the walkthrough, coloured by palette slot."""
+    import json
+    data = json.loads((REPO_ROOT / "viewer" / "public" / "data" / "model.json").read_text(encoding="utf-8"))
+    boxes = data["finishes"]["boxes"]
+    assert len(boxes) > 150
+    slots = {b["slot"] for b in boxes}
+    assert {"accents.joinery", "accents.textile", "fixtures.sanitary"} <= slots
+    for b in boxes:
+        u0, u1, v0, v1, z0, z1 = b["b"]
+        assert u1 > u0 and v1 > v0 and z1 > z0

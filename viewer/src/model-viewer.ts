@@ -222,6 +222,8 @@ async function boot() {
     roomLabels.push({ obj, room: r });
   }
 
+  const furnIds = Object.entries(byCat)
+    .filter(([c]) => c === 'IFCFURNITURE' || c === 'IFCSANITARYTERMINAL').flatMap(([, l]) => l);
   // Interior palettes (D-052): floors, wall faces and ceilings per room.
   const finishes = data.finishes && data.finishes.quads.length ? new PaletteLayer(data.finishes) : null;
   if (finishes) { world.scene.three.add(finishes.group); finishes.set(0); }
@@ -238,6 +240,9 @@ async function boot() {
     for (const id of groups.spaces) {
       if (!state.spaces || spaceLevel.get(id) !== top) hide.push(id);
     }
+    // The palette layer draws the furniture in the palette's colours; the
+    // plain IFC copies hide while a palette is on.
+    if (finishes && finishes.current >= 0) hide.push(...furnIds);
     if (hide.length) await hider.set(false, map(hide));
     for (const { obj, room } of roomLabels) {
       obj.visible = state.labels && state.view !== 'whole' && room.storey === top;
@@ -476,6 +481,7 @@ async function boot() {
     const palNote = h('p', { class: 'note' });
     const choose = (i: number) => {
       finishes.set(i);
+      void applyVisibility();
       palBtns.forEach((b, k) => b.classList.toggle('on', k - 1 === i));
       const p = i >= 0 ? finishes.data.palettes[i] : null;
       palNote.textContent = p

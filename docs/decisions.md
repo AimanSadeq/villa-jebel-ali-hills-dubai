@@ -8,6 +8,26 @@ Columns: date, decision, reason, approved by Aiman.
 
 ## 2026-10-02, the ground floor built from the reference
 
+### D-054 Furniture in every room (answer P5: A)
+
+**Date.** 2026-10-03.
+
+**Decision.** src/model/furniture.py furnishes every room by type: beds with bedside tables, a TV unit and a desk in the bedrooms; the master suite's king bed, private sitting group by the balcony and coffee station (FF3); wardrobe runs and the master's dressing island; showers, vanities, WCs and the master's bathtub and two basins; the living and family rooms' TV unit, sofa, coffee table and rug; a 12 seat dining table; the salon's two facing sofas, table, rug and console on the feature wall; kitchen runs and the island; the office desk and shelves; pantry shelves, laundry and the foyer console. Each piece is checked against the walls, door swings, the passages through open joins, windows and the other pieces, and left out (and reported) if it does not fit. In the IFC as IfcFurniture and IfcSanitaryTerminal; in the walkthrough coloured by the chosen palette, and the walker cannot pass through beds, sofas, tables and counters. Sizes indicative.
+
+**Reason.** CLAUDE.md deliverables 1 and 2 (furniture in the IFC and the walkthrough); owner's answer P5.
+
+**Approved by Aiman.** Approach yes (P5: A, 2026-10-03); the room layouts are for his review.
+
+### D-053 Palette 1 back to Sand and Oak
+
+**Date.** 2026-10-03.
+
+**Decision.** Palette 1 is Sand and Oak again, as first proposed on VJH-SK-018 (beige limestone look floors, warm white walls, travertine feature walls, light oak joinery, brushed brass), replacing White, Black and Beige (P2, P3). It is the walkthrough's default. White, Black and Beige stays in the git history if wanted later.
+
+**Reason.** Owner's instruction, 2026-10-03.
+
+**Approved by Aiman.** Yes.
+
 ### D-052 Three interior palettes in the walkthrough (answers P1 to P4)
 
 **Date.** 2026-10-03.

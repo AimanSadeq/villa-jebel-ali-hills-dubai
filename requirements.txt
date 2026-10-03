@@ -6,6 +6,7 @@ ifcopenshell==0.9.0   # IFC4 model generation, reading, clash detection
 ezdxf==1.4.4          # DXF drawings, rendered to PDF via the drawing addon
 matplotlib==3.11.2    # PDF drawing output, charts, ezdxf backend
 numpy==2.5.3          # numerics
+scipy==1.17.1         # image filters for the sketch sheets (VJH-SK-017, SK-018)
 shapely==2.1.2        # plot polygon, setbacks, areas
 pyyaml==6.0.3         # reads brief/program.yaml and brief/site.yaml
 pvlib==0.16.1         # sun positions for shading studies

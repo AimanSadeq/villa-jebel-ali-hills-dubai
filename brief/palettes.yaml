@@ -22,7 +22,7 @@
 
 meta:
   stamp: "CONCEPT DESIGN, NOT FOR CONSTRUCTION"
-  status: "Approved by the owner (answer P4: A, 2026-10-03, D-052). Built into the walkthrough."
+  status: "Approved by the owner (P4, D-052); palette 1 back to Sand and Oak by the owner, 2026-10-03 (D-053). Built into the walkthrough; Sand and Oak is the default."
   count: 3
 
 # Feature walls (walls.feature): the TV wall between the living room and the
@@ -34,34 +34,33 @@ feature_walls:
 
 palettes:
   - key: palette_1
-    name: "White, Black and Beige"
+    name: "Sand and Oak"
     status: approved
-    replaces: "Sand and Oak (answers P2 C and P3 C, 2026-10-03)"
+    restored: "Sand and Oak restored by the owner, 2026-10-03, replacing White, Black and Beige (answer P6, D-053)"
     idea: >
-      The owner's direction: white walls and joinery, warm beige floors and
-      soft furnishings, black as the sharp accent in a black marble look
-      feature wall, black worktops and matt black metal. Clean and bright,
-      with the beige keeping it warm next to the stone facade.
+      Warm and quiet, the closest to the facade: sand coloured stone floors,
+      warm white walls, light oak joinery, brushed brass. Calm, light rooms
+      that let the double height spaces and the garden lead.
     flooring:
-      public:   {name: "Warm beige porcelain, 1200 x 1200, matt", colour: "#d8cbb3", pattern: stone, roughness: 0.55}
-      kitchen:  {name: "As the public floor", colour: "#d8cbb3", pattern: stone, roughness: 0.55}
-      bedrooms: {name: "Pale washed oak engineered timber, beige tone", colour: "#d4c1a1", pattern: wood, roughness: 0.6}
-      wet:      {name: "Beige stone look porcelain, textured", colour: "#d2c4aa", pattern: stone, roughness: 0.8}
-      service:  {name: "Beige porcelain, matt", colour: "#d6ccbb", pattern: plain, roughness: 0.7}
+      public:   {name: "Beige limestone look porcelain, 1200 x 600, honed", colour: "#d9ccb4", pattern: stone, roughness: 0.55}
+      kitchen:  {name: "As the public floor", colour: "#d9ccb4", pattern: stone, roughness: 0.55}
+      bedrooms: {name: "Light oak engineered timber, wide plank", colour: "#c9a77c", pattern: wood, roughness: 0.6}
+      wet:      {name: "Beige limestone look porcelain, textured", colour: "#cfc1a6", pattern: stone, roughness: 0.8}
+      service:  {name: "Light beige porcelain, matt", colour: "#d6cfc2", pattern: plain, roughness: 0.7}
     walls:
-      main:     {name: "Pure white paint, matt", colour: "#f7f6f2", pattern: plain, roughness: 0.9}
-      feature:  {name: "Black marble look slab, Nero Marquina type, TV wall and salon wall", colour: "#1f1e1d", pattern: marble, roughness: 0.25}
-      wet:      {name: "White porcelain, large format, satin", colour: "#f3f2ee", pattern: plain, roughness: 0.4}
-      ceiling:  {name: "Pure white paint, flat", colour: "#fafaf8", pattern: plain, roughness: 0.95}
+      main:     {name: "Warm white paint, matt", colour: "#f2ece1", pattern: plain, roughness: 0.9}
+      feature:  {name: "Travertine slab, TV wall and salon wall", colour: "#d8c3a0", pattern: stone, roughness: 0.6}
+      wet:      {name: "Beige stone look porcelain, large format", colour: "#e0d4bf", pattern: stone, roughness: 0.5}
+      ceiling:  {name: "Warm white paint, flat", colour: "#f6f2ea", pattern: plain, roughness: 0.95}
     accents:
-      joinery:  {name: "White matt lacquer, black handles", colour: "#f0eee9", pattern: plain, roughness: 0.6}
-      worktop:  {name: "Black sintered stone", colour: "#1e1e1e", pattern: plain, roughness: 0.3}
-      textile:  {name: "Beige boucle and linen", colour: "#d9cbb2", pattern: plain, roughness: 1.0}
-      highlight: {name: "Black leather and black and white art", colour: "#1c1c1c", pattern: plain, roughness: 0.6}
+      joinery:  {name: "Light oak veneer", colour: "#c8a272", pattern: wood, roughness: 0.6}
+      worktop:  {name: "Cream quartz", colour: "#ece4d4", pattern: plain, roughness: 0.3}
+      textile:  {name: "Oatmeal linen and boucle", colour: "#d7cbb5", pattern: plain, roughness: 1.0}
+      highlight: {name: "Terracotta cushions and art", colour: "#b8694a", pattern: plain, roughness: 0.9}
     fixtures:
-      metal:    {name: "Matt black", colour: "#232323", pattern: metal, roughness: 0.5}
+      metal:    {name: "Brushed brass", colour: "#b08d57", pattern: metal, roughness: 0.35}
       sanitary: {name: "White ceramic", colour: "#f7f7f5", pattern: plain, roughness: 0.15}
-      lighting: {name: "Warm white 3000 K, black and opal glass", colour: "#ffecc9", pattern: plain, roughness: 1.0}
+      lighting: {name: "Warm white 2700 K, linen shades", colour: "#ffe2b0", pattern: plain, roughness: 1.0}
 
   - key: palette_2
     name: "Marble and Walnut"

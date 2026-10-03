@@ -23,6 +23,8 @@ export interface Palette {
 }
 export interface Finishes {
   quads: { slot: string; storey: 'ground' | 'first'; room: string; p: Pt[] }[];
+  /** Furniture (src/model/furniture.py): boxes u0, u1, v0, v1, z0, z1. */
+  boxes?: { slot: string; storey: 'ground' | 'first'; b: number[] }[];
   palettes: Palette[];
   note: string;
 }
@@ -118,6 +120,28 @@ export class PaletteLayer {
       }
       b.idx.push(base, base + 1, base + 2, base, base + 2, base + 3);
     }
+    // Furniture boxes become six faces each, outward.
+    for (const fb of data.boxes ?? []) {
+      const [u0, u1, v0, v1, z0, z1] = fb.b;
+      const faces: Pt[][] = [
+        [[u0, v0, z1], [u1, v0, z1], [u1, v1, z1], [u0, v1, z1]],
+        [[u0, v0, z0], [u0, v1, z0], [u1, v1, z0], [u1, v0, z0]],
+        [[u0, v0, z0], [u1, v0, z0], [u1, v0, z1], [u0, v0, z1]],
+        [[u1, v1, z0], [u0, v1, z0], [u0, v1, z1], [u1, v1, z1]],
+        [[u0, v1, z0], [u0, v0, z0], [u0, v0, z1], [u0, v1, z1]],
+        [[u1, v0, z0], [u1, v1, z0], [u1, v1, z1], [u1, v0, z1]],
+      ];
+      const k = `${fb.slot}|${fb.storey}|f`;
+      if (!buckets.has(k)) buckets.set(k, { slot: fb.slot, storey: fb.storey, pos: [], uv: [], idx: [] });
+      const bk = buckets.get(k)!;
+      for (const f of faces) {
+        const base = bk.pos.length / 3;
+        const flat = f.every((p) => p[2] === f[0][2]);
+        const alongU = f.every((p) => p[1] === f[0][1]);
+        for (const [u, v, z] of f) { bk.pos.push(u, z, -v); bk.uv.push(flat ? u : alongU ? u : v, flat ? v : z); }
+        bk.idx.push(base, base + 1, base + 2, base, base + 2, base + 3);
+      }
+    }
     for (const b of buckets.values()) {
       const geo = new THREE.BufferGeometry();
       geo.setAttribute('position', new THREE.Float32BufferAttribute(b.pos, 3));
@@ -150,6 +174,12 @@ export class PaletteLayer {
     if (i < 0) return;
     const p = this.data.palettes[i];
     this.mats.forEach((m, slot) => {
+      if (slot.startsWith('fixed.')) {
+        // Fixed colours: bed linen, screens, glass, mirrors.
+        m.map = null; m.color.set(slot.slice(6)); m.roughness = slot === 'fixed.#121212' ? 0.2 : 0.5;
+        m.needsUpdate = true;
+        return;
+      }
       const sw = swatchOf(p, slot);
       if (!sw) return;
       const key = `${sw.pattern}|${sw.colour}|${i}`;

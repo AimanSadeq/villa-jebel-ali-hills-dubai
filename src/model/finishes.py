@@ -196,6 +196,8 @@ def finish_data(m) -> dict:
 
     palettes = [{k: p[k] for k in ("key", "name", "flooring", "walls", "accents", "fixtures")}
                 for p in spec["palettes"]]
-    return {"quads": quads, "palettes": palettes,
+    boxes = [{"slot": q[0], "storey": f.storey, "b": [round(x, 3) for x in (q[1], q[2], q[3], q[4], m.elev[f.storey] + q[5], m.elev[f.storey] + q[6])]}
+             for f in getattr(m, "furniture", []) for q in f.parts]
+    return {"quads": quads, "boxes": boxes, "palettes": palettes,
             "note": "Interior palettes, brief/palettes.yaml (P1 to P4). Visual concept finishes, "
                     "not a specification. CONCEPT DESIGN, NOT FOR CONSTRUCTION."}

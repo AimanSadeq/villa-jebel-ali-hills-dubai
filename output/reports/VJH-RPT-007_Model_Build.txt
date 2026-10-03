@@ -9,10 +9,12 @@ CONCEPT DESIGN, NOT FOR CONSTRUCTION
    IfcColumn                     3
    IfcCovering                  28
    IfcDoor                      30
+   IfcFurniture                 65
    IfcGeographicElement          1
    IfcLightFixture               7
    IfcOpeningElement            68
    IfcRailing                    4
+   IfcSanitaryTerminal          27
    IfcShadingDevice              4
    IfcSlab                      11
    IfcSpace                     50
@@ -23,14 +25,16 @@ CONCEPT DESIGN, NOT FOR CONSTRUCTION
 
 3. Schema validation: PASS, 0 issue(s)
 
-4. Geometry: 192 elements tessellated, 0 failed
+4. Geometry: 284 elements tessellated, 0 failed
    IfcBuildingElementProxy       1        4.41 m3
    IfcColumn                     3        1.58 m3
    IfcCovering                  28      143.41 m3
    IfcDoor                      30        5.61 m3
+   IfcFurniture                 65       75.75 m3
    IfcGeographicElement          1      305.99 m3
    IfcLightFixture               7        0.14 m3
    IfcRailing                    4        1.95 m3
+   IfcSanitaryTerminal          27        5.56 m3
    IfcShadingDevice              4        0.43 m3
    IfcSlab                      11      379.09 m3
    IfcSpace                     50     3057.17 m3
