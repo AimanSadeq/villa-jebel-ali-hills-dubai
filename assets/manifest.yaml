@@ -39,7 +39,8 @@ textures:
   travertine:      {prefer: [travertine_01, limestone_floor_02, stone_tiles_03, stone_tiles_02], search: {type: textures, tags: [limestone, stone, tiles]}, scale_m: 2.0}
   marble_white:    {prefer: [marble_01, white_marble_01], search: {type: textures, tags: [marble, white]}, scale_m: 2.4}
   marble_black:    {prefer: [black_marble_01, marble_01], search: {type: textures, tags: [marble, black]}, scale_m: 2.4}
-  oak_floor:       {prefer: [wood_floor_deck, oak_veneer_01], search: {type: textures, tags: [wood, floor, oak]}, scale_m: 2.0}
+  oak_floor:       {prefer: [oak_veneer_01, wood_floor_worn, wood_floor_deck], search: {type: textures, tags: [oak, wood]}, scale_m: 2.0,
+                    note: "Light oak: wood_floor_deck came out as a dark red deck, so the lighter oak veneer is preferred."}
   walnut:          {prefer: [wood_table_001, dark_wood], search: {type: textures, tags: [walnut, wood]}, scale_m: 1.5}
   terrazzo:        {prefer: [terrazzo_01, terrazzo], search: {type: textures, tags: [terrazzo]}, scale_m: 1.2}
   concrete_smooth: {prefer: [concrete_floor_painted, concrete_wall_006], search: {type: textures, tags: [concrete, smooth]}, scale_m: 2.4}
