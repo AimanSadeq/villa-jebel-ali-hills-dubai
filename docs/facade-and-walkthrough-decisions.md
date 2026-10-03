@@ -24,3 +24,4 @@ docs/decisions.md once the set is complete.
 | P4 | Are these the three palettes to build into the walkthrough | **A: yes, all three.** | Built (D-052): floors, walls and ceilings of every room switch between White, Black and Beige, Marble and Walnut, and Stone and Charcoal from the viewer's Interior palette panel; ceilings show while walking. |
 | P5 | What next in Phase 4 | **A: furniture in every room.** | Built (D-054), coloured by the palette. Owner then restored Sand and Oak as palette 1 (D-053). |
 | P6 | Are the furniture layouts right | **A: yes, keep them; move on to the garden.** | D-054 approved as built. Next: the garden, one question at a time. |
+| G1 | Where the BBQ area with its pergola goes | **A: the south corner of the back garden, by the Arabic kitchen door (G21).** | Cooking on the service route; smoke and cooking away from the living room and dining glass; the lawn stays open to the view from inside. Placed with the garden build. |
