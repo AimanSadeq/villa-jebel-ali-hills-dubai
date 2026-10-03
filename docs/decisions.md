@@ -19,6 +19,8 @@ Columns: date, decision, reason, approved by Aiman.
 - the six views of CLAUDE.md deliverable 5: entrance, double height living room, salon, master suite, garden at sunset, aerial. Output output/renders/VJH-R-00n_<view>.png, stamped.
 Runs with Blender's Python module (pip install bpy, kept in its own environment) or inside Blender on the laptop with the Intel Arc GPU (--device GPU, oneAPI). Test renders at low quality were made in the cloud with stand-in textures; the real photographs and the full quality renders are made on the laptop.
 
+**Stage 2 (answer P10: B, 2026-10-03).** The Blender route kept over Twinmotion. renders/furniture_bl.py builds every layout piece as modelled furniture in the palette's materials: beds with frame, mattress, pillows, duvet and bedside lamps; sofas and armchairs with cushions and legs; dining and desk chairs; tables; wardrobes, consoles and shelves with door lines and handles; kitchen runs with wall units, worktops and the island; vanities with basins, taps and mirror; WCs, showers with glass screens, the bathtub; rugs. Palms get a rachis with leaflets, trees branches with leaf clusters kept above head height. The walkthrough keeps the boxes (stage 2 there is not planned while the renders are the pictures).
+
 **Reason.** Owner's answer P9: the walkthrough looked unreal; photographs of the finished house can only come from path traced renders (CLAUDE.md deliverable 5, Phase 7), and the same model and materials feed them.
 
 **Approved by Aiman.** Yes, the approach (P9: A, 2026-10-03).
