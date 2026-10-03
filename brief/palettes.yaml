@@ -9,7 +9,9 @@
 #          service (maid's room, laundry, plant room, service halls).
 #   a swatch: name, colour (hex, for the viewer), pattern (how the sheet and
 #          the viewer draw it: plain, stone, marble, wood, terrazzo, concrete,
-#          metal), roughness 0 to 1 (viewer material).
+#          metal), roughness 0 to 1 (viewer material), and texture: the key of
+#          the photographic material in assets/manifest.yaml (answer P7, D-056),
+#          used when the asset has been fetched; the pattern is the fallback.
 #
 # They all sit with the facade (D-048, D-051): warm stone, beige render,
 # timber, dark slim frames. Colours are visual concept finishes, not a
@@ -42,25 +44,25 @@ palettes:
       warm white walls, light oak joinery, brushed brass. Calm, light rooms
       that let the double height spaces and the garden lead.
     flooring:
-      public:   {name: "Beige limestone look porcelain, 1200 x 600, honed", colour: "#d9ccb4", pattern: stone, roughness: 0.55}
-      kitchen:  {name: "As the public floor", colour: "#d9ccb4", pattern: stone, roughness: 0.55}
-      bedrooms: {name: "Light oak engineered timber, wide plank", colour: "#c9a77c", pattern: wood, roughness: 0.6}
-      wet:      {name: "Beige limestone look porcelain, textured", colour: "#cfc1a6", pattern: stone, roughness: 0.8}
-      service:  {name: "Light beige porcelain, matt", colour: "#d6cfc2", pattern: plain, roughness: 0.7}
+      public:   {name: "Beige limestone look porcelain, 1200 x 600, honed", colour: "#d9ccb4", pattern: stone, roughness: 0.55, texture: limestone_floor}
+      kitchen:  {name: "As the public floor", colour: "#d9ccb4", pattern: stone, roughness: 0.55, texture: limestone_floor}
+      bedrooms: {name: "Light oak engineered timber, wide plank", colour: "#c9a77c", pattern: wood, roughness: 0.6, texture: oak_floor}
+      wet:      {name: "Beige limestone look porcelain, textured", colour: "#cfc1a6", pattern: stone, roughness: 0.8, texture: limestone_floor}
+      service:  {name: "Light beige porcelain, matt", colour: "#d6cfc2", pattern: plain, roughness: 0.7, texture: limestone_floor}
     walls:
-      main:     {name: "Warm white paint, matt", colour: "#f2ece1", pattern: plain, roughness: 0.9}
-      feature:  {name: "Travertine slab, TV wall and salon wall", colour: "#d8c3a0", pattern: stone, roughness: 0.6}
-      wet:      {name: "Beige stone look porcelain, large format", colour: "#e0d4bf", pattern: stone, roughness: 0.5}
-      ceiling:  {name: "Warm white paint, flat", colour: "#f6f2ea", pattern: plain, roughness: 0.95}
+      main:     {name: "Warm white paint, matt", colour: "#f2ece1", pattern: plain, roughness: 0.9, texture: plaster_white}
+      feature:  {name: "Travertine slab, TV wall and salon wall", colour: "#d8c3a0", pattern: stone, roughness: 0.6, texture: travertine}
+      wet:      {name: "Beige stone look porcelain, large format", colour: "#e0d4bf", pattern: stone, roughness: 0.5, texture: limestone_floor}
+      ceiling:  {name: "Warm white paint, flat", colour: "#f6f2ea", pattern: plain, roughness: 0.95, texture: plaster_white}
     accents:
-      joinery:  {name: "Light oak veneer", colour: "#c8a272", pattern: wood, roughness: 0.6}
+      joinery:  {name: "Light oak veneer", colour: "#c8a272", pattern: wood, roughness: 0.6, texture: oak_floor}
       worktop:  {name: "Cream quartz", colour: "#ece4d4", pattern: plain, roughness: 0.3}
-      textile:  {name: "Oatmeal linen and boucle", colour: "#d7cbb5", pattern: plain, roughness: 1.0}
+      textile:  {name: "Oatmeal linen and boucle", colour: "#d7cbb5", pattern: plain, roughness: 1.0, texture: fabric}
       highlight: {name: "Terracotta cushions and art", colour: "#b8694a", pattern: plain, roughness: 0.9}
     fixtures:
       metal:    {name: "Brushed brass", colour: "#b08d57", pattern: metal, roughness: 0.35}
       sanitary: {name: "White ceramic", colour: "#f7f7f5", pattern: plain, roughness: 0.15}
-      lighting: {name: "Warm white 2700 K, linen shades", colour: "#ffe2b0", pattern: plain, roughness: 1.0}
+      lighting: {name: "Warm white 2700 K, linen shades", colour: "#ffe2b0", pattern: plain, roughness: 1.0, texture: fabric}
 
   - key: palette_2
     name: "Marble and Walnut"
@@ -70,20 +72,20 @@ palettes:
       public rooms, greige walls, dark walnut joinery, champagne bronze. The
       salon and foyer read as the house's formal heart.
     flooring:
-      public:   {name: "White marble look porcelain, Calacatta type, polished", colour: "#eeebe6", pattern: marble, roughness: 0.15}
-      kitchen:  {name: "As the public floor, honed", colour: "#eae6df", pattern: marble, roughness: 0.4}
-      bedrooms: {name: "Walnut engineered timber, herringbone", colour: "#7a5236", pattern: wood, roughness: 0.55}
-      wet:      {name: "Grey veined marble look porcelain, honed", colour: "#d9d6d0", pattern: marble, roughness: 0.6}
-      service:  {name: "Light grey porcelain, matt", colour: "#d3d1cc", pattern: plain, roughness: 0.7}
+      public:   {name: "White marble look porcelain, Calacatta type, polished", colour: "#eeebe6", pattern: marble, roughness: 0.15, texture: marble_white}
+      kitchen:  {name: "As the public floor, honed", colour: "#eae6df", pattern: marble, roughness: 0.4, texture: marble_white}
+      bedrooms: {name: "Walnut engineered timber, herringbone", colour: "#7a5236", pattern: wood, roughness: 0.55, texture: walnut}
+      wet:      {name: "Grey veined marble look porcelain, honed", colour: "#d9d6d0", pattern: marble, roughness: 0.6, texture: marble_white}
+      service:  {name: "Light grey porcelain, matt", colour: "#d3d1cc", pattern: plain, roughness: 0.7, texture: concrete_smooth}
     walls:
-      main:     {name: "Greige paint, matt", colour: "#d9d2c6", pattern: plain, roughness: 0.9}
-      feature:  {name: "Book matched marble look slab, TV wall and salon wall", colour: "#ebe7e1", pattern: marble, roughness: 0.2}
-      wet:      {name: "White marble look porcelain, large format", colour: "#f0ede8", pattern: marble, roughness: 0.3}
-      ceiling:  {name: "Soft white paint, flat", colour: "#f4f2ee", pattern: plain, roughness: 0.95}
+      main:     {name: "Greige paint, matt", colour: "#d9d2c6", pattern: plain, roughness: 0.9, texture: paint_greige}
+      feature:  {name: "Book matched marble look slab, TV wall and salon wall", colour: "#ebe7e1", pattern: marble, roughness: 0.2, texture: marble_white}
+      wet:      {name: "White marble look porcelain, large format", colour: "#f0ede8", pattern: marble, roughness: 0.3, texture: marble_white}
+      ceiling:  {name: "Soft white paint, flat", colour: "#f4f2ee", pattern: plain, roughness: 0.95, texture: plaster_white}
     accents:
-      joinery:  {name: "Dark walnut veneer", colour: "#5e3d27", pattern: wood, roughness: 0.5}
-      worktop:  {name: "White marble look sintered stone", colour: "#f1eee9", pattern: marble, roughness: 0.25}
-      textile:  {name: "Ivory velvet and silk", colour: "#e9e1d3", pattern: plain, roughness: 1.0}
+      joinery:  {name: "Dark walnut veneer", colour: "#5e3d27", pattern: wood, roughness: 0.5, texture: walnut}
+      worktop:  {name: "White marble look sintered stone", colour: "#f1eee9", pattern: marble, roughness: 0.25, texture: marble_white}
+      textile:  {name: "Ivory velvet and silk", colour: "#e9e1d3", pattern: plain, roughness: 1.0, texture: fabric}
       highlight: {name: "Deep emerald upholstery and art", colour: "#2f5a4c", pattern: plain, roughness: 0.9}
     fixtures:
       metal:    {name: "Champagne bronze", colour: "#a8865e", pattern: metal, roughness: 0.3}
@@ -98,21 +100,21 @@ palettes:
       and concrete look floors, white walls, charcoal and smoked oak, matt
       black metal. Graphic, gallery like rooms.
     flooring:
-      public:   {name: "Light grey terrazzo look porcelain, 1200 x 1200", colour: "#cfcdc8", pattern: terrazzo, roughness: 0.4}
-      kitchen:  {name: "As the public floor", colour: "#cfcdc8", pattern: terrazzo, roughness: 0.4}
-      bedrooms: {name: "Smoked oak engineered timber", colour: "#8a7663", pattern: wood, roughness: 0.6}
-      wet:      {name: "Mid grey concrete look porcelain, textured", colour: "#a9a7a2", pattern: concrete, roughness: 0.8}
-      service:  {name: "Grey porcelain, matt", colour: "#c4c2bd", pattern: plain, roughness: 0.7}
+      public:   {name: "Light grey terrazzo look porcelain, 1200 x 1200", colour: "#cfcdc8", pattern: terrazzo, roughness: 0.4, texture: terrazzo}
+      kitchen:  {name: "As the public floor", colour: "#cfcdc8", pattern: terrazzo, roughness: 0.4, texture: terrazzo}
+      bedrooms: {name: "Smoked oak engineered timber", colour: "#8a7663", pattern: wood, roughness: 0.6, texture: oak_floor}
+      wet:      {name: "Mid grey concrete look porcelain, textured", colour: "#a9a7a2", pattern: concrete, roughness: 0.8, texture: concrete_smooth}
+      service:  {name: "Grey porcelain, matt", colour: "#c4c2bd", pattern: plain, roughness: 0.7, texture: concrete_smooth}
     walls:
-      main:     {name: "Pure white paint, matt", colour: "#f7f7f5", pattern: plain, roughness: 0.9}
-      feature:  {name: "Charcoal microcement, TV wall and salon wall", colour: "#4a4947", pattern: concrete, roughness: 0.7}
-      wet:      {name: "Light grey concrete look porcelain, large format", colour: "#c9c7c2", pattern: concrete, roughness: 0.6}
-      ceiling:  {name: "Pure white paint, flat", colour: "#fafaf9", pattern: plain, roughness: 0.95}
+      main:     {name: "Pure white paint, matt", colour: "#f7f7f5", pattern: plain, roughness: 0.9, texture: plaster_white}
+      feature:  {name: "Charcoal microcement, TV wall and salon wall", colour: "#4a4947", pattern: concrete, roughness: 0.7, texture: concrete_smooth}
+      wet:      {name: "Light grey concrete look porcelain, large format", colour: "#c9c7c2", pattern: concrete, roughness: 0.6, texture: concrete_smooth}
+      ceiling:  {name: "Pure white paint, flat", colour: "#fafaf9", pattern: plain, roughness: 0.95, texture: plaster_white}
     accents:
-      joinery:  {name: "Smoked oak and charcoal lacquer", colour: "#5a4c40", pattern: wood, roughness: 0.55}
+      joinery:  {name: "Smoked oak and charcoal lacquer", colour: "#5a4c40", pattern: wood, roughness: 0.55, texture: walnut}
       worktop:  {name: "Dark grey sintered stone", colour: "#3f3e3c", pattern: concrete, roughness: 0.35}
-      textile:  {name: "Stone grey wool", colour: "#b9b5ad", pattern: plain, roughness: 1.0}
-      highlight: {name: "Rust and cognac leather", colour: "#9a5b34", pattern: plain, roughness: 0.6}
+      textile:  {name: "Stone grey wool", colour: "#b9b5ad", pattern: plain, roughness: 1.0, texture: fabric}
+      highlight: {name: "Rust and cognac leather", colour: "#9a5b34", pattern: plain, roughness: 0.6, texture: leather}
     fixtures:
       metal:    {name: "Matt black", colour: "#262626", pattern: metal, roughness: 0.5}
       sanitary: {name: "Matt white ceramic", colour: "#f2f2f0", pattern: plain, roughness: 0.4}

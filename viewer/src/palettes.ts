@@ -13,9 +13,10 @@
  */
 
 import * as THREE from 'three';
+import type { Materials } from './realism';
 
 type Pt = [number, number, number];
-export interface Swatch { name: string; colour: string; pattern: string; roughness: number }
+export interface Swatch { name: string; colour: string; pattern: string; roughness: number; texture?: string }
 export interface Palette {
   key: string; name: string;
   flooring: Record<string, Swatch>; walls: Record<string, Swatch>;
@@ -100,6 +101,8 @@ export class PaletteLayer {
   private readonly tex = new Map<string, THREE.Texture | null>();
   current = -1;
   readonly data: Finishes;
+  /** Photographic materials (realism.ts); null keeps the drawn textures. */
+  materials: Materials | null = null;
 
   constructor(data: Finishes) {
     this.data = data;
@@ -152,6 +155,7 @@ export class PaletteLayer {
       const mesh = new THREE.Mesh(geo, mat);
       mesh.name = `Finish, ${b.slot}, ${b.storey}`;
       mesh.renderOrder = 1;
+      mesh.castShadow = true; mesh.receiveShadow = true;
       this.group.add(mesh);
       this.meshes.push({ mesh, slot: b.slot, storey: b.storey, ceiling: b.slot === 'walls.ceiling' });
     }
@@ -182,6 +186,13 @@ export class PaletteLayer {
       }
       const sw = swatchOf(p, slot);
       if (!sw) return;
+      if (this.materials && this.materials.has(sw.texture)) {
+        // A photograph of the real material; dark marbles keep their tint.
+        const dark = new THREE.Color(sw.colour).getHSL({ h: 0, s: 0, l: 0 }).l < 0.3;
+        this.materials.apply(m, sw.texture!, dark ? sw.colour : '#ffffff', sw.roughness);
+        return;
+      }
+      m.normalMap = null; m.roughnessMap = null;
       const key = `${sw.pattern}|${sw.colour}|${i}`;
       if (!this.tex.has(key)) this.tex.set(key, patternTexture(sw.pattern, i * 7 + sw.pattern.length, sw.colour));
       const t = this.tex.get(key) ?? null;

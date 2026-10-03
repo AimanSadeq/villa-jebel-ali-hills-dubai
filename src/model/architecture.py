@@ -1395,6 +1395,7 @@ class Model:
         one element. Visual concept finishes, not a specification."""
         inside = facade_mod.inside_from_layouts(LAYOUTS)
         bx, self.facade_notes = facade_mod.boxes(self.window_boxes, self.fspec, inside)
+        self.facade_boxes = bx
         groups: dict[tuple, list] = {}
         for b in bx:
             key = ("Roof pergola" if b.kind == "pergola" else b.name, b.kind, b.material)

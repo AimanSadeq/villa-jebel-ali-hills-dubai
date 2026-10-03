@@ -1,0 +1,72 @@
+# manifest.yaml: the free assets the walkthrough uses to look real (answer P7,
+# D-056). All from Poly Haven (https://polyhaven.com), licence CC0 1.0
+# (public domain dedication, https://polyhaven.com/license): photographs of
+# real materials scanned as textures, real skies (HDRI), and 3D models.
+#
+# The files are NOT in the repository (binaries, Git LFS cannot be pushed from
+# the cloud sessions). Run on the laptop:
+#     python assets/fetch_assets.py            (textures and the sky, stage 1)
+#     python assets/fetch_assets.py --models   (also the 3D models, stage 2)
+# It downloads into viewer/public/assets/ (git ignored), writes
+# assets/LICENSES.md with every asset's page, author and licence, and
+# viewer/public/assets/index.json, which the viewer reads. Without the files
+# the viewer falls back to its drawn textures and plain sky.
+#
+# Each entry names preferred Poly Haven asset ids and a search (categories and
+# tags) the script uses when a preferred id is not found, so a renamed asset
+# does not break the fetch. scale_m is the real size of one texture repeat.
+#
+# CONCEPT DESIGN, NOT FOR CONSTRUCTION.
+
+meta:
+  source: "Poly Haven, https://polyhaven.com, CC0 1.0"
+  resolution: 1k            # 1024 px, JPG: light enough for the laptop's GPU
+  hdri_resolution: 2k
+
+hdri:
+  sky_day:
+    prefer: [kloofendal_48d_partly_cloudy_puresky, syferfontein_1d_clear_puresky, noon_grass]
+    search: {type: hdris, categories: [skies], tags: [clear, sunny]}
+    note: "A clear day sky; the sun's own position comes from the sun study."
+  sky_dusk:
+    prefer: [qwantani_dusk_2_puresky, kloofendal_28d_misty_puresky]
+    search: {type: hdris, categories: [skies], tags: [sunset, dusk]}
+    note: "Evening sky for the night view."
+
+textures:
+  # Interior palettes (brief/palettes.yaml, texture keys).
+  limestone_floor: {prefer: [limestone_floor_02, stone_tiles_02], search: {type: textures, tags: [limestone, tiles]}, scale_m: 2.4}
+  travertine:      {prefer: [travertine_01, limestone_floor_02], search: {type: textures, tags: [travertine]}, scale_m: 2.0}
+  marble_white:    {prefer: [marble_01, white_marble_01], search: {type: textures, tags: [marble, white]}, scale_m: 2.4}
+  marble_black:    {prefer: [black_marble_01, marble_01], search: {type: textures, tags: [marble, black]}, scale_m: 2.4}
+  oak_floor:       {prefer: [wood_floor_deck, oak_veneer_01], search: {type: textures, tags: [wood, floor, oak]}, scale_m: 2.0}
+  walnut:          {prefer: [wood_table_001, dark_wood], search: {type: textures, tags: [walnut, wood]}, scale_m: 1.5}
+  terrazzo:        {prefer: [terrazzo_01, terrazzo], search: {type: textures, tags: [terrazzo]}, scale_m: 1.2}
+  concrete_smooth: {prefer: [concrete_floor_painted, concrete_wall_006], search: {type: textures, tags: [concrete, smooth]}, scale_m: 2.4}
+  plaster_white:   {prefer: [painted_plaster_wall, beige_wall_001], search: {type: textures, tags: [plaster, wall]}, scale_m: 2.0}
+  paint_greige:    {prefer: [beige_wall_001, painted_plaster_wall], search: {type: textures, tags: [plaster, painted]}, scale_m: 2.0}
+  fabric:          {prefer: [fabric_pattern_07, leather_white], search: {type: textures, tags: [fabric]}, scale_m: 0.6}
+  leather:         {prefer: [leather_red_03, brown_leather], search: {type: textures, tags: [leather]}, scale_m: 0.6}
+  # Facade (brief/facade.yaml materials) and the garden (brief/garden.yaml).
+  beige_render:    {prefer: [beige_wall_001, rough_plaster_wall], search: {type: textures, tags: [plaster, stucco]}, scale_m: 2.0}
+  split_face_stone: {prefer: [stone_wall_04, rock_wall_08, sandstone_blocks_05], search: {type: textures, tags: [stone, wall, blocks]}, scale_m: 1.5}
+  timber:          {prefer: [wood_planks_grey, weathered_planks], search: {type: textures, tags: [planks, wood]}, scale_m: 1.2}
+  lawn:            {prefer: [grass_path_2, aerial_grass_rock], search: {type: textures, tags: [grass]}, scale_m: 2.0}
+  soil:            {prefer: [brown_mud_leaves_01, forest_floor], search: {type: textures, tags: [mud, soil]}, scale_m: 2.0}
+  paving:          {prefer: [pavement_02, concrete_pavers], search: {type: textures, tags: [pavement, pavers]}, scale_m: 2.0}
+  terrace_stone:   {prefer: [limestone_floor_02, stone_tiles_02], search: {type: textures, tags: [limestone, floor]}, scale_m: 2.4}
+
+# Stage 2, 3D models for the furniture and the plants (--models). Each is
+# fitted to the box the layout places (src/model/furniture.py), so the model
+# only needs to be the right kind of thing. Low polygon counts are preferred
+# for the laptop (instanced where repeated).
+models:
+  sofa:          {prefer: [sofa_02, sofa_03], search: {type: models, tags: [sofa]}, fits: [Sofa, Salon sofa, Sitting sofa]}
+  armchair:      {prefer: [ArmChair_01, armchair_01], search: {type: models, tags: [armchair]}, fits: [Armchair]}
+  dining_chair:  {prefer: [ChairDining_01, dining_chair_01], search: {type: models, tags: [chair, dining]}, fits: [Dining chair, BBQ chair]}
+  coffee_table:  {prefer: [CoffeeTable_01, coffee_table_round_01], search: {type: models, tags: [coffee table]}, fits: [Coffee table, Salon table, Sitting table]}
+  dining_table:  {prefer: [dining_table_01, wooden_table_02], search: {type: models, tags: [table, dining]}, fits: [Dining table, BBQ table]}
+  bed:           {prefer: [bed_01, bed_02], search: {type: models, tags: [bed]}, fits: [Bed]}
+  potted_plant:  {prefer: [potted_plant_01, potted_plant_04], search: {type: models, tags: [plant, potted]}, fits: []}
+  tree:          {prefer: [tree_small_02, tree_small_01], search: {type: models, tags: [tree]}, fits: [Tree]}
+  palm:          {prefer: [palm_tree_01, tree_palm], search: {type: models, tags: [palm]}, fits: [Palm]}

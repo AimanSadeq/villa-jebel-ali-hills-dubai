@@ -41,7 +41,7 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from analysis import gfa_check  # noqa: E402
 from model import architecture  # noqa: E402
-from model.finishes import finish_data  # noqa: E402
+from model.finishes import exterior_data, finish_data  # noqa: E402
 from model.heights import clear_heights, room_height_text  # noqa: E402
 from model.site import sqft  # noqa: E402
 
@@ -114,6 +114,33 @@ def plan_area(items) -> float:
             if p.area > 1e-6:
                 polys.append(p)
     return unary_union(polys).area if polys else 0.0
+
+
+def sun_positions() -> dict:
+    """Sun directions for the walkthrough's shadows, in the plot grid (pvlib,
+    brief/site.yaml location): a spring afternoon and a summer afternoon.
+    dir_uvz points from the ground toward the sun."""
+    import math  # noqa: PLC0415
+
+    import pandas as pd  # noqa: PLC0415
+    import pvlib  # noqa: PLC0415
+
+    from model.massing import load_massing  # noqa: PLC0415
+    from model.site import load_site  # noqa: PLC0415
+    loc = load_site()["location"]
+    bearing = float(load_massing()["grid"]["bearing_deg"])
+    out = {}
+    for key, when in (("spring_15h", "2026-03-21 15:00"), ("summer_16h", "2026-06-21 16:00"),
+                      ("winter_15h", "2026-12-21 15:00")):
+        t = pd.DatetimeIndex([pd.Timestamp(when, tz=loc["timezone"])])
+        sp = pvlib.solarposition.get_solarposition(t, float(loc["latitude"]), float(loc["longitude"]))
+        az, el = float(sp["azimuth"].iloc[0]), float(sp["apparent_elevation"].iloc[0])
+        th = math.radians(az - bearing)          # clockwise from the grid's v axis
+        out[key] = {"when": when, "azimuth_deg": round(az, 1), "elevation_deg": round(el, 1),
+                    "dir_uvz": [round(math.sin(th) * math.cos(math.radians(el)), 4),
+                                round(math.cos(th) * math.cos(math.radians(el)), 4),
+                                round(math.sin(math.radians(el)), 4)]}
+    return out
 
 
 def measured_from_ifc(f, meshes) -> dict:
@@ -210,6 +237,8 @@ def publish_to_viewer(model, path: Path, lay: dict, ifc_areas: dict) -> None:
         # The walkthrough (D-049): where a person can stand on each level.
         "walk": model.walk_data(),
         "finishes": finish_data(model),
+        "exterior": exterior_data(model),
+        "sun": sun_positions(),
     }
     (VIEWER_DATA / "model.json").write_text(json.dumps(data, indent=1),
                                            encoding="utf-8")

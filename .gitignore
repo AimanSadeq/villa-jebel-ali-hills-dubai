@@ -23,3 +23,6 @@ desktop.ini
 # Scratch
 scratch/
 tmp/
+
+# Fetched CC0 assets (assets/fetch_assets.py) and stand-ins: binaries, not committed
+viewer/public/assets/

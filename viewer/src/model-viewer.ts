@@ -18,6 +18,7 @@ import workerUrl from '@thatopen/fragments/worker?url';
 import { append, clear, h, icon, tr } from './dom';
 import { Walker, drawMiniMap, type WalkData } from './walk';
 import { PaletteLayer, type Finishes } from './palettes';
+import { ExteriorLayer, Materials, Sky, enableShadows, loadAssetIndex, type Exterior, type SunSpec } from './realism';
 
 interface RoomLabel {
   key: string; name: string; label: string; storey: 'ground' | 'first';
@@ -41,6 +42,8 @@ interface ModelData {
   rooms: RoomLabel[];
   walk?: WalkData;
   finishes?: Finishes;
+  exterior?: Exterior;
+  sun?: Record<string, SunSpec>;
 }
 
 type Level = 'ground' | 'first' | 'roof';
@@ -225,9 +228,35 @@ async function boot() {
 
   const furnIds = Object.entries(byCat)
     .filter(([c]) => c === 'IFCFURNITURE' || c === 'IFCSANITARYTERMINAL').flatMap(([, l]) => l);
+  const walkState = { on: false, night: false };
   // Interior palettes (D-052): floors, wall faces and ceilings per room.
   const finishes = data.finishes && data.finishes.quads.length ? new PaletteLayer(data.finishes) : null;
   if (finishes) { world.scene.three.add(finishes.group); finishes.set(0); }
+
+  // Real materials, sky and sun (D-056): only when the assets have been fetched.
+  const assetIndex = await loadAssetIndex();
+  const mats = assetIndex ? new Materials(assetIndex) : null;
+  const sunSpec = data.sun?.spring_15h ?? { when: '', azimuth_deg: 240, elevation_deg: 45, dir_uvz: [-0.6, -0.35, 0.7] as [number, number, number] };
+  const modelCentre = model.box.getCenter(new THREE.Vector3());
+  const sky = new Sky(world.scene.three, world.renderer!.three as THREE.WebGLRenderer, modelCentre, sunSpec, new THREE.Color(0xf7f5f1));
+  sky.baseLights = world.scene.three.children.filter((o) => (o as THREE.Light).isLight && o !== sky.sun)
+    .map((o) => ({ light: o as THREE.Light, intensity: (o as THREE.Light).intensity }));
+  if (assetIndex) await sky.load(assetIndex);
+  const exterior = mats && data.exterior ? new ExteriorLayer(data.exterior, mats) : null;
+  if (exterior) { world.scene.three.add(exterior.group); exterior.group.visible = false; }
+  const realState = { on: false };
+  const plainExteriorIds = ids.filter((id) => {
+    const ot = nameOf.get(id)?.objectType ?? '';
+    return /^Facade: (cladding|surround|soffit|canopy|fin|pergola)$/.test(ot)
+      || /^Landscape: (lawn|bed|ground|paving|path|step|steps|hedge)$/.test(ot);
+  });
+  function setReal(on: boolean) {
+    realState.on = on && !!assetIndex;
+    if (finishes) { finishes.materials = realState.on ? mats : null; finishes.set(finishes.current); }
+    if (exterior) exterior.group.visible = realState.on;
+    sky.set(realState.on, walkState.night);
+    void applyVisibility();
+  }
 
   async function applyVisibility() {
     const shown: Level[] = state.view === 'whole' ? ['ground', 'first', 'roof']
@@ -244,6 +273,9 @@ async function boot() {
     // The palette layer draws the furniture in the palette's colours; the
     // plain IFC copies hide while a palette is on.
     if (finishes && finishes.current >= 0) hide.push(...furnIds);
+    // With real materials on, the textured exterior layer replaces the plain
+    // facade parts and garden surfaces.
+    if (realState.on) hide.push(...plainExteriorIds);
     if (hide.length) await hider.set(false, map(hide));
     for (const { obj, room } of roomLabels) {
       obj.visible = state.labels && state.view !== 'whole' && room.storey === top;
@@ -319,7 +351,6 @@ async function boot() {
   const roomRects = data.rooms.filter((r) => r.rect && !r.sub)
     .map((r) => ({ rect: r.rect!, storey: r.storey, label: r.label, room: r }));
   let orbitView: { pos: THREE.Vector3; target: THREE.Vector3 } | null = null;
-  const walkState = { on: false, night: false };
 
   function roomAt(u: number, v: number, storey: string) {
     let best: RoomLabel | null = null;
@@ -398,8 +429,9 @@ async function boot() {
   }
   function setNight(on: boolean) {
     walkState.night = on;
-    sceneLights.forEach((l, i) => { l.intensity = baseIntensity[i] * (on ? 0.12 : 1); });
+    if (!realState.on) sceneLights.forEach((l, i) => { l.intensity = baseIntensity[i] * (on ? 0.12 : 1); });
     world.scene.three.background = on ? nightBg : dayBg;
+    sky.set(realState.on, on);
     if (!on) lamps.forEach((l) => { l.intensity = 0; });
     placeLamps();
     dayBtn.classList.toggle('on', !on);
@@ -409,8 +441,11 @@ async function boot() {
   const clock = new THREE.Clock();
   let sinceFrags = 0;
   let sinceLamps = 0;
+  let sinceShadows = 0;
   world.renderer.onBeforeUpdate.add(() => {
     const dt = clock.getDelta();
+    sinceShadows += dt;
+    if (realState.on && sinceShadows > 1.0) { sinceShadows = 0; enableShadows(model.object); }
     if (!walker || !walkState.on) return;
     walker.update(dt);
     sinceFrags += dt;
@@ -503,6 +538,34 @@ async function boot() {
     choose(0);
   }
 
+  {
+    const realBtn = h('button', { class: 'chip wide', type: 'button' }, icon('sun', 'icon tiny'), 'Real materials and sky');
+    const note = h('p', { class: 'note' });
+    if (!assetIndex) {
+      realBtn.disabled = true;
+      note.append(icon('warn', 'icon tiny'),
+        'The photographic materials and the sky are not fetched yet. On the laptop run: python assets/fetch_assets.py (free CC0 assets from Poly Haven, listed in assets/manifest.yaml), then reload.');
+    } else {
+      note.append(icon('check', 'icon tiny'), assetIndex.standin
+        ? 'Stand-in textures for testing (assets/make_standins.py). Run python assets/fetch_assets.py on the laptop for the real photographs.'
+        : `Photographs of real materials and a real sky, ${assetIndex.source}; sun at ${sunSpec.when} (azimuth ${sunSpec.azimuth_deg}, elevation ${sunSpec.elevation_deg}), from the sun study.`);
+    }
+    realBtn.addEventListener('click', () => { setReal(!realState.on); realBtn.classList.toggle('on', realState.on); });
+    // The sun at the sun study's three afternoons.
+    const sunChips = h('div', { class: 'chips', style: 'margin-top:8px' });
+    const sunLabels: Record<string, string> = { spring_15h: 'Spring 15:00', summer_16h: 'Summer 16:00', winter_15h: 'Winter 15:00' };
+    const sunBtns: HTMLButtonElement[] = [];
+    for (const [k, spec] of Object.entries(data.sun ?? {})) {
+      const b = h('button', { class: k === 'spring_15h' ? 'chip on' : 'chip', type: 'button' }, sunLabels[k] ?? k);
+      b.title = `${spec.when}: azimuth ${spec.azimuth_deg}, elevation ${spec.elevation_deg}`;
+      b.addEventListener('click', () => { sky.place(spec); sunBtns.forEach((x) => x.classList.toggle('on', x === b)); });
+      sunBtns.push(b);
+      sunChips.append(b);
+    }
+    panel.append(section('sun', 'Realism', h('div', { class: 'chips' }, realBtn), sunChips, note));
+    if (assetIndex) { setReal(true); realBtn.classList.add('on'); }
+  }
+
   panel.append(section('check', 'Selection', info));
 
   const g = data.gfa;
@@ -566,7 +629,7 @@ async function boot() {
 
   // Development only: lets the camera be scripted when checking views.
   if (import.meta.env.DEV) {
-    (window as unknown as Record<string, unknown>).__villa = { world, model, centre, walker, setWalking, setNight, finishes };
+    (window as unknown as Record<string, unknown>).__villa = { world, model, centre, walker, setWalking, setNight, finishes, setReal, sky, exterior };
   }
 }
 

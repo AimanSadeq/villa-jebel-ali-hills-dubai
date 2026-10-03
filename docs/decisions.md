@@ -8,6 +8,20 @@ Columns: date, decision, reason, approved by Aiman.
 
 ## 2026-10-02, the ground floor built from the reference
 
+### D-056 Real materials, sky and sun in the walkthrough (answer P7: A)
+
+**Date.** 2026-10-03.
+
+**Decision.** The walkthrough gets photographs of real materials, a real sky and a sun with shadows, from free CC0 assets (Poly Haven), as CLAUDE.md section 8 asks:
+- assets/manifest.yaml lists every asset (skies, 19 material textures, and the stage 2 furniture and plant models) with preferred Poly Haven ids and a category and tag search as fallback; assets/fetch_assets.py downloads them on the laptop into viewer/public/assets/ (not committed, binaries) and writes assets/LICENSES.md and an index the viewer reads. The cloud sessions cannot reach polyhaven.com, so assets/make_standins.py makes synthetic stand-ins for testing the pipeline there.
+- Each palette swatch in brief/palettes.yaml names its texture (limestone, travertine, marbles, oak, walnut, terrazzo, concrete, plaster, fabric, leather); the facade's stone, timber and render and the garden's lawn, soil, terrace stone and paving have theirs.
+- The viewer (viewer/src/realism.ts): the sky as background and light (HDRI), filmic tone mapping, a sun casting shadows at the sun study's position (pvlib, brief/site.yaml: 21 March 15:00, azimuth 242, elevation 46; summer and winter afternoons exported too), the finishes and furniture in photographic materials with normal and roughness maps at their real scale, and a textured exterior layer for the facade parts, the garden surfaces and the hedges in place of their plain IFC copies. A "Real materials and sky" switch; without the fetched assets the viewer keeps its drawn textures and tells the owner what to run.
+- Stage 2 (next): 3D models for the furniture, palms and trees in place of the boxes.
+
+**Reason.** Owner's answer P7 (2026-10-03): the walkthrough looked unreal; the villa does not exist, so photographs of it cannot, and photographs of real materials with real light are the closest thing in an interactive view. Deliverable 2, CLAUDE.md section 8 (free assets, licences recorded, compressed textures, smooth frame rate).
+
+**Approved by Aiman.** Yes, the approach (P7: A, 2026-10-03).
+
 ### D-055 The garden built (answers G1 to G4)
 
 **Date.** 2026-10-03.

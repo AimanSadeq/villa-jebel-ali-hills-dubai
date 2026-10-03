@@ -201,3 +201,40 @@ def finish_data(m) -> dict:
     return {"quads": quads, "boxes": boxes, "palettes": palettes,
             "note": "Interior palettes, brief/palettes.yaml (P1 to P4). Visual concept finishes, "
                     "not a specification. CONCEPT DESIGN, NOT FOR CONSTRUCTION."}
+
+
+def exterior_data(m) -> dict:
+    """The outside, for the walkthrough's real materials (answer P7, D-056):
+    the facade parts as boxes with their material, the garden surfaces as
+    polygons with their kind and level, the hedges, and the trees with their
+    species sizes. The viewer draws them with photographic textures and hides
+    the plain IFC copies while real materials are on."""
+    def rings(poly):
+        out = []
+        for p in ([poly] if poly.geom_type == "Polygon" else list(getattr(poly, "geoms", []))):
+            if p.area < 0.02:
+                continue
+            out.append([[[round(x, 3), round(y, 3)] for x, y in p.exterior.coords[:-1]]]
+                       + [[[round(x, 3), round(y, 3)] for x, y in r.coords[:-1]] for r in p.interiors])
+        return out
+
+    facade = [{"name": b.name, "kind": b.kind, "material": b.material,
+               "b": [round(x, 3) for x in (b.u0, b.u1, b.v0, b.v1, b.z0, b.z1)]}
+              for b in getattr(m, "facade_boxes", [])]
+    g = getattr(m, "garden", None)
+    garden, hedges, trees = [], [], []
+    if g is not None:
+        for s, poly in g.surfaces:
+            if s["kind"] == "steps":
+                continue
+            garden.append({"key": s["key"], "kind": s["kind"], "z": float(s["z"]), "rings": rings(poly)})
+        for it in g.items:
+            if it.object_type == "Landscape: hedge":
+                for p, z0, h in it.prisms:
+                    b = p.bounds
+                    hedges.append({"b": [round(x, 3) for x in (b[0], b[2], b[1], b[3], z0, z0 + h)]})
+        for tr, sp in g.trees:
+            trees.append({"species": tr["species"], "kind": sp["kind"], "u": tr["u"], "v": tr["v"],
+                          "height_m": sp["height_m"], "trunk_m": sp["trunk_m"], "crown_m": sp["crown_m"]})
+    return {"facade": facade, "garden": garden, "hedges": hedges, "trees": trees,
+            "ground_z": float(g.flat[0][2]) if g and g.flat else -0.45}
