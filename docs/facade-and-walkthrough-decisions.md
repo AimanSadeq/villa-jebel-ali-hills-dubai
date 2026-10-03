@@ -25,3 +25,4 @@ docs/decisions.md once the set is complete.
 | P5 | What next in Phase 4 | **A: furniture in every room.** | Built (D-054), coloured by the palette. Owner then restored Sand and Oak as palette 1 (D-053). |
 | P6 | Are the furniture layouts right | **A: yes, keep them; move on to the garden.** | D-054 approved as built. Next: the garden, one question at a time. |
 | G1 | Where the BBQ area with its pergola goes | **A: the south corner of the back garden, by the Arabic kitchen door (G21).** | Cooking on the service route; smoke and cooking away from the living room and dining glass; the lawn stays open to the view from inside. Placed with the garden build. |
+| G2 | What character the back garden has | **C: balanced.** | A paved terrace along the house linking the three garden doors (G20, G21, G22) and the BBQ; a central lawn in front of the living room; planting beds with shade trees and palms along the boundary; paved paths. |
