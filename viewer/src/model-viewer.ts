@@ -614,7 +614,7 @@ async function boot() {
   panel.append(h('footer', {},
     h('h3', {}, icon('warn', 'icon tiny'), data.meta.stamp),
     h('p', { class: 'small' },
-      'Indicative model generated from brief/*.yaml. Structure, MEP and finishes are not modelled yet. A DDA registered consultant and a licensed structural engineer must review and stamp all final drawings.')));
+      'Indicative model generated from brief/*.yaml. Finishes, furniture and the garden are concept level; structure and MEP are not modelled yet. A DDA registered consultant and a licensed structural engineer must review and stamp all final drawings.')));
 
   await applyVisibility();
 
