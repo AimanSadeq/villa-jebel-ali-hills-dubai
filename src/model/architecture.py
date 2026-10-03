@@ -54,6 +54,7 @@ from shapely.ops import unary_union
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from model import facade as facade_mod  # noqa: E402
+from model import landscape as landscape_mod  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT / "src"))
@@ -103,6 +104,12 @@ STYLES = [
     ("water", "Pool water", (0.22, 0.58, 0.78), 0.35),
     ("deck", "Stone deck", (0.86, 0.81, 0.71), 0.0),
     ("terrain", "Garden ground", (0.78, 0.80, 0.66), 0.0),
+    ("lawn", "Lawn", (0.45, 0.62, 0.30), 0.0),
+    ("soil", "Planting bed, mulch", (0.45, 0.36, 0.27), 0.0),
+    ("paving", "Paving, light", (0.80, 0.78, 0.72), 0.0),
+    ("leaf", "Foliage", (0.33, 0.50, 0.26), 0.0),
+    ("palm", "Palm fronds", (0.42, 0.58, 0.28), 0.0),
+    ("trunk", "Trunk", (0.42, 0.33, 0.24), 0.0),
     ("stair", "Stair, stone", (0.83, 0.80, 0.75), 0.0),
     ("lift", "Lift car and shaft", (0.40, 0.42, 0.45), 0.0),
     ("space", "Room volume", (0.55, 0.78, 0.62), 0.8),
@@ -1321,6 +1328,25 @@ class Model:
         self.element("IfcGeographicElement", "Plot terrain", None,
                      [self._prism(plot, ground_level - 0.30, 0.30)], predefined="TERRAIN",
                      container=True, style="terrain")
+        # The garden (brief/garden.yaml, G1 to G4, D-055). The carport columns
+        # and the facade parts on the ground are obstacles for the walker.
+        obstacles = list(self.facade_obstacles)
+        if self.carport is not None:
+            roof = self.carport.difference(self.g_fp.buffer(0.01, join_style=2))
+            b, c = roof.bounds, 0.40
+            for cu0 in (b[0], b[2] - c):
+                for cv0 in (b[1], b[3] - c):
+                    col = box(cu0, cv0, cu0 + c, cv0 + c)
+                    if not self.g_fp.buffer(0.05).intersects(col):
+                        obstacles.append(col.buffer(0.05))
+        self.garden = landscape_mod.build(landscape_mod.load(), plot, self.g_fp, self.carport, obstacles)
+        for it in self.garden.items:
+            items = [self._prism(p, z0, h) for p, z0, h in it.prisms if h > 0.005 and p.area > 1e-4]
+            if not items:
+                continue
+            el = self.element(it.cls, it.name, None, items, predefined=it.predefined,
+                              object_type=it.object_type, material=it.material, style=it.style)
+            el.Description = "Landscape, brief/garden.yaml, indicative. CONCEPT DESIGN, NOT FOR CONSTRUCTION."
         removed = {r["key"] for r in self.prog.get("removed", []) or []}
         if "pool" in removed and not self.lay.get("pool"):
             return        # no pool, owner decision D-041
@@ -1437,9 +1463,7 @@ class Model:
 
         stair = getattr(self, "walk_stair", [])
         solid = getattr(self, "walk_stair_solid", Polygon())
-        plot = site_to_grid(plot_polygon())
-        ground = unary_union([interior("ground", self.g_rooms, self.g_circ),
-                              plot.difference(self.g_fp)]).difference(solid)
+        ground = interior("ground", self.g_rooms, self.g_circ).difference(solid)
         # Facade parts standing on the ground (portal legs, carport piers).
         for ob in self.facade_obstacles:
             ground = ground.difference(ob)
@@ -1467,11 +1491,12 @@ class Model:
             return out
 
         zones = []
-        for name, poly, z in (("ground floor and garden", ground, 0.0),
-                              ("first floor", first, self.HG)):
+        garden = getattr(self, "garden", None)
+        outside = [(n, p, z) for n, p, z in garden.flat] if garden else []
+        for name, poly, z in [("ground floor", ground, 0.0), ("first floor", first, self.HG)] + outside:
             for rg in rings(poly):
                 zones.append({"name": name, "kind": "flat", "z": z, "rings": rg})
-        for zdef in stair:
+        for zdef in stair + (garden.ramps if garden else []):
             for rg in rings(zdef["poly"]):
                 zz = {k: v for k, v in zdef.items() if k != "poly"}
                 for k in ("p0", "p1"):

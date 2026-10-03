@@ -8,6 +8,22 @@ Columns: date, decision, reason, approved by Aiman.
 
 ## 2026-10-02, the ground floor built from the reference
 
+### D-055 The garden built (answers G1 to G4)
+
+**Date.** 2026-10-03.
+
+**Decision.** brief/garden.yaml holds the landscape; src/model/landscape.py builds it into the IFC, the walkthrough and sketch VJH-SK-019:
+- G1: the BBQ area in the south corner of the back garden by the Arabic kitchen door G21: a paved BBQ terrace 6.11 x 6.69 m, 40.9 m2 (440 sq ft), an open timber pergola 4.00 x 3.60 m with 2.45 m clear under the beams, a 3.00 m BBQ counter and a table for six. Inside the 3 m setback line.
+- G2: a balanced back garden: a 3.00 m paved terrace along the house linking G20, G21 and G22 (3.01 x 20.17 m, 60.7 m2, 653 sq ft); one 0.15 m step down to the lawn in front of the living room and dining (3.60 x 20.17 m, 72.6 m2, 782 sq ft); a planting bed along the landscape plot with three date palms, a ghaf and a sidr; a side path along the north wall round to the front; a paved service yard from the carport to the laundry and plant room doors and the BBQ terrace; planting strips in the setbacks.
+- G3: the D-011 boundary wall, 2.40 m, solid to 1.20 m with a timber screen above on the road and landscape sides, solid against both neighbours. Whether a wall is allowed (DDA FAQ Q3) and its heights TO VERIFY (OI-14).
+- G4: a sliding car gate into the carport (the carport's road edge, D-044 TO VERIFY) and a pedestrian gate on the line of the stone portal; a 1.50 m path, three steps up to the entrance court inside the portal at the porch level (2.95 x 3.09 m, 9.1 m2, 98 sq ft); front lawns with four date palms and a low hedge along the road wall.
+- Levels: garden ground 0.45 m below the house floor (gate level, reference sheet A-09-001), terraces 0.15 m below, carport floor 0.30 m below. The walker follows them; beds, hedges, trees, the wall and the BBQ furniture stop it.
+- Plants: indicative species common in UAE residential gardens, native where possible, for the landscape architect to confirm with the irrigation design (Phase 5). No regulatory value is assumed.
+
+**Reason.** Owner's answers G1 to G4; CLAUDE.md section 4 (outside), deliverables 1 and 2.
+
+**Approved by Aiman.** The answers yes (G1 to G4, 2026-10-03); the layout as built is for his review.
+
 ### D-054 Furniture in every room (answer P5: A)
 
 **Date.** 2026-10-03.

@@ -5,42 +5,42 @@ CONCEPT DESIGN, NOT FOR CONSTRUCTION
 
 2. IFC generated: output/ifc/VJH-ARCH-001_Villa_5130272.ifc
    Schema IFC4. Stair and lift core: reference stair: 28 risers of 179 mm, going 253 mm, two flights 1.47 m wide, half landing 1.47 m, in a 4.80 x 2.98 m stair room; the reference's 300 mm treads and 1.5 m landing need 5.45 m (OI-23, TO VERIFY); lift in its own shaft 1.80 x 2.15 m
-   IfcBuildingElementProxy       1
+   IfcBuildingElementProxy       2
    IfcColumn                     3
    IfcCovering                  28
-   IfcDoor                      30
-   IfcFurniture                 65
-   IfcGeographicElement          1
+   IfcDoor                      32
+   IfcFurniture                 74
+   IfcGeographicElement         40
    IfcLightFixture               7
    IfcOpeningElement            68
    IfcRailing                    4
    IfcSanitaryTerminal          27
    IfcShadingDevice              4
-   IfcSlab                      11
+   IfcSlab                      22
    IfcSpace                     50
    IfcStair                      1
    IfcTransportElement           1
-   IfcWall                      15
+   IfcWall                      27
    IfcWindow                    36
 
 3. Schema validation: PASS, 0 issue(s)
 
-4. Geometry: 284 elements tessellated, 0 failed
-   IfcBuildingElementProxy       1        4.41 m3
+4. Geometry: 358 elements tessellated, 0 failed
+   IfcBuildingElementProxy       2        5.55 m3
    IfcColumn                     3        1.58 m3
    IfcCovering                  28      143.41 m3
-   IfcDoor                      30        5.61 m3
-   IfcFurniture                 65       75.75 m3
-   IfcGeographicElement          1      305.99 m3
+   IfcDoor                      32        6.92 m3
+   IfcFurniture                 74       78.28 m3
+   IfcGeographicElement         40      735.16 m3
    IfcLightFixture               7        0.14 m3
    IfcRailing                    4        1.95 m3
    IfcSanitaryTerminal          27        5.56 m3
    IfcShadingDevice              4        0.43 m3
-   IfcSlab                      11      379.09 m3
+   IfcSlab                      22      429.90 m3
    IfcSpace                     50     3057.17 m3
    IfcStair                      1       12.92 m3
    IfcTransportElement           1       27.14 m3
-   IfcWall                      15      297.26 m3
+   IfcWall                      27      364.21 m3
    IfcWindow                    36        7.44 m3
 
 5. Floor area, IFC against the plan (walls and spaces in plan; tolerance 0.10 m2)

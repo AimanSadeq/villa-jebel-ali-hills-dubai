@@ -168,13 +168,13 @@ async function boot() {
   }
   const boxes = await model.getBoxes(ids);
   const items = await model.getItemsData(ids, { attributesDefault: true });
-  const nameOf = new Map<number, { name: string; longName: string }>();
+  const nameOf = new Map<number, { name: string; longName: string; objectType: string }>();
   items.forEach((it, i) => {
     const attr = (k: string) => {
       const a = (it as Record<string, unknown>)[k] as { value?: unknown } | undefined;
       return a && typeof a.value === 'string' ? a.value : '';
     };
-    nameOf.set(ids[i], { name: attr('Name'), longName: attr('LongName') });
+    nameOf.set(ids[i], { name: attr('Name'), longName: attr('LongName'), objectType: attr('ObjectType') });
   });
 
   const groups: Record<Group, number[]> = { site: [], spaces: [], ground: [], first: [], roof: [] };
@@ -192,7 +192,8 @@ async function boot() {
     if (cat === 'IFCSPACE') {
       if (name === 'Swimming pool water') groups.site.push(id);
       else { groups.spaces.push(id); spaceLevel.set(id, level); }
-    } else if (cat === 'IFCGEOGRAPHICELEMENT' || (cat === 'IFCBUILDINGELEMENTPROXY' && !facadePart) || name === 'Pool deck') {
+    } else if (cat === 'IFCGEOGRAPHICELEMENT' || (cat === 'IFCBUILDINGELEMENTPROXY' && !facadePart) || name === 'Pool deck'
+               || (nameOf.get(id)?.objectType ?? '').startsWith('Landscape')) {
       groups.site.push(id);
     } else {
       groups[level].push(id);
