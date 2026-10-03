@@ -576,6 +576,9 @@ class Model:
             first_floor = first_floor.difference(v.poly)
         # Stairwell and lift shaft pass through: see build_core.
         first_floor = first_floor.difference(self.stairwell).difference(self.shaft)
+        # A facade cut over the full first floor height takes the slab strip too
+        # (the porch opens to the road over its whole height, D-051).
+        first_floor = self._cut(first_floor, "first", -S, self.HF - S)
         self.element("IfcSlab", "First floor slab", "first",
                      [self._prism(p, -S, S) for p in clean(first_floor)],
                      predefined="FLOOR", material="slab")
@@ -810,6 +813,9 @@ class Model:
         # landing stay walkable (their headroom is OI-23).
         s_head = L - (L - landing) * min(1.0, 2.0 / z_land)
         self.walk_stair_solid = box_l(s_head, L, 0.0, flight_w)
+        # Where flight 2 arrives on the first floor: the stair head stays open
+        # there, guarded everywhere else (build_railings).
+        self.walk_stair_arrival = box_l(L - 0.05, L + 0.05, W - flight_w, W)
         self.walk_stair = [
             {"name": "stair flight 1", "kind": "ramp", "poly": box_l(landing, L, 0.0, flight_w),
              "p0": pt(L, tm1), "z0": 0.0, "p1": pt(landing, tm1), "z1": z_land},
@@ -1433,9 +1439,12 @@ class Model:
         brief/massing.yaml); its use for an internal void edge is TO VERIFY
         against the Dubai Building Code."""
         walls = unary_union([poly for _, poly, _ in self.walls["first"]]).buffer(0.03)
+        # No balustrade where a facade cut opens the void edge to the outside.
+        cuts = unary_union([box(c["u"][0], c["v"][0], c["u"][1], c["v"][1]).buffer(0.05)
+                            for c in self.cuts if c["z"][1] > self.HG + 0.5] or [Polygon()])
         h = float(self.PAR)
         for v in self.voids:
-            edge = v.poly.exterior.difference(walls)
+            edge = v.poly.exterior.difference(walls).difference(cuts)
             lines = [edge] if edge.geom_type == "LineString" else list(getattr(edge, "geoms", []))
             for ln in lines:
                 if ln.length < 0.30:
@@ -1444,6 +1453,18 @@ class Model:
                 self.element("IfcRailing", f"Balustrade, {self.names.get(v.key, v.key)}",
                              "first", [self._prism(band, 0.0, h)], predefined="BALUSTRADE",
                              material="glass")
+        # The stair head: the stairwell's open edges on the first floor, where
+        # no wall stands and the flights do not arrive (review 2026-10-03).
+        arrive = getattr(self, "walk_stair_arrival", None)
+        edge = self.stairwell.exterior.difference(walls)
+        if arrive is not None:
+            edge = edge.difference(arrive.buffer(0.05))
+        for ln in ([edge] if edge.geom_type == "LineString" else list(getattr(edge, "geoms", []))):
+            if ln.length < 0.30:
+                continue
+            band = ln.buffer(0.03, cap_style=2, join_style=2)
+            self.element("IfcRailing", "Balustrade, stair head", "first",
+                         [self._prism(band, 0.0, h)], predefined="BALUSTRADE", material="glass")
 
     def walk_data(self) -> dict:
         """Where a person can stand, for the walkthrough's collision and floor
@@ -1465,6 +1486,13 @@ class Model:
         stair = getattr(self, "walk_stair", [])
         solid = getattr(self, "walk_stair_solid", Polygon())
         ground = interior("ground", self.g_rooms, self.g_circ).difference(solid)
+        # The carport floor is below the house floor: its own zone at that level.
+        carport_zone = None
+        if self.carport is not None:
+            lv = self.lay.get("levels", {}) or {}
+            cz = float(lv.get("carport_ffl_above_gate_m", 0.15)) - float(lv.get("ground_ffl_above_gate_m", 0.45))
+            carport_zone = (self.carport.difference(self.g_fp.buffer(0.01, join_style=2)), cz)
+            ground = ground.difference(carport_zone[0])
         # Facade parts standing on the ground (portal legs, carport piers).
         for ob in self.facade_obstacles:
             ground = ground.difference(ob)
@@ -1494,6 +1522,11 @@ class Model:
         zones = []
         garden = getattr(self, "garden", None)
         outside = [(n, p, z) for n, p, z in garden.flat] if garden else []
+        if carport_zone is not None:
+            cp = carport_zone[0]
+            for ob in self.facade_obstacles:
+                cp = cp.difference(ob)
+            outside = [("carport", cp, carport_zone[1])] + outside
         for name, poly, z in [("ground floor", ground, 0.0), ("first floor", first, self.HG)] + outside:
             for rg in rings(poly):
                 zones.append({"name": name, "kind": "flat", "z": z, "rings": rg})

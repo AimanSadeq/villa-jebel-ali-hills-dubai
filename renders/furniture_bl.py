@@ -208,7 +208,9 @@ def coffee_table(f: Frame, piece: dict):
 
 
 def desk(f: Frame, piece: dict):
-    """A desk with a chair pulled up to its front."""
+    """A desk with a chair pulled up to its front. The layout places the office
+    desk facing the window (flip), so the chair side is where its box has the
+    chair part: nearest the room, which the frame's y already runs toward."""
     w = f.w
     d = min(f.d, 0.8)
     f.box(J, -w / 2, w / 2, 0.0, d, 0.72, 0.75, bevel=0.006, name=f"{f.name} top")

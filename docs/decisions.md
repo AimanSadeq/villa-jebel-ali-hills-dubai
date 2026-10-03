@@ -8,6 +8,22 @@ Columns: date, decision, reason, approved by Aiman.
 
 ## 2026-10-03, Phase 4: facade, palettes, furniture, garden, renders
 
+### D-058 Phase 4 independent review, findings fixed
+
+**Date.** 2026-10-03.
+
+**Decision.** Three read-only review lenses (fidelity to the owner's answers; model, walkthrough and render integrity; project rules) were run over the whole Phase 4 build and their findings fixed:
+- Walkthrough: four first floor rooms (the dress rooms and bathrooms of bedrooms 2 and 4) had been sealed by a wardrobe or the bed standing across the open entry; open joins between touching rooms now keep a 1.0 m passage. Vanities now block the walker. The carport floor is its own level (0.30 m below the house). A flood fill test (tests/test_walk_reach.py) now proves every room and the garden reachable from the front door.
+- Model: the first floor slab strip and a glass balustrade left across the portal opening are removed (the porch is open over its full height, D-051); a glass guard is added at the stair head on the first floor, leaving the flight's arrival open (1.20 m, DDA FAQs Building Q34, TO VERIFY for an internal edge); the front palms moved 0.6 m toward the road so no crown reaches the house, and the landscape build now refuses any tree whose crown would.
+- Viewer: the entrance steps no longer disappear with real materials on; the BBQ furniture stays visible with a palette on; night with real materials off keeps the night sky; textures are cached.
+- Renders: the BBQ furniture is rendered; shower screens are real glass; the stamp writer is mandatory (Pillow).
+- Records: README, SETUP, CLAUDE.md and program.yaml describe the current pipeline and the decided garden; the generated IFC and plan PDF are no longer tracked (the committed copy was the ground floor only; the build makes them); OI-10 closed properly, OI-14 lists the assumed wall values, OI-28 and OI-29 say built; the master's coffee station shortfall (1.35 m against the 1.80 m of FF3) is on record in D-054 and OI-27.
+- Left as found, told to the owner: facade cladding boxes overlap the parapet returns and slab edges by a few centimetres rather than trimming them (coplanar faces, visible only as flicker in the viewer); the roof hatch is not modelled (Phase 6 roof plan).
+
+**Reason.** Owner's answer P11 (C): review before the Phase 4 checkpoint and the MEP.
+
+**Approved by Aiman.** Pending, at the Phase 4 checkpoint.
+
 ### D-057 Photo-realistic renders brought forward (answer P9: A)
 
 **Date.** 2026-10-03.

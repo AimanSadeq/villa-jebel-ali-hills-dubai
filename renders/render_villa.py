@@ -68,7 +68,7 @@ STYLE_MAT = {
     "Pool shell": (None, "#e0e2e0", 0.4), "Pool water": (None, "#3a94c7", 0.05), "Room volume": None,
 }
 SKIP_CLASSES = {"IfcSpace", "IfcOpeningElement", "IfcFurniture", "IfcSanitaryTerminal"}
-SKIP_OBJECT_TYPES = ("Landscape: palm", "Landscape: tree", "Landscape: hedge", "Landscape: furniture")
+SKIP_OBJECT_TYPES = ("Landscape: palm", "Landscape: tree", "Landscape: hedge")
 
 VIEWS = {
     # name: (camera position u, v, z; look-at u, v, z; lens mm; sun key; title)
@@ -261,7 +261,9 @@ def add_finishes(data: dict, palette: int, mats: Materials, col) -> None:
     def slot_mat(slot: str):
         if slot.startswith("fixed."):
             colour = slot[6:]
-            rough = 0.5 if colour == "#121212" else 0.15 if colour in ("#bcd3dd", "#c9d4d8", "#9fb7c2") else 0.8
+            if colour == "#bcd3dd":                      # shower screens: real glass
+                return mats.get("glass", colour, 0.02, "shower glass")
+            rough = 0.5 if colour == "#121212" else 0.15 if colour in ("#c9d4d8", "#9fb7c2") else 0.8
             return mats.get(None, colour, rough, f"fixed {colour}")
         grp, key = slot.split(".")
         sw = pal[grp][key]

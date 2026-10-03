@@ -226,8 +226,10 @@ async function boot() {
     roomLabels.push({ obj, room: r });
   }
 
+  // The house furniture only: the palette layer redraws it, the BBQ furniture stays.
   const furnIds = Object.entries(byCat)
-    .filter(([c]) => c === 'IFCFURNITURE' || c === 'IFCSANITARYTERMINAL').flatMap(([, l]) => l);
+    .filter(([c]) => c === 'IFCFURNITURE' || c === 'IFCSANITARYTERMINAL').flatMap(([, l]) => l)
+    .filter((id) => (nameOf.get(id)?.objectType ?? '') === 'Furniture, indicative');
   const walkState = { on: false, night: false };
   // Interior palettes (D-052): floors, wall faces and ceilings per room.
   const finishes = data.finishes && data.finishes.quads.length ? new PaletteLayer(data.finishes) : null;
@@ -248,7 +250,7 @@ async function boot() {
   const plainExteriorIds = ids.filter((id) => {
     const ot = nameOf.get(id)?.objectType ?? '';
     return /^Facade: (cladding|surround|soffit|canopy|fin|pergola)$/.test(ot)
-      || /^Landscape: (lawn|bed|ground|paving|path|step|steps|hedge)$/.test(ot);
+      || /^Landscape: (lawn|bed|ground|paving|path|step|hedge)$/.test(ot);
   });
   function setReal(on: boolean) {
     realState.on = on && !!assetIndex;

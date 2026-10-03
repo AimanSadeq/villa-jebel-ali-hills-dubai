@@ -41,15 +41,20 @@ HEADERS = {"User-Agent": "villa-5130272-concept-design/1.0 (fetch_assets.py; CC0
            "Accept": "application/json, */*"}
 
 
+class FetchError(RuntimeError):
+    """One asset failed; the run goes on and the index records what it has."""
+
+
 def _open(url: str, timeout: int):
     try:
         return urllib.request.urlopen(urllib.request.Request(url, headers=HEADERS), timeout=timeout)
     except urllib.error.HTTPError as e:
-        raise SystemExit(f"polyhaven.com refused {url} (HTTP {e.code}). Try again in a minute; if it "
+        raise FetchError(f"polyhaven.com refused {url} (HTTP {e.code}). Try again in a minute; if it "
                          f"persists, the site may be blocking this network.") from e
     except urllib.error.URLError as e:
-        raise SystemExit(f"Cannot reach {url}: {e.reason}. Check the internet connection or a proxy.") from e
-MAP_KEYS = {"diff": ("diffuse", "diff"), "nor": ("nor_gl",), "rough": ("rough",), "arm": ("arm",)}
+        raise FetchError(f"Cannot reach {url}: {e.reason}. Check the internet connection or a proxy.") from e
+
+MAP_KEYS = {"diff": ("diffuse", "diff"), "nor": ("nor_gl",), "rough": ("rough",)}
 
 
 def get_json(url: str) -> dict:
@@ -62,12 +67,18 @@ def download(url: str, path: Path) -> None:
         return
     path.parent.mkdir(parents=True, exist_ok=True)
     print(f"   {url.rsplit('/', 1)[-1]} -> {path.relative_to(REPO_ROOT)}")
-    with _open(url, 300) as r, open(path, "wb") as f:
-        while True:
-            chunk = r.read(1 << 16)
-            if not chunk:
-                break
-            f.write(chunk)
+    tmp = path.with_suffix(path.suffix + ".part")
+    try:
+        with _open(url, 300) as r, open(tmp, "wb") as f:
+            while True:
+                chunk = r.read(1 << 16)
+                if not chunk:
+                    break
+                f.write(chunk)
+        tmp.replace(path)             # a partial download never counts as fetched
+    except BaseException:
+        tmp.unlink(missing_ok=True)
+        raise
 
 
 class Catalogue:
@@ -128,43 +139,57 @@ def main() -> int:
         authors = ", ".join((meta.get("authors") or {}).keys()) or "Poly Haven"
         licences.append((key, kind, f"{aid} by {authors}", f"https://polyhaven.com/a/{aid}"))
 
+    failed: list[str] = []
     print("Skies")
     for key, spec in man["hdri"].items():
-        ch = cat.choose(spec)
+        try:
+            ch = cat.choose(spec)
+        except FetchError as e:
+            print(f"   {key}: {e}")
+            failed.append(key)
+            continue
         if not ch:
             print(f"   {key}: nothing found, skipped")
             continue
         aid, meta = ch
-        files = get_json(f"{API}/files/{aid}")
-        url = pick_file(files, ("hdri",), hres, "hdr")
         print(f"   {key}: {aid}")
-        if url and not args.check:
-            path = OUT / "hdri" / f"{aid}_{hres}.hdr"
-            download(url, path)
-            index["hdri"][key] = {"path": f"assets/hdri/{path.name}", "id": aid}
-        record(key, aid, meta, "HDRI sky")
+        try:
+            files = get_json(f"{API}/files/{aid}")
+            url = pick_file(files, ("hdri",), hres, "hdr")
+            if url and not args.check:
+                path = OUT / "hdri" / f"{aid}_{hres}.hdr"
+                download(url, path)
+                index["hdri"][key] = {"path": f"assets/hdri/{path.name}", "id": aid}
+            record(key, aid, meta, "HDRI sky")
+        except FetchError as e:
+            print(f"   {key}: {e}")
+            failed.append(key)
 
     print("Textures")
     for key, spec in man["textures"].items():
-        ch = cat.choose(spec)
-        if not ch:
-            print(f"   {key}: nothing found, skipped")
-            continue
-        aid, meta = ch
-        files = get_json(f"{API}/files/{aid}")
-        entry = {"id": aid, "scale_m": float(spec.get("scale_m", 2.0))}
-        print(f"   {key}: {aid}")
-        if not args.check:
-            for mk, names in MAP_KEYS.items():
-                url = pick_file(files, names, res, "jpg")
-                if not url:
-                    continue
-                path = OUT / "textures" / aid / url.rsplit("/", 1)[-1]
-                download(url, path)
-                entry[mk] = f"assets/textures/{aid}/{path.name}"
-            if "diff" in entry:
-                index["textures"][key] = entry
-        record(key, aid, meta, "texture")
+        try:
+            ch = cat.choose(spec)
+            if not ch:
+                print(f"   {key}: nothing found, skipped")
+                continue
+            aid, meta = ch
+            files = get_json(f"{API}/files/{aid}")
+            entry = {"id": aid, "scale_m": float(spec.get("scale_m", 2.0))}
+            print(f"   {key}: {aid}")
+            if not args.check:
+                for mk, names in MAP_KEYS.items():
+                    url = pick_file(files, names, res, "jpg")
+                    if not url:
+                        continue
+                    path = OUT / "textures" / aid / url.rsplit("/", 1)[-1]
+                    download(url, path)
+                    entry[mk] = f"assets/textures/{aid}/{path.name}"
+                if "diff" in entry:
+                    index["textures"][key] = entry
+            record(key, aid, meta, "texture")
+        except FetchError as e:
+            print(f"   {key}: {e}")
+            failed.append(key)
 
     if args.models:
         print("Models")
@@ -203,6 +228,9 @@ def main() -> int:
     lines += ["", "CONCEPT DESIGN, NOT FOR CONSTRUCTION."]
     LICENSES.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"index: {OUT.relative_to(REPO_ROOT)}/index.json   licences: {LICENSES.relative_to(REPO_ROOT)}")
+    if failed:
+        print(f"not fetched ({len(failed)}): {', '.join(failed)}. Run again to retry; the viewer falls back for these.")
+        return 2
     return 0
 
 

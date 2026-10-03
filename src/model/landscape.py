@@ -185,6 +185,9 @@ def build(spec: dict, plot: Polygon, house: Polygon, carport: Polygon | None,
             L.report.append(f"{sp['name']} at ({u:.1f}, {v:.1f}) is outside the plot, left out")
             continue
         hgt, trunk, crown = float(sp["height_m"]), float(sp["trunk_m"]), float(sp["crown_m"])
+        if Point(u, v).buffer(crown / 2).intersects(house.buffer(0.3)):
+            L.report.append(f"{sp['name']} at ({u:.1f}, {v:.1f}): crown reaches the house, moved out")
+            continue
         name = f"{'Palm' if sp['kind'] == 'palm' else 'Tree'}, {sp['name']}"
         if sp["kind"] == "palm":
             prisms = [(_octagon(u, v, 0.22), g0, trunk)]

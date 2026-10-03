@@ -113,10 +113,10 @@ trees:
   - {species: frangipani, u: 29.1, v: 32.2}
   - {species: frangipani, u: 12.0, v: 32.3}
   - {species: frangipani, u: 22.0, v: 32.3}
-  - {species: date_palm, u: 2.0, v: 14.6}
-  - {species: date_palm, u: 2.0, v: 17.0}
-  - {species: date_palm, u: 2.0, v: 23.2}
-  - {species: date_palm, u: 2.0, v: 26.8}
+  - {species: date_palm, u: 1.4, v: 14.6}
+  - {species: date_palm, u: 1.4, v: 17.0}
+  - {species: date_palm, u: 1.3, v: 23.4}
+  - {species: date_palm, u: 1.3, v: 26.8}
   - {species: frangipani, u: 6.5, v: 31.8}
 
 # BBQ area (G1): an open timber pergola over the BBQ terrace, a BBQ counter

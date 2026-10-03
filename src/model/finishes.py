@@ -27,7 +27,9 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 
 PALETTES = REPO_ROOT / "brief" / "palettes.yaml"
 INSET = 0.004             # finishes sit just inside the room
-SKIP = ("garage", "main_entrance", "stair", "lift", "landing")
+# Rooms with no finish surfaces: the open carport and porch, the stair and
+# lift shafts themselves. Halls (landing, lift lobby, stair hall) are finished.
+SKIP = ("garage", "main_entrance", "stair_lift", "lift_first", "lift")
 
 
 def load() -> dict:

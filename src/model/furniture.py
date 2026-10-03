@@ -50,7 +50,7 @@ class Piece:
     def footprint(self) -> Polygon:
         """What stands on the floor and stops the walker: parts below 0.30 m
         and thicker than 2 cm (a wall hung vanity or a rug does not block)."""
-        floor = [box(p[1], p[3], p[2], p[4]) for p in self.parts if p[5] < 0.3 and p[6] - p[5] > 0.02]
+        floor = [box(p[1], p[3], p[2], p[4]) for p in self.parts if p[5] <= 0.3 and p[6] - p[5] > 0.02]
         return unary_union(floor) if floor else Polygon()
 
     def extent(self) -> Polygon:
@@ -569,8 +569,19 @@ def layout(m) -> tuple[list[Piece], list[str]]:
             room.blocked.append(box(*_xy(room.to_grid(side, s - w / 2 - 0.05, s + w / 2 + 0.05, 0, depth))))
             room.wall_openings.append((side, s - w / 2 - 0.05, s + w / 2 + 0.05))
     # Open joins: a passage 1.0 m deep along each join, and no wall there.
+    # Joins whose rooms touch have no bridge polygon (nothing to remove), so
+    # their shared edge is taken from the rooms themselves.
     for storey in ("ground", "first"):
-        for _, g in m.bridges[storey]:
+        joins = [g for _, g in m.bridges[storey]]
+        for a_key, b_key in m._joins(storey):
+            ra, rb = rects.get((storey, a_key)), rects.get((storey, b_key))
+            if ra is None or rb is None or not ra.poly.touches(rb.poly):
+                continue
+            shared = ra.poly.intersection(rb.poly)
+            if shared.length < 0.6:
+                continue
+            joins.append(shared.buffer(0.01, cap_style=2))
+        for g in joins:
             for (st, k), room in rects.items():
                 if st != storey or room.poly.distance(g) > 0.02:
                     continue

@@ -48,13 +48,17 @@ export async function loadAssetIndex(): Promise<AssetIndex | null> {
 export class Materials {
   private readonly loader = new THREE.TextureLoader();
   private readonly cache = new Map<string, THREE.MeshStandardMaterial>();
+  private readonly texCache = new Map<string, THREE.Texture>();
   readonly index: AssetIndex;
   constructor(index: AssetIndex) { this.index = index; }
 
   has(key: string | undefined): boolean { return !!key && !!this.index.textures[key]?.diff; }
 
   private tex(path: string, srgb: boolean, scale: number): THREE.Texture {
+    const k = `${path}|${srgb}|${scale}`;
+    if (this.texCache.has(k)) return this.texCache.get(k)!;
     const t = this.loader.load(path);
+    this.texCache.set(k, t);
     t.wrapS = THREE.RepeatWrapping; t.wrapT = THREE.RepeatWrapping;
     t.repeat.set(1 / scale, 1 / scale);
     t.anisotropy = 8;
@@ -156,7 +160,7 @@ export class Sky {
       this.scene.environmentIntensity = night ? 0.12 : 0.6;
     } else {
       this.scene.environment = null;
-      if (!night) this.scene.background = this.plainBg;
+      this.scene.background = night ? new THREE.Color(0x141b2b) : this.plainBg;
     }
     // Balanced against the sky's light so the shadows read and the render stays off-white.
     this.sun.intensity = on ? (night ? 0.0 : 10) : 0;
