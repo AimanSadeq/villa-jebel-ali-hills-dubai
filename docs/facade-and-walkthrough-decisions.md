@@ -23,3 +23,4 @@ docs/decisions.md once the set is complete.
 | P3 | Which palette it replaces | **C: palette 1, Sand and Oak.** | Palette 1 is now White, Black and Beige: white walls and joinery, beige floors and soft furnishings, a black marble look feature wall, black worktops, matt black metal. VJH-SK-018 Rev B. Palettes 2 and 3 unchanged. |
 | P4 | Are these the three palettes to build into the walkthrough | **A: yes, all three.** | Built (D-052): floors, walls and ceilings of every room switch between White, Black and Beige, Marble and Walnut, and Stone and Charcoal from the viewer's Interior palette panel; ceilings show while walking. |
 | P5 | What next in Phase 4 | **A: furniture in every room.** | Built (D-054), coloured by the palette. Owner then restored Sand and Oak as palette 1 (D-053). |
+| P6 | Are the furniture layouts right | **A: yes, keep them; move on to the garden.** | D-054 approved as built. Next: the garden, one question at a time. |

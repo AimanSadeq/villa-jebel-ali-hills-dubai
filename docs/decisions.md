@@ -16,7 +16,7 @@ Columns: date, decision, reason, approved by Aiman.
 
 **Reason.** CLAUDE.md deliverables 1 and 2 (furniture in the IFC and the walkthrough); owner's answer P5.
 
-**Approved by Aiman.** Approach yes (P5: A, 2026-10-03); the room layouts are for his review.
+**Approved by Aiman.** Yes (P5: A; layouts P6: A, 2026-10-03).
 
 ### D-053 Palette 1 back to Sand and Oak
 
