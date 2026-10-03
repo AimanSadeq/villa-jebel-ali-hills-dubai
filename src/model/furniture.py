@@ -48,8 +48,14 @@ class Piece:
     flip: bool = False                           # placed facing that wall (back away from it)
 
     def footprint(self) -> Polygon:
+        """What stands on the floor and stops the walker: parts below 0.30 m
+        and thicker than 2 cm (a wall hung vanity or a rug does not block)."""
         floor = [box(p[1], p[3], p[2], p[4]) for p in self.parts if p[5] < 0.3 and p[6] - p[5] > 0.02]
         return unary_union(floor) if floor else Polygon()
+
+    def extent(self) -> Polygon:
+        """The whole piece in plan, for the renders and the drawings."""
+        return unary_union([box(p[1], p[3], p[2], p[4]) for p in self.parts]) if self.parts else Polygon()
 
 
 class Room:
@@ -325,17 +331,22 @@ def furnish_master(room: Room, balcony_side="E"):
     else:
         room.skipped.append("Private sitting group")
     # Coffee station (FF3): 1.80 m of joinery on a free wall.
-    for sd in SIDES:
-        done = False
-        for a, b in room.free_wall(sd):
-            if b - a >= 1.25 and _run(room, "Coffee station, {L:.2f} m", sd, a, b,
-                                      lambda n: counter(n, 0.6) + [(J, -n / 2, n / 2, 0.0, 0.35, 1.45, 2.2)],
-                                      1.2):
-                done = True
+    # Coffee station (FF3): the brief's 1.80 m on any free wall first; only
+    # if no wall takes 1.80 m does it shrink, down to 1.20 m.
+    maker = lambda n: counter(n, 0.6) + [(J, -n / 2, n / 2, 0.0, 0.35, 1.45, 2.2)]  # noqa: E731
+    placed = None
+    for min_len in (1.80, 1.20):
+        for sd in SIDES:
+            for a, b in room.free_wall(sd):
+                if b - a >= min_len + 0.05:
+                    placed = _run(room, "Coffee station, {L:.2f} m", sd, a, b, maker, min_len)
+                    if placed:
+                        break
+            if placed:
                 break
-        if done:
+        if placed:
             break
-    else:
+    if placed is None:
         room.skipped.append("Coffee station")
 
 

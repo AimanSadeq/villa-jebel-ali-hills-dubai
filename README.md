@@ -16,7 +16,7 @@ licensed structural engineer must review, complete, and stamp all final drawings
 | Maximum GFA | 662.99 m² (7,136.36 sq ft) |
 | Maximum height | G+1 |
 | Setbacks | 3 m on all sides |
-| Current phase | Restarted floor by floor (D-038); ground floor built from the owner's reference, 645.07 m2, awaiting owner review |
+| Current phase | Phase 4 built (facade, three palettes, furniture, garden, real materials, Blender renders), in review; GFA 659.98 m2, 3.01 m2 inside the cap |
 
 ## Start here
 
@@ -53,24 +53,31 @@ pip install -r requirements.txt
 | `python src/drawings/option_c_wing.py` | Option C wing, indicative plan |
 | `python src/model/export_massing.py` | Writes the viewer's data file |
 | `python src/model/layout_gen.py` | Generates the room layout, brief/layouts.yaml |
-| `python src/model/build_model.py` | GFA check, then the IFC model, validation, and the viewer's model data |
-| `python src/analysis/shade_check.py` | Afternoon shade on the pool deck from the planned footprint, VJH-RPT-008 |
+| `python src/model/build_model.py` | GFA check, then the IFC model, validation, and the viewer's model data. The IFC and the plan PDF are generated, not committed: run this before the viewer |
+| `python src/analysis/shade_check.py` | Afternoon shade on the garden from the planned footprint, VJH-RPT-008 (written when the pool was in scope) |
 | `npm run dev --prefix viewer` | Massing viewer at http://localhost:5173 |
-| (same server) | Phase 3 IFC model viewer at http://localhost:5173/model.html |
+| (same server) | IFC model viewer and walkthrough at http://localhost:5173/model.html: walk, day and night, three palettes, real materials and sky |
 | `python src/model/assemble_reference.py` | The owner's reference villa with his answers, writes brief/reference_plan.yaml (run before layout_gen) |
 | `python src/drawings/sketch_12_floors.py` | Decision sketch VJH-SK-013, answer 12 on both floors with the door schedule (also sketch_12a.py, sketch_12_trims.py) |
-| `python -m pytest -q` | Setback, GFA, shading, orientation, layout, door and interior guards, 96 checks (2 expected failures on the GFA margin, D-046) |
+| `python src/drawings/sketch_facade.py` | Facade elevations VJH-SK-017 from the IFC and brief/facade.yaml |
+| `python src/drawings/sketch_palettes.py` | Interior palettes VJH-SK-018 from brief/palettes.yaml |
+| `python src/drawings/sketch_garden.py` | Garden plan VJH-SK-019 from brief/garden.yaml |
+| `python assets/fetch_assets.py` | Fetches the free CC0 textures and skies (Poly Haven) for the walkthrough and renders, writes assets/LICENSES.md |
+| `python assets/make_standins.py` | Synthetic stand-in textures for testing without network |
+| `python renders/render_villa.py --all --device GPU` | Blender Cycles renders of the six views, output/renders |
+| `python -m pytest -q` | Setback, GFA, shading, layout, doors, facade, palettes, garden, realism and render guards, 116 checks (2 expected failures on the GFA margin, FF6) |
 
 ## Where things live
 
 ```
-brief/      site.yaml, program.yaml, palettes.yaml. Single source of truth.
+brief/      site.yaml, program.yaml, palettes.yaml, facade.yaml, garden.yaml. Single source of truth.
+assets/     manifest.yaml, fetch_assets.py, LICENSES.md (free CC0 assets, not committed)
 reference/  DDA plot details and authority documents
 src/model/      site geometry, architecture, MEP, landscape
 src/analysis/   GFA, sun study, cooling load, electrical load, clash detection
 src/drawings/   site plan, floor plans, elevations, sections, schedules
-viewer/     Vite + Three.js + That Open walkthrough (Phase 3)
-renders/    Blender scripts and camera setups (Phase 7)
+viewer/     Vite + Three.js + That Open walkthrough
+renders/    Blender Cycles render pipeline, render_villa.py and furniture_bl.py
 output/     ifc, dxf, pdf, renders, reports
 docs/       decisions, open items, assumptions
 tests/      automated checks
@@ -86,13 +93,13 @@ and regenerate: nothing else needs touching.
 | Phase | Work | Status |
 |---|---|---|
 | 0 | Repo setup, brief files, plot and area verification | Complete, awaiting review |
-| 1 | Sun study, massing options, pool and garden position | Complete, awaiting review |
+| 1 | Sun study, massing options, garden position | Complete, approved |
 | 2 | Room layouts, two plan options, GFA check | Approved, 656.47 m2, 6.52 inside the cap |
-| 3 | Full IFC architectural model | Built and in the viewer, awaiting review |
-| 4 | Walkthrough, furniture, landscape, three palettes | Not started |
+| 3 | Full IFC architectural model | Built floor by floor from the owner's reference and answers (D-044 to D-051) |
+| 4 | Walkthrough, furniture, landscape, three palettes | Built (D-049 to D-056), in review |
 | 5 | MEP design, calculations, clash detection | Not started |
 | 6 | Drawing set in PDF and DXF, schedules | Not started |
-| 7 | Photo-realistic renders in Blender | Not started |
+| 7 | Photo-realistic renders in Blender | Pipeline built and brought forward (D-057); full quality renders on the laptop |
 | 8 | Consultant handover package | Not started |
 
 Each phase stops for the owner's approval before the next begins.

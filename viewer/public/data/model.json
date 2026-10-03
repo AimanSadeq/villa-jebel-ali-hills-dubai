@@ -5,7 +5,7 @@
   "stamp": "CONCEPT DESIGN, NOT FOR CONSTRUCTION",
   "phase": 4,
   "ifc": "data/VJH-ARCH-001_Villa_5130272.ifc",
-  "built": "2026-10-03T04:06"
+  "built": "2026-10-03T10:52"
  },
  "north_uv": [
   -0.50272,
@@ -24695,6 +24695,25 @@
     ]
    },
    {
+    "name": "Vanity, 1 basin",
+    "room": "outdoor_bathroom",
+    "storey": "ground",
+    "side": "S",
+    "back": "S",
+    "slot": "accents.joinery",
+    "index": 1,
+    "fp": [
+     10.04,
+     10.84,
+     9.218,
+     9.768
+    ],
+    "z": [
+     0.3,
+     2.0
+    ]
+   },
+   {
     "name": "Shower",
     "room": "maids_toilet",
     "storey": "ground",
@@ -24710,6 +24729,25 @@
     ],
     "z": [
      0.0,
+     2.0
+    ]
+   },
+   {
+    "name": "Vanity, 1 basin",
+    "room": "maids_toilet",
+    "storey": "ground",
+    "side": "N",
+    "back": "N",
+    "slot": "accents.joinery",
+    "index": 3,
+    "fp": [
+     12.093,
+     12.893,
+     8.568,
+     9.118
+    ],
+    "z": [
+     0.3,
      2.0
     ]
    },
@@ -24733,6 +24771,25 @@
     ]
    },
    {
+    "name": "Vanity, 1 basin",
+    "room": "wash",
+    "storey": "ground",
+    "side": "S",
+    "back": "S",
+    "slot": "accents.joinery",
+    "index": 5,
+    "fp": [
+     12.093,
+     12.893,
+     9.221,
+     9.771
+    ],
+    "z": [
+     0.3,
+     2.0
+    ]
+   },
+   {
     "name": "Bed, 0.90 m",
     "room": "maids_room",
     "storey": "ground",
@@ -24749,6 +24806,25 @@
     "z": [
      0.0,
      1.25
+    ]
+   },
+   {
+    "name": "Vanity, 1 basin",
+    "room": "guest_powder",
+    "storey": "ground",
+    "side": "S",
+    "back": "S",
+    "slot": "accents.joinery",
+    "index": 7,
+    "fp": [
+     13.688,
+     14.489,
+     9.82,
+     10.37
+    ],
+    "z": [
+     0.3,
+     2.0
     ]
    },
    {
@@ -24836,9 +24912,9 @@
     "slot": "fixtures.sanitary",
     "index": 12,
     "fp": [
-     16.611,
-     17.971,
-     8.118,
+     16.591,
+     17.991,
+     8.098,
      8.718
     ],
     "z": [
@@ -24856,7 +24932,7 @@
     "index": 13,
     "fp": [
      18.646,
-     19.246,
+     19.266,
      6.348,
      11.488
     ],
@@ -24874,7 +24950,7 @@
     "slot": "accents.joinery",
     "index": 14,
     "fp": [
-     20.44,
+     20.42,
      21.04,
      8.232,
      9.862
@@ -24923,6 +24999,25 @@
     ]
    },
    {
+    "name": "Vanity, 1 basin",
+    "room": "office_toilet",
+    "storey": "ground",
+    "side": "S",
+    "back": "S",
+    "slot": "accents.joinery",
+    "index": 17,
+    "fp": [
+     6.541,
+     7.341,
+     12.323,
+     12.873
+    ],
+    "z": [
+     0.3,
+     2.0
+    ]
+   },
+   {
     "name": "WC",
     "room": "office_toilet",
     "storey": "ground",
@@ -24950,10 +25045,10 @@
     "slot": "accents.textile",
     "index": 19,
     "fp": [
-     6.891,
-     8.491,
+     6.791,
+     8.591,
      16.768,
-     18.118
+     18.218
     ],
     "z": [
      0.0,
@@ -25026,10 +25121,10 @@
     "slot": "accents.textile",
     "index": 23,
     "fp": [
-     4.142,
+     4.042,
      5.172,
-     23.968,
-     24.968
+     23.869,
+     25.069
     ],
     "z": [
      0.0,
@@ -25094,6 +25189,25 @@
     ]
    },
    {
+    "name": "Vanity, 1 basin",
+    "room": "guest_toilet",
+    "storey": "ground",
+    "side": "S",
+    "back": "S",
+    "slot": "accents.joinery",
+    "index": 27,
+    "fp": [
+     5.14,
+     5.941,
+     26.821,
+     27.371
+    ],
+    "z": [
+     0.3,
+     2.0
+    ]
+   },
+   {
     "name": "WC",
     "room": "guest_toilet",
     "storey": "ground",
@@ -25123,7 +25237,7 @@
     "fp": [
      16.065,
      20.415,
-     16.217,
+     16.197,
      16.817
     ],
     "z": [
@@ -25143,7 +25257,7 @@
      16.54,
      19.54,
      14.268,
-     15.248
+     15.268
     ],
     "z": [
      0.0,
@@ -25197,14 +25311,33 @@
     "slot": "accents.joinery",
     "index": 33,
     "fp": [
-     17.47,
-     18.61,
-     21.149,
-     21.689
+     17.39,
+     18.69,
+     21.069,
+     21.769
     ],
     "z": [
      0.0,
      0.4
+    ]
+   },
+   {
+    "name": "Rug",
+    "room": "living",
+    "storey": "ground",
+    "side": "",
+    "back": "",
+    "slot": "accents.highlight",
+    "index": 34,
+    "fp": [
+     16.54,
+     19.54,
+     19.969,
+     22.169
+    ],
+    "z": [
+     0.0,
+     0.012
     ]
    },
    {
@@ -25216,10 +25349,10 @@
     "slot": "accents.worktop",
     "index": 35,
     "fp": [
-     18.342,
-     19.192,
-     25.494,
-     28.494
+     18.242,
+     19.292,
+     25.394,
+     28.594
     ],
     "z": [
      0.0,
@@ -25482,14 +25615,33 @@
     "slot": "accents.joinery",
     "index": 49,
     "fp": [
-     12.824,
-     14.264,
-     26.754,
-     27.494
+     12.744,
+     14.344,
+     26.674,
+     27.574
     ],
     "z": [
      0.0,
      0.4
+    ]
+   },
+   {
+    "name": "Rug",
+    "room": "salon",
+    "storey": "ground",
+    "side": "",
+    "back": "",
+    "slot": "accents.highlight",
+    "index": 50,
+    "fp": [
+     11.944,
+     15.144,
+     25.574,
+     28.674
+    ],
+    "z": [
+     0.0,
+     0.012
     ]
    },
    {
@@ -25539,10 +25691,10 @@
     "slot": "accents.textile",
     "index": 53,
     "fp": [
-     15.146,
+     15.046,
      16.176,
-     10.361,
-     11.361
+     10.261,
+     11.461
     ],
     "z": [
      5.0,
@@ -25577,10 +25729,10 @@
     "slot": "accents.joinery",
     "index": 55,
     "fp": [
-     17.177,
-     18.017,
-     7.642,
-     8.082
+     17.096,
+     18.096,
+     7.562,
+     8.162
     ],
     "z": [
      5.0,
@@ -25635,7 +25787,7 @@
     "index": 58,
     "fp": [
      15.046,
-     15.626,
+     15.646,
      11.383,
      12.733
     ],
@@ -25740,6 +25892,25 @@
     ]
    },
    {
+    "name": "Vanity, 2 basins",
+    "room": "master_toilet",
+    "storey": "first",
+    "side": "S",
+    "back": "S",
+    "slot": "accents.joinery",
+    "index": 64,
+    "fp": [
+     6.341,
+     7.941,
+     6.312,
+     6.862
+    ],
+    "z": [
+     5.3,
+     7.0
+    ]
+   },
+   {
     "name": "WC",
     "room": "master_toilet",
     "storey": "first",
@@ -25805,10 +25976,10 @@
     "slot": "accents.textile",
     "index": 68,
     "fp": [
-     5.148,
+     5.048,
      6.178,
-     15.069,
-     16.069
+     14.97,
+     16.169
     ],
     "z": [
      5.0,
@@ -25850,6 +26021,25 @@
     ],
     "z": [
      5.0,
+     7.0
+    ]
+   },
+   {
+    "name": "Vanity, 1 basin",
+    "room": "bedroom_2_toilet",
+    "storey": "first",
+    "side": "S",
+    "back": "S",
+    "slot": "accents.joinery",
+    "index": 71,
+    "fp": [
+     7.091,
+     7.891,
+     10.416,
+     10.966
+    ],
+    "z": [
+     5.3,
      7.0
     ]
    },
@@ -25919,10 +26109,10 @@
     "slot": "accents.textile",
     "index": 75,
     "fp": [
-     4.142,
+     4.042,
      5.172,
-     23.97,
-     24.97
+     23.869,
+     25.07
     ],
     "z": [
      5.0,
@@ -25983,6 +26173,25 @@
     ],
     "z": [
      5.0,
+     7.0
+    ]
+   },
+   {
+    "name": "Vanity, 1 basin",
+    "room": "bedroom_3_toilet",
+    "storey": "first",
+    "side": "S",
+    "back": "S",
+    "slot": "accents.joinery",
+    "index": 79,
+    "fp": [
+     5.143,
+     5.944,
+     26.822,
+     27.372
+    ],
+    "z": [
+     5.3,
      7.0
     ]
    },
@@ -26052,10 +26261,10 @@
     "slot": "accents.textile",
     "index": 83,
     "fp": [
-     15.146,
+     15.046,
      16.176,
-     25.742,
-     26.742
+     25.642,
+     26.842
     ],
     "z": [
      5.0,
@@ -26097,6 +26306,25 @@
     ],
     "z": [
      5.0,
+     7.0
+    ]
+   },
+   {
+    "name": "Vanity, 1 basin",
+    "room": "bedroom_4_toilet",
+    "storey": "first",
+    "side": "S",
+    "back": "S",
+    "slot": "accents.joinery",
+    "index": 86,
+    "fp": [
+     18.646,
+     19.446,
+     28.526,
+     29.076
+    ],
+    "z": [
+     5.3,
      7.0
     ]
    },
@@ -26166,14 +26394,33 @@
     "slot": "accents.joinery",
     "index": 90,
     "fp": [
-     12.029,
-     12.569,
-     26.029,
-     27.169
+     11.949,
+     12.649,
+     25.949,
+     27.249
     ],
     "z": [
      5.0,
      5.4
+    ]
+   },
+   {
+    "name": "Rug",
+    "room": "family_living",
+    "storey": "first",
+    "side": "",
+    "back": "",
+    "slot": "accents.highlight",
+    "index": 91,
+    "fp": [
+     11.549,
+     13.749,
+     25.099,
+     28.099
+    ],
+    "z": [
+     5.0,
+     5.012
     ]
    }
   ],

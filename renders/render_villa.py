@@ -519,8 +519,9 @@ def stamp(path: Path, title: str) -> None:
     """Write the stamp and the view title onto the finished render."""
     try:
         from PIL import Image, ImageDraw  # noqa: PLC0415
-    except ImportError:
-        return
+    except ImportError as e:
+        raise SystemExit("Pillow is needed to stamp the render (pip install pillow); "
+                         "every output must carry CONCEPT DESIGN, NOT FOR CONSTRUCTION.") from e
     im = Image.open(path).convert("RGB")
     d = ImageDraw.Draw(im)
     w, h = im.size

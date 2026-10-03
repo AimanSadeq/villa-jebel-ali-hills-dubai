@@ -48,7 +48,7 @@ git push
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install --upgrade pip
-pip install ifcopenshell ezdxf matplotlib numpy shapely pyyaml pvlib pandas pytest
+pip install -r requirements.txt
 ```
 
 If PowerShell blocks the activate script, run once: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
@@ -66,7 +66,7 @@ What each library does:
 | pandas | Schedules and load calculation tables |
 | pytest | Automated checks (GFA limit, setbacks) |
 
-## Step 4: Viewer libraries (Claude Code will run these in Phase 3)
+## Step 4: Viewer libraries
 
 ```powershell
 npm create vite@latest viewer -- --template vanilla-ts
@@ -117,15 +117,27 @@ Optional desktop tools:
 
 1. Open the Claude Desktop app and go to the **Code** tab.
 2. Open the folder `C:\Projects\villa-5130272`.
-3. Type: `Read CLAUDE.md and SETUP.md, confirm the setup is complete, then propose Phase 0 and wait for my approval.`
+3. Type: `Read CLAUDE.md, SETUP.md and docs/decisions.md, confirm the setup is complete, then continue from the current phase and wait for my approval.`
 
-Claude Code will check the installs, ask any remaining questions one at a time, and start Phase 0 only after you approve.
+Claude Code will check the installs, ask any remaining questions one at a time, and continue only after you approve.
 
 ## Notes
 
 - Sizes: expect the repo to grow to a few GB once 3D assets and renders are added. Git LFS will be set up by Claude Code for large files (`git lfs install`).
 - Backups: GitHub is your remote copy. Push at the end of every session.
 - Performance: if the walkthrough feels slow, ask Claude Code to lower plant density or texture resolution; your 32 GB RAM and Arc 140V handle a single villa scene well.
+
+## Walkthrough with real materials (D-056)
+
+```
+.\.venv\Scripts\Activate.ps1
+python assets/fetch_assets.py          # once: photographs of real materials and skies, CC0 from Poly Haven
+python src/model/build_model.py
+npm run dev --prefix viewer            # then http://localhost:5173/model.html, reload after a fetch
+```
+
+The viewer's Realism section switches the photographic materials and the sky;
+the Interior palette section switches the three palettes (brief/palettes.yaml).
 
 ## Renders (Phase 7, brought forward by D-057)
 
@@ -136,7 +148,7 @@ assets, on the laptop's Intel Arc GPU:
 .\.venv\Scripts\Activate.ps1
 python assets/fetch_assets.py                  # once: textures and skies
 python src/model/build_model.py
-pip install bpy                                # Blender as a Python module, once (large)
+pip install bpy pillow                         # Blender as a Python module (large) and the stamp writer, once
 python renders/render_villa.py --all --device GPU --samples 256 --size 1920x1080
 ```
 

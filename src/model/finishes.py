@@ -204,7 +204,7 @@ def finish_data(m) -> dict:
     opposite = {"S": "N", "N": "S", "W": "E", "E": "W"}
     pieces = []
     for i, f in enumerate(getattr(m, "furniture", [])):
-        fp = f.footprint()
+        fp = f.extent()
         if fp.is_empty:
             pieces.append(None)
             continue

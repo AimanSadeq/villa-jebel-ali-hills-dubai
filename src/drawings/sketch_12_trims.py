@@ -87,8 +87,8 @@ def option_b(first: list) -> tuple[list, frozenset, list[str]]:
     s3 = sum((r["x1"] - r["x0"]) * (r["y1"] - r["y0"]) for r in f
              if r["key"] in ("bedroom_3", "bedroom_3_dress", "bedroom_3_toilet"))
     notes.append("Bedroom 3 WC gets tight at that size: WC, basin and shower only, no bath.")
-    notes.append(f"Suites (room, dress, WC): bedroom 2 {s2:.1f} m², bedroom 3 {s3:.1f} m²; "
-                 "the brief asks 30 to 35 m².")
+    notes.append(f"Suites (room, dress, WC): bedroom 2 {s2:.1f} m2 ({s2 * SQFT:,.0f} sq ft), "
+                 f"bedroom 3 {s3:.1f} m2 ({s3 * SQFT:,.0f} sq ft), clear height 3.55 m; the brief asks 30 to 35 m2.")
     notes.append(f"The {STEP_BACK:.2f} m strips on the road face become open recesses (balcony or shading ledge), "
                  "outside GFA (D-039, TO VERIFY). They shade the bedroom glass on the hot road face, as the brief "
                  "asks for south and west faces.")

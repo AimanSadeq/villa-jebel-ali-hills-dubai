@@ -6,7 +6,7 @@ Columns: date, decision, reason, approved by Aiman.
 
 ---
 
-## 2026-10-02, the ground floor built from the reference
+## 2026-10-03, Phase 4: facade, palettes, furniture, garden, renders
 
 ### D-057 Photo-realistic renders brought forward (answer P9: A)
 
@@ -19,7 +19,7 @@ Columns: date, decision, reason, approved by Aiman.
 - the six views of CLAUDE.md deliverable 5: entrance, double height living room, salon, master suite, garden at sunset, aerial. Output output/renders/VJH-R-00n_<view>.png, stamped.
 Runs with Blender's Python module (pip install bpy, kept in its own environment) or inside Blender on the laptop with the Intel Arc GPU (--device GPU, oneAPI). Test renders at low quality were made in the cloud with stand-in textures; the real photographs and the full quality renders are made on the laptop.
 
-**Stage 2 (answer P10: B, 2026-10-03).** The Blender route kept over Twinmotion. renders/furniture_bl.py builds every layout piece as modelled furniture in the palette's materials: beds with frame, mattress, pillows, duvet and bedside lamps; sofas and armchairs with cushions and legs; dining and desk chairs; tables; wardrobes, consoles and shelves with door lines and handles; kitchen runs with wall units, worktops and the island; vanities with basins, taps and mirror; WCs, showers with glass screens, the bathtub; rugs. Palms get a rachis with leaflets, trees branches with leaf clusters kept above head height. The walkthrough keeps the boxes (stage 2 there is not planned while the renders are the pictures).
+**Stage 2 (answer P10: B, 2026-10-03).** The Blender route kept over Twinmotion. renders/furniture_bl.py builds every layout piece as modelled furniture in the palette's materials: beds with frame, mattress, pillows, duvet and bedside lamps; sofas and armchairs with cushions and legs; dining and desk chairs; tables; wardrobes, consoles and shelves with door lines and handles; kitchen runs with wall units, worktops and the island; vanities with basins, taps and mirror; WCs, showers with glass screens, the bathtub; rugs. Palms get a rachis with leaflets, trees branches with leaf clusters kept above head height. The walkthrough keeps the boxes (stage 2 there is not planned while the renders are the pictures). Review 2026-10-03: pieces now export their full plan extent, so wall hung vanities and rugs reach the builders too.
 
 **Reason.** Owner's answer P9: the walkthrough looked unreal; photographs of the finished house can only come from path traced renders (CLAUDE.md deliverable 5, Phase 7), and the same model and materials feed them.
 
@@ -53,7 +53,7 @@ Runs with Blender's Python module (pip install bpy, kept in its own environment)
 
 **Reason.** Owner's answers G1 to G4; CLAUDE.md section 4 (outside), deliverables 1 and 2.
 
-**Approved by Aiman.** The answers yes (G1 to G4, 2026-10-03); the layout as built is for his review.
+**Approved by Aiman.** Yes (G1 to G4, 2026-10-03). The layout as built is for his review at the Phase 4 checkpoint.
 
 ### D-054 Furniture in every room (answer P5: A)
 
@@ -62,6 +62,8 @@ Runs with Blender's Python module (pip install bpy, kept in its own environment)
 **Decision.** src/model/furniture.py furnishes every room by type: beds with bedside tables, a TV unit and a desk in the bedrooms; the master suite's king bed, private sitting group by the balcony and coffee station (FF3); wardrobe runs and the master's dressing island; showers, vanities, WCs and the master's bathtub and two basins; the living and family rooms' TV unit, sofa, coffee table and rug; a 12 seat dining table; the salon's two facing sofas, table, rug and console on the feature wall; kitchen runs and the island; the office desk and shelves; pantry shelves, laundry and the foyer console. Each piece is checked against the walls, door swings, the passages through open joins, windows and the other pieces, and left out (and reported) if it does not fit. In the IFC as IfcFurniture and IfcSanitaryTerminal; in the walkthrough coloured by the chosen palette, and the walker cannot pass through beds, sofas, tables and counters. Sizes indicative.
 
 **Reason.** CLAUDE.md deliverables 1 and 2 (furniture in the IFC and the walkthrough); owner's answer P5.
+
+**Shortfall told to the owner (review 2026-10-03).** The master's coffee station (FF3, 1.80 m on VJH-SK-015) is placed at 1.35 m: no free wall of the suite takes 1.80 m once the bed, the sitting group and the doors are in. The search now tries 1.80 m on every wall before shrinking; the length built is the one the layout report prints.
 
 **Approved by Aiman.** Yes (P5: A; layouts P6: A, 2026-10-03).
 
@@ -99,7 +101,7 @@ The model build exports every room's floor, wall faces (leaving doors, windows a
 - Garden side: a stone frame 2.55 m deep around the tall glass of the double height living room; its bottom band shades the living room glass 2.06 m deep.
 - South face: eaves 1.50 m at the roof and 1.00 m over the ground floor, timber soffits.
 - Carport columns clad in stone; projecting surrounds on the windows of the hot faces, vertical timber fins on the larger road side windows.
-- An open timber louvred pergola, 6.00 x 9.41 m, over the garden frame, no roof access (R1, R2, D-017 stands), top +11.70 TO VERIFY (OI-28, OI-13).
+- An open timber louvred pergola, 6.00 x 9.41 m, over the garden frame, no roof access (R1, R2, D-017 stands), top +11.70 TO VERIFY (OI-28, OI-13). The maintenance roof hatch (R1) is not modelled; it belongs with the roof plan in Phase 6.
 - Beige render replaces white on the walls (D-048); linear LED lines as in the renders.
 - Model changes: the first floor wall across the road side of the porch removed (the porch opens to the road over its full double height); the 1.20 m parapet on the 0.49 m ledge in front of the living room's tall glass removed inside the frame (TO VERIFY, OI-29); bedroom 4's balcony starts at v 24.12, 0.70 x 2.00 m shorter.
 - GFA measured from the plan 659.98 m2, margin 3.01 m2 (was 660.82 m2, 2.17 m2): the removed wall over the porch (3.39 x 0.25 m) no longer counts. IFC check 659.94 m2.
@@ -140,6 +142,8 @@ Materials, furniture, landscape and the three palettes follow; the facade after 
 **Reason.** Owner answers F3 (interactive browser walkthrough) and F4 (A: walkthrough now). CLAUDE.md deliverable 2.
 
 **Approved by Aiman.** Yes for the phase (F3, F4); the engine's details are reviewed in the walkthrough.
+
+## 2026-10-02, the ground floor built from the reference
 
 ### D-048 Facade after the owner's reference renders
 

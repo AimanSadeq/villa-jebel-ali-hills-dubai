@@ -115,10 +115,10 @@ Master suite contents: bedroom, private sitting area, his and hers walk-in wardr
 ### Outside
 
 - Swimming pool, 10 x 4 m, with deck. REMOVED by owner decision 2026-10-02 (D-041): no pool.
-- BBQ area with pergola (was by the pool; position to be decided with the garden, D-041)
+- BBQ area with pergola: south corner of the back garden by the Arabic kitchen door (G1, D-055)
 - Landscape and softscape: trees, palms, lawn, planting beds, hardscape paving, driveway
-- Boundary walls and gates: propose design at checkpoint 1
-- Position of pool and main garden: NOT decided. Test at least two options (east toward the landscape plot, and south/southwest) with sun-path and shading studies, then recommend one with reasons.
+- Boundary walls and gates: D-011 wall approved (G3), TO VERIFY with Meraas (OI-14); car gate to the carport and pedestrian gate on the portal line (G4)
+- Main garden: east, toward the landscape plot, a balanced garden with terrace, central lawn and planting beds (G2, D-055). No pool (D-041).
 
 ## 5. Architectural style
 

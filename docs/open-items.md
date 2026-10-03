@@ -419,6 +419,8 @@ That assumption now has a citation against it and needs the Meraas guideline to
 confirm. If walls are not permitted, the privacy argument for the SSW and NNE
 faces changes and the landscape design has to carry it instead.
 
+Update 2026-10-03: the owner approved the D-011 wall (answer G3) and it is built in the model (D-055), still TO VERIFY. Values assumed, none from a regulation: wall 2.40 m overall, solid to 1.20 m with a timber screen above on the road and landscape sides, solid full height against both neighbours, 0.25 m thick; car and pedestrian gates 2.20 m; hedges 0.90 m along the road wall and 1.50 m on the north and south sides; BBQ pergola 2.70 m. If Meraas does not allow a wall, the same lines become hedges.
+
 Source: DDA FAQs - Building, retrieved 2026-10-01 from https://webzoning.dda.gov.ae/Zoning/Content/dda/FAQs.pdf
 
 ### OI-15 Air well for the enclosed Arabic kitchen
@@ -535,7 +537,7 @@ about 0.5 m from the store or the prep kitchen.
 | Raised | 2026-10-02, D-046 |
 
 - The 6 m2 linen store (brief) has no place since answer 12l. CLOSED by FF4 (C): no separate store, linen in built-in cupboards.
-- The master suite's coffee station (brief) was the reference pantry's. CLOSED by FF3: a 1.80 m station between the dressing room and the bedroom (VJH-SK-015); modelled with the Phase 4 furniture.
+- The master suite's coffee station (brief) was the reference pantry's. CLOSED by FF3: a 1.80 m station between the dressing room and the bedroom (VJH-SK-015). Built at 1.35 m (D-054): no free wall takes 1.80 m with the bed, sitting group and doors in place; told to the owner.
 - The family room above the salon was 26.2 m2 against the brief's 35 m2. CLOSED by FF5: open to the gallery, 4.99 x 5.25 m plus 1.49 x 5.04 m, about 33.7 m2 (363 sq ft), clear height 3.55 m.
 - GFA margin: 3.01 m2 since the facade build (R4, D-051: the wall over the porch removed); 2.17 m2 after FF7, 1.30 m2 before. The owner keeps it (FF6) and declines the D-005 reserve for now; the risk stays open until the consultant measures (OI-01).
 - The first floor wall at the void's end stood 0.21 m forward of the TV wall below. CLOSED by FF7 (A): lined up, built (D-050).
@@ -554,8 +556,8 @@ its look only: open on all sides, no roof terrace, no stair or lift to the roof
 open, unreachable roof pergola toward GFA or the G+1 height limit (the DDA FAQ
 Q27 reading in D-017 covers roof enclosures, not open pergolas), any limit on
 its height above the roof, and the roof hatch and parapet rules in the Dubai
-Building Code. No value is assumed. The proposal (VJH-SK-017) puts its top at
-+11.70, 2.70 m above the roof; see also OI-13 (DDA FAQs Building Q29 may limit
+Building Code. No value is assumed. Built in the model (D-051) with its top at
++11.70, 2.70 m above the roof; the maintenance hatch is not modelled yet (Phase 6 roof plan); see also OI-13 (DDA FAQs Building Q29 may limit
 a G+1 villa to 8.40 m to its last point).
 
 ### OI-29 Facade projections into the setback, and the ledge parapet (VJH-SK-017)
@@ -565,13 +567,13 @@ a G+1 villa to 8.40 m to its last point).
 | Status | OPEN, TO VERIFY with DDA and the Dubai Building Code through the consultant |
 | Raised | 2026-10-02, answer R3 |
 
-The facade proposal (brief/facade.yaml) keeps every element inside the 3 m
+The facade (brief/facade.yaml, built as D-051) keeps every element inside the 3 m
 setback line except the stone cladding of the carport columns, which already
 stand there (D-044). To verify: whether eaves, window surrounds, fins, stone
 cladding and the entrance portal may project toward the setback line or into
 it, and by how much; and whether a parapet is required on the 0.49 m ledge in
-front of the living room's tall glass, which nobody can reach (the proposal
-removes it inside the garden frame). No value is assumed.
+front of the living room's tall glass, which nobody can reach (removed inside
+the garden frame in the model, D-051). No value is assumed.
 
 ## Owner decisions outstanding
 
@@ -628,11 +630,12 @@ allowance, or set a different one.
 
 | | |
 |---|---|
-| Status | OPEN, low priority |
+| Status | CLOSED 2026-10-02 |
 | Decided by | Aiman |
 
 The owner confirmed on 2026-10-01 that the majlis and the salon are the same
-room. Drawings currently label it `Majlis (Salon)`. Confirm, or pick one word.
+room, and on 2026-10-02 that it is always called the salon (D-047). Every
+drawing, label and script now says salon; older reports (VJH-RPT-006) predate it.
 
 ## Standing item
 

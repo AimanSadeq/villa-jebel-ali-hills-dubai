@@ -26,7 +26,7 @@ def test_three_distinct_palettes_fill_every_slot():
             for s in slots:
                 sw = p[grp][s]
                 assert re.fullmatch(r"#[0-9a-f]{6}", sw["colour"]) and 0 <= sw["roughness"] <= 1
-                assert sw["name"] and "—" not in sw["name"]
+                assert sw["name"] and "\u2014" not in sw["name"]
     floors = [tuple(p["flooring"][k]["colour"] for k in ("public", "bedrooms")) for p in pals]
     assert len(set(floors)) == 3
 
