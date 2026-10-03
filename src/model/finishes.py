@@ -196,21 +196,27 @@ def finish_data(m) -> dict:
 
     palettes = [{k: p[k] for k in ("key", "name", "flooring", "walls", "accents", "fixtures")}
                 for p in spec["palettes"]]
-    boxes = [{"slot": q[0], "storey": f.storey, "b": [round(x, 3) for x in (q[1], q[2], q[3], q[4], m.elev[f.storey] + q[5], m.elev[f.storey] + q[6])]}
-             for f in getattr(m, "furniture", []) for q in f.parts]
+    boxes = [{"slot": q[0], "storey": f.storey, "piece": i,
+              "b": [round(x, 3) for x in (q[1], q[2], q[3], q[4], m.elev[f.storey] + q[5], m.elev[f.storey] + q[6])]}
+             for i, f in enumerate(getattr(m, "furniture", [])) for q in f.parts]
     # Whole pieces, for the renders and the stage 2 models: the footprint,
     # the height, the wall side it stands against and its main slot.
+    opposite = {"S": "N", "N": "S", "W": "E", "E": "W"}
     pieces = []
-    for f in getattr(m, "furniture", []):
+    for i, f in enumerate(getattr(m, "furniture", [])):
         fp = f.footprint()
         if fp.is_empty:
+            pieces.append(None)
             continue
         b = fp.bounds
         z0 = m.elev[f.storey] + min(q[5] for q in f.parts)
         z1 = m.elev[f.storey] + max(q[6] for q in f.parts)
         slot = max(f.parts, key=lambda q: (q[2] - q[1]) * (q[4] - q[3]) * (q[6] - q[5]))[0]
-        pieces.append({"name": f.name, "room": f.room, "storey": f.storey, "side": f.side, "slot": slot,
+        # back: the side of the piece that stands against or faces away from the room.
+        pieces.append({"name": f.name, "room": f.room, "storey": f.storey, "side": f.side,
+                       "back": opposite.get(f.side, f.side) if f.flip else f.side, "slot": slot, "index": i,
                        "fp": [round(x, 3) for x in (b[0], b[2], b[1], b[3])], "z": [round(z0, 3), round(z1, 3)]})
+    pieces = [p for p in pieces if p is not None]
     return {"quads": quads, "boxes": boxes, "pieces": pieces, "palettes": palettes,
             "note": "Interior palettes, brief/palettes.yaml (P1 to P4). Visual concept finishes, "
                     "not a specification. CONCEPT DESIGN, NOT FOR CONSTRUCTION."}

@@ -5,7 +5,7 @@
   "stamp": "CONCEPT DESIGN, NOT FOR CONSTRUCTION",
   "phase": 4,
   "ifc": "data/VJH-ARCH-001_Villa_5130272.ifc",
-  "built": "2026-10-03T03:48"
+  "built": "2026-10-03T04:06"
  },
  "north_uv": [
   -0.50272,
@@ -21127,6 +21127,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "ground",
+    "piece": 0,
     "b": [
      10.19,
      10.99,
@@ -21139,6 +21140,7 @@
    {
     "slot": "fixed.#bcd3dd",
     "storey": "ground",
+    "piece": 0,
     "b": [
      10.19,
      10.99,
@@ -21151,6 +21153,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 1,
     "b": [
      10.04,
      10.84,
@@ -21163,6 +21166,7 @@
    {
     "slot": "accents.worktop",
     "storey": "ground",
+    "piece": 1,
     "b": [
      10.04,
      10.84,
@@ -21175,6 +21179,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "ground",
+    "piece": 1,
     "b": [
      10.24,
      10.64,
@@ -21187,6 +21192,7 @@
    {
     "slot": "fixed.#c9d4d8",
     "storey": "ground",
+    "piece": 1,
     "b": [
      10.04,
      10.84,
@@ -21199,6 +21205,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "ground",
+    "piece": 2,
     "b": [
      12.093,
      12.893,
@@ -21211,6 +21218,7 @@
    {
     "slot": "fixed.#bcd3dd",
     "storey": "ground",
+    "piece": 2,
     "b": [
      12.093,
      12.893,
@@ -21223,6 +21231,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 3,
     "b": [
      12.093,
      12.893,
@@ -21235,6 +21244,7 @@
    {
     "slot": "accents.worktop",
     "storey": "ground",
+    "piece": 3,
     "b": [
      12.093,
      12.893,
@@ -21247,6 +21257,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "ground",
+    "piece": 3,
     "b": [
      12.293,
      12.693,
@@ -21259,6 +21270,7 @@
    {
     "slot": "fixed.#c9d4d8",
     "storey": "ground",
+    "piece": 3,
     "b": [
      12.093,
      12.893,
@@ -21271,6 +21283,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "ground",
+    "piece": 4,
     "b": [
      12.303,
      12.683,
@@ -21283,6 +21296,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "ground",
+    "piece": 4,
     "b": [
      12.243,
      12.743,
@@ -21295,6 +21309,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 5,
     "b": [
      12.093,
      12.893,
@@ -21307,6 +21322,7 @@
    {
     "slot": "accents.worktop",
     "storey": "ground",
+    "piece": 5,
     "b": [
      12.093,
      12.893,
@@ -21319,6 +21335,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "ground",
+    "piece": 5,
     "b": [
      12.293,
      12.693,
@@ -21331,6 +21348,7 @@
    {
     "slot": "fixed.#c9d4d8",
     "storey": "ground",
+    "piece": 5,
     "b": [
      12.093,
      12.893,
@@ -21343,6 +21361,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 6,
     "b": [
      13.419,
      15.419,
@@ -21355,6 +21374,7 @@
    {
     "slot": "fixed.#f4f1ea",
     "storey": "ground",
+    "piece": 6,
     "b": [
      13.439,
      15.389,
@@ -21367,6 +21387,7 @@
    {
     "slot": "accents.highlight",
     "storey": "ground",
+    "piece": 6,
     "b": [
      14.789,
      15.399,
@@ -21379,6 +21400,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 6,
     "b": [
      13.339,
      13.419,
@@ -21391,6 +21413,7 @@
    {
     "slot": "fixed.#f4f1ea",
     "storey": "ground",
+    "piece": 6,
     "b": [
      13.459,
      13.889,
@@ -21403,6 +21426,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 7,
     "b": [
      13.688,
      14.489,
@@ -21415,6 +21439,7 @@
    {
     "slot": "accents.worktop",
     "storey": "ground",
+    "piece": 7,
     "b": [
      13.688,
      14.489,
@@ -21427,6 +21452,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "ground",
+    "piece": 7,
     "b": [
      13.889,
      14.288,
@@ -21439,6 +21465,7 @@
    {
     "slot": "fixed.#c9d4d8",
     "storey": "ground",
+    "piece": 7,
     "b": [
      13.688,
      14.489,
@@ -21451,6 +21478,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "ground",
+    "piece": 8,
     "b": [
      13.899,
      14.278,
@@ -21463,6 +21491,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "ground",
+    "piece": 8,
     "b": [
      13.838,
      14.338,
@@ -21475,6 +21504,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 9,
     "b": [
      15.066,
      16.816,
@@ -21487,6 +21517,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 10,
     "b": [
      15.066,
      16.816,
@@ -21499,6 +21530,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 11,
     "b": [
      15.043,
      15.493,
@@ -21511,6 +21543,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "ground",
+    "piece": 12,
     "b": [
      17.371,
      17.971,
@@ -21523,6 +21556,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "ground",
+    "piece": 12,
     "b": [
      16.611,
      17.212,
@@ -21535,6 +21569,7 @@
    {
     "slot": "accents.worktop",
     "storey": "ground",
+    "piece": 12,
     "b": [
      16.591,
      17.991,
@@ -21547,6 +21582,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 13,
     "b": [
      18.646,
      19.246,
@@ -21559,6 +21595,7 @@
    {
     "slot": "accents.worktop",
     "storey": "ground",
+    "piece": 13,
     "b": [
      18.646,
      19.266,
@@ -21571,6 +21608,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 13,
     "b": [
      18.646,
      18.996,
@@ -21583,6 +21621,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 14,
     "b": [
      20.44,
      21.04,
@@ -21595,6 +21634,7 @@
    {
     "slot": "accents.worktop",
     "storey": "ground",
+    "piece": 14,
     "b": [
      20.42,
      21.04,
@@ -21607,6 +21647,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 14,
     "b": [
      20.69,
      21.04,
@@ -21619,6 +21660,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 15,
     "b": [
      11.393,
      13.193,
@@ -21631,6 +21673,7 @@
    {
     "slot": "fixed.#c9d4d8",
     "storey": "ground",
+    "piece": 15,
     "b": [
      11.693,
      12.893,
@@ -21643,6 +21686,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "ground",
+    "piece": 16,
     "b": [
      7.241,
      8.141,
@@ -21655,6 +21699,7 @@
    {
     "slot": "fixed.#bcd3dd",
     "storey": "ground",
+    "piece": 16,
     "b": [
      7.241,
      8.141,
@@ -21667,6 +21712,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 17,
     "b": [
      6.541,
      7.341,
@@ -21679,6 +21725,7 @@
    {
     "slot": "accents.worktop",
     "storey": "ground",
+    "piece": 17,
     "b": [
      6.541,
      7.341,
@@ -21691,6 +21738,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "ground",
+    "piece": 17,
     "b": [
      6.741,
      7.141,
@@ -21703,6 +21751,7 @@
    {
     "slot": "fixed.#c9d4d8",
     "storey": "ground",
+    "piece": 17,
     "b": [
      6.541,
      7.341,
@@ -21715,6 +21764,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "ground",
+    "piece": 18,
     "b": [
      6.701,
      7.081,
@@ -21727,6 +21777,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "ground",
+    "piece": 18,
     "b": [
      6.641,
      7.141,
@@ -21739,6 +21790,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 19,
     "b": [
      6.791,
      8.591,
@@ -21751,6 +21803,7 @@
    {
     "slot": "fixtures.metal",
     "storey": "ground",
+    "piece": 19,
     "b": [
      8.411,
      8.491,
@@ -21763,6 +21816,7 @@
    {
     "slot": "fixtures.metal",
     "storey": "ground",
+    "piece": 19,
     "b": [
      6.891,
      6.971,
@@ -21775,6 +21829,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 19,
     "b": [
      7.441,
      7.941,
@@ -21787,6 +21842,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 20,
     "b": [
      5.866,
      7.216,
@@ -21799,6 +21855,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 21,
     "b": [
      5.991,
      7.591,
@@ -21811,6 +21868,7 @@
    {
     "slot": "fixed.#f4f1ea",
     "storey": "ground",
+    "piece": 21,
     "b": [
      6.021,
      7.561,
@@ -21823,6 +21881,7 @@
    {
     "slot": "accents.highlight",
     "storey": "ground",
+    "piece": 21,
     "b": [
      5.991,
      7.591,
@@ -21835,6 +21894,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 21,
     "b": [
      5.941,
      7.641,
@@ -21847,6 +21907,7 @@
    {
     "slot": "fixed.#f4f1ea",
     "storey": "ground",
+    "piece": 21,
     "b": [
      6.821,
      7.461,
@@ -21859,6 +21920,7 @@
    {
     "slot": "fixed.#f4f1ea",
     "storey": "ground",
+    "piece": 21,
     "b": [
      6.121,
      6.761,
@@ -21871,6 +21933,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 21,
     "b": [
      7.641,
      8.141,
@@ -21883,6 +21946,7 @@
    {
     "slot": "fixtures.metal",
     "storey": "ground",
+    "piece": 21,
     "b": [
      7.811,
      7.971,
@@ -21895,6 +21959,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 21,
     "b": [
      5.441,
      5.941,
@@ -21907,6 +21972,7 @@
    {
     "slot": "fixtures.metal",
     "storey": "ground",
+    "piece": 21,
     "b": [
      5.611,
      5.771,
@@ -21919,6 +21985,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 22,
     "b": [
      4.091,
      5.891,
@@ -21931,6 +21998,7 @@
    {
     "slot": "fixed.#121212",
     "storey": "ground",
+    "piece": 22,
     "b": [
      4.171,
      5.811,
@@ -21943,6 +22011,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 23,
     "b": [
      4.042,
      4.592,
@@ -21955,6 +22024,7 @@
    {
     "slot": "fixtures.metal",
     "storey": "ground",
+    "piece": 23,
     "b": [
      4.142,
      4.492,
@@ -21967,6 +22037,7 @@
    {
     "slot": "fixtures.metal",
     "storey": "ground",
+    "piece": 23,
     "b": [
      4.142,
      4.492,
@@ -21979,6 +22050,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 23,
     "b": [
      4.692,
      5.172,
@@ -21991,6 +22063,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 24,
     "b": [
      7.143,
      7.743,
@@ -22003,6 +22076,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 25,
     "b": [
      8.94,
      9.54,
@@ -22015,6 +22089,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "ground",
+    "piece": 26,
     "b": [
      5.09,
      5.99,
@@ -22027,6 +22102,7 @@
    {
     "slot": "fixed.#bcd3dd",
     "storey": "ground",
+    "piece": 26,
     "b": [
      5.09,
      5.99,
@@ -22039,6 +22115,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 27,
     "b": [
      5.14,
      5.941,
@@ -22051,6 +22128,7 @@
    {
     "slot": "accents.worktop",
     "storey": "ground",
+    "piece": 27,
     "b": [
      5.14,
      5.941,
@@ -22063,6 +22141,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "ground",
+    "piece": 27,
     "b": [
      5.34,
      5.74,
@@ -22075,6 +22154,7 @@
    {
     "slot": "fixed.#c9d4d8",
     "storey": "ground",
+    "piece": 27,
     "b": [
      5.14,
      5.941,
@@ -22087,6 +22167,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "ground",
+    "piece": 28,
     "b": [
      4.55,
      4.93,
@@ -22099,6 +22180,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "ground",
+    "piece": 28,
     "b": [
      4.49,
      4.99,
@@ -22111,6 +22193,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 29,
     "b": [
      16.065,
      20.415,
@@ -22123,6 +22206,7 @@
    {
     "slot": "accents.worktop",
     "storey": "ground",
+    "piece": 29,
     "b": [
      16.065,
      20.415,
@@ -22135,6 +22219,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 29,
     "b": [
      16.065,
      20.415,
@@ -22147,6 +22232,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 30,
     "b": [
      16.54,
      19.54,
@@ -22159,6 +22245,7 @@
    {
     "slot": "accents.worktop",
     "storey": "ground",
+    "piece": 30,
     "b": [
      16.54,
      19.54,
@@ -22171,6 +22258,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 31,
     "b": [
      17.34,
      19.74,
@@ -22183,6 +22271,7 @@
    {
     "slot": "fixed.#121212",
     "storey": "ground",
+    "piece": 31,
     "b": [
      17.72,
      19.36,
@@ -22195,6 +22284,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 32,
     "b": [
      16.54,
      19.54,
@@ -22207,6 +22297,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 32,
     "b": [
      16.54,
      19.54,
@@ -22219,6 +22310,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 32,
     "b": [
      19.36,
      19.54,
@@ -22231,6 +22323,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 32,
     "b": [
      16.54,
      16.72,
@@ -22243,6 +22336,7 @@
    {
     "slot": "accents.highlight",
     "storey": "ground",
+    "piece": 32,
     "b": [
      18.84,
      19.29,
@@ -22255,6 +22349,7 @@
    {
     "slot": "accents.highlight",
     "storey": "ground",
+    "piece": 32,
     "b": [
      16.79,
      17.24,
@@ -22267,6 +22362,7 @@
    {
     "slot": "accents.worktop",
     "storey": "ground",
+    "piece": 33,
     "b": [
      17.39,
      18.69,
@@ -22279,6 +22375,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 33,
     "b": [
      17.47,
      18.61,
@@ -22291,6 +22388,7 @@
    {
     "slot": "accents.highlight",
     "storey": "ground",
+    "piece": 34,
     "b": [
      16.54,
      19.54,
@@ -22303,6 +22401,7 @@
    {
     "slot": "accents.worktop",
     "storey": "ground",
+    "piece": 35,
     "b": [
      18.242,
      19.292,
@@ -22315,6 +22414,7 @@
    {
     "slot": "fixtures.metal",
     "storey": "ground",
+    "piece": 35,
     "b": [
      18.342,
      19.192,
@@ -22327,6 +22427,7 @@
    {
     "slot": "fixtures.metal",
     "storey": "ground",
+    "piece": 35,
     "b": [
      18.342,
      19.192,
@@ -22339,6 +22440,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 36,
     "b": [
      17.642,
      18.122,
@@ -22351,6 +22453,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 36,
     "b": [
      17.642,
      17.712,
@@ -22363,6 +22466,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 37,
     "b": [
      19.412,
      19.892,
@@ -22375,6 +22479,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 37,
     "b": [
      19.822,
      19.892,
@@ -22387,6 +22492,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 38,
     "b": [
      17.642,
      18.122,
@@ -22399,6 +22505,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 38,
     "b": [
      17.642,
      17.712,
@@ -22411,6 +22518,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 39,
     "b": [
      19.412,
      19.892,
@@ -22423,6 +22531,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 39,
     "b": [
      19.822,
      19.892,
@@ -22435,6 +22544,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 40,
     "b": [
      17.642,
      18.122,
@@ -22447,6 +22557,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 40,
     "b": [
      17.642,
      17.712,
@@ -22459,6 +22570,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 41,
     "b": [
      19.412,
      19.892,
@@ -22471,6 +22583,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 41,
     "b": [
      19.822,
      19.892,
@@ -22483,6 +22596,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 42,
     "b": [
      17.642,
      18.122,
@@ -22495,6 +22609,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 42,
     "b": [
      17.642,
      17.712,
@@ -22507,6 +22622,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 43,
     "b": [
      19.412,
      19.892,
@@ -22519,6 +22635,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 43,
     "b": [
      19.822,
      19.892,
@@ -22531,6 +22648,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 44,
     "b": [
      17.642,
      18.122,
@@ -22543,6 +22661,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 44,
     "b": [
      17.642,
      17.712,
@@ -22555,6 +22674,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 45,
     "b": [
      19.412,
      19.892,
@@ -22567,6 +22687,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 45,
     "b": [
      19.822,
      19.892,
@@ -22579,6 +22700,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 46,
     "b": [
      9.794,
      10.214,
@@ -22591,6 +22713,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 47,
     "b": [
      12.244,
      14.844,
@@ -22603,6 +22726,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 47,
     "b": [
      12.244,
      14.844,
@@ -22615,6 +22739,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 47,
     "b": [
      12.244,
      12.424,
@@ -22627,6 +22752,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 47,
     "b": [
      14.664,
      14.844,
@@ -22639,6 +22765,7 @@
    {
     "slot": "accents.highlight",
     "storey": "ground",
+    "piece": 47,
     "b": [
      12.494,
      12.944,
@@ -22651,6 +22778,7 @@
    {
     "slot": "accents.highlight",
     "storey": "ground",
+    "piece": 47,
     "b": [
      14.144,
      14.594,
@@ -22663,6 +22791,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 48,
     "b": [
      12.244,
      14.844,
@@ -22675,6 +22804,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 48,
     "b": [
      12.244,
      14.844,
@@ -22687,6 +22817,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 48,
     "b": [
      12.244,
      12.424,
@@ -22699,6 +22830,7 @@
    {
     "slot": "accents.textile",
     "storey": "ground",
+    "piece": 48,
     "b": [
      14.664,
      14.844,
@@ -22711,6 +22843,7 @@
    {
     "slot": "accents.highlight",
     "storey": "ground",
+    "piece": 48,
     "b": [
      12.494,
      12.944,
@@ -22723,6 +22856,7 @@
    {
     "slot": "accents.highlight",
     "storey": "ground",
+    "piece": 48,
     "b": [
      14.144,
      14.594,
@@ -22735,6 +22869,7 @@
    {
     "slot": "accents.worktop",
     "storey": "ground",
+    "piece": 49,
     "b": [
      12.744,
      14.344,
@@ -22747,6 +22882,7 @@
    {
     "slot": "accents.joinery",
     "storey": "ground",
+    "piece": 49,
     "b": [
      12.824,
      14.264,
@@ -22759,6 +22895,7 @@
    {
     "slot": "accents.highlight",
     "storey": "ground",
+    "piece": 50,
     "b": [
      11.944,
      15.144,
@@ -22771,6 +22908,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 51,
     "b": [
      17.419,
      19.349,
@@ -22783,6 +22921,7 @@
    {
     "slot": "fixed.#f4f1ea",
     "storey": "first",
+    "piece": 51,
     "b": [
      17.448,
      19.319,
@@ -22795,6 +22934,7 @@
    {
     "slot": "accents.highlight",
     "storey": "first",
+    "piece": 51,
     "b": [
      17.419,
      19.349,
@@ -22807,6 +22947,7 @@
    {
     "slot": "accents.textile",
     "storey": "first",
+    "piece": 51,
     "b": [
      17.369,
      19.398,
@@ -22819,6 +22960,7 @@
    {
     "slot": "fixed.#f4f1ea",
     "storey": "first",
+    "piece": 51,
     "b": [
      18.413,
      19.218,
@@ -22831,6 +22973,7 @@
    {
     "slot": "fixed.#f4f1ea",
     "storey": "first",
+    "piece": 51,
     "b": [
      17.549,
      18.354,
@@ -22843,6 +22986,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 51,
     "b": [
      19.398,
      19.898,
@@ -22855,6 +22999,7 @@
    {
     "slot": "fixtures.metal",
     "storey": "first",
+    "piece": 51,
     "b": [
      19.569,
      19.729,
@@ -22867,6 +23012,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 51,
     "b": [
      16.869,
      17.369,
@@ -22879,6 +23025,7 @@
    {
     "slot": "fixtures.metal",
     "storey": "first",
+    "piece": 51,
     "b": [
      17.038,
      17.198,
@@ -22891,6 +23038,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 52,
     "b": [
      18.697,
      20.497,
@@ -22903,6 +23051,7 @@
    {
     "slot": "fixed.#121212",
     "storey": "first",
+    "piece": 52,
     "b": [
      18.776,
      20.416,
@@ -22915,6 +23064,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 53,
     "b": [
      15.046,
      15.596,
@@ -22927,6 +23077,7 @@
    {
     "slot": "fixtures.metal",
     "storey": "first",
+    "piece": 53,
     "b": [
      15.146,
      15.496,
@@ -22939,6 +23090,7 @@
    {
     "slot": "fixtures.metal",
     "storey": "first",
+    "piece": 53,
     "b": [
      15.146,
      15.496,
@@ -22951,6 +23103,7 @@
    {
     "slot": "accents.textile",
     "storey": "first",
+    "piece": 53,
     "b": [
      15.696,
      16.176,
@@ -22963,6 +23116,7 @@
    {
     "slot": "accents.textile",
     "storey": "first",
+    "piece": 54,
     "b": [
      16.497,
      18.697,
@@ -22975,6 +23129,7 @@
    {
     "slot": "accents.textile",
     "storey": "first",
+    "piece": 54,
     "b": [
      16.497,
      18.697,
@@ -22987,6 +23142,7 @@
    {
     "slot": "accents.textile",
     "storey": "first",
+    "piece": 54,
     "b": [
      16.497,
      16.677,
@@ -22999,6 +23155,7 @@
    {
     "slot": "accents.textile",
     "storey": "first",
+    "piece": 54,
     "b": [
      18.517,
      18.697,
@@ -23011,6 +23168,7 @@
    {
     "slot": "accents.highlight",
     "storey": "first",
+    "piece": 54,
     "b": [
      16.747,
      17.197,
@@ -23023,6 +23181,7 @@
    {
     "slot": "accents.highlight",
     "storey": "first",
+    "piece": 54,
     "b": [
      17.997,
      18.447,
@@ -23035,6 +23194,7 @@
    {
     "slot": "accents.worktop",
     "storey": "first",
+    "piece": 55,
     "b": [
      17.096,
      18.096,
@@ -23047,6 +23207,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 55,
     "b": [
      17.177,
      18.017,
@@ -23059,6 +23220,7 @@
    {
     "slot": "accents.textile",
     "storey": "first",
+    "piece": 56,
     "b": [
      16.572,
      17.421,
@@ -23071,6 +23233,7 @@
    {
     "slot": "accents.textile",
     "storey": "first",
+    "piece": 56,
     "b": [
      16.572,
      17.421,
@@ -23083,6 +23246,7 @@
    {
     "slot": "accents.textile",
     "storey": "first",
+    "piece": 56,
     "b": [
      16.572,
      16.712,
@@ -23095,6 +23259,7 @@
    {
     "slot": "accents.textile",
     "storey": "first",
+    "piece": 56,
     "b": [
      17.282,
      17.421,
@@ -23107,6 +23272,7 @@
    {
     "slot": "accents.textile",
     "storey": "first",
+    "piece": 57,
     "b": [
      17.771,
      18.622,
@@ -23119,6 +23285,7 @@
    {
     "slot": "accents.textile",
     "storey": "first",
+    "piece": 57,
     "b": [
      17.771,
      18.622,
@@ -23131,6 +23298,7 @@
    {
     "slot": "accents.textile",
     "storey": "first",
+    "piece": 57,
     "b": [
      17.771,
      17.912,
@@ -23143,6 +23311,7 @@
    {
     "slot": "accents.textile",
     "storey": "first",
+    "piece": 57,
     "b": [
      18.482,
      18.622,
@@ -23155,6 +23324,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 58,
     "b": [
      15.046,
      15.626,
@@ -23167,6 +23337,7 @@
    {
     "slot": "accents.worktop",
     "storey": "first",
+    "piece": 58,
     "b": [
      15.046,
      15.646,
@@ -23179,6 +23350,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 58,
     "b": [
      15.046,
      15.396,
@@ -23191,6 +23363,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 59,
     "b": [
      10.463,
      13.923,
@@ -23203,6 +23376,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 60,
     "b": [
      10.463,
      13.923,
@@ -23215,6 +23389,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 61,
     "b": [
      11.893,
      13.493,
@@ -23227,6 +23402,7 @@
    {
     "slot": "accents.worktop",
     "storey": "first",
+    "piece": 61,
     "b": [
      11.893,
      13.493,
@@ -23239,6 +23415,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "first",
+    "piece": 62,
     "b": [
      7.742,
      8.941,
@@ -23251,6 +23428,7 @@
    {
     "slot": "fixed.#bcd3dd",
     "storey": "first",
+    "piece": 62,
     "b": [
      7.742,
      8.941,
@@ -23263,6 +23441,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "first",
+    "piece": 63,
     "b": [
      7.492,
      9.191,
@@ -23275,6 +23454,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 64,
     "b": [
      6.341,
      7.941,
@@ -23287,6 +23467,7 @@
    {
     "slot": "accents.worktop",
     "storey": "first",
+    "piece": 64,
     "b": [
      6.341,
      7.941,
@@ -23299,6 +23480,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "first",
+    "piece": 64,
     "b": [
      6.542,
      6.941,
@@ -23311,6 +23493,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "first",
+    "piece": 64,
     "b": [
      7.341,
      7.742,
@@ -23323,6 +23506,7 @@
    {
     "slot": "fixed.#c9d4d8",
     "storey": "first",
+    "piece": 64,
     "b": [
      6.341,
      7.941,
@@ -23335,6 +23519,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "first",
+    "piece": 65,
     "b": [
      7.152,
      7.531,
@@ -23347,6 +23532,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "first",
+    "piece": 65,
     "b": [
      7.091,
      7.591,
@@ -23359,6 +23545,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 66,
     "b": [
      6.496,
      8.096,
@@ -23371,6 +23558,7 @@
    {
     "slot": "fixed.#f4f1ea",
     "storey": "first",
+    "piece": 66,
     "b": [
      6.526,
      8.066,
@@ -23383,6 +23571,7 @@
    {
     "slot": "accents.highlight",
     "storey": "first",
+    "piece": 66,
     "b": [
      6.496,
      8.096,
@@ -23395,6 +23584,7 @@
    {
     "slot": "accents.textile",
     "storey": "first",
+    "piece": 66,
     "b": [
      6.446,
      8.146,
@@ -23407,6 +23597,7 @@
    {
     "slot": "fixed.#f4f1ea",
     "storey": "first",
+    "piece": 66,
     "b": [
      6.626,
      7.266,
@@ -23419,6 +23610,7 @@
    {
     "slot": "fixed.#f4f1ea",
     "storey": "first",
+    "piece": 66,
     "b": [
      7.326,
      7.966,
@@ -23431,6 +23623,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 66,
     "b": [
      5.946,
      6.446,
@@ -23443,6 +23636,7 @@
    {
     "slot": "fixtures.metal",
     "storey": "first",
+    "piece": 66,
     "b": [
      6.116,
      6.276,
@@ -23455,6 +23649,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 66,
     "b": [
      8.146,
      8.646,
@@ -23467,6 +23662,7 @@
    {
     "slot": "fixtures.metal",
     "storey": "first",
+    "piece": 66,
     "b": [
      8.316,
      8.476,
@@ -23479,6 +23675,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 67,
     "b": [
      6.396,
      8.196,
@@ -23491,6 +23688,7 @@
    {
     "slot": "fixed.#121212",
     "storey": "first",
+    "piece": 67,
     "b": [
      6.476,
      8.116,
@@ -23503,6 +23701,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 68,
     "b": [
      5.048,
      5.598,
@@ -23515,6 +23714,7 @@
    {
     "slot": "fixtures.metal",
     "storey": "first",
+    "piece": 68,
     "b": [
      5.148,
      5.498,
@@ -23527,6 +23727,7 @@
    {
     "slot": "fixtures.metal",
     "storey": "first",
+    "piece": 68,
     "b": [
      5.148,
      5.498,
@@ -23539,6 +23740,7 @@
    {
     "slot": "accents.textile",
     "storey": "first",
+    "piece": 68,
     "b": [
      5.698,
      6.178,
@@ -23551,6 +23753,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 69,
     "b": [
      9.544,
      10.144,
@@ -23563,6 +23766,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "first",
+    "piece": 70,
     "b": [
      7.042,
      7.941,
@@ -23575,6 +23779,7 @@
    {
     "slot": "fixed.#bcd3dd",
     "storey": "first",
+    "piece": 70,
     "b": [
      7.042,
      7.941,
@@ -23587,6 +23792,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 71,
     "b": [
      7.091,
      7.891,
@@ -23599,6 +23805,7 @@
    {
     "slot": "accents.worktop",
     "storey": "first",
+    "piece": 71,
     "b": [
      7.091,
      7.891,
@@ -23611,6 +23818,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "first",
+    "piece": 71,
     "b": [
      7.292,
      7.691,
@@ -23623,6 +23831,7 @@
    {
     "slot": "fixed.#c9d4d8",
     "storey": "first",
+    "piece": 71,
     "b": [
      7.091,
      7.891,
@@ -23635,6 +23844,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "first",
+    "piece": 72,
     "b": [
      6.502,
      6.881,
@@ -23647,6 +23857,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "first",
+    "piece": 72,
     "b": [
      6.441,
      6.941,
@@ -23659,6 +23870,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 73,
     "b": [
      5.993,
      7.593,
@@ -23671,6 +23883,7 @@
    {
     "slot": "fixed.#f4f1ea",
     "storey": "first",
+    "piece": 73,
     "b": [
      6.023,
      7.563,
@@ -23683,6 +23896,7 @@
    {
     "slot": "accents.highlight",
     "storey": "first",
+    "piece": 73,
     "b": [
      5.993,
      7.593,
@@ -23695,6 +23909,7 @@
    {
     "slot": "accents.textile",
     "storey": "first",
+    "piece": 73,
     "b": [
      5.943,
      7.643,
@@ -23707,6 +23922,7 @@
    {
     "slot": "fixed.#f4f1ea",
     "storey": "first",
+    "piece": 73,
     "b": [
      6.123,
      6.763,
@@ -23719,6 +23935,7 @@
    {
     "slot": "fixed.#f4f1ea",
     "storey": "first",
+    "piece": 73,
     "b": [
      6.823,
      7.463,
@@ -23731,6 +23948,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 73,
     "b": [
      5.443,
      5.943,
@@ -23743,6 +23961,7 @@
    {
     "slot": "fixtures.metal",
     "storey": "first",
+    "piece": 73,
     "b": [
      5.613,
      5.773,
@@ -23755,6 +23974,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 73,
     "b": [
      7.643,
      8.143,
@@ -23767,6 +23987,7 @@
    {
     "slot": "fixtures.metal",
     "storey": "first",
+    "piece": 73,
     "b": [
      7.813,
      7.973,
@@ -23779,6 +24000,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 74,
     "b": [
      5.893,
      7.693,
@@ -23791,6 +24013,7 @@
    {
     "slot": "fixed.#121212",
     "storey": "first",
+    "piece": 74,
     "b": [
      5.973,
      7.613,
@@ -23803,6 +24026,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 75,
     "b": [
      4.042,
      4.592,
@@ -23815,6 +24039,7 @@
    {
     "slot": "fixtures.metal",
     "storey": "first",
+    "piece": 75,
     "b": [
      4.142,
      4.492,
@@ -23827,6 +24052,7 @@
    {
     "slot": "fixtures.metal",
     "storey": "first",
+    "piece": 75,
     "b": [
      4.142,
      4.492,
@@ -23839,6 +24065,7 @@
    {
     "slot": "accents.textile",
     "storey": "first",
+    "piece": 75,
     "b": [
      4.692,
      5.172,
@@ -23851,6 +24078,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 76,
     "b": [
      7.138,
      7.738,
@@ -23863,6 +24091,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 77,
     "b": [
      8.944,
      9.544,
@@ -23875,6 +24104,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "first",
+    "piece": 78,
     "b": [
      5.093,
      5.994,
@@ -23887,6 +24117,7 @@
    {
     "slot": "fixed.#bcd3dd",
     "storey": "first",
+    "piece": 78,
     "b": [
      5.093,
      5.994,
@@ -23899,6 +24130,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 79,
     "b": [
      5.143,
      5.944,
@@ -23911,6 +24143,7 @@
    {
     "slot": "accents.worktop",
     "storey": "first",
+    "piece": 79,
     "b": [
      5.143,
      5.944,
@@ -23923,6 +24156,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "first",
+    "piece": 79,
     "b": [
      5.343,
      5.744,
@@ -23935,6 +24169,7 @@
    {
     "slot": "fixed.#c9d4d8",
     "storey": "first",
+    "piece": 79,
     "b": [
      5.143,
      5.944,
@@ -23947,6 +24182,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "first",
+    "piece": 80,
     "b": [
      4.553,
      4.933,
@@ -23959,6 +24195,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "first",
+    "piece": 80,
     "b": [
      4.494,
      4.994,
@@ -23971,6 +24208,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 81,
     "b": [
      16.997,
      18.596,
@@ -23983,6 +24221,7 @@
    {
     "slot": "fixed.#f4f1ea",
     "storey": "first",
+    "piece": 81,
     "b": [
      17.026,
      18.567,
@@ -23995,6 +24234,7 @@
    {
     "slot": "accents.highlight",
     "storey": "first",
+    "piece": 81,
     "b": [
      16.997,
      18.596,
@@ -24007,6 +24247,7 @@
    {
     "slot": "accents.textile",
     "storey": "first",
+    "piece": 81,
     "b": [
      16.947,
      18.646,
@@ -24019,6 +24260,7 @@
    {
     "slot": "fixed.#f4f1ea",
     "storey": "first",
+    "piece": 81,
     "b": [
      17.826,
      18.466,
@@ -24031,6 +24273,7 @@
    {
     "slot": "fixed.#f4f1ea",
     "storey": "first",
+    "piece": 81,
     "b": [
      17.127,
      17.767,
@@ -24043,6 +24286,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 81,
     "b": [
      18.646,
      19.146,
@@ -24055,6 +24299,7 @@
    {
     "slot": "fixtures.metal",
     "storey": "first",
+    "piece": 81,
     "b": [
      18.817,
      18.977,
@@ -24067,6 +24312,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 81,
     "b": [
      16.447,
      16.947,
@@ -24079,6 +24325,7 @@
    {
     "slot": "fixtures.metal",
     "storey": "first",
+    "piece": 81,
     "b": [
      16.616,
      16.776,
@@ -24091,6 +24338,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 82,
     "b": [
      16.896,
      18.697,
@@ -24103,6 +24351,7 @@
    {
     "slot": "fixed.#121212",
     "storey": "first",
+    "piece": 82,
     "b": [
      16.977,
      18.616,
@@ -24115,6 +24364,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 83,
     "b": [
      15.046,
      15.596,
@@ -24127,6 +24377,7 @@
    {
     "slot": "fixtures.metal",
     "storey": "first",
+    "piece": 83,
     "b": [
      15.146,
      15.496,
@@ -24139,6 +24390,7 @@
    {
     "slot": "fixtures.metal",
     "storey": "first",
+    "piece": 83,
     "b": [
      15.146,
      15.496,
@@ -24151,6 +24403,7 @@
    {
     "slot": "accents.textile",
     "storey": "first",
+    "piece": 83,
     "b": [
      15.696,
      16.176,
@@ -24163,6 +24416,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 84,
     "b": [
      15.169,
      16.529,
@@ -24175,6 +24429,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "first",
+    "piece": 85,
     "b": [
      18.646,
      19.446,
@@ -24187,6 +24442,7 @@
    {
     "slot": "fixed.#bcd3dd",
     "storey": "first",
+    "piece": 85,
     "b": [
      18.646,
      19.446,
@@ -24199,6 +24455,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 86,
     "b": [
      18.646,
      19.446,
@@ -24211,6 +24468,7 @@
    {
     "slot": "accents.worktop",
     "storey": "first",
+    "piece": 86,
     "b": [
      18.646,
      19.446,
@@ -24223,6 +24481,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "first",
+    "piece": 86,
     "b": [
      18.846,
      19.246,
@@ -24235,6 +24494,7 @@
    {
     "slot": "fixed.#c9d4d8",
     "storey": "first",
+    "piece": 86,
     "b": [
      18.646,
      19.446,
@@ -24247,6 +24507,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "first",
+    "piece": 87,
     "b": [
      19.656,
      20.036,
@@ -24259,6 +24520,7 @@
    {
     "slot": "fixtures.sanitary",
     "storey": "first",
+    "piece": 87,
     "b": [
      19.596,
      20.096,
@@ -24271,6 +24533,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 88,
     "b": [
      9.799,
      10.249,
@@ -24283,6 +24546,7 @@
    {
     "slot": "fixed.#121212",
     "storey": "first",
+    "piece": 88,
     "b": [
      9.799,
      9.849,
@@ -24295,6 +24559,7 @@
    {
     "slot": "accents.textile",
     "storey": "first",
+    "piece": 89,
     "b": [
      12.799,
      13.749,
@@ -24307,6 +24572,7 @@
    {
     "slot": "accents.textile",
     "storey": "first",
+    "piece": 89,
     "b": [
      13.529,
      13.749,
@@ -24319,6 +24585,7 @@
    {
     "slot": "accents.textile",
     "storey": "first",
+    "piece": 89,
     "b": [
      12.799,
      13.529,
@@ -24331,6 +24598,7 @@
    {
     "slot": "accents.textile",
     "storey": "first",
+    "piece": 89,
     "b": [
      12.799,
      13.529,
@@ -24343,6 +24611,7 @@
    {
     "slot": "accents.highlight",
     "storey": "first",
+    "piece": 89,
     "b": [
      13.369,
      13.529,
@@ -24355,6 +24624,7 @@
    {
     "slot": "accents.highlight",
     "storey": "first",
+    "piece": 89,
     "b": [
      13.369,
      13.529,
@@ -24367,6 +24637,7 @@
    {
     "slot": "accents.worktop",
     "storey": "first",
+    "piece": 90,
     "b": [
      11.949,
      12.649,
@@ -24379,6 +24650,7 @@
    {
     "slot": "accents.joinery",
     "storey": "first",
+    "piece": 90,
     "b": [
      12.029,
      12.569,
@@ -24391,6 +24663,7 @@
    {
     "slot": "accents.highlight",
     "storey": "first",
+    "piece": 91,
     "b": [
      11.549,
      13.749,
@@ -24407,7 +24680,9 @@
     "room": "outdoor_bathroom",
     "storey": "ground",
     "side": "S",
+    "back": "S",
     "slot": "fixtures.sanitary",
+    "index": 0,
     "fp": [
      10.19,
      10.99,
@@ -24424,7 +24699,9 @@
     "room": "maids_toilet",
     "storey": "ground",
     "side": "S",
+    "back": "S",
     "slot": "fixtures.sanitary",
+    "index": 2,
     "fp": [
      12.093,
      12.893,
@@ -24441,7 +24718,9 @@
     "room": "maids_toilet",
     "storey": "ground",
     "side": "N",
+    "back": "N",
     "slot": "fixtures.sanitary",
+    "index": 4,
     "fp": [
      12.243,
      12.743,
@@ -24458,7 +24737,9 @@
     "room": "maids_room",
     "storey": "ground",
     "side": "W",
+    "back": "W",
     "slot": "accents.joinery",
+    "index": 6,
     "fp": [
      13.339,
      15.419,
@@ -24475,7 +24756,9 @@
     "room": "guest_powder",
     "storey": "ground",
     "side": "S",
+    "back": "S",
     "slot": "fixtures.sanitary",
+    "index": 8,
     "fp": [
      13.838,
      14.338,
@@ -24492,7 +24775,9 @@
     "room": "pantry",
     "storey": "ground",
     "side": "S",
+    "back": "S",
     "slot": "accents.joinery",
+    "index": 9,
     "fp": [
      15.066,
      16.816,
@@ -24509,7 +24794,9 @@
     "room": "pantry",
     "storey": "ground",
     "side": "N",
+    "back": "N",
     "slot": "accents.joinery",
+    "index": 10,
     "fp": [
      15.066,
      16.816,
@@ -24526,7 +24813,9 @@
     "room": "pantry",
     "storey": "ground",
     "side": "W",
+    "back": "W",
     "slot": "accents.joinery",
+    "index": 11,
     "fp": [
      15.043,
      15.493,
@@ -24543,7 +24832,9 @@
     "room": "laundry",
     "storey": "ground",
     "side": "N",
+    "back": "N",
     "slot": "fixtures.sanitary",
+    "index": 12,
     "fp": [
      16.611,
      17.971,
@@ -24560,7 +24851,9 @@
     "room": "arabic_kitchen",
     "storey": "ground",
     "side": "W",
+    "back": "W",
     "slot": "accents.joinery",
+    "index": 13,
     "fp": [
      18.646,
      19.246,
@@ -24577,7 +24870,9 @@
     "room": "arabic_kitchen",
     "storey": "ground",
     "side": "E",
+    "back": "E",
     "slot": "accents.joinery",
+    "index": 14,
     "fp": [
      20.44,
      21.04,
@@ -24594,7 +24889,9 @@
     "room": "entrance_foyer",
     "storey": "ground",
     "side": "S",
+    "back": "S",
     "slot": "accents.joinery",
+    "index": 15,
     "fp": [
      11.393,
      13.193,
@@ -24611,7 +24908,9 @@
     "room": "office_toilet",
     "storey": "ground",
     "side": "S",
+    "back": "S",
     "slot": "fixtures.sanitary",
+    "index": 16,
     "fp": [
      7.241,
      8.141,
@@ -24628,7 +24927,9 @@
     "room": "office_toilet",
     "storey": "ground",
     "side": "S",
+    "back": "S",
     "slot": "fixtures.sanitary",
+    "index": 18,
     "fp": [
      6.641,
      7.141,
@@ -24645,7 +24946,9 @@
     "room": "home_office",
     "storey": "ground",
     "side": "N",
+    "back": "S",
     "slot": "accents.textile",
+    "index": 19,
     "fp": [
      6.891,
      8.491,
@@ -24662,7 +24965,9 @@
     "room": "home_office",
     "storey": "ground",
     "side": "S",
+    "back": "S",
     "slot": "accents.joinery",
+    "index": 20,
     "fp": [
      5.866,
      7.216,
@@ -24679,7 +24984,9 @@
     "room": "guest_bedroom",
     "storey": "ground",
     "side": "N",
+    "back": "N",
     "slot": "accents.joinery",
+    "index": 21,
     "fp": [
      5.441,
      8.141,
@@ -24696,7 +25003,9 @@
     "room": "guest_bedroom",
     "storey": "ground",
     "side": "S",
+    "back": "S",
     "slot": "accents.joinery",
+    "index": 22,
     "fp": [
      4.091,
      5.891,
@@ -24713,7 +25022,9 @@
     "room": "guest_bedroom",
     "storey": "ground",
     "side": "W",
+    "back": "W",
     "slot": "accents.textile",
+    "index": 23,
     "fp": [
      4.142,
      5.172,
@@ -24730,7 +25041,9 @@
     "room": "guest_dress",
     "storey": "ground",
     "side": "W",
+    "back": "W",
     "slot": "accents.joinery",
+    "index": 24,
     "fp": [
      7.143,
      7.743,
@@ -24747,7 +25060,9 @@
     "room": "guest_dress",
     "storey": "ground",
     "side": "E",
+    "back": "E",
     "slot": "accents.joinery",
+    "index": 25,
     "fp": [
      8.94,
      9.54,
@@ -24764,7 +25079,9 @@
     "room": "guest_toilet",
     "storey": "ground",
     "side": "S",
+    "back": "S",
     "slot": "fixtures.sanitary",
+    "index": 26,
     "fp": [
      5.09,
      5.99,
@@ -24781,7 +25098,9 @@
     "room": "guest_toilet",
     "storey": "ground",
     "side": "S",
+    "back": "S",
     "slot": "fixtures.sanitary",
+    "index": 28,
     "fp": [
      4.49,
      4.99,
@@ -24798,7 +25117,9 @@
     "room": "show_kitchen",
     "storey": "ground",
     "side": "N",
+    "back": "N",
     "slot": "accents.joinery",
+    "index": 29,
     "fp": [
      16.065,
      20.415,
@@ -24815,7 +25136,9 @@
     "room": "show_kitchen",
     "storey": "ground",
     "side": "S",
+    "back": "S",
     "slot": "accents.joinery",
+    "index": 30,
     "fp": [
      16.54,
      19.54,
@@ -24832,7 +25155,9 @@
     "room": "living",
     "storey": "ground",
     "side": "N",
+    "back": "N",
     "slot": "accents.joinery",
+    "index": 31,
     "fp": [
      17.34,
      19.74,
@@ -24849,7 +25174,9 @@
     "room": "living",
     "storey": "ground",
     "side": "",
+    "back": "",
     "slot": "accents.textile",
+    "index": 32,
     "fp": [
      16.54,
      19.54,
@@ -24866,7 +25193,9 @@
     "room": "living",
     "storey": "ground",
     "side": "",
+    "back": "",
     "slot": "accents.joinery",
+    "index": 33,
     "fp": [
      17.47,
      18.61,
@@ -24883,7 +25212,9 @@
     "room": "dining",
     "storey": "ground",
     "side": "",
+    "back": "",
     "slot": "accents.worktop",
+    "index": 35,
     "fp": [
      18.342,
      19.192,
@@ -24900,7 +25231,9 @@
     "room": "dining",
     "storey": "ground",
     "side": "",
+    "back": "",
     "slot": "accents.textile",
+    "index": 36,
     "fp": [
      17.642,
      18.122,
@@ -24917,7 +25250,9 @@
     "room": "dining",
     "storey": "ground",
     "side": "",
+    "back": "",
     "slot": "accents.textile",
+    "index": 37,
     "fp": [
      19.412,
      19.892,
@@ -24934,7 +25269,9 @@
     "room": "dining",
     "storey": "ground",
     "side": "",
+    "back": "",
     "slot": "accents.textile",
+    "index": 38,
     "fp": [
      17.642,
      18.122,
@@ -24951,7 +25288,9 @@
     "room": "dining",
     "storey": "ground",
     "side": "",
+    "back": "",
     "slot": "accents.textile",
+    "index": 39,
     "fp": [
      19.412,
      19.892,
@@ -24968,7 +25307,9 @@
     "room": "dining",
     "storey": "ground",
     "side": "",
+    "back": "",
     "slot": "accents.textile",
+    "index": 40,
     "fp": [
      17.642,
      18.122,
@@ -24985,7 +25326,9 @@
     "room": "dining",
     "storey": "ground",
     "side": "",
+    "back": "",
     "slot": "accents.textile",
+    "index": 41,
     "fp": [
      19.412,
      19.892,
@@ -25002,7 +25345,9 @@
     "room": "dining",
     "storey": "ground",
     "side": "",
+    "back": "",
     "slot": "accents.textile",
+    "index": 42,
     "fp": [
      17.642,
      18.122,
@@ -25019,7 +25364,9 @@
     "room": "dining",
     "storey": "ground",
     "side": "",
+    "back": "",
     "slot": "accents.textile",
+    "index": 43,
     "fp": [
      19.412,
      19.892,
@@ -25036,7 +25383,9 @@
     "room": "dining",
     "storey": "ground",
     "side": "",
+    "back": "",
     "slot": "accents.textile",
+    "index": 44,
     "fp": [
      17.642,
      18.122,
@@ -25053,7 +25402,9 @@
     "room": "dining",
     "storey": "ground",
     "side": "",
+    "back": "",
     "slot": "accents.textile",
+    "index": 45,
     "fp": [
      19.412,
      19.892,
@@ -25070,7 +25421,9 @@
     "room": "salon",
     "storey": "ground",
     "side": "W",
+    "back": "W",
     "slot": "accents.joinery",
+    "index": 46,
     "fp": [
      9.794,
      10.214,
@@ -25087,7 +25440,9 @@
     "room": "salon",
     "storey": "ground",
     "side": "",
+    "back": "",
     "slot": "accents.textile",
+    "index": 47,
     "fp": [
      12.244,
      14.844,
@@ -25104,7 +25459,9 @@
     "room": "salon",
     "storey": "ground",
     "side": "",
+    "back": "",
     "slot": "accents.textile",
+    "index": 48,
     "fp": [
      12.244,
      14.844,
@@ -25121,7 +25478,9 @@
     "room": "salon",
     "storey": "ground",
     "side": "",
+    "back": "",
     "slot": "accents.joinery",
+    "index": 49,
     "fp": [
      12.824,
      14.264,
@@ -25138,7 +25497,9 @@
     "room": "master_suite",
     "storey": "first",
     "side": "N",
+    "back": "N",
     "slot": "accents.joinery",
+    "index": 51,
     "fp": [
      16.869,
      19.898,
@@ -25155,7 +25516,9 @@
     "room": "master_suite",
     "storey": "first",
     "side": "S",
+    "back": "S",
     "slot": "accents.joinery",
+    "index": 52,
     "fp": [
      18.697,
      20.497,
@@ -25172,7 +25535,9 @@
     "room": "master_suite",
     "storey": "first",
     "side": "W",
+    "back": "W",
     "slot": "accents.textile",
+    "index": 53,
     "fp": [
      15.146,
      16.176,
@@ -25189,7 +25554,9 @@
     "room": "master_suite",
     "storey": "first",
     "side": "",
+    "back": "",
     "slot": "accents.textile",
+    "index": 54,
     "fp": [
      16.497,
      18.697,
@@ -25206,7 +25573,9 @@
     "room": "master_suite",
     "storey": "first",
     "side": "",
+    "back": "",
     "slot": "accents.joinery",
+    "index": 55,
     "fp": [
      17.177,
      18.017,
@@ -25223,7 +25592,9 @@
     "room": "master_suite",
     "storey": "first",
     "side": "",
+    "back": "",
     "slot": "accents.textile",
+    "index": 56,
     "fp": [
      16.572,
      17.421,
@@ -25240,7 +25611,9 @@
     "room": "master_suite",
     "storey": "first",
     "side": "",
+    "back": "",
     "slot": "accents.textile",
+    "index": 57,
     "fp": [
      17.771,
      18.622,
@@ -25257,7 +25630,9 @@
     "room": "master_suite",
     "storey": "first",
     "side": "W",
+    "back": "W",
     "slot": "accents.joinery",
+    "index": 58,
     "fp": [
      15.046,
      15.626,
@@ -25274,7 +25649,9 @@
     "room": "master_dress",
     "storey": "first",
     "side": "S",
+    "back": "S",
     "slot": "accents.joinery",
+    "index": 59,
     "fp": [
      10.463,
      13.923,
@@ -25291,7 +25668,9 @@
     "room": "master_dress",
     "storey": "first",
     "side": "N",
+    "back": "N",
     "slot": "accents.joinery",
+    "index": 60,
     "fp": [
      10.463,
      13.923,
@@ -25308,7 +25687,9 @@
     "room": "master_dress",
     "storey": "first",
     "side": "S",
+    "back": "S",
     "slot": "accents.joinery",
+    "index": 61,
     "fp": [
      11.893,
      13.493,
@@ -25325,7 +25706,9 @@
     "room": "master_toilet",
     "storey": "first",
     "side": "S",
+    "back": "S",
     "slot": "fixtures.sanitary",
+    "index": 62,
     "fp": [
      7.742,
      8.941,
@@ -25342,7 +25725,9 @@
     "room": "master_toilet",
     "storey": "first",
     "side": "N",
+    "back": "N",
     "slot": "fixtures.sanitary",
+    "index": 63,
     "fp": [
      7.492,
      9.191,
@@ -25359,7 +25744,9 @@
     "room": "master_toilet",
     "storey": "first",
     "side": "S",
+    "back": "S",
     "slot": "fixtures.sanitary",
+    "index": 65,
     "fp": [
      7.091,
      7.591,
@@ -25376,7 +25763,9 @@
     "room": "bedroom_2",
     "storey": "first",
     "side": "S",
+    "back": "S",
     "slot": "accents.joinery",
+    "index": 66,
     "fp": [
      5.946,
      8.646,
@@ -25393,7 +25782,9 @@
     "room": "bedroom_2",
     "storey": "first",
     "side": "N",
+    "back": "N",
     "slot": "accents.joinery",
+    "index": 67,
     "fp": [
      6.396,
      8.196,
@@ -25410,7 +25801,9 @@
     "room": "bedroom_2",
     "storey": "first",
     "side": "W",
+    "back": "W",
     "slot": "accents.textile",
+    "index": 68,
     "fp": [
      5.148,
      6.178,
@@ -25427,7 +25820,9 @@
     "room": "bedroom_2_dress",
     "storey": "first",
     "side": "W",
+    "back": "W",
     "slot": "accents.joinery",
+    "index": 69,
     "fp": [
      9.544,
      10.144,
@@ -25444,7 +25839,9 @@
     "room": "bedroom_2_toilet",
     "storey": "first",
     "side": "S",
+    "back": "S",
     "slot": "fixtures.sanitary",
+    "index": 70,
     "fp": [
      7.042,
      7.941,
@@ -25461,7 +25858,9 @@
     "room": "bedroom_2_toilet",
     "storey": "first",
     "side": "S",
+    "back": "S",
     "slot": "fixtures.sanitary",
+    "index": 72,
     "fp": [
      6.441,
      6.941,
@@ -25478,7 +25877,9 @@
     "room": "bedroom_3",
     "storey": "first",
     "side": "S",
+    "back": "S",
     "slot": "accents.joinery",
+    "index": 73,
     "fp": [
      5.443,
      8.143,
@@ -25495,7 +25896,9 @@
     "room": "bedroom_3",
     "storey": "first",
     "side": "N",
+    "back": "N",
     "slot": "accents.joinery",
+    "index": 74,
     "fp": [
      5.893,
      7.693,
@@ -25512,7 +25915,9 @@
     "room": "bedroom_3",
     "storey": "first",
     "side": "W",
+    "back": "W",
     "slot": "accents.textile",
+    "index": 75,
     "fp": [
      4.142,
      5.172,
@@ -25529,7 +25934,9 @@
     "room": "bedroom_3_dress",
     "storey": "first",
     "side": "W",
+    "back": "W",
     "slot": "accents.joinery",
+    "index": 76,
     "fp": [
      7.138,
      7.738,
@@ -25546,7 +25953,9 @@
     "room": "bedroom_3_dress",
     "storey": "first",
     "side": "E",
+    "back": "E",
     "slot": "accents.joinery",
+    "index": 77,
     "fp": [
      8.944,
      9.544,
@@ -25563,7 +25972,9 @@
     "room": "bedroom_3_toilet",
     "storey": "first",
     "side": "S",
+    "back": "S",
     "slot": "fixtures.sanitary",
+    "index": 78,
     "fp": [
      5.093,
      5.994,
@@ -25580,7 +25991,9 @@
     "room": "bedroom_3_toilet",
     "storey": "first",
     "side": "S",
+    "back": "S",
     "slot": "fixtures.sanitary",
+    "index": 80,
     "fp": [
      4.494,
      4.994,
@@ -25597,7 +26010,9 @@
     "room": "bedroom_4",
     "storey": "first",
     "side": "N",
+    "back": "N",
     "slot": "accents.joinery",
+    "index": 81,
     "fp": [
      16.447,
      19.146,
@@ -25614,7 +26029,9 @@
     "room": "bedroom_4",
     "storey": "first",
     "side": "S",
+    "back": "S",
     "slot": "accents.joinery",
+    "index": 82,
     "fp": [
      16.896,
      18.697,
@@ -25631,7 +26048,9 @@
     "room": "bedroom_4",
     "storey": "first",
     "side": "W",
+    "back": "W",
     "slot": "accents.textile",
+    "index": 83,
     "fp": [
      15.146,
      16.176,
@@ -25648,7 +26067,9 @@
     "room": "bedroom_4_dress",
     "storey": "first",
     "side": "S",
+    "back": "S",
     "slot": "accents.joinery",
+    "index": 84,
     "fp": [
      15.169,
      16.529,
@@ -25665,7 +26086,9 @@
     "room": "bedroom_4_toilet",
     "storey": "first",
     "side": "S",
+    "back": "S",
     "slot": "fixtures.sanitary",
+    "index": 85,
     "fp": [
      18.646,
      19.446,
@@ -25682,7 +26105,9 @@
     "room": "bedroom_4_toilet",
     "storey": "first",
     "side": "S",
+    "back": "S",
     "slot": "fixtures.sanitary",
+    "index": 87,
     "fp": [
      19.596,
      20.096,
@@ -25699,7 +26124,9 @@
     "room": "family_living",
     "storey": "first",
     "side": "W",
+    "back": "W",
     "slot": "accents.joinery",
+    "index": 88,
     "fp": [
      9.799,
      10.249,
@@ -25716,7 +26143,9 @@
     "room": "family_living",
     "storey": "first",
     "side": "",
+    "back": "",
     "slot": "accents.textile",
+    "index": 89,
     "fp": [
      12.799,
      13.749,
@@ -25733,7 +26162,9 @@
     "room": "family_living",
     "storey": "first",
     "side": "",
+    "back": "",
     "slot": "accents.joinery",
+    "index": 90,
     "fp": [
      12.029,
      12.569,

@@ -45,6 +45,7 @@ class Piece:
     parts: list = field(default_factory=list)    # (slot, u0, u1, v0, v1, z0, z1)
     clear: list = field(default_factory=list)    # 2D boxes kept free in front of it
     side: str = ""                               # the wall it was placed against
+    flip: bool = False                           # placed facing that wall (back away from it)
 
     def footprint(self) -> Polygon:
         floor = [box(p[1], p[3], p[2], p[4]) for p in self.parts if p[5] < 0.3 and p[6] - p[5] > 0.02]
@@ -106,6 +107,7 @@ def _place(room: Room, name, side, s_c, t_off, local, flip=False, ifc="IfcFurnit
            block=True, clear=()):
     """Local parts (slot, s0, s1, t0, t1, z0, z1) around s = s_c, from t = t_off."""
     p = Piece(name, room.key, room.storey, ifc, block)
+    p.flip = flip
     for slot, s0, s1, t0, t1, z0, z1 in local:
         if flip:
             t0, t1 = -t1, -t0

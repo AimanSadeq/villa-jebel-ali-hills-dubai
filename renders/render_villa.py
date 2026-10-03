@@ -40,6 +40,9 @@ import yaml  # noqa: E402
 from mathutils import Vector  # noqa: E402
 from mathutils.geometry import tessellate_polygon  # noqa: E402
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import furniture_bl  # noqa: E402
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 IFC = REPO_ROOT / "output" / "ifc" / "VJH-ARCH-001_Villa_5130272.ifc"
 MODEL_JSON = REPO_ROOT / "viewer" / "public" / "data" / "model.json"
@@ -250,24 +253,32 @@ def add_finishes(data: dict, palette: int, mats: Materials, col) -> None:
         mat = mats.get(sw.get("texture"), tint, float(sw["roughness"]), f"finish {q['slot']}")
         pts = q["p"]
         mesh_object(f"finish {q['slot']} {q['room']}", pts, [(0, 1, 2, 3)], mat, col)
-    # Furniture: the layout's boxes, softened by a bevel, in the palette's colours.
+    # Furniture: modelled pieces (furniture_bl.py) in the palette's colours;
+    # the layout's boxes, softened, for anything without a builder.
     soft = {"accents.textile": 0.07, "accents.highlight": 0.05, "fixtures.sanitary": 0.03,
             "accents.joinery": 0.012, "accents.worktop": 0.008, "fixtures.metal": 0.004}
-    for b in fin.get("boxes", []):
-        slot = b["slot"]
-        u0, u1, v0, v1, z0, z1 = b["b"]
+
+    def slot_mat(slot: str):
         if slot.startswith("fixed."):
             colour = slot[6:]
-            # Screens stay dark and only softly glossy; glass and mirrors are glossy.
-            mat = mats.get(None, colour, 0.5 if colour == "#121212" else 0.15 if colour in ("#bcd3dd", "#c9d4d8") else 0.8,
-                           f"fixed {colour}")
-            bevel = 0.0
-        else:
-            grp, key = slot.split(".")
-            sw = pal[grp][key]
-            mat = mats.get(sw.get("texture"), "#ffffff" if sw.get("texture") else sw["colour"], float(sw["roughness"]), f"furniture {slot}")
-            bevel = soft.get(slot, 0.01)
-        box_object(f"furniture {slot}", u0, u1, v0, v1, z0, z1, mat, col, bevel=bevel, smooth=bevel >= 0.03)
+            rough = 0.5 if colour == "#121212" else 0.15 if colour in ("#bcd3dd", "#c9d4d8", "#9fb7c2") else 0.8
+            return mats.get(None, colour, rough, f"fixed {colour}")
+        grp, key = slot.split(".")
+        sw = pal[grp][key]
+        return mats.get(sw.get("texture"), "#ffffff" if sw.get("texture") else sw["colour"], float(sw["roughness"]),
+                        f"furniture {slot}")
+
+    built = set()
+    for piece in fin.get("pieces", []):
+        if furniture_bl.build_piece(piece, col, slot_mat):
+            built.add(piece["index"])
+    for b in fin.get("boxes", []):
+        if b.get("piece") in built:
+            continue
+        slot = b["slot"]
+        u0, u1, v0, v1, z0, z1 = b["b"]
+        bevel = 0.0 if slot.startswith("fixed.") else soft.get(slot, 0.01)
+        box_object(f"furniture {slot}", u0, u1, v0, v1, z0, z1, slot_mat(slot), col, bevel=bevel, smooth=bevel >= 0.03)
 
 
 def add_garden(data: dict, mats: Materials, col) -> None:
@@ -312,58 +323,97 @@ def add_surroundings(mats: Materials, col, ground: float) -> None:
 def add_tree(t: dict, trunk_mat, leaf_mat, col, ground: float) -> None:
     u, v = t["u"], t["v"]
     hgt, tk, crown = float(t["height_m"]), float(t["trunk_m"]), float(t["crown_m"])
-    r = 0.22 if t["kind"] == "palm" else 0.18
-    bpy.ops.mesh.primitive_cone_add(vertices=12, radius1=r * 1.3, radius2=r * 0.7, depth=tk, location=(u, v, ground + tk / 2))
-    tr = bpy.context.active_object
-    tr.data.materials.append(trunk_mat)
-    for p in tr.data.polygons:
-        p.use_smooth = True
-    for c in list(tr.users_collection):
-        c.objects.unlink(tr)
-    col.objects.link(tr)
     rng = np.random.default_rng(int(u * 10 + v * 100))
     if t["kind"] == "palm":
-        # Fronds: bent tapered blades around the top of the trunk.
-        n = 14
+        # Trunk with a slight lean, then fronds: a rachis with leaflets either side.
+        lean = rng.uniform(-0.06, 0.06), rng.uniform(-0.06, 0.06)
+        bpy.ops.mesh.primitive_cone_add(vertices=14, radius1=0.30, radius2=0.20, depth=tk, location=(u, v, ground + tk / 2))
+        tr = bpy.context.active_object
+        tr.rotation_euler = (lean[1], -lean[0], 0)
+        tr.data.materials.append(trunk_mat)
+        for p in tr.data.polygons:
+            p.use_smooth = True
+        for c in list(tr.users_collection):
+            c.objects.unlink(tr)
+        col.objects.link(tr)
+        top = Vector((u + lean[0] * tk, v + lean[1] * tk, ground + tk))
+        n = 16
         for i in range(n):
-            a = 2 * math.pi * i / n + rng.uniform(-0.15, 0.15)
-            tilt = rng.uniform(0.35, 1.05)          # 0 = straight up, larger = drooping
+            a = 2 * math.pi * i / n + rng.uniform(-0.12, 0.12)
+            tilt = rng.uniform(0.25, 1.0)
             L = crown * 0.55
-            segs = 8
+            segs = 10
             verts, faces = [], []
+            spine = []
             for k in range(segs + 1):
-                s = k / segs
-                droop = tilt * s + 1.3 * s * s
-                dist = L * s * math.cos(min(droop, 1.5))
-                z = ground + tk + L * s * math.sin(max(0.0, 1.2 - droop))
-                w = 0.07 + 0.32 * math.sin(math.pi * min(1.0, s * 1.15))
-                cx, cy = u + dist * math.cos(a), v + dist * math.sin(a)
-                px, py = -math.sin(a) * w, math.cos(a) * w
-                verts += [(cx - px, cy - py, z), (cx + px, cy + py, z)]
+                sgm = k / segs
+                droop = tilt * sgm + 1.4 * sgm * sgm
+                ang = max(-1.2, 1.1 - droop)
+                dist = L * sgm * math.cos(ang) if k else 0.0
+                z = top.z + L * sgm * math.sin(ang)
+                spine.append(Vector((top.x + dist * math.cos(a), top.y + dist * math.sin(a), z)))
+            # Rachis.
+            for k in range(segs + 1):
+                px, py = -math.sin(a) * 0.02, math.cos(a) * 0.02
+                sp = spine[k]
+                verts += [(sp.x - px, sp.y - py, sp.z), (sp.x + px, sp.y + py, sp.z)]
                 if k:
                     b0 = 2 * (k - 1)
                     faces.append((b0, b0 + 1, b0 + 3, b0 + 2))
+            # Leaflets: pairs of thin blades angled down and out.
+            for k in range(1, segs):
+                sgm = k / segs
+                lw = 0.45 * math.sin(math.pi * min(1.0, sgm * 1.1)) + 0.1
+                sp, nxt = spine[k], spine[min(k + 1, segs)]
+                d = (nxt - sp).normalized()
+                side = Vector((-math.sin(a), math.cos(a), 0.0))
+                for sg in (-1, 1):
+                    tip = sp + side * (sg * lw) + Vector((0, 0, -lw * 0.55)) + d * 0.12
+                    b0 = len(verts)
+                    verts += [tuple(sp - d * 0.04), tuple(sp + d * 0.05), tuple(tip)]
+                    faces.append((b0, b0 + 1, b0 + 2))
             mesh_object("palm frond", verts, faces, leaf_mat, col, smooth=True)
     else:
-        # Crown: a cluster of displaced spheres.
-        for i in range(6):
-            cr = crown * rng.uniform(0.28, 0.4)
-            cx = u + rng.uniform(-0.25, 0.25) * crown
-            cy = v + rng.uniform(-0.25, 0.25) * crown
-            cz = ground + tk + (hgt - tk) * rng.uniform(0.3, 0.7)
-            bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=3, radius=cr, location=(cx, cy, cz))
-            sp = bpy.context.active_object
-            sp.data.materials.append(leaf_mat)
-            for p in sp.data.polygons:
-                p.use_smooth = True
-            d = sp.modifiers.new("displace", "DISPLACE")
-            tx = bpy.data.textures.new("leaf_noise", "CLOUDS")
-            tx.noise_scale = 0.35
-            d.texture = tx
-            d.strength = cr * 0.5
-            for c in list(sp.users_collection):
-                c.objects.unlink(sp)
-            col.objects.link(sp)
+        bpy.ops.mesh.primitive_cone_add(vertices=12, radius1=0.24, radius2=0.14, depth=tk + 0.6, location=(u, v, ground + (tk + 0.6) / 2))
+        tr = bpy.context.active_object
+        tr.data.materials.append(trunk_mat)
+        for p in tr.data.polygons:
+            p.use_smooth = True
+        for c in list(tr.users_collection):
+            c.objects.unlink(tr)
+        col.objects.link(tr)
+        # Branches fanning out from the top of the trunk, each with a leaf cluster.
+        for i in range(7):
+            a = 2 * math.pi * i / 7 + rng.uniform(-0.3, 0.3)
+            rise = rng.uniform(0.35, 0.75)
+            L = crown * rng.uniform(0.3, 0.5)
+            end = Vector((u + L * math.cos(a) * math.cos(rise), v + L * math.sin(a) * math.cos(rise), ground + tk + 0.4 + L * math.sin(rise)))
+            start = Vector((u, v, ground + tk + 0.3))
+            mid = (start + end) / 2
+            d = end - start
+            bpy.ops.mesh.primitive_cone_add(vertices=8, radius1=0.09, radius2=0.04, depth=d.length, location=mid)
+            br = bpy.context.active_object
+            br.rotation_euler = d.to_track_quat("Z", "Y").to_euler()
+            br.data.materials.append(trunk_mat)
+            for c in list(br.users_collection):
+                c.objects.unlink(br)
+            col.objects.link(br)
+            for j in range(3):
+                cr = crown * rng.uniform(0.16, 0.26)
+                cpos = end + Vector((rng.uniform(-0.3, 0.3) * cr * 2, rng.uniform(-0.3, 0.3) * cr * 2, rng.uniform(0.0, 0.5) * cr))
+                bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=3, radius=cr, location=cpos)
+                sp = bpy.context.active_object
+                sp.data.materials.append(leaf_mat)
+                for p in sp.data.polygons:
+                    p.use_smooth = True
+                dm = sp.modifiers.new("displace", "DISPLACE")
+                tx = bpy.data.textures.new("leaf_noise", "CLOUDS")
+                tx.noise_scale = 0.25
+                dm.texture = tx
+                dm.strength = cr * 0.7
+                for c in list(sp.users_collection):
+                    c.objects.unlink(sp)
+                col.objects.link(sp)
 
 
 def add_sky(sun: dict, bearing_deg: float) -> None:
@@ -431,7 +481,7 @@ def setup_render(samples: int, device: str) -> None:
     sc.cycles.caustics_refractive = False
 
 
-def calibrate_exposure(target: float = 0.40) -> float:
+def calibrate_exposure(target: float = 0.50) -> float:
     """The Nishita sky is in physical units: render a tiny preview and set
     the exposure so the mean of the picture lands near the target."""
     sc = bpy.context.scene
@@ -445,7 +495,10 @@ def calibrate_exposure(target: float = 0.40) -> float:
     bpy.ops.render.render(write_still=True)
     img = bpy.data.images.load(str(tmp))
     px = np.array(img.pixels[:]).reshape(-1, 4)[:, :3]
-    mean = float(np.clip(px, 0, 1).mean())
+    lum = np.clip(px, 0, 1).mean(1)
+    # Windows and the sky blow out whatever the exposure: judge the rest.
+    body = lum[lum < 0.97]
+    mean = float(body.mean()) if len(body) > lum.size * 0.2 else float(lum.mean())
     bpy.data.images.remove(img)
     tmp.unlink(missing_ok=True)
     sc.render.resolution_percentage = pct
@@ -453,7 +506,7 @@ def calibrate_exposure(target: float = 0.40) -> float:
     sc.cycles.use_denoising = True
     # AgX is roughly logarithmic in the mid range: one stop moves the mean about 0.12.
     ev = (target - mean) / 0.12
-    ev = max(-8.0, min(8.0, ev))
+    ev = max(-8.0, min(6.0, ev))
     sc.view_settings.exposure = ev
     return ev
 
