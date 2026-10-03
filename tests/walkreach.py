@@ -36,7 +36,7 @@ def stand(u, v, znow):
     for du, dv in ring:
         if support(u + du, v + dv, zc) is None: return None
     return zc
-G = 0.2
+G = 0.3          # grid step; 0.2 is exact but three minutes, 0.3 under a minute
 start = (w["start"]["u"], w["start"]["v"], w["start"]["z"])
 key = lambda u, v, z: (round(u / G), round(v / G), 0 if z < 2.5 else 1)
 seen = {key(*start): start}
