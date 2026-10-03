@@ -8,6 +8,20 @@ Columns: date, decision, reason, approved by Aiman.
 
 ## 2026-10-03, Phase 4: facade, palettes, furniture, garden, renders
 
+### D-059 The realistic walkthrough in Twinmotion, from the project's IFC (answer W1: A)
+
+**Date.** 2026-10-03.
+
+**Decision.** The owner is not satisfied with the look of the browser walkthrough, and a browser walkthrough written here will not reach the look of his reference renders in a reasonable number of sessions (real time photo realism needs large libraries of detailed furniture, plants and materials and a mature rendering engine). The realistic walkthrough is therefore made in Twinmotion from the project's own model:
+- src/model/export_twinmotion.py writes one IFC per interior palette (VJH-TM-001) with every element carrying a material named for what it is (the model build now gives every style a matching material), the palette's finishes as IfcCovering surfaces named per finish slot so each is swapped from the library in one click, and without the box furniture, sanitary ware, trees and room volumes that the library replaces; plus VJH-TM-001_placements.csv (every furniture piece and tree with position, size, rotation and the library kind) and VJH-TM-001_cameras.csv (the six views of deliverable 5 with the sun study's sun).
+- docs/twinmotion-guide.md tells the owner how to install, import (collapse by material, north offset 30.18 degrees TO VERIFY against a shadow, Dubai location), assign materials, place the furniture and plants, and set the cameras and sun; and that design changes are made in the brief files and re-imported.
+- The browser walkthrough (viewer/model.html) stays as the plan checking tool (reachability, labels, areas, palettes); the Blender pipeline stays for the Phase 7 stills.
+- Twinmotion is a free Community Edition for personal, non-commercial use at the time of writing, TO VERIFY on its site; the laptop's integrated GPU may need reduced quality.
+
+**Reason.** Owner's answer W1 (2026-10-03), after the Phase 4 walkthrough fell short of "a complete realistic walkthrough" (F3). CLAUDE.md section 8 names the project's own stack for the walkthrough; the owner's instruction takes precedence for the realistic one, and the stack keeps the design, the checks and the deliverables.
+
+**Approved by Aiman.** Yes (W1: A, 2026-10-03).
+
 ### D-058 Phase 4 independent review, findings fixed
 
 **Date.** 2026-10-03.

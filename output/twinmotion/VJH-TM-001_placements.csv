@@ -1,0 +1,89 @@
+item,library_kind,room,storey,x_m,y_m,z_m,width_m,depth_m,height_m,rotation_deg,back_toward
+Shower,Walk in shower with glass screen,outdoor_bathroom,ground,10.59,9.67,0.0,0.8,0.9,2.0,0.0,S
+"Vanity, 1 basin",Basin vanity with mirror,outdoor_bathroom,ground,10.59,10.44,0.3,0.8,0.55,1.7,180.0,N
+Shower,Walk in shower with glass screen,maids_toilet,ground,12.49,6.77,0.0,0.8,0.9,2.0,0.0,S
+"Vanity, 1 basin",Basin vanity with mirror,maids_toilet,ground,12.49,8.84,0.3,0.8,0.55,1.7,180.0,N
+"Vanity, 1 basin",Basin vanity with mirror,wash,ground,12.49,9.5,0.3,0.8,0.55,1.7,0.0,S
+"Bed, 0.90 m","Bed, single",maids_room,ground,14.38,8.72,0.0,1.0,2.08,1.25,-90.0,W
+"Vanity, 1 basin",Basin vanity with mirror,guest_powder,ground,14.09,10.09,0.3,0.8,0.55,1.7,0.0,S
+WC,Wall hung WC,guest_powder,ground,14.09,11.81,0.0,0.5,0.62,1.0,180.0,N
+"Pantry shelves, 1.75 m",Shelving unit,pantry,ground,15.94,10.05,0.0,1.75,0.45,2.2,0.0,S
+"Pantry shelves, 1.75 m",Shelving unit,pantry,ground,15.94,12.29,0.0,1.75,0.45,2.2,180.0,N
+"Pantry shelves, 1.74 m",Shelving unit,pantry,ground,15.27,11.17,0.0,1.74,0.45,2.2,-90.0,W
+"Washer and dryer, counter",Washing machine and dryer,laundry,ground,18.23,7.52,0.0,1.4,0.62,0.89,90.0,E
+"Kitchen run, 2.45 m",Kitchen base and wall units,arabic_kitchen,ground,18.96,7.57,0.0,2.45,0.62,2.25,-90.0,W
+"Kitchen run, 1.63 m",Kitchen base and wall units,arabic_kitchen,ground,20.73,9.05,0.0,1.63,0.62,2.25,90.0,E
+Shower,Walk in shower with glass screen,office_toilet,ground,7.69,12.77,0.0,0.9,0.9,2.0,0.0,S
+"Vanity, 1 basin",Basin vanity with mirror,office_toilet,ground,6.79,12.6,0.3,0.8,0.55,1.7,0.0,S
+WC,Wall hung WC,office_toilet,ground,8.49,12.63,0.0,0.5,0.62,1.0,0.0,S
+Desk and chair,Desk with office chair,home_office,ground,7.69,17.49,0.0,1.8,1.45,1.0,0.0,S
+"Bookshelves, 1.35 m",Bookshelf,home_office,ground,6.54,14.51,0.0,1.35,0.38,2.2,0.0,S
+"Bed, 1.60 m","Bed, queen",guest_bedroom,ground,5.59,25.62,0.0,2.7,2.18,1.25,180.0,N
+TV unit,TV cabinet with television,guest_bedroom,ground,4.99,22.45,0.0,1.8,0.45,2.0,0.0,S
+Desk and chair,Desk with office chair,guest_bedroom,ground,4.61,23.57,0.0,1.2,1.13,0.9,-90.0,W
+"Wardrobes, 1.45 m",Wardrobe run,guest_dress,ground,9.24,28.46,0.0,1.45,0.6,2.4,90.0,E
+Shower,Walk in shower with glass screen,guest_toilet,ground,5.54,27.27,0.0,0.9,0.9,2.0,0.0,S
+"Vanity, 1 basin",Basin vanity with mirror,guest_toilet,ground,4.64,27.1,0.3,0.8,0.55,1.7,0.0,S
+WC,Wall hung WC,guest_toilet,ground,6.34,27.13,0.0,0.5,0.62,1.0,0.0,S
+"Island, 3.00 m",Kitchen island,show_kitchen,ground,18.04,14.77,0.0,3.0,1.0,0.9,0.0,S
+TV unit,TV cabinet with television,living,ground,18.54,23.69,0.0,2.4,0.45,2.0,180.0,N
+"Sofa, 3.00 m","Sofa, 3 seats",living,ground,18.04,20.44,0.0,3.0,0.95,0.85,0.0,S
+Coffee table,Coffee table,living,ground,18.04,21.42,0.0,1.3,0.7,0.4,0.0,S
+Rug,Rug,living,ground,18.04,21.07,0.0,3.0,2.2,0.01,0.0,S
+Console,Console table,salon,ground,10.0,26.95,0.0,2.0,0.42,0.8,-90.0,W
+"Salon sofa, 2.60 m","Sofa, 3 seats",salon,ground,13.54,25.45,0.0,2.6,0.95,0.85,0.0,S
+"Salon sofa, 2.60 m","Sofa, 3 seats",salon,ground,13.54,28.8,0.0,2.6,0.95,0.85,0.0,S
+Salon table,"Coffee table, large",salon,ground,13.54,27.12,0.0,1.6,0.9,0.4,0.0,S
+Rug,Rug,salon,ground,13.54,27.12,0.0,3.2,3.1,0.01,0.0,S
+"Bed, 1.93 m","Bed, king",master_suite,first,18.38,12.72,5.0,3.03,2.18,1.25,180.0,N
+TV unit,TV cabinet with television,master_suite,first,19.6,6.54,5.0,1.8,0.45,2.0,0.0,S
+Desk and chair,Desk with office chair,master_suite,first,15.61,10.86,5.0,1.2,1.13,0.9,-90.0,W
+Sitting sofa,"Sofa, 2 seats",master_suite,first,17.6,6.79,5.0,2.2,0.95,0.85,0.0,S
+Sitting table,"Coffee table, small",master_suite,first,17.6,7.86,5.0,1.0,0.6,0.4,0.0,S
+Armchair,Armchair,master_suite,first,17.0,8.84,5.0,0.85,0.85,0.8,0.0,S
+Armchair,Armchair,master_suite,first,18.2,8.84,5.0,0.85,0.85,0.8,0.0,S
+"Coffee station, 1.35 m",Kitchenette units,master_suite,first,15.35,12.06,5.0,1.35,0.6,2.2,-90.0,W
+"Wardrobes, 3.46 m",Wardrobe run,master_dress,first,12.19,6.61,5.0,3.46,0.6,2.4,0.0,S
+"Wardrobes, 3.46 m",Wardrobe run,master_dress,first,12.19,10.01,5.0,3.46,0.6,2.4,180.0,N
+Dressing island,Dressing island,master_dress,first,12.69,8.31,5.0,1.6,0.8,0.93,0.0,S
+Shower,Walk in shower with glass screen,master_toilet,first,8.34,6.76,5.0,1.2,0.9,2.0,0.0,S
+Bathtub,Freestanding bathtub,master_toilet,first,8.34,9.91,5.0,1.7,0.8,0.58,180.0,N
+"Vanity, 2 basins",Double basin vanity with mirror,master_toilet,first,10.07,7.41,5.3,1.6,0.55,1.7,90.0,E
+WC,Wall hung WC,master_toilet,first,7.34,6.62,5.0,0.5,0.62,1.0,0.0,S
+"Bed, 1.60 m","Bed, queen",bedroom_2,first,7.1,13.91,5.0,2.7,2.18,1.25,0.0,S
+TV unit,TV cabinet with television,bedroom_2,first,7.3,18.09,5.0,1.8,0.45,2.0,180.0,N
+Desk and chair,Desk with office chair,bedroom_2,first,5.61,15.57,5.0,1.2,1.13,0.9,-90.0,W
+Shower,Walk in shower with glass screen,bedroom_2_toilet,first,7.49,10.87,5.0,0.9,0.9,2.0,0.0,S
+"Vanity, 1 basin",Basin vanity with mirror,bedroom_2_toilet,first,6.59,10.69,5.3,0.8,0.55,1.7,0.0,S
+WC,Wall hung WC,bedroom_2_toilet,first,8.29,10.73,5.0,0.5,0.62,1.0,0.0,S
+"Bed, 1.60 m","Bed, queen",bedroom_3,first,6.79,23.31,5.0,2.7,2.18,1.25,0.0,S
+TV unit,TV cabinet with television,bedroom_3,first,6.19,26.49,5.0,1.8,0.45,2.0,180.0,N
+Desk and chair,Desk with office chair,bedroom_3,first,4.61,24.47,5.0,1.2,1.13,0.9,-90.0,W
+"Wardrobes, 1.45 m",Wardrobe run,bedroom_3_dress,first,9.24,28.47,5.0,1.45,0.6,2.4,90.0,E
+Shower,Walk in shower with glass screen,bedroom_3_toilet,first,5.54,27.27,5.0,0.9,0.9,2.0,0.0,S
+"Vanity, 1 basin",Basin vanity with mirror,bedroom_3_toilet,first,4.64,27.1,5.3,0.8,0.55,1.7,0.0,S
+WC,Wall hung WC,bedroom_3_toilet,first,6.34,27.13,5.0,0.5,0.62,1.0,0.0,S
+"Bed, 1.60 m","Bed, queen",bedroom_4,first,18.37,25.16,5.0,2.7,2.18,1.25,0.0,S
+TV unit,TV cabinet with television,bedroom_4,first,18.4,28.19,5.0,1.8,0.45,2.0,180.0,N
+Desk and chair,Desk with office chair,bedroom_4,first,15.61,26.24,5.0,1.2,1.13,0.9,-90.0,W
+Shower,Walk in shower with glass screen,bedroom_4_toilet,first,19.05,28.98,5.0,0.8,0.9,2.0,0.0,S
+"Vanity, 1 basin",Basin vanity with mirror,bedroom_4_toilet,first,19.95,28.8,5.3,0.8,0.55,1.7,0.0,S
+WC,Wall hung WC,bedroom_4_toilet,first,19.85,30.0,5.0,0.5,0.62,1.0,180.0,N
+TV unit,TV cabinet with television,family_living,first,10.02,26.6,5.0,2.4,0.45,2.0,-90.0,W
+"Sofa, 3.00 m","Sofa, 3 seats",family_living,first,13.27,26.6,5.0,0.95,3.0,0.85,0.0,S
+Coffee table,Coffee table,family_living,first,12.3,26.6,5.0,0.7,1.3,0.4,0.0,S
+Rug,Rug,family_living,first,12.65,26.6,5.0,2.2,3.0,0.01,0.0,S
+date_palm,"Palm, Phoenix dactylifera (date palm)",garden,site,29.3,6.0,-0.45,5.0,5.0,7.0,0.0,
+date_palm,"Palm, Phoenix dactylifera (date palm)",garden,site,29.3,12.5,-0.45,5.0,5.0,7.0,0.0,
+ghaf,"Tree, Prosopis (ghaf) or acacia",garden,site,29.1,18.5,-0.45,6.0,6.0,7.0,0.0,
+date_palm,"Palm, Phoenix dactylifera (date palm)",garden,site,29.3,23.5,-0.45,5.0,5.0,7.0,0.0,
+sidr,"Tree, Ziziphus (sidr) or similar broadleaf",garden,site,29.1,28.5,-0.45,5.0,5.0,6.0,0.0,
+frangipani,"Tree, Plumeria (frangipani)",garden,site,29.1,32.2,-0.45,3.5,3.5,4.0,0.0,
+frangipani,"Tree, Plumeria (frangipani)",garden,site,12.0,32.3,-0.45,3.5,3.5,4.0,0.0,
+frangipani,"Tree, Plumeria (frangipani)",garden,site,22.0,32.3,-0.45,3.5,3.5,4.0,0.0,
+date_palm,"Palm, Phoenix dactylifera (date palm)",garden,site,1.4,14.6,-0.45,5.0,5.0,7.0,0.0,
+date_palm,"Palm, Phoenix dactylifera (date palm)",garden,site,1.4,17.0,-0.45,5.0,5.0,7.0,0.0,
+frangipani,"Tree, Plumeria (frangipani)",garden,site,1.5,24.0,-0.45,3.5,3.5,4.0,0.0,
+date_palm,"Palm, Phoenix dactylifera (date palm)",garden,site,1.6,32.0,-0.45,5.0,5.0,7.0,0.0,
+date_palm,"Palm, Phoenix dactylifera (date palm)",garden,site,6.5,33.2,-0.45,5.0,5.0,7.0,0.0,
+frangipani,"Tree, Plumeria (frangipani)",garden,site,4.2,33.0,-0.45,3.5,3.5,4.0,0.0,

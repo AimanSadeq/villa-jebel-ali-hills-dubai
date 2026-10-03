@@ -1,0 +1,7 @@
+view,title,camera_x,camera_y,camera_z,target_x,target_y,target_z,lens_mm,sun,sun_when,sun_azimuth_deg,sun_elevation_deg
+entrance,Entrance from the road,-11.0,28.5,1.7,6.0,20.3,4.2,30,spring_15h,2026-03-21 15:00,242.2,45.7
+living,Double height living room,15.6,17.3,1.55,19.5,22.6,2.6,22,morning_9h,2026-03-21 09:00,108.1,34.2
+salon,Salon,16.6,24.6,1.5,11.0,28.4,1.5,24,spring_15h,2026-03-21 15:00,242.2,45.7
+master,Master suite,15.6,7.0,6.5,19.8,11.6,6.3,24,morning_9h,2026-03-21 09:00,108.1,34.2
+garden_sunset,Garden at sunset,26.9,27.2,1.5,21.6,15.0,3.8,22,sunset,2026-03-21 18:05,268.0,5.4
+aerial,Aerial view,-14.0,-10.0,26.0,13.0,18.0,3.0,35,spring_15h,2026-03-21 15:00,242.2,45.7

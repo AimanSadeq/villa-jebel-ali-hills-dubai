@@ -139,6 +139,19 @@ npm run dev --prefix viewer            # then http://localhost:5173/model.html, 
 The viewer's Realism section switches the photographic materials and the sky;
 the Interior palette section switches the three palettes (brief/palettes.yaml).
 
+## Twinmotion walkthrough (D-059)
+
+```
+.\.venv\Scripts\Activate.ps1
+python src/model/build_model.py
+python src/model/export_twinmotion.py
+```
+
+Then follow `docs/twinmotion-guide.md` (also copied to `output/twinmotion/README.md`):
+import the palette's `.ifc`, assign the library materials by name, place the
+furniture and plants from `VJH-TM-001_placements.csv`, set the six cameras
+from `VJH-TM-001_cameras.csv`.
+
 ## Renders (Phase 7, brought forward by D-057)
 
 Blender Cycles renders of the six views, from the model and the fetched

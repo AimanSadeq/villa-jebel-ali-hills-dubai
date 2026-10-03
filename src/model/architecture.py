@@ -315,6 +315,15 @@ class Model:
             self.style[key] = st
 
         self.mat = {}
+        # Every style also gets a material of the same name, so that an element
+        # with only a style still carries a named material (Twinmotion and
+        # other viewers group surfaces by material name, D-059).
+        for key, name, rgb, _t in STYLES:
+            if key in ("ext", "stone", "timber", "led", "int", "slab", "glass", "door", "pool", "deck"):
+                continue
+            self.mat[key] = ifcopenshell.api.material.add_material(f, name=name, category="finish")
+            ifcopenshell.api.style.assign_material_style(
+                f, material=self.mat[key], style=self.style[key], context=self.body)
         for key, name, cat in (("ext", "Masonry, beige render", "block"),
                                ("stone", "Split face stone cladding", "stone"),
                                ("timber", "Timber, exterior", "wood"),
@@ -387,6 +396,7 @@ class Model:
         if style is not None:
             ifcopenshell.api.style.assign_representation_styles(
                 f, shape_representation=rep, styles=[self.style[style]])
+        material = material or (style if style in self.mat and ifc_class != "IfcSpace" else None)
         if material is not None:
             ifcopenshell.api.material.assign_material(f, products=[e],
                                                       material=self.mat[material])

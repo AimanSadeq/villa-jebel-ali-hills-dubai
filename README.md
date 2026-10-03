@@ -65,6 +65,7 @@ pip install -r requirements.txt
 | `python assets/fetch_assets.py` | Fetches the free CC0 textures and skies (Poly Haven) for the walkthrough and renders, writes assets/LICENSES.md |
 | `python assets/make_standins.py` | Synthetic stand-in textures for testing without network |
 | `python renders/render_villa.py --all --device GPU` | Blender Cycles renders of the six views, output/renders |
+| `python src/model/export_twinmotion.py` | Twinmotion export: one IFC per palette with named materials and finish surfaces, placements and cameras, output/twinmotion (guide: docs/twinmotion-guide.md) |
 | `python -m pytest -q` | Setback, GFA, shading, layout, doors, facade, palettes, garden, realism and render guards, 116 checks (2 expected failures on the GFA margin, FF6) |
 
 ## Where things live
