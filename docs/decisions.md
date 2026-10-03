@@ -897,7 +897,7 @@ so there is a view worth keeping. Both neighbour sides are about privacy only.
 Gates are recessed so a car can pull clear of the 18.30 m road while the gate
 opens. Heights are TO VERIFY against DDA rules.
 
-**Approved by Aiman: not yet.** Proposed at the Phase 1 checkpoint.
+**Approved by Aiman: yes,** 2026-10-03 (answer G3: A), kept TO VERIFY: DDA FAQ Q3 allows a boundary wall only where the development guideline does (OI-14).
 
 ### D-010 Massing option A, Garden East, recommended
 
