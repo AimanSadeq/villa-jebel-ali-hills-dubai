@@ -8,6 +8,21 @@ Columns: date, decision, reason, approved by Aiman.
 
 ## 2026-10-02, the ground floor built from the reference
 
+### D-057 Photo-realistic renders brought forward (answer P9: A)
+
+**Date.** 2026-10-03.
+
+**Decision.** The Phase 7 renders start now, from the model as it stands. renders/render_villa.py builds the Blender scene from the project's own outputs and renders it with Cycles:
+- the IFC model through IfcOpenShell, each element with its surface style mapped to the photographic materials of assets/manifest.yaml (box projected, so no UV work); window glass refractive to the eye and transparent to light, so the sun and sky light the rooms;
+- the chosen palette's finishes, the furniture as softened pieces in the palette's colours, the garden surfaces, hedges, procedural palms and trees, and the land and road around the plot, all from viewer/public/data/model.json;
+- a physical sky (Blender's Nishita model) with the sun at the sun study's position for the view (pvlib, brief/site.yaml), exposure calibrated from a preview;
+- the six views of CLAUDE.md deliverable 5: entrance, double height living room, salon, master suite, garden at sunset, aerial. Output output/renders/VJH-R-00n_<view>.png, stamped.
+Runs with Blender's Python module (pip install bpy, kept in its own environment) or inside Blender on the laptop with the Intel Arc GPU (--device GPU, oneAPI). Test renders at low quality were made in the cloud with stand-in textures; the real photographs and the full quality renders are made on the laptop.
+
+**Reason.** Owner's answer P9: the walkthrough looked unreal; photographs of the finished house can only come from path traced renders (CLAUDE.md deliverable 5, Phase 7), and the same model and materials feed them.
+
+**Approved by Aiman.** Yes, the approach (P9: A, 2026-10-03).
+
 ### D-056 Real materials, sky and sun in the walkthrough (answer P7: A)
 
 **Date.** 2026-10-03.

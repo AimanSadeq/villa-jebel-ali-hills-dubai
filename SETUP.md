@@ -126,3 +126,20 @@ Claude Code will check the installs, ask any remaining questions one at a time, 
 - Sizes: expect the repo to grow to a few GB once 3D assets and renders are added. Git LFS will be set up by Claude Code for large files (`git lfs install`).
 - Backups: GitHub is your remote copy. Push at the end of every session.
 - Performance: if the walkthrough feels slow, ask Claude Code to lower plant density or texture resolution; your 32 GB RAM and Arc 140V handle a single villa scene well.
+
+## Renders (Phase 7, brought forward by D-057)
+
+Blender Cycles renders of the six views, from the model and the fetched
+assets, on the laptop's Intel Arc GPU:
+
+```
+.\.venv\Scripts\Activate.ps1
+python assets/fetch_assets.py                  # once: textures and skies
+python src/model/build_model.py
+pip install bpy                                # Blender as a Python module, once (large)
+python renders/render_villa.py --all --device GPU --samples 256 --size 1920x1080
+```
+
+One view at test quality: `python renders/render_villa.py --view living --samples 32 --size 960x540`.
+Output: `output/renders/VJH-R-00n_<view>.png`. The render script also runs inside
+Blender: `blender -b -P renders/render_villa.py -- --view aerial`.

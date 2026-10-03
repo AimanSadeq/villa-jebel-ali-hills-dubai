@@ -131,7 +131,8 @@ def sun_positions() -> dict:
     bearing = float(load_massing()["grid"]["bearing_deg"])
     out = {}
     for key, when in (("spring_15h", "2026-03-21 15:00"), ("summer_16h", "2026-06-21 16:00"),
-                      ("winter_15h", "2026-12-21 15:00")):
+                      ("winter_15h", "2026-12-21 15:00"), ("sunset", "2026-03-21 18:05"),
+                      ("morning_9h", "2026-03-21 09:00")):
         t = pd.DatetimeIndex([pd.Timestamp(when, tz=loc["timezone"])])
         sp = pvlib.solarposition.get_solarposition(t, float(loc["latitude"]), float(loc["longitude"]))
         az, el = float(sp["azimuth"].iloc[0]), float(sp["apparent_elevation"].iloc[0])
