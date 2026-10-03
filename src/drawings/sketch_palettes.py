@@ -101,7 +101,7 @@ def vignette(ax, pal: dict) -> None:
     ax.imshow(texture(f["public"], 400, 60, 4), extent=(0, W, 0, 1.0), aspect="auto")
     # Low joinery under the feature wall, a TV above it.
     ax.imshow(texture(a["joinery"], 200, 30, 5), extent=(3.6, 7.0, 1.0, 1.55), aspect="auto")
-    ax.add_patch(Rectangle((4.3, 2.3), 2.0, 1.15, facecolor="#1f1f1f", edgecolor="none"))
+    ax.add_patch(Rectangle((4.3, 2.3), 2.0, 1.15, facecolor="#1f1f1f", edgecolor="#6b6b6b", lw=0.8))
     # Sofa and cushions, side table, lamp.
     tx = rgb(a["textile"]["colour"])
     ax.add_patch(Rectangle((0.5, 0.9), 2.4, 0.55, facecolor=tx * 0.92, edgecolor="none"))
@@ -161,8 +161,8 @@ def main() -> int:
             y -= 0.006
 
     notes = [
-        "All three sit with the facade as built (D-048, D-051): warm split face stone, beige render, "
-        "timber, slim dark frames.",
+        "Palette 1 is the owner's white, black and beige direction, replacing Sand and Oak (P2 C, P3 C). "
+        "All three sit with the facade as built (D-048, D-051).",
         "Colours and patterns are visual concept finishes, not a specification. Products, slip "
         "resistance in wet areas and fire ratings are for the interior designer and the consultant.",
         "In the walkthrough the palettes switch with one button; textures will come from free CC0 "
@@ -176,7 +176,7 @@ def main() -> int:
         y -= 0.013
     fig.text(0.975, 0.030, "CONCEPT DESIGN, NOT FOR CONSTRUCTION", fontsize=11, color=RED,
              ha="right", fontweight="bold")
-    fig.text(0.975, 0.016, "Sketch VJH-SK-018   Interior palettes, answer P1   Rev A   A2 landscape",
+    fig.text(0.975, 0.016, "Sketch VJH-SK-018   Interior palettes, answers P1 to P3   Rev B   A2 landscape",
              fontsize=7.5, color=MUTED, ha="right")
     OUT_PDF.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(OUT_PDF, facecolor="white", dpi=200)
