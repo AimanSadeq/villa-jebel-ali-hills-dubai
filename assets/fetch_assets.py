@@ -23,6 +23,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import urllib.error
 import urllib.request
 from datetime import date
 from pathlib import Path
@@ -34,11 +35,25 @@ MANIFEST = REPO_ROOT / "assets" / "manifest.yaml"
 LICENSES = REPO_ROOT / "assets" / "LICENSES.md"
 OUT = REPO_ROOT / "viewer" / "public" / "assets"
 API = "https://api.polyhaven.com"
+# Poly Haven's servers answer 403 to anonymous clients (Python's default user
+# agent), so every request identifies this project, as their API asks.
+HEADERS = {"User-Agent": "villa-5130272-concept-design/1.0 (fetch_assets.py; CC0 asset fetch)",
+           "Accept": "application/json, */*"}
+
+
+def _open(url: str, timeout: int):
+    try:
+        return urllib.request.urlopen(urllib.request.Request(url, headers=HEADERS), timeout=timeout)
+    except urllib.error.HTTPError as e:
+        raise SystemExit(f"polyhaven.com refused {url} (HTTP {e.code}). Try again in a minute; if it "
+                         f"persists, the site may be blocking this network.") from e
+    except urllib.error.URLError as e:
+        raise SystemExit(f"Cannot reach {url}: {e.reason}. Check the internet connection or a proxy.") from e
 MAP_KEYS = {"diff": ("diffuse", "diff"), "nor": ("nor_gl",), "rough": ("rough",), "arm": ("arm",)}
 
 
 def get_json(url: str) -> dict:
-    with urllib.request.urlopen(url, timeout=60) as r:
+    with _open(url, 60) as r:
         return json.loads(r.read().decode("utf-8"))
 
 
@@ -47,7 +62,7 @@ def download(url: str, path: Path) -> None:
         return
     path.parent.mkdir(parents=True, exist_ok=True)
     print(f"   {url.rsplit('/', 1)[-1]} -> {path.relative_to(REPO_ROOT)}")
-    with urllib.request.urlopen(url, timeout=300) as r, open(path, "wb") as f:
+    with _open(url, 300) as r, open(path, "wb") as f:
         while True:
             chunk = r.read(1 << 16)
             if not chunk:
