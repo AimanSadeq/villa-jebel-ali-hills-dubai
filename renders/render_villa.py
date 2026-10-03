@@ -76,7 +76,7 @@ VIEWS = {
     "living": ((15.6, 17.3, 1.55), (19.5, 22.6, 2.6), 22, "morning_9h", "Double height living room"),
     "salon": ((16.6, 24.6, 1.5), (11.0, 28.4, 1.5), 24, "spring_15h", "Salon"),
     "master": ((15.6, 7.0, 6.5), (19.8, 11.6, 6.3), 24, "morning_9h", "Master suite"),
-    "garden_sunset": ((27.6, 19.2, 1.6), (20.5, 13.5, 4.5), 24, "sunset", "Garden at sunset"),
+    "garden_sunset": ((26.9, 27.2, 1.5), (21.6, 15.0, 3.8), 22, "sunset", "Garden at sunset"),
     "aerial": ((-14.0, -10.0, 26.0), (13.0, 18.0, 3.0), 35, "spring_15h", "Aerial view"),
 }
 PALETTE_DEFAULT = 0
@@ -337,12 +337,12 @@ def add_tree(t: dict, trunk_mat, leaf_mat, col, ground: float) -> None:
             c.objects.unlink(tr)
         col.objects.link(tr)
         top = Vector((u + lean[0] * tk, v + lean[1] * tk, ground + tk))
-        n = 16
+        n = 22
         for i in range(n):
             a = 2 * math.pi * i / n + rng.uniform(-0.12, 0.12)
-            tilt = rng.uniform(0.25, 1.0)
-            L = crown * 0.55
-            segs = 10
+            tilt = rng.uniform(0.15, 1.1)
+            L = crown * 0.6
+            segs = 14
             verts, faces = [], []
             spine = []
             for k in range(segs + 1):
@@ -354,24 +354,26 @@ def add_tree(t: dict, trunk_mat, leaf_mat, col, ground: float) -> None:
                 spine.append(Vector((top.x + dist * math.cos(a), top.y + dist * math.sin(a), z)))
             # Rachis.
             for k in range(segs + 1):
-                px, py = -math.sin(a) * 0.02, math.cos(a) * 0.02
+                px, py = -math.sin(a) * 0.035, math.cos(a) * 0.035
                 sp = spine[k]
                 verts += [(sp.x - px, sp.y - py, sp.z), (sp.x + px, sp.y + py, sp.z)]
                 if k:
                     b0 = 2 * (k - 1)
                     faces.append((b0, b0 + 1, b0 + 3, b0 + 2))
-            # Leaflets: pairs of thin blades angled down and out.
+            # Leaflets: close pairs of blades along the rachis, angled down and out.
             for k in range(1, segs):
                 sgm = k / segs
-                lw = 0.45 * math.sin(math.pi * min(1.0, sgm * 1.1)) + 0.1
+                lw = 0.55 * math.sin(math.pi * min(1.0, sgm * 1.1)) + 0.12
                 sp, nxt = spine[k], spine[min(k + 1, segs)]
                 d = (nxt - sp).normalized()
                 side = Vector((-math.sin(a), math.cos(a), 0.0))
-                for sg in (-1, 1):
-                    tip = sp + side * (sg * lw) + Vector((0, 0, -lw * 0.55)) + d * 0.12
-                    b0 = len(verts)
-                    verts += [tuple(sp - d * 0.04), tuple(sp + d * 0.05), tuple(tip)]
-                    faces.append((b0, b0 + 1, b0 + 2))
+                for j in range(3):
+                    base = sp + d * (j * 0.33 * (nxt - sp).length)
+                    for sg in (-1, 1):
+                        tip = base + side * (sg * lw) + Vector((0, 0, -lw * 0.5)) + d * 0.15
+                        b0 = len(verts)
+                        verts += [tuple(base - d * 0.03), tuple(base + d * 0.06), tuple(tip)]
+                        faces.append((b0, b0 + 1, b0 + 2))
             mesh_object("palm frond", verts, faces, leaf_mat, col, smooth=True)
     else:
         bpy.ops.mesh.primitive_cone_add(vertices=12, radius1=0.24, radius2=0.14, depth=tk + 0.6, location=(u, v, ground + (tk + 0.6) / 2))
@@ -385,9 +387,9 @@ def add_tree(t: dict, trunk_mat, leaf_mat, col, ground: float) -> None:
         # Branches fanning out from the top of the trunk, each with a leaf cluster.
         for i in range(7):
             a = 2 * math.pi * i / 7 + rng.uniform(-0.3, 0.3)
-            rise = rng.uniform(0.35, 0.75)
+            rise = rng.uniform(0.45, 0.85)
             L = crown * rng.uniform(0.3, 0.5)
-            end = Vector((u + L * math.cos(a) * math.cos(rise), v + L * math.sin(a) * math.cos(rise), ground + tk + 0.4 + L * math.sin(rise)))
+            end = Vector((u + L * math.cos(a) * math.cos(rise), v + L * math.sin(a) * math.cos(rise), ground + tk + 0.6 + L * math.sin(rise)))
             start = Vector((u, v, ground + tk + 0.3))
             mid = (start + end) / 2
             d = end - start
@@ -399,8 +401,10 @@ def add_tree(t: dict, trunk_mat, leaf_mat, col, ground: float) -> None:
                 c.objects.unlink(br)
             col.objects.link(br)
             for j in range(3):
-                cr = crown * rng.uniform(0.16, 0.26)
-                cpos = end + Vector((rng.uniform(-0.3, 0.3) * cr * 2, rng.uniform(-0.3, 0.3) * cr * 2, rng.uniform(0.0, 0.5) * cr))
+                cr = crown * rng.uniform(0.16, 0.24)
+                # Crowns stay above head height: nothing lower than the trunk top plus a metre.
+                cpos = end + Vector((rng.uniform(-0.3, 0.3) * cr * 2, rng.uniform(-0.3, 0.3) * cr * 2, rng.uniform(0.1, 0.6) * cr))
+                cpos.z = max(cpos.z, ground + tk + 1.0 + cr)
                 bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=3, radius=cr, location=cpos)
                 sp = bpy.context.active_object
                 sp.data.materials.append(leaf_mat)
