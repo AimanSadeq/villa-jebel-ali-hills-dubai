@@ -46,10 +46,12 @@ procedural trees are left out on purpose: Twinmotion's library has real ones.
 
 ## 3. Import into Twinmotion
 
-1. File, Import, Geometry, choose the palette's `.ifc`. Options: units
-   metres (the IFC is in metres), "Collapse by material" ON (one object per
-   material, which is how the finishes are meant to be swapped), "Keep
-   hierarchy" OFF.
+1. Import (bottom bar), Geometry, choose the palette's `.ifc`. Options:
+   units metres (the IFC is in metres), Collapse: "Collapse all" (it merges
+   the geometry but keeps each material separate, which is how the finishes
+   are meant to be swapped). Not "Keep hierarchy", which brings in every IFC
+   element as its own object. (Twinmotion 2026.1; older versions call the
+   same option "Collapse by material".)
 2. The model lands at the plot's own coordinates: x east-south-east along
    the plot grid, y north-north-east, z up; the house floor is z 0.00 and
    the garden ground z -0.45. Nothing needs moving.
