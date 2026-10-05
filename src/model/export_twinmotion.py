@@ -8,6 +8,9 @@ Writes, from the built model (run src/model/build_model.py first):
     name, so each finish is replaced from its library in one click). The box
     furniture, the sanitary ware and the procedural trees are left out:
     Twinmotion's library supplies real ones, placed from the lists below.
+  * the same model per palette as .glb (binary glTF 2.0) and .obj with .mtl,
+    y up, metres, one mesh per material: Twinmotion 2026 does not list IFC in
+    its import dialog (owner, 2026-10-05), these are the files to import.
   * output/twinmotion/VJH-TM-001_placements.csv: every furniture piece and
     tree with its position (x, y, z in metres, the IFC's own frame), size,
     rotation and the library kind to use.
@@ -174,6 +177,201 @@ def export_palette(data: dict, pal_index: int, pal_name: str) -> Path:
     return path
 
 
+def _style_name(f, geom_name: str) -> str | None:
+    """IfcOpenShell names a tessellated material after its style item
+    ("IfcSurfaceStyleShading-76"); return the IfcSurfaceStyle's own name."""
+    tail = geom_name.rsplit("-", 1)[-1]
+    if not tail.isdigit():
+        return None
+    try:
+        ent = f.by_id(int(tail))
+    except RuntimeError:
+        return None
+    if ent.is_a("IfcSurfaceStyle"):
+        return ent.Name
+    for inv in f.get_inverse(ent):
+        if inv.is_a("IfcSurfaceStyle") and inv.Name:
+            return inv.Name
+    return None
+
+
+def tessellate(ifc_path: Path) -> dict[str, dict]:
+    """Every visible element of the IFC as triangles in world coordinates,
+    grouped by material name: {name: {"tris": (n, 3, 3) array, "rgb", "alpha"}}.
+    Openings and room volumes carry no visible surface and are skipped."""
+    import multiprocessing
+
+    import ifcopenshell.geom
+    import numpy as np
+
+    f = ifcopenshell.open(str(ifc_path))
+    s = ifcopenshell.geom.settings()
+    s.set("use-world-coords", True)
+    it = ifcopenshell.geom.iterator(s, f, max(1, multiprocessing.cpu_count()),
+                                    exclude=("IfcOpeningElement", "IfcSpace"))
+    groups: dict[str, dict] = {}
+    if not it.initialize():
+        return groups
+    while True:
+        sh = it.get()
+        g = sh.geometry
+        v = np.asarray(g.verts, dtype=np.float64).reshape(-1, 3)
+        tri = np.asarray(g.faces, dtype=np.int64).reshape(-1, 3)
+        mids = np.asarray(g.material_ids, dtype=np.int64)
+        elem_mat = None
+        for k, m in enumerate(g.materials):
+            name = _style_name(f, m.name)
+            if name is None:                       # no style: the element's IfcMaterial
+                if elem_mat is None:
+                    em = ifcopenshell.util.element.get_material(f.by_id(sh.id))
+                    elem_mat = getattr(em, "Name", None) or "Unnamed"
+                name = elem_mat
+            sel = tri[mids == k] if len(mids) == len(tri) else tri
+            if not len(sel):
+                continue
+            d = m.diffuse
+            rgb = tuple(float(c) for c in ((d.r(), d.g(), d.b()) if hasattr(d, "r") else d))
+            grp = groups.setdefault(name, {"tris": [], "rgb": rgb,
+                                           "alpha": 1.0 - float(m.transparency or 0.0)})
+            grp["tris"].append(v[sel])
+        if not it.next():
+            break
+    for grp in groups.values():
+        grp["tris"] = np.concatenate(grp["tris"]).astype(np.float32)
+    return groups
+
+
+def _mesh_arrays(tris):
+    """Flat shaded vertices in glTF's frame (y up, -z toward model +y), normals
+    and UVs in metres by box projection, so library textures keep their scale."""
+    import numpy as np
+
+    p = tris.reshape(-1, 3)
+    pos = np.stack([p[:, 0], p[:, 2], -p[:, 1]], axis=1).astype(np.float32)   # z up to y up
+    t = pos.reshape(-1, 3, 3)
+    n = np.cross(t[:, 1] - t[:, 0], t[:, 2] - t[:, 0])
+    ln = np.linalg.norm(n, axis=1, keepdims=True)
+    keep = ln[:, 0] > 1e-12                                           # drop degenerate triangles
+    t, n, ln = t[keep], n[keep], ln[keep]
+    n = (n / ln).astype(np.float32)
+    nrm = np.repeat(n, 3, axis=0)
+    pos = t.reshape(-1, 3)
+    ax = np.argmax(np.abs(nrm), axis=1)
+    uv = np.where(ax[:, None] == 0, pos[:, [2, 1]], np.where(ax[:, None] == 1, pos[:, [0, 2]], pos[:, [0, 1]]))
+    uv = uv.astype(np.float32) * np.array([1.0, -1.0], dtype=np.float32)
+    return pos, nrm, uv
+
+
+def _pbr(name: str, rgb, alpha: float) -> dict:
+    low = name.lower()
+    mat = {"name": name, "doubleSided": True,
+           "pbrMetallicRoughness": {"baseColorFactor": [*rgb, alpha], "metallicFactor": 0.0,
+                                    "roughnessFactor": 0.05 if alpha < 1.0 else 0.8}}
+    if alpha < 1.0:
+        mat["alphaMode"] = "BLEND"
+    if "led" in low:
+        mat["emissiveFactor"] = list(rgb)
+    return mat
+
+
+def write_glb(groups: dict[str, dict], path: Path) -> int:
+    """A binary glTF 2.0 file: one node and mesh per material, metres, y up."""
+    import struct
+
+    import numpy as np
+
+    gltf = {"asset": {"version": "2.0", "generator": "villa-5130272 export_twinmotion.py",
+                      "copyright": STAMP},
+            "scene": 0, "scenes": [{"name": "Villa 5130272", "nodes": []}],
+            "nodes": [], "meshes": [], "materials": [], "accessors": [], "bufferViews": [], "buffers": []}
+    blob = bytearray()
+    ntri = 0
+
+    def add(arr, kind, minmax=False):
+        arr = np.ascontiguousarray(arr, dtype=np.float32)
+        while len(blob) % 4:
+            blob.append(0)
+        gltf["bufferViews"].append({"buffer": 0, "byteOffset": len(blob), "byteLength": arr.nbytes,
+                                    "target": 34962})
+        blob.extend(arr.tobytes())
+        acc = {"bufferView": len(gltf["bufferViews"]) - 1, "componentType": 5126, "count": len(arr), "type": kind}
+        if minmax:
+            acc["min"] = [float(x) for x in arr.min(axis=0)]
+            acc["max"] = [float(x) for x in arr.max(axis=0)]
+        gltf["accessors"].append(acc)
+        return len(gltf["accessors"]) - 1
+
+    for name in sorted(groups):
+        grp = groups[name]
+        pos, nrm, uv = _mesh_arrays(grp["tris"])
+        if not len(pos):
+            continue
+        ntri += len(pos) // 3
+        gltf["materials"].append(_pbr(name, grp["rgb"], grp["alpha"]))
+        prim = {"attributes": {"POSITION": add(pos, "VEC3", True), "NORMAL": add(nrm, "VEC3"),
+                               "TEXCOORD_0": add(uv, "VEC2")},
+                "material": len(gltf["materials"]) - 1, "mode": 4}
+        gltf["meshes"].append({"name": name, "primitives": [prim]})
+        gltf["nodes"].append({"name": name, "mesh": len(gltf["meshes"]) - 1})
+        gltf["scenes"][0]["nodes"].append(len(gltf["nodes"]) - 1)
+    while len(blob) % 4:
+        blob.append(0)
+    gltf["buffers"].append({"byteLength": len(blob)})
+    js = json.dumps(gltf, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    js += b" " * (-len(js) % 4)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("wb") as fh:
+        fh.write(struct.pack("<III", 0x46546C67, 2, 12 + 8 + len(js) + 8 + len(blob)))
+        fh.write(struct.pack("<II", len(js), 0x4E4F534A) + js)
+        fh.write(struct.pack("<II", len(blob), 0x004E4942) + bytes(blob))
+    return ntri
+
+
+def _obj_name(name: str) -> str:
+    return "".join(c if c.isalnum() or c in "-_." else "_" for c in name).strip("_")
+
+
+def write_obj(groups: dict[str, dict], path: Path) -> int:
+    """The same geometry as Wavefront OBJ with an MTL file (y up, metres), for
+    a Twinmotion version whose import dialog does not list glTF."""
+    mtl = path.with_suffix(".mtl")
+    lines = [f"# Villa 5130272, {STAMP}", f"mtllib {mtl.name}"]
+    mlines = [f"# Villa 5130272, {STAMP}"]
+    base = 1
+    for name in sorted(groups):
+        grp = groups[name]
+        pos, nrm, uv = _mesh_arrays(grp["tris"])
+        if not len(pos):
+            continue
+        on = _obj_name(name)
+        r, g, b = grp["rgb"]
+        mlines += ["", f"newmtl {on}", f"Kd {r:.4f} {g:.4f} {b:.4f}", "Ka 0 0 0", "Ks 0.04 0.04 0.04",
+                   f"d {grp['alpha']:.3f}", "illum 2"]
+        lines += [f"o {on}", f"usemtl {on}"]
+        lines += [f"v {x:.4f} {y:.4f} {z:.4f}" for x, y, z in pos]
+        lines += [f"vn {x:.4f} {y:.4f} {z:.4f}" for x, y, z in nrm]
+        lines += [f"vt {u:.4f} {v:.4f}" for u, v in uv]
+        for i in range(0, len(pos), 3):
+            a, b2, c = base + i, base + i + 1, base + i + 2
+            lines.append(f"f {a}/{a}/{a} {b2}/{b2}/{b2} {c}/{c}/{c}")
+        base += len(pos)
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    mtl.write_text("\n".join(mlines) + "\n", encoding="utf-8")
+    return (base - 1) // 3
+
+
+def export_meshes(ifc_path: Path) -> tuple[Path, Path]:
+    """GLB and OBJ beside the palette's IFC: Twinmotion 2026 does not offer IFC
+    in its import dialog (owner, 2026-10-05), it does take glTF, FBX and OBJ."""
+    groups = tessellate(ifc_path)
+    glb = ifc_path.with_suffix(".glb")
+    obj = ifc_path.with_suffix(".obj")
+    n = write_glb(groups, glb)
+    write_obj(groups, obj)
+    print(f"GLB  {_rel(glb)}   {len(groups)} materials, {n} triangles (and the same as .obj)")
+    return glb, obj
+
+
 def write_placements(data: dict) -> Path:
     path = OUT / "VJH-TM-001_placements.csv"
     rows = []
@@ -230,7 +428,7 @@ def main() -> int:
     pals = yaml.safe_load(PALETTES.read_text(encoding="utf-8"))["palettes"]
     which = [args.palette - 1] if args.palette else range(len(pals))
     for i in which:
-        export_palette(data, i, pals[i]["name"])
+        export_meshes(export_palette(data, i, pals[i]["name"]))
     write_placements(data)
     write_cameras(data)
     shutil.copy(REPO_ROOT / "docs" / "twinmotion-guide.md", OUT / "README.md")

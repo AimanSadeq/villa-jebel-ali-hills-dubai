@@ -17,6 +17,7 @@ Columns: date, decision, reason, approved by Aiman.
 - docs/twinmotion-guide.md tells the owner how to install, import (collapse by material, north offset 30.18 degrees TO VERIFY against a shadow, Dubai location), assign materials, place the furniture and plants, and set the cameras and sun; and that design changes are made in the brief files and re-imported.
 - The browser walkthrough (viewer/model.html) stays as the plan checking tool (reachability, labels, areas, palettes); the Blender pipeline stays for the Phase 7 stills.
 - Twinmotion is a free Community Edition for personal, non-commercial use at the time of writing, TO VERIFY on its site; the laptop's integrated GPU may need reduced quality.
+- Update 2026-10-05: the owner's Twinmotion 2026.2 import dialog offers no IFC file type. The export now also writes, per palette, the same model as `.glb` (binary glTF 2.0) and `.obj` with `.mtl`, tessellated from the palette IFC: y up, metres, one mesh per material with the same material names, UVs in metres so library textures keep their scale. The `.glb` is the file to import; the `.obj` is the fallback if the dialog does not list glTF. Checked by re-importing the GLB in Blender: 26 materials, the model at the plot coordinates.
 
 **Reason.** Owner's answer W1 (2026-10-03), after the Phase 4 walkthrough fell short of "a complete realistic walkthrough" (F3). CLAUDE.md section 8 names the project's own stack for the walkthrough; the owner's instruction takes precedence for the realistic one, and the stack keeps the design, the checks and the deliverables.
 

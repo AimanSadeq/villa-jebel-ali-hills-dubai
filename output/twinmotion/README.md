@@ -34,11 +34,13 @@ This writes `output/twinmotion/`:
 
 | File | What |
 |---|---|
-| `VJH-TM-001_Villa_5130272_palette1_sand_and_oak.ifc` | The villa with palette 1's finishes (and `palette2_…`, `palette3_…`) |
+| `VJH-TM-001_Villa_5130272_palette1_sand_and_oak.glb` | **The file to import.** The villa with palette 1's finishes (and `palette2_…`, `palette3_…`) |
+| `VJH-TM-001_Villa_5130272_palette1_sand_and_oak.obj` and `.mtl` | The same model, if the import dialog does not list `.glb` (keep the `.mtl` beside the `.obj`) |
+| `VJH-TM-001_Villa_5130272_palette1_sand_and_oak.ifc` | The same model as IFC, for programs that read IFC (Twinmotion 2026.2 does not list IFC on import, 2026-10-05) |
 | `VJH-TM-001_placements.csv` | Every furniture piece and tree: position, size, rotation, library kind |
 | `VJH-TM-001_cameras.csv` | The six views of the brief and the sun positions from the sun study |
 
-Each IFC carries the walls, slabs, roof, doors, windows, stair, lift, facade
+Each file carries the walls, slabs, roof, doors, windows, stair, lift, facade
 (stone portal, garden frame, eaves, fins, pergola, LED lines), the garden
 surfaces, the boundary wall and gates, and the interior finishes of one
 palette as thin surfaces. The box furniture, sanitary ware and the
@@ -46,15 +48,19 @@ procedural trees are left out on purpose: Twinmotion's library has real ones.
 
 ## 3. Import into Twinmotion
 
-1. Import (bottom bar), Geometry, choose the palette's `.ifc`. Options:
-   units metres (the IFC is in metres), Collapse: "Collapse all" (it merges
-   the geometry but keeps each material separate, which is how the finishes
-   are meant to be swapped). Not "Keep hierarchy", which brings in every IFC
-   element as its own object. (Twinmotion 2026.1; older versions call the
-   same option "Collapse by material".)
-2. The model lands at the plot's own coordinates: x east-south-east along
-   the plot grid, y north-north-east, z up; the house floor is z 0.00 and
-   the garden ground z -0.45. Nothing needs moving.
+1. Import (bottom bar), Geometry, choose the palette's `.glb` (if the
+   file-type list has no glTF entry, pick "All files" or use the `.obj`).
+   Options: Collapse: "Collapse all" (it merges the geometry but keeps each
+   material separate, which is how the finishes are meant to be swapped);
+   leave the axis and unit options at their defaults (the file is in metres,
+   y up, as glTF requires). (Twinmotion 2026.1; older versions call the
+   collapse option "Collapse by material".)
+2. The model lands at the plot's own coordinates: x east-south-east
+   along the plot grid, the plot's y north-north-east, z up; the house
+   floor is z 0.00 and the garden ground z -0.45. Nothing needs moving. The
+   ground plane "Starting Base" of an empty scene can be hidden (Scene panel,
+   eye icon) so it does not cut the garden. If the house comes in lying on
+   its side, re-import the `.obj` and set the import's up axis to Y.
 3. Orientation: the model's +y is bearing 30.18 degrees (NNE), not north.
    In Twinmotion's Location panel set the north offset so the sun matches:
    rotate north by 30 degrees from +y toward +x (TO VERIFY by checking a
@@ -97,7 +103,7 @@ main wall). Suggested library matches, palette 1 Sand and Oak:
 | Paving, light | Concrete pavers |
 
 Palettes 2 (Marble and Walnut) and 3 (Stone and Charcoal) follow the names
-in their `.ifc`; the swatch sheet VJH-SK-018 shows the intent.
+in their files; the swatch sheet VJH-SK-018 shows the intent.
 
 ## 5. Furniture and plants
 

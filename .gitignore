@@ -31,4 +31,8 @@ viewer/public/assets/
 # (Git LFS cannot be pushed from the cloud sessions). Run the build before the viewer.
 output/ifc/*.ifc
 viewer/public/data/*.ifc
+output/twinmotion/*.ifc
+output/twinmotion/*.glb
+output/twinmotion/*.obj
+output/twinmotion/*.mtl
 output/pdf/VJH-GA-001_Floor_Plans.pdf
