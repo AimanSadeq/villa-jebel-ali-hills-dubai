@@ -34,3 +34,8 @@ not take, because the handover corrected it: the fourth bedroom, the linen
 room, the word majlis, the planted roof over the guest suite, and the garden
 figure of 12 x 20 m, which was never measured. The board is not stored in the
 repository (it could not be saved from the chat); the owner holds it.
+
+| No. | Question | Answer | Consequence |
+|---|---|---|---|
+| R1 | Does the courtyard villa go in the right direction (plans and seven renders sent 2026-10-23) | Not answered yet: the owner's reaction was that the images are very basic. | The design stays for review; the image upgrade goes first. |
+| U1 | Which image upgrade first: a Twinmotion step list, laptop renders with textures, or an AI finishing prompt | **A: the Twinmotion step list.** | docs/twinmotion-steps-courtyard-villa.md: the exact import, material, vegetation and camera steps for this house. The other two upgrades remain available. |

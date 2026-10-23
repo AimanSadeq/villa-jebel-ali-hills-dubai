@@ -5,7 +5,7 @@
   "stamp": "CONCEPT DESIGN, NOT FOR CONSTRUCTION",
   "phase": 4,
   "ifc": "data/VJH-ARCH-001_Villa_5130272.ifc",
-  "built": "2026-10-23T16:20"
+  "built": "2026-10-23T19:08"
  },
  "north_uv": [
   -0.50272,
@@ -22444,6 +22444,7 @@
     "kind": "tree",
     "u": 11.4,
     "v": 17.55,
+    "z": 0.0,
     "height_m": 4.5,
     "trunk_m": 2.0,
     "crown_m": 3.6
@@ -22453,6 +22454,7 @@
     "kind": "palm",
     "u": 29.3,
     "v": 6.0,
+    "z": null,
     "height_m": 7.0,
     "trunk_m": 5.0,
     "crown_m": 5.0
@@ -22462,6 +22464,7 @@
     "kind": "palm",
     "u": 29.3,
     "v": 12.5,
+    "z": null,
     "height_m": 7.0,
     "trunk_m": 5.0,
     "crown_m": 5.0
@@ -22471,6 +22474,7 @@
     "kind": "tree",
     "u": 29.1,
     "v": 18.5,
+    "z": null,
     "height_m": 7.0,
     "trunk_m": 2.2,
     "crown_m": 6.0
@@ -22480,6 +22484,7 @@
     "kind": "palm",
     "u": 29.3,
     "v": 23.5,
+    "z": null,
     "height_m": 7.0,
     "trunk_m": 5.0,
     "crown_m": 5.0
@@ -22489,6 +22494,7 @@
     "kind": "tree",
     "u": 29.1,
     "v": 28.5,
+    "z": null,
     "height_m": 6.0,
     "trunk_m": 2.0,
     "crown_m": 5.0
@@ -22498,6 +22504,7 @@
     "kind": "tree",
     "u": 25.0,
     "v": 32.6,
+    "z": null,
     "height_m": 4.0,
     "trunk_m": 1.6,
     "crown_m": 3.5
@@ -22507,6 +22514,7 @@
     "kind": "tree",
     "u": 16.0,
     "v": 32.6,
+    "z": null,
     "height_m": 4.0,
     "trunk_m": 1.6,
     "crown_m": 3.5
@@ -22516,6 +22524,7 @@
     "kind": "tree",
     "u": 25.0,
     "v": 15.5,
+    "z": null,
     "height_m": 4.0,
     "trunk_m": 1.6,
     "crown_m": 3.5
@@ -22525,6 +22534,7 @@
     "kind": "tree",
     "u": 1.8,
     "v": 11.5,
+    "z": null,
     "height_m": 4.0,
     "trunk_m": 1.6,
     "crown_m": 3.5
@@ -22534,6 +22544,7 @@
     "kind": "tree",
     "u": 1.8,
     "v": 14.2,
+    "z": null,
     "height_m": 4.0,
     "trunk_m": 1.6,
     "crown_m": 3.5
@@ -22543,6 +22554,7 @@
     "kind": "tree",
     "u": 1.8,
     "v": 20.5,
+    "z": null,
     "height_m": 4.0,
     "trunk_m": 1.6,
     "crown_m": 3.5
@@ -22552,6 +22564,7 @@
     "kind": "tree",
     "u": 1.8,
     "v": 27.5,
+    "z": null,
     "height_m": 4.0,
     "trunk_m": 1.6,
     "crown_m": 3.5
@@ -22561,6 +22574,7 @@
     "kind": "palm",
     "u": 1.5,
     "v": 32.8,
+    "z": null,
     "height_m": 7.0,
     "trunk_m": 5.0,
     "crown_m": 5.0
@@ -22570,6 +22584,7 @@
     "kind": "palm",
     "u": 7.0,
     "v": 33.3,
+    "z": null,
     "height_m": 7.0,
     "trunk_m": 5.0,
     "crown_m": 5.0
@@ -22579,6 +22594,7 @@
     "kind": "palm",
     "u": 1.5,
     "v": 1.6,
+    "z": null,
     "height_m": 7.0,
     "trunk_m": 5.0,
     "crown_m": 5.0
@@ -22588,6 +22604,7 @@
     "kind": "palm",
     "u": 25.0,
     "v": 1.6,
+    "z": null,
     "height_m": 7.0,
     "trunk_m": 5.0,
     "crown_m": 5.0

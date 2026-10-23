@@ -390,7 +390,8 @@ def write_placements(data: dict) -> Path:
     g = data["exterior"]
     for t in g["trees"]:
         rows.append({"item": t["species"], "library_kind": SPECIES_KIND.get(t["species"], t["species"]), "room": "garden",
-                     "storey": "site", "x_m": t["u"], "y_m": t["v"], "z_m": g["ground_z"], "width_m": t["crown_m"],
+                     "storey": "site", "x_m": t["u"], "y_m": t["v"],
+                     "z_m": (t["z"] if t.get("z") is not None else g["ground_z"]), "width_m": t["crown_m"],
                      "depth_m": t["crown_m"], "height_m": t["height_m"], "rotation_deg": 0.0, "back_toward": ""})
     with path.open("w", newline="", encoding="utf-8") as fh:
         w = csv.DictWriter(fh, fieldnames=list(rows[0].keys()))

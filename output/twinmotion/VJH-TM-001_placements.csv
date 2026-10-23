@@ -55,7 +55,7 @@ Rug,Rug,family_living,first,6.15,27.95,5.0,2.2,3.0,0.01,0.0,S
 TV unit,TV cabinet with television,bedroom_2,first,13.43,27.95,5.0,1.8,0.45,2.0,90.0,E
 "Bed, 1.60 m","Bed, queen",bedroom_3,first,14.89,27.95,5.0,2.7,2.18,1.25,-90.0,W
 Desk and chair,Desk with office chair,bedroom_3,first,16.27,26.31,5.0,1.2,1.13,0.9,0.0,S
-olive,"Tree, Olea europaea (olive), ornamental",garden,site,11.4,17.55,-0.45,3.6,3.6,4.5,0.0,
+olive,"Tree, Olea europaea (olive), ornamental",garden,site,11.4,17.55,0.0,3.6,3.6,4.5,0.0,
 date_palm,"Palm, Phoenix dactylifera (date palm)",garden,site,29.3,6.0,-0.45,5.0,5.0,7.0,0.0,
 date_palm,"Palm, Phoenix dactylifera (date palm)",garden,site,29.3,12.5,-0.45,5.0,5.0,7.0,0.0,
 ghaf,"Tree, Prosopis (ghaf) or acacia",garden,site,29.1,18.5,-0.45,6.0,6.0,7.0,0.0,

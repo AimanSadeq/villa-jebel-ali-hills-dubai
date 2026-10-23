@@ -258,6 +258,8 @@ def exterior_data(m) -> dict:
                     hedges.append({"b": [round(x, 3) for x in (b[0], b[2], b[1], b[3], z0, z0 + h)]})
         for tr, sp in g.trees:
             trees.append({"species": tr["species"], "kind": sp["kind"], "u": tr["u"], "v": tr["v"],
+                          "z": (float(tr["z"]) if tr.get("z") is not None else None),   # the courtyard tree stands at the house level
+
                           "height_m": sp["height_m"], "trunk_m": sp["trunk_m"], "crown_m": sp["crown_m"]})
     return {"facade": facade, "garden": garden, "hedges": hedges, "trees": trees,
             "ground_z": float(g.flat[0][2]) if g and g.flat else -0.45}
