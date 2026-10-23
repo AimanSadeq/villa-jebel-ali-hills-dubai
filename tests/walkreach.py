@@ -38,7 +38,12 @@ def stand(u, v, znow):
     return zc
 G = 0.3          # grid step; 0.2 is exact but three minutes, 0.3 under a minute
 start = (w["start"]["u"], w["start"]["v"], w["start"]["z"])
-key = lambda u, v, z: (round(u / G), round(v / G), 0 if z < 2.5 else 1)
+# Grid keys count steps from the start: a plain round(v / G) lands on .5 for
+# some starts and Python rounds halves to even, merging neighbouring rows.
+# The third key is the height in half metres, so a flight passing over a
+# walkable floor (the straight stair's lower flight, D-060) is not merged
+# with the floor beneath it.
+key = lambda u, v, z: (round((u - start[0]) / G), round((v - start[1]) / G), round(z / 0.5))
 seen = {key(*start): start}
 frontier = [start]
 while frontier:

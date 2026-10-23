@@ -6,7 +6,7 @@ names the document that must answer it.
 
 Status key: OPEN, ASKED (sent to a third party), CLOSED.
 
-Last updated: 2026-10-02 (ground floor built from the owner's reference; inside the cap by 17.92 m2)
+Last updated: 2026-10-23 (the courtyard villa of the redesign, D-061; 504.22 m2, inside the cap by 158.77 m2)
 
 ## Critical. Blocks Phase 2 room layouts
 
@@ -39,6 +39,8 @@ numbers and a web form only.
 What DDA's published material does establish, from the FAQs retrieved
 2026-10-01: GFA and BUA are different measures, since Q25 excludes balconies from
 GFA but includes them in BUA. The cap on this plot is on GFA.
+
+**Update 2026-10-23, D-061.** The redesign has an open two car carport of 38.91 m2 and a covered master terrace of 9.20 m2 outside GFA on the D-039 reading; with both counted the total would be 552.33 m2, still inside the cap.
 
 ### OI-02 Does the roof stair and elevator enclosure count toward GFA?
 
@@ -423,6 +425,8 @@ Update 2026-10-03: the owner approved the D-011 wall (answer G3) and it is built
 
 Source: DDA FAQs - Building, retrieved 2026-10-01 from https://webzoning.dda.gov.ae/Zoning/Content/dda/FAQs.pdf
 
+**Update 2026-10-23, D-061.** The handover asks for no vehicle gate and no pedestrian gate: the road side is an open planted edge, the walls to the neighbours and the landscape side stay. Whether Meraas requires a wall or a gate on the road side is part of this item.
+
 ### OI-15 Air well for the enclosed Arabic kitchen
 
 | | |
@@ -440,6 +444,8 @@ m air well, 9 m2, which is not in the room program and would have to come out of
 the floor plate. Confirm the reading before Phase 2 layouts.
 
 Source: DDA FAQs - Building, retrieved 2026-10-01 from https://webzoning.dda.gov.ae/Zoning/Content/dda/FAQs.pdf
+
+**Update 2026-10-23, D-061.** The prep kitchen (8.8 m2, enclosed) now adjoins the open courtyard and takes a 2.40 x 0.60 m window onto it (G13). Whether the courtyard, 4.50 x 4.60 m, satisfies the 3 x 3 m air well reading is to confirm with DDA.
 
 ### OI-16 Dubai Civil Defence approval
 
@@ -481,6 +487,8 @@ shaft, 28 risers over 5.00 m. As transcribed the stair room is 4.80 m long;
 the reference's 300 mm treads and 1.5 m landing need 5.45 m, so the model fits
 a 253 mm going. To confirm on the reference's own stair detail or with the
 consultant.
+
+**Update 2026-10-23, D-061.** The redesign's stair is straight: 28 risers of 179 mm, going 270 mm, two flights 1.20 m wide in one lane with a 1.20 m landing at +2.50 m, 2.20 m headroom over the landing under the gallery slab; the lift shaft is 1.60 x 2.15 m. Riser, going, width, headroom and the shaft size are all to confirm.
 
 ### OI-24 Fire separation in the open plan
 
@@ -529,6 +537,8 @@ are kept as the reference draws them and listed in tests/test_layout.py so no
 new one can appear unnoticed. Widening the service passage to 1.5 m would take
 about 0.5 m from the store or the prep kitchen.
 
+**Update 2026-10-23, D-061.** The redesign's narrow passages: the 1.50 m service corridor, the 1.40 m salon lobby and the 1.50 m guest lobby (vestibules). The gallery and the bridge are 1.80 m and the hall 3.30 m.
+
 ### OI-27 First floor design: what answer 12 leaves open
 
 | | |
@@ -560,6 +570,8 @@ Building Code. No value is assumed. Built in the model (D-051) with its top at
 +11.70, 2.70 m above the roof; the maintenance hatch is not modelled yet (Phase 6 roof plan); see also OI-13 (DDA FAQs Building Q29 may limit
 a G+1 villa to 8.40 m to its last point).
 
+**Update 2026-10-23, D-061.** Closed for the redesign: no roof pergola (S1: A, white minimalist; nothing rises above the parapet).
+
 ### OI-29 Facade projections into the setback, and the ledge parapet (VJH-SK-017)
 
 | | |
@@ -576,6 +588,8 @@ front of the living room's tall glass, which nobody can reach (removed inside
 the garden frame in the model, D-051). No value is assumed.
 
 ## Owner decisions outstanding
+
+**Update 2026-10-23, D-061.** Closed for the redesign: every facade element stays inside the 3 m setback line (tests/test_facade.py); no ledge parapet question remains.
 
 ### OI-07 Pool and main garden position
 

@@ -30,9 +30,13 @@ meta:
 # Feature walls (walls.feature): the TV wall between the living room and the
 # dining (answer 12g), both faces, and the salon's long solid wall.
 feature_walls:
-  - {room: living, side: N}
-  - {room: dining, side: S}
-  - {room: salon, side: W}
+  # Redesign (D-060): the foyer's south wall and the stair wall behind the
+  # floating stair (timber slats in the owner's images), the family living's
+  # wall to the guest suite (TV wall), the salon's wall to the guest suite.
+  - {room: entrance_foyer, side: S}
+  - {room: hall, side: N}
+  - {room: living, side: W}
+  - {room: salon, side: E}
 
 palettes:
   - key: palette_1

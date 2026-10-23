@@ -26,7 +26,7 @@ def test_every_furniture_piece_and_tree_has_a_library_kind():
 
 
 def test_the_six_views_name_sun_positions_that_exist():
-    assert set(tm.VIEWS) == {"entrance", "living", "salon", "master", "garden_sunset", "aerial"}
+    assert set(tm.VIEWS) == {"entrance", "foyer", "courtyard", "living", "master", "garden_sunset", "aerial"}
     for name, (pos, look, lens, sun_key, title) in tm.VIEWS.items():
         assert sun_key in DATA["sun"], (name, sun_key)
 
@@ -52,7 +52,7 @@ def test_the_export_writes_the_placements_and_cameras(tmp_path, monkeypatch):
     assert len(rows) == len(DATA["finishes"]["pieces"]) + len(DATA["exterior"]["trees"])
     assert all(r["library_kind"] and r["rotation_deg"] in ("0.0", "90.0", "180.0", "-90.0") for r in rows)
     cams = list(csv.DictReader((tmp_path / "VJH-TM-001_cameras.csv").open(encoding="utf-8")))
-    assert len(cams) == 6 and all(float(c["sun_elevation_deg"]) > 0 for c in cams)
+    assert len(cams) == 7 and all(float(c["sun_elevation_deg"]) > 0 for c in cams)
 
 
 def _read_glb(path):
@@ -98,6 +98,6 @@ def test_the_glb_is_valid_glTF_with_y_up_and_named_materials(tmp_path):
 def test_the_model_tessellates_with_every_surface_named():
     groups = tm.tessellate(tm.IFC_IN)
     names = set(groups)
-    assert {"Beige render", "Warm split face stone", "Glazing", "Lawn"} <= names
+    assert {"White render", "Charcoal stone cladding", "Glazing", "Lawn"} <= names
     assert not any(n.startswith("IfcSurfaceStyle") or n in ("DefaultMaterial", "Unnamed") for n in names), names
     assert groups["Glazing"]["alpha"] < 1.0

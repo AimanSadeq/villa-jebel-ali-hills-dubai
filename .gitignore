@@ -36,3 +36,4 @@ output/twinmotion/*.glb
 output/twinmotion/*.obj
 output/twinmotion/*.mtl
 output/pdf/VJH-GA-001_Floor_Plans.pdf
+output/plans/*.pdf

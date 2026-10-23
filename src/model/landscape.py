@@ -91,8 +91,11 @@ def build(spec: dict, plot: Polygon, house: Polygon, carport: Polygon | None,
     gates = w.get("gates", []) or []
     coords = list(plot.exterior.coords)
     screen_z = (float(w["solid_m"]), float(w["overall_m"]))
+    open_sides = set(w.get("open_sides", []) or [])
     for p, q in zip(coords[:-1], coords[1:]):
         side = _side_of(p, q, plot)
+        if side in open_sides:
+            continue
         strip = LineString([p, q]).buffer(t + 0.001, cap_style=2).intersection(plot)
         strip = strip.difference(inner.buffer(-0.001))
         for gt in gates:
@@ -185,25 +188,27 @@ def build(spec: dict, plot: Polygon, house: Polygon, carport: Polygon | None,
             L.report.append(f"{sp['name']} at ({u:.1f}, {v:.1f}) is outside the plot, left out")
             continue
         hgt, trunk, crown = float(sp["height_m"]), float(sp["trunk_m"]), float(sp["crown_m"])
-        if Point(u, v).buffer(crown / 2).intersects(house.buffer(0.3)):
+        z_tree = float(tr.get("z", g0))
+        if not tr.get("courtyard") and Point(u, v).buffer(crown / 2).intersects(house.buffer(0.3)):
             L.report.append(f"{sp['name']} at ({u:.1f}, {v:.1f}): crown reaches the house, moved out")
             continue
         name = f"{'Palm' if sp['kind'] == 'palm' else 'Tree'}, {sp['name']}"
         if sp["kind"] == "palm":
-            prisms = [(_octagon(u, v, 0.22), g0, trunk)]
-            crown_prisms = [(_octagon(u, v, crown / 2), g0 + trunk - 0.2, 0.9),
-                            (_octagon(u, v, crown * 0.3), g0 + trunk + 0.7, hgt - trunk - 0.7)]
+            prisms = [(_octagon(u, v, 0.22), z_tree, trunk)]
+            crown_prisms = [(_octagon(u, v, crown / 2), z_tree + trunk - 0.2, 0.9),
+                            (_octagon(u, v, crown * 0.3), z_tree + trunk + 0.7, hgt - trunk - 0.7)]
         else:
-            prisms = [(_octagon(u, v, 0.18), g0, trunk)]
+            prisms = [(_octagon(u, v, 0.18), z_tree, trunk)]
             h1 = (hgt - trunk) * 0.6
-            crown_prisms = [(_octagon(u, v, crown / 2), g0 + trunk, h1),
-                            (_octagon(u, v, crown * 0.3), g0 + trunk + h1, hgt - trunk - h1)]
+            crown_prisms = [(_octagon(u, v, crown / 2), z_tree + trunk, h1),
+                            (_octagon(u, v, crown * 0.3), z_tree + trunk + h1, hgt - trunk - h1)]
         L.items.append(Item("IfcGeographicElement", f"{name}, trunk", f"Landscape: {sp['kind']}",
                             "trunk", prisms))
         L.items.append(Item("IfcGeographicElement", f"{name}, crown", f"Landscape: {sp['kind']}",
                             "palm" if sp["kind"] == "palm" else "leaf", crown_prisms))
         L.trees.append((tr, sp))
-        block = block.union(Point(u, v).buffer(0.45))
+        if not tr.get("courtyard"):
+            block = block.union(Point(u, v).buffer(0.45))
 
     # BBQ area (G1).
     bq = spec["bbq"]

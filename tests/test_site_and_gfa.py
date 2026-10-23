@@ -206,20 +206,18 @@ def test_every_room_declares_its_gfa_treatment():
         )
 
 
-def test_master_suite_is_much_larger_than_the_other_bedrooms():
-    """CLAUDE.md section 4: 2.2 to 2.5 times the other bedrooms, compared like
-    with like, the bottom of each range against the bottom, the top against the
-    top."""
+def test_the_master_suite_is_the_largest_bedroom_suite():
+    """The handover (D-060) drops the earlier 2.2 to 2.5 ratio; the master
+    suite, with its walk-in wardrobe, shower bathroom and terrace, is still
+    the largest suite by a clear margin."""
+    program = load_program()
+    anc = {a["key"]: a for a in program["ancillary"]}
     by_key = {r.key: r for r in rooms()}
-    master = by_key["master_suite"]
-    others = [by_key[k] for k in ("bedroom_2", "bedroom_3", "bedroom_4")]
-    for end, m, o in (("minimum", master.low_m2, max(b.low_m2 for b in others)),
-                      ("maximum", master.high_m2, max(b.high_m2 for b in others))):
-        ratio = m / o
-        assert 2.2 - 1e-9 <= ratio <= 2.5 + 1e-9, (
-            f"At the {end} of the ranges the master is {ratio:.2f} times the "
-            "largest bedroom; the brief asks for 2.2 to 2.5"
-        )
+
+    def suite(key):
+        return by_key[key].low_m2 + sum(a["target_m2"] for a in anc.values() if a["serves"] == key)
+    master = suite("master_suite")
+    assert master >= 1.3 * max(suite("bedroom_2"), suite("bedroom_3"))
 
 
 def test_salon_has_its_own_guest_powder_room():
@@ -235,10 +233,14 @@ def test_guest_bedroom_is_the_only_bedroom_on_the_ground_floor():
 
 
 def test_stair_and_lift_land_on_every_level_they_serve():
-    """Since the roof stop was removed, the lift serves ground and first only,
-    and both still need a landing."""
-    keys = {r.key for r in rooms()}
-    assert {"stair_lift_ground", "stair_lift_first"} <= keys
+    """Since the roof stop was removed (D-017), the lift serves ground and
+    first only; the straight stair lands on the gallery bridge (D-060)."""
+    program = load_program()
+    keys = {r.key for r in rooms()} | {a["key"] for a in program["ancillary"]}
+    assert {"lift", "lift_first"} <= keys
+    import yaml as _yaml
+    lay = _yaml.safe_load((REPO_ROOT / "brief" / "layouts.yaml").read_text(encoding="utf-8"))
+    assert lay["stair"]["kind"] == "straight"
 
 
 # Facade orientation
@@ -311,7 +313,8 @@ def test_every_trim_records_the_brief_figure_it_came_from():
     beside its new one, so the trim stays visible and reversible rather than
     quietly becoming the brief."""
     trimmed = _trimmed()
-    assert trimmed, "No trims recorded in brief/program.yaml"
+    # The redesign (D-060) starts from the handover, not from trims of the
+    # CLAUDE.md targets: the earlier trims are in Git history and D-019 to D-029.
     for room in trimmed:
         if "target_min_m2" in room:          # a ranged room, trimmed at its floor
             assert "brief_target_min_m2" in room, f"{room['key']} lost its brief figure"
@@ -399,16 +402,15 @@ def test_the_net_to_gross_factor_is_measured_not_assumed():
     )
 
 
-def test_the_carport_is_sized_for_three_cars():
-    """Owner decision 2026-10-02, D-040: the reference villa's open carport,
-    outside GFA pending DDA (D-039). Three bays of 2.5 x 5.5 m (DDA FAQs
-    Building Q5) must fit inside it."""
+def test_the_carport_is_sized_for_two_cars():
+    """The handover (D-060): an open side by side carport for a large SUV and
+    a standard car, provisional 6.5 x 6.0 m, outside GFA pending DDA (D-039).
+    Two bays of 2.5 x 5.5 m (DDA FAQs Building Q5) must fit inside it."""
     program = load_program()
     spec = next(r for r in program["ground"] if r["key"] == "garage")
-    assert spec["cars"] == 3
-    assert spec["brief_target_m2"] == 55
+    assert spec["outside_the_house"] and spec["gfa"] == "unverified"
     import yaml as _yaml
     lay = _yaml.safe_load((REPO_ROOT / "brief" / "layouts.yaml").read_text(encoding="utf-8"))
-    c = next(r for r in lay["floors"]["ground"]["rooms"] if r["key"] == "garage")
+    c = lay["plates"]["carport"]
     w, d = sorted((c["u"][1] - c["u"][0], c["v"][1] - c["v"][0]))
-    assert w >= 5.5 and d >= 3 * 2.5, f"carport {w:.2f} x {d:.2f} m cannot take three bays"
+    assert w >= 5.5 and d >= 2 * 2.5, f"carport {w:.2f} x {d:.2f} m cannot take two bays"

@@ -73,8 +73,8 @@ procedural trees are left out on purpose: Twinmotion's library has real ones.
 
 Every surface in the import carries a material named for what it is:
 
-- Facade: "Beige render", "Warm split face stone", "Timber, soffits, fins and
-  pergola", "Glazing", "Linear LED line, warm white".
+- Facade (the redesign, D-061): "White render", "Charcoal stone cladding", "Timber,
+  soffits, fins and screens", "Glazing", "Linear LED line, warm white".
 - Interior finishes of the palette: "Floor public: Beige limestone look
   porcelain…", "Wall feature: Travertine slab…", "Wall ceiling: …", and so
   on, one material per finish slot of brief/palettes.yaml.
@@ -93,9 +93,9 @@ main wall). Suggested library matches, palette 1 Sand and Oak:
 | Wall main, ceiling | Paint, warm white matt |
 | Wall feature | Stone, travertine slab |
 | Wall wet | Stone, light limestone, large tiles |
-| Beige render | Plaster or stucco, beige |
-| Warm split face stone | Stone, split face or rock face, warm |
-| Timber, soffits, fins and pergola | Wood, teak or iroko |
+| White render | Plaster or stucco, white, smooth |
+| Charcoal stone cladding | Stone, charcoal or dark basalt, large panels |
+| Timber, soffits, fins and screens | Wood, teak or iroko |
 | Glazing | Glass, clear, low iron |
 | Linear LED line, warm white | Neon or emissive, warm white 2700 K |
 | Lawn | Grass, short |
@@ -125,8 +125,8 @@ Scatter paint is quicker for the hedges along the planting beds.
 
 ## 6. Sun, cameras and the views
 
-`VJH-TM-001_cameras.csv`: for each of the six views of the brief (entrance,
-double height living room, salon, master suite, garden at sunset, aerial),
+`VJH-TM-001_cameras.csv`: for each of the seven views (entrance and carport, foyer and stair, courtyard,
+family living, master bedroom, garden at sunset, aerial),
 the camera position and target in metres, the lens, and the sun's date, time,
 azimuth and elevation from the sun study. In Twinmotion create an Image
 (Media panel), place the camera by typing the position, point it at the

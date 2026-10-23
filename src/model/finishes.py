@@ -104,6 +104,8 @@ def finish_data(m) -> dict:
         for r in rooms:
             if r.key in skip_keys or any(s in r.key for s in SKIP):
                 continue
+            if r.key in getattr(m, 'open_sky_keys', set()):
+                continue
             zone = zone_of(r.key)
             poly = r.poly
             under = poly.intersection(voids).area if (voids is not None and storey == "ground") else 0.0

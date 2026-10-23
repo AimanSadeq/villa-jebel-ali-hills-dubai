@@ -18,3 +18,19 @@ set is complete.
 | S5 | Home office: upstairs workspace only (handover), ground floor office only, or both | **A: upstairs workspace only,** in the family lounge. | No ground floor office or office WC in the new program. |
 | S6 | Floor heights: 4.5 m ground and 3.6 m first, 5.0 and 4.0 as now, or 4.0 and 3.4 | **B: 5.0 m ground, 4.0 m first,** as the current design: the grandest foyer and living room, 10.2 m overall with the 1.20 m parapet. | D-030 stands for the new design. Stair of 28 risers over 5.0 m, as now (OI-23 TO VERIFY). |
 | S7 | Start the first design now, or wait for the owner's ChatGPT images | **B: wait for the images.** | The first design is drawn only after the images arrive, so it follows them from the start. |
+
+## The owner's images, received 2026-10-23
+
+One board from his work with the other assistant: a front elevation from the
+road, a rear elevation from the garden, both floor plans, and four interiors
+(the double height foyer with a floating stair and a tree, the family living
+toward the garden, the dining with the courtyard, the master bedroom). What the
+redesign takes from it as the style reference (S1: A): white render volumes
+with flat roofs; a charcoal stone volume around the double height entrance;
+timber soffits under the eaves and the carport; vertical timber fins; large
+glass in slim dark frames; warm interiors with timber slat walls, light stone
+floors and cream furniture; palms and planted beds at the front. What it does
+not take, because the handover corrected it: the fourth bedroom, the linen
+room, the word majlis, the planted roof over the guest suite, and the garden
+figure of 12 x 20 m, which was never measured. The board is not stored in the
+repository (it could not be saved from the chat); the owner holds it.

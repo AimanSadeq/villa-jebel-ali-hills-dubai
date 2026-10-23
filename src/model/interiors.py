@@ -39,7 +39,9 @@ T_EXT = 0.25
 
 # Where private rooms take their doors from, in order of preference (D-032,
 # D-033). Shared with src/model/architecture.py.
-HUBS = ["corridor", "entrance_foyer", "hall_arm", "family_hall", "family_living"]
+HUBS = ["corridor", "entrance_foyer", "hall_arm", "family_hall", "family_living",
+        "hall", "gallery", "gallery_west", "north_lobby", "guest_lobby", "salon_lobby",
+        "service_corridor"]
 
 
 @dataclass

@@ -30,7 +30,7 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 FACADE = REPO_ROOT / "brief" / "facade.yaml"
 T_EXT = 0.25
 CENTRE_UV = (12.5, 18.3)        # inside the house, to tell the faces apart
-OPEN_AIR = {"garage", "main_entrance"}   # the open carport and porch (D-039, D-040)
+OPEN_AIR = {"garage", "main_entrance", "courtyard"}   # the open carport, porch and court
 
 
 @dataclass
@@ -159,16 +159,17 @@ def boxes(windows: list[dict], spec: dict | None = None,
     named = _named(spec)
     out = list(named)
     notes: list[str] = []
-    hw = spec["hot_windows"]
+    hw = spec.get("hot_windows")
     for w in windows:
-        if "hot" not in w["name"]:
+        if hw is None or "hot" not in w["name"]:
             continue
         sur = _surround(w, hw, inside)
         if any(b.overlaps(n) for b in sur for n in named):
             notes.append(f"No surround on '{w['name']}': it would clash with the facade elements.")
             continue
         out += sur
-    out += _pergola(spec["pergola"])
+    if spec.get("pergola"):
+        out += _pergola(spec["pergola"])
     return out, notes
 
 

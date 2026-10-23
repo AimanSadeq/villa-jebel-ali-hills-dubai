@@ -1,8 +1,10 @@
-"""Checks on the generated plan in brief/layouts.yaml.
+"""Checks on the courtyard villa's plan in brief/layouts.yaml (D-060).
 
-These test the geometry a builder would care about, not the estimate: every room
-is placed once, nothing overlaps, the upper floor sits on the lower one, and the
-stair cores stack.
+These test the geometry a builder would care about and the owner's handover
+acceptance tests: every room placed once, nothing overlaps, the first floor
+enclosed over the guest suite and the powder room, exactly three bedrooms
+upstairs, the courtyard open to the sky, the foyer double height, no gates,
+the stair straight, and the plan inside the GFA cap and behind the setbacks.
 """
 
 from __future__ import annotations
@@ -13,112 +15,163 @@ from pathlib import Path
 
 import pytest
 import yaml
-from shapely.geometry import Point, Polygon, box
+from shapely.geometry import Polygon, box
+from shapely.ops import unary_union
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
 LAYOUTS = REPO_ROOT / "brief" / "layouts.yaml"
 PROGRAM = REPO_ROOT / "brief" / "program.yaml"
+GARDEN = REPO_ROOT / "brief" / "garden.yaml"
 
 lay = yaml.safe_load(LAYOUTS.read_text(encoding="utf-8"))
 prog = yaml.safe_load(PROGRAM.read_text(encoding="utf-8"))
+garden = yaml.safe_load(GARDEN.read_text(encoding="utf-8"))
 
 
 def _box(r):
     return box(r["u"][0], r["v"][0], r["u"][1], r["v"][1])
 
 
+def _room(floor, key):
+    return next(r for r in lay["floors"][floor]["rooms"] + lay["floors"][floor]["circulation"]
+                if r["key"] == key)
+
+
+PLACED = {r["key"] for f in ("ground", "first") for r in lay["floors"][f]["rooms"]}
+
+
 def test_every_program_room_is_placed_exactly_once():
-    """Every room of brief/program.yaml, the reference villa's own dress rooms,
-    toilets and bays (the ancillary list) included, is placed once. A room the
-    owner deferred is not placed and carries its reason (the linen store was
-    deferred by 12l and removed by FF4, D-050)."""
+    """Every room of brief/program.yaml and every ancillary room is placed
+    once; the carport is a roofed plate outside the house, not a room."""
     placed = [r["key"] for f in ("ground", "first") for r in lay["floors"][f]["rooms"]]
-    wanted = [r["key"] for f in ("ground", "first") for r in prog[f] if not r.get("deferred")]
+    wanted = [r["key"] for f in ("ground", "first") for r in prog[f]
+              if not r.get("outside_the_house")]
     wanted += [a["key"] for a in prog.get("ancillary", []) or []]
     assert sorted(placed) == sorted(wanted)
 
 
-def test_the_linen_store_is_removed_and_on_record():
-    """D-050, first floor answer FF4: no separate linen store; linen in the
-    dressing rooms' built-in wardrobes. Nothing else is deferred."""
+def test_the_removed_rooms_are_on_record_and_not_placed():
+    """The handover: no fourth bedroom, no linen room, no ground floor office
+    (S5), no pool (D-041). Each removal names its decision."""
     removed = {r["key"]: r for r in prog.get("removed", [])}
-    assert removed["linen_storage"]["decision"] == "D-050"
-    assert not [r for f in ("ground", "first") for r in prog[f] if r.get("deferred")]
-    placed = {r["key"] for f in ("ground", "first") for r in lay["floors"][f]["rooms"]}
-    assert "linen_storage" not in placed
+    for key in ("bedroom_4", "linen_storage", "home_office", "pool", "drivers_room", "sunroom"):
+        assert key in removed and removed[key]["decision"], key
+        assert key not in PLACED, key
 
 
-def test_first_floor_answers_are_built():
-    """D-050: the family room opens to the gallery (FF5) and the first floor
-    wall at the end of the living room void stands on the TV wall (FF7)."""
-    joins = {frozenset(j.split("/")) for j in lay["open_joins"]["first"]}
-    assert frozenset(("gallery", "family_living")) in joins
-    assert not any(d["no"] == "F13" for d in lay["doors"])
-    living, dining = _room("ground", "living"), _room("ground", "dining")
-    b4 = _room("first", "bedroom_4")
-    void = next(v for v in lay["floors"]["first"]["voids"] if v["key"] == "void_over_living")
-    # In the grid the road-to-garden axis is u and the along-road axis is v.
-    assert abs(b4["v"][0] - dining["v"][0]) < 0.01 and abs(void["v"][1] - living["v"][1]) < 0.01
+def test_exactly_three_bedrooms_upstairs_each_with_its_own_bathroom():
+    """The handover's acceptance test: master plus two, three en-suites."""
+    first = {r["key"] for r in lay["floors"]["first"]["rooms"]}
+    bedrooms = {k for k in first if (k.startswith("bedroom_") or k == "master_suite")
+                and not any(x in k for x in ("dress", "toilet"))}
+    assert bedrooms == {"master_suite", "bedroom_2", "bedroom_3"}
+    assert {"master_toilet", "bedroom_2_toilet", "bedroom_3_toilet"} <= first
+    serves = {a["key"]: a["serves"] for a in prog["ancillary"]}
+    assert serves["master_toilet"] == "master_suite"
+    assert serves["bedroom_2_toilet"] == "bedroom_2" and serves["bedroom_3_toilet"] == "bedroom_3"
 
 
-def test_the_sunroom_is_removed_and_on_record():
-    placed = {r["key"] for f in ("ground", "first") for r in lay["floors"][f]["rooms"]}
-    assert "sunroom" not in placed
-    removed = {r["key"]: r for r in prog.get("removed", [])}
-    assert removed["sunroom"]["brief_target_m2"] == 20
+def test_the_master_has_an_integrated_walk_in_and_a_shower_bathroom():
+    """Handover: the walk-in closet opens from the bedroom and the bathroom
+    from the closet; shower only, no bathtub."""
+    pairs = {frozenset((d["a"], d["b"])) for d in lay["doors"] if d["kind"] != "fixed"}
+    assert frozenset(("master_suite", "master_dress")) in pairs
+    assert frozenset(("master_dress", "master_toilet")) in pairs
+    bath = next(a for a in prog["ancillary"] if a["key"] == "master_toilet")
+    assert "shower" in bath["name"].lower()
+    assert "bathtub" not in " ".join(prog["interiors"]["master_suite"]["bathroom"]["fittings"])
+
+
+def test_the_first_floor_is_enclosed_over_the_guest_suite_and_the_powder_room():
+    """The defect the owner rejected in the other assistant's images: an open
+    planted roof over the guest suite. Here the first floor rooms cover the
+    guest bedroom, its bathroom and the powder room entirely, and no void,
+    terrace or balcony lies over them."""
+    g = {r["key"]: _box(r) for r in lay["floors"]["ground"]["rooms"]}
+    target = unary_union([g["guest_bedroom"], g["guest_toilet"], g["guest_powder"]])
+    f = lay["floors"]["first"]
+    enclosed = unary_union([_box(r) for r in f["rooms"] + f["circulation"]])
+    enclosed = enclosed.buffer(0.08, join_style=2).buffer(-0.08, join_style=2)   # close the partitions
+    assert target.intersection(enclosed).area / target.area > 0.999
+    opens = unary_union([_box(r) for r in f["voids"] + f["outdoor"]])
+    assert opens.intersection(target).area < 1e-6
+    over = {r["key"] for r in f["rooms"] if _box(r).intersection(target).area > 1.0}
+    assert "bedroom_2" in over
+
+
+def test_the_courtyard_is_open_to_the_sky_and_the_foyer_double_height():
+    """S2: a central court of about 22 m2; the handover: keep only the
+    intentional voids, the courtyard and the double height foyer."""
+    assert lay["open_to_sky"] == ["courtyard"]
+    court = _box(_room("ground", "courtyard"))
+    assert 20.0 <= court.area <= 25.0
+    void_c = next(v for v in lay["floors"]["first"]["voids"] if v["key"] == "void_over_courtyard")
+    assert _box(void_c).equals(court)
+    assert lay["double_height"] == ["entrance_foyer"]
+    void_f = next(v for v in lay["floors"]["first"]["voids"] if v["key"] == "void_over_foyer")
+    assert _box(void_f).contains(_box(_room("ground", "entrance_foyer")).buffer(-0.01))
+    assert {v["key"] for v in lay["floors"]["first"]["voids"]} == {"void_over_foyer", "void_over_courtyard"}
+
+
+def test_no_gates_and_an_open_two_car_carport():
+    """Handover: no vehicle gate, no pedestrian gate; an open carport for a
+    large SUV and a standard car. Two bays of 2.5 x 5.5 m (DDA FAQs Building
+    Q5) must fit."""
+    assert garden["wall"]["gates"] == [] and "road" in garden["wall"]["open_sides"]
+    c = lay["plates"]["carport"]
+    w, d = sorted((c["u"][1] - c["u"][0], c["v"][1] - c["v"][0]))
+    assert w >= 5.5 and d >= 2 * 2.5
+    assert "garage" not in PLACED
+
+
+def test_the_family_living_opens_to_the_garden():
+    """Handover: direct shaded door access from the family living to the garden."""
+    d = next(d for d in lay["doors"] if d["a"] == "living" and d["b"] == "outside")
+    assert d["kind"] == "sliding" and d["u"] > _room("ground", "living")["u"][1]
 
 
 @pytest.mark.parametrize("floor", ["ground", "first"])
 def test_no_two_rooms_overlap(floor):
-    rooms = lay["floors"][floor]["rooms"] + lay["floors"][floor]["circulation"]
+    f = lay["floors"][floor]
+    rooms = f["rooms"] + f["circulation"] + f.get("voids", []) + f.get("outdoor", [])
     for a, b in combinations(rooms, 2):
         assert _box(a).intersection(_box(b)).area < 1e-6, (
-            f"{a['key']} and {b['key']} overlap on the {floor} floor"
-        )
+            f"{a['key']} and {b['key']} overlap on the {floor} floor")
 
 
-def test_the_first_floor_stays_inside_the_envelope_and_cantilevers_no_further_than_the_reference():
-    """The first floor is the reference's, a placeholder until the owner decides
-    it (D-038). It may cantilever past the ground floor as the reference does
-    (its bedroom wing runs about 1.6 m past the guest wing), but never past a
-    setback line; the placeholder was trimmed there."""
-    sys.path.insert(0, str(REPO_ROOT / "src"))
+def test_the_house_stays_behind_the_setback_lines():
+    """Both outlines, the terrace and the open carport inside the 3 m envelope."""
     from model.massing import site_to_grid
     from model.site import buildable_envelope
 
-    first = Polygon(lay["outlines"]["first"])
-    ground = Polygon(lay["outlines"]["ground"])
-    env = site_to_grid(buildable_envelope())
-    assert first.buffer(-0.01).within(env), "the first floor crosses a setback line"
-    over = first.difference(ground.buffer(0.01))
-    reach = max((ground.distance(Point(x, y)) for x, y in over.exterior.coords),
-                default=0.0) if not over.is_empty and over.geom_type == "Polygon" else 0.0
-    assert reach <= 1.8, f"the first floor cantilevers {reach:.2f} m past the ground floor"
+    env = site_to_grid(buildable_envelope()).buffer(0.01)
+    assert env.contains(Polygon(lay["outlines"]["ground"]))
+    assert env.contains(Polygon(lay["outlines"]["first"]))
+    assert env.contains(_box(lay["plates"]["carport"]))
+    for r in lay["floors"]["first"]["outdoor"]:
+        assert env.contains(_box(r)), r["key"]
 
 
-def test_the_stair_and_lift_stack():
-    """The ground floor stair lane lies mostly under the first floor stair room
-    (the dog leg's return flight runs over the stair hall), and the lift shafts
-    coincide."""
-    def room(f, k):
-        return next(r for r in lay["floors"][f]["rooms"] if r["key"] == k)
-    g, f = _box(room("ground", "stair_lift_ground")), _box(room("first", "stair_lift_first"))
-    assert g.intersection(f).area >= 0.6 * g.area
-    lg, lf = _box(room("ground", "lift")), _box(room("first", "lift_first"))
+def test_the_stair_is_straight_in_the_hall_and_the_lift_stacks():
+    """Handover: a straight floating statement stair. Its lane lies in the
+    hall along the courtyard; the lift shafts coincide."""
+    s = lay["stair"]
+    assert s["kind"] == "straight"
+    hall = _box(_room("ground", s["hall"]))
+    lane = box(hall.bounds[0], s["v"][0], hall.bounds[2], s["v"][1])
+    assert hall.contains(lane.buffer(-0.001))
+    lg, lf = _box(_room("ground", "lift")), _box(_room("first", "lift_first"))
     assert lg.intersection(lf).area >= 0.9 * min(lg.area, lf.area)
 
 
-# Circulation narrower than the 1.80 m the owner set for corridors (D-026,
-# DDA FAQs Building Q12), each as drawn in the reference villa and flagged in
-# docs/open-items.md (OI-26). A new narrow passage fails this test.
+# Circulation narrower than 1.80 m (D-026, DDA FAQs Building Q12, OI-21), each
+# a short vestibule or a service passage, listed so a new narrow corridor fails.
 KNOWN_NARROW = {
-    "service_passage": "reference: 1.0 m passage behind the store, OI-26",
-    "service_steps": "reference: steps up from the carport, not a corridor",
-    "stair_hall": "reference: 1.5 m hall between the lift and the stair, OI-26",
-    "corridor_first": "first floor placeholder, 1.5 m, OI-26",
-    "gallery": "first floor placeholder, 1.5 m, OI-26",
+    "service_corridor": "1.50 m service passage behind the carport, OI-26",
+    "salon_lobby": "1.40 m vestibule between the hall and the salon",
+    "guest_lobby": "1.50 m vestibule between the hall and the guest suite",
 }
 
 
@@ -131,141 +184,60 @@ def test_circulation_is_the_dda_width_or_a_known_exception():
                     f"{c['key']} on the {floor} floor is {width:.2f} m wide and not a known exception")
 
 
-def test_the_measured_plan_fits_the_cap():
-    """The hard limit, tested on drawn geometry. Strict xfail until 2026-10-02,
-    when trim D-027 brought the plan inside the cap and the marker came off."""
+def test_the_measured_plan_fits_the_cap_and_sits_near_the_handover_range():
+    """The hard limit and the handover's target of about 450 to 500 m2
+    enclosed, optimised rather than filled. The plan lands within a few
+    square metres of the top of that range; the courtyard is not counted."""
     m = lay["gfa_measured"]
     assert m["total"] <= m["cap"]
-
-
-@pytest.mark.xfail(strict=True, reason=(
-    "D-046 and first floor answer FF6: the owner keeps 3.01 m2 inside the cap (2.17 m2 before R4, 1.30 m2 before FF7) and declines "
-    "the D-005 reserve for now, knowing a remeasure could take the house over."))
-def test_the_measured_plan_holds_the_recommended_margin():
-    """D-005: hold about 10 m2 back for the consultant's remeasure. A strict
-    expected failure from D-029 (6.52 m2) until the central hall plan, D-036,
-    restored the margin, and again from answer 12 (D-046)."""
-    m = lay["gfa_measured"]
-    assert m["margin"] >= 9.99 - 1e-6, f"only {m['margin']:.2f} m2 held back"
-
-
-def test_there_is_no_drivers_room_and_its_removal_is_on_record():
-    """Owner decision 2026-10-02, D-028."""
-    placed = {r["key"] for f in ("ground", "first") for r in lay["floors"][f]["rooms"]}
-    assert "drivers_room" not in placed
-    assert any(r["key"] == "drivers_room" for r in prog.get("removed", []))
-
-
-def test_the_outdoor_bathroom_and_plant_room_are_attached_to_the_carport():
-    """D-043: the old driver's slot, split. Both share a wall with the carport;
-    the bathroom opens onto it."""
-    g = {r["key"]: r for r in lay["floors"]["ground"]["rooms"]}
-    car = _box(g["garage"])
-    for k in ("outdoor_bathroom", "plant_room"):
-        d = _box(g[k]).distance(car)
-        assert d <= 0.30, f"{k} is {d:.2f} m from the carport"
-
-
-def test_the_outdoor_bathroom_counts_toward_gfa():
-    """It is enclosed floor area, so it counts, like everything else here."""
-    progs = {r["key"]: r for r in prog["ground"]}
-    assert progs["outdoor_bathroom"]["gfa"] == "counts"
-
-
-@pytest.mark.xfail(strict=True, reason=(
-    "D-046 and first floor answer FF6: the owner keeps 3.01 m2 (2.17 m2 before R4, 1.30 m2 before FF7) and declines the 5 m2 floor "
-    "for now (offered a 0.50 m step back of bedrooms 2 and 3 for 7.80 m2)."))
-def test_the_measured_plan_holds_a_real_margin():
-    """The floor below the D-005 recommendation: never design with nothing in
-    hand against a consultant's remeasure."""
-    assert lay["gfa_measured"]["margin"] >= 5.0
-
-
-def _room(floor, key):
-    return next(r for r in lay["floors"][floor]["rooms"] if r["key"] == key)
-
-
-def test_the_plan_is_the_reference_mirrored_with_the_carport_south():
-    """D-038, answer 7: the reference villa facing the road, mirrored, so the
-    carport takes the south (low v) end. Answer 12a B: the dining takes the
-    north rear corner, the salon the old lawn court beside it."""
-    rooms = lay["floors"]["ground"]["rooms"]
-    car, dining = _room("ground", "garage"), _room("ground", "dining")
-    salon = _room("ground", "salon")
-    assert car["v"][0] <= min(r["v"][0] for r in rooms) + 1e-6
-    assert dining["v"][1] >= max(r["v"][1] for r in rooms) - 0.6
-    assert dining["u"][1] >= max(r["u"][1] for r in rooms) - 1e-6
-    assert abs(salon["v"][1] - dining["v"][1]) < 0.01, "12d: the salon lines up with the dining"
-    assert lay["meta"]["massing_option"] == "R"
-
-
-def test_answer_12_open_plan_with_a_tv_wall():
-    """D-046: the salon is open to the foyer, the living room and the
-    dining (12c, 12h); the island kitchen opens to the living room; a solid
-    wall stands between the living room and the dining for the TV (12g)."""
-    joins = {frozenset(j.split("/")) for j in lay["open_joins"]["ground"]}
-    for pair in (("salon", "dining"), ("salon", "entrance_foyer"), ("salon", "living"),
-                 ("show_kitchen", "living"), ("entrance_foyer", "living")):
-        assert frozenset(pair) in joins, f"{pair} should be open"
-    assert frozenset(("living", "dining")) not in joins
-    gap = _box(_room("ground", "living")).distance(_box(_room("ground", "dining")))
-    assert 0.10 <= gap <= 0.30, f"no TV wall between the living room and the dining ({gap:.2f} m)"
-    assert "living" in lay["double_height"] and "entrance_foyer" in lay["double_height"]
-
-
-def test_the_arabic_kitchen_is_walled_with_an_open_entrance_from_the_kitchen():
-    """D-046, answer 12m: walled from the service passage, entered from the
-    island kitchen by an opening with no door leaf."""
-    joins = {frozenset(j.split("/")) for j in lay["open_joins"]["ground"]}
-    assert frozenset(("arabic_kitchen_bay", "service_passage")) not in joins
-    entry = [d for d in lay["doors"] if {d["a"], d["b"]} == {"show_kitchen", "arabic_kitchen"}]
-    assert len(entry) == 1 and entry[0]["kind"] == "open"
+    assert m["margin"] >= 100.0
+    assert 450.0 <= m["total"] <= 510.0, m["total"]
+    assert m["first_floor_voids"] > 45.0 and m["courtyard_open_to_sky_m2"] > 20.0
 
 
 def test_the_door_schedule_is_complete_and_numbered_once():
-    """D-046: the doors the owner was shown on VJH-SK-013, each once, each with
-    its source, each between placed rooms or to the outside. F13 (family
-    room) is retired by FF5: the family room opens to the gallery."""
     nos = [d["no"] for d in lay["doors"]]
-    assert len(nos) == len(set(nos)) == 34
-    assert "F13" not in nos
+    assert len(nos) == len(set(nos)) == 33
     placed = {r["key"] for f in ("ground", "first")
               for r in lay["floors"][f]["rooms"] + lay["floors"][f]["circulation"]}
+    voids = {v["key"] for v in lay["floors"]["first"]["voids"]}
     for d in lay["doors"]:
         assert d["source"], d["no"]
-        assert d["a"] in placed and (d["b"] in placed or d["b"] == "outside"), d["no"]
+        assert d["a"] in placed, d["no"]
+        assert d["b"] in placed or d["b"] == "outside" or (d["kind"] == "fixed" and d["b"] in voids), d["no"]
 
 
-@pytest.mark.parametrize("bedroom", ["guest_bedroom", "master_suite", "bedroom_2",
-                                     "bedroom_3", "bedroom_4"])
+@pytest.mark.parametrize("bedroom", ["guest_bedroom", "master_suite", "bedroom_2", "bedroom_3"])
 def test_every_bedroom_has_an_entry_door_from_a_hall(bedroom):
-    """The defect in the 2026-10-02 build (commit 6322806): no bedroom had a
-    door from a hall, only to its own dress or WC. Each now has one."""
-    halls = {"entrance_foyer", "corridor_first", "gallery", "lift_lobby", "landing"}
-    assert any(d["kind"] != "open" and {d["a"], d["b"]} & halls and bedroom in (d["a"], d["b"])
+    """Each bedroom opens off a hall or its own lobby or dressing room."""
+    halls = {"hall", "gallery", "gallery_west", "north_lobby", "guest_lobby", "bedroom_3_dress"}
+    assert any(d["kind"] not in ("open", "fixed") and {d["a"], d["b"]} & halls and bedroom in (d["a"], d["b"])
                for d in lay["doors"]), f"{bedroom} has no door from a hall"
 
 
-def test_the_house_stays_behind_the_setback_lines():
-    """Every enclosed ground floor room is inside the buildable envelope. Only
-    the open carport and the porch reach into the front setback, as in the
-    reference (TO VERIFY), and both stay on the plot."""
-    sys.path.insert(0, str(REPO_ROOT / "src"))
-    from model.massing import site_to_grid
-    from model.site import buildable_envelope, plot_polygon
+def test_every_room_can_be_reached_and_the_generator_agrees():
+    """The generator's own checks: walls of the standard thickness, nothing
+    outside the envelope, every room reached on foot, the overlap test."""
+    from model import layout_court
+    assert layout_court.check(layout_court.resolve_doors()) == []
 
-    env = site_to_grid(buildable_envelope()).buffer(0.01)
-    plot = site_to_grid(plot_polygon()).buffer(0.01)
-    porch = {p["key"] for p in lay.get("porches", []) or []}
-    for r in lay["floors"]["ground"]["rooms"] + lay["floors"]["ground"]["circulation"]:
-        b = _box(r)
-        if r["key"] == "garage" or r["key"] in porch:
-            assert b.within(plot), f"{r['key']} leaves the plot"
-        else:
-            assert b.within(env), f"{r['key']} crosses a setback line"
+
+def test_the_formal_room_is_the_salon_never_majlis():
+    """D-047 and S3: salon everywhere."""
+    names = [r["key"] + " " + r["name"] for f in ("ground", "first") for r in prog[f]]
+    names += [a["key"] + " " + a["name"] for a in prog["ancillary"]]
+    assert not any("majlis" in n.lower() for n in names)
+    assert "majlis" not in LAYOUTS.read_text(encoding="utf-8").lower()
+    assert "salon" in PLACED
+
+
+def test_the_arabic_kitchen_looks_into_the_courtyard():
+    """OI-15: the closed prep kitchen gets light and air from the open court."""
+    assert any(d["a"] == "arabic_kitchen" and d["b"] == "courtyard" and d["kind"] == "fixed"
+               for d in lay["doors"])
 
 
 def test_there_is_no_pool():
-    """D-041: the owner does not want a pool."""
+    """D-041: the owner does not want a pool; the handover agrees."""
     assert not lay.get("pool")
     assert any(r["key"] == "pool" for r in prog.get("removed", []))

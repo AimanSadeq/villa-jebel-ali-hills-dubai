@@ -16,7 +16,7 @@ licensed structural engineer must review, complete, and stamp all final drawings
 | Maximum GFA | 662.99 m² (7,136.36 sq ft) |
 | Maximum height | G+1 |
 | Setbacks | 3 m on all sides |
-| Current phase | Phase 4 built (facade, three palettes, furniture, garden, real materials, Blender renders), in review; GFA 659.98 m2, 3.01 m2 inside the cap |
+| Current phase | Redesign (D-060, D-061): the courtyard villa from the owner's handover of 2026-10-23, built end to end for his review; 504.22 m2 enclosed, 158.77 m2 inside the cap. The active brief is docs/current-approved-brief.md |
 
 ## Start here
 
@@ -43,7 +43,8 @@ pip install -r requirements.txt
 | `python src/analysis/gfa_check.py --strict` | Same, failing when unverified areas breach the cap |
 | `python src/analysis/plan_feasibility.py` | Can the program be laid out inside the massing |
 | `python src/analysis/trim_packages.py` | Cost trim packages against the plan geometry |
-| `python src/model/layout_gen.py` | Generate the room layout, writes brief/layouts.yaml |
+| `python src/model/layout_court.py` | The courtyard villa's plan (D-061), writes brief/layouts.yaml. The earlier generators (layout_gen.py, assemble_reference.py) stay for the record |
+| `python src/analysis/geometry_validation.py` | The handover's acceptance tests as geometry, the areas and the measured garden: output/reports/geometry_validation.md and output/plans/floor_overlay.pdf |
 | `python src/drawings/floor_plans.py` | Ground and first floor plans, A1 at 1:100 |
 | `python src/drawings/site_plan.py` | Site plan DXF and PDF |
 | `python src/analysis/sun_study.py` | Sun paths and facade solar exposure |

@@ -1,4 +1,5 @@
-"""Facade proposal, brief/facade.yaml through src/model/facade.py (answer R3).
+"""The facade of the redesign, brief/facade.yaml through src/model/facade.py
+(D-060, S1: A, white minimalist after the owner's images).
 
 CONCEPT DESIGN, NOT FOR CONSTRUCTION.
 """
@@ -15,59 +16,56 @@ from model import facade  # noqa: E402
 
 SPEC = facade.load()
 HEIGHTS = yaml.safe_load((REPO_ROOT / "brief" / "massing.yaml").read_text(encoding="utf-8"))["heights"]
+LAY = yaml.safe_load((REPO_ROOT / "brief" / "layouts.yaml").read_text(encoding="utf-8"))
 
 
-def test_everything_but_the_carport_piers_stays_inside_the_setback_line():
-    """The carport already stands in the setback (D-044, TO VERIFY); nothing
-    else of the facade may."""
+def test_everything_stays_inside_the_setback_line():
+    """No facade element crosses the 3 m setback (OI-29 noted projections;
+    the redesign keeps them all inside)."""
     bx, _ = facade.boxes([], SPEC)
-    assert set(facade.check(bx)) <= {"Carport pier, road north", "Carport pier, road south"}
+    assert facade.check(bx) == []
 
 
-def test_the_portal_and_the_frame_add_no_height():
-    """Only the pergola (R1, R2, OI-28) rises above the parapet top; DDA FAQ
-    Q29 may cap the height (OI-13)."""
+def test_nothing_adds_height():
+    """The entrance stone box and the eaves stop at the parapet top (DDA FAQ
+    Q29 may cap the height, OI-13). No roof pergola in the redesign."""
     top = float(HEIGHTS["overall_m"])
     for e in SPEC["elements"]:
         assert e["z"][1] <= top + 1e-6, e["name"]
+    assert "pergola" not in SPEC
 
 
-def test_the_pergola_is_open_and_over_the_garden_frame():
-    """R1 B, R2 A: an open pergola above the living room, set back from the
-    roof edge, inside the garden frame's span."""
-    p = SPEC["pergola"]
-    legs = [e for e in SPEC["elements"] if e["name"].startswith("Garden frame") and "leg" in e["name"]]
-    assert p["v"][0] >= min(e["v"][0] for e in legs) and p["v"][1] <= max(e["v"][1] for e in legs)
-    assert p["u"][1] < min(e["u"][1] for e in legs)
-    bx, _ = facade.boxes([], SPEC)
-    assert all(b.kind != "enclosure" for b in bx)
+def test_the_entrance_stone_box_frames_the_front_door():
+    """The charcoal box's legs stand either side of the pivot door G01 and
+    its glass above, with a canopy over the door."""
+    g01 = next(d for d in LAY["doors"] if d["no"] == "G01")
+    legs = [e for e in SPEC["elements"] if "Entrance stone box" in e["name"] and "leg" in e["name"]]
+    assert len(legs) == 2 and all(e["material"] == "stone" for e in legs)
+    lo, hi = g01["v"] - g01["width_m"] / 2, g01["v"] + g01["width_m"] / 2
+    assert min(e["v"][1] for e in legs) <= lo and max(e["v"][0] for e in legs) >= hi
+    canopy = next(e for e in SPEC["elements"] if e["name"] == "Entrance canopy")
+    assert canopy["v"][0] <= lo and canopy["v"][1] >= hi and canopy["u"][0] >= 3.0
 
 
-def test_a_window_on_the_porch_looks_out_of_the_porch():
-    """The guest bedroom's window onto the porch faces south, although it is
-    north of the house centre: the open porch is not a room."""
-    inside = facade.inside_from_layouts()
-    w = dict(name="Window, Guest Bedroom, En-suite, hot", u0=5.89, u1=7.69, v0=22.07, v1=22.13,
-             z0=0.9, z1=2.7)
-    assert facade.face_of(w, inside)[0] == "S"
+def test_the_materials_are_the_white_minimalist_set():
+    """S1: A. White render, charcoal stone, timber soffits and fins."""
+    m = SPEC["materials"]
+    assert "white" in m["render"]["label"].lower()
+    assert "charcoal" in m["stone"]["label"].lower()
+    assert any(e["kind"] == "soffit" and e["material"] == "timber" for e in SPEC["elements"])
+
+
+def test_the_garden_face_gets_deep_eaves_with_timber_soffits():
+    """CLAUDE.md section 5: deep overhangs over the glazed faces."""
+    eaves = [e for e in SPEC["elements"] if e["name"].startswith("East eave, roof") and e["kind"] == "canopy"]
+    assert eaves and all(e["u"][1] - e["u"][0] >= 0.6 for e in eaves)
+    soffits = [e for e in SPEC["elements"] if "East eave" in e["name"] and e["kind"] == "soffit"]
+    assert soffits and all(e["material"] == "timber" for e in soffits)
 
 
 def test_road_windows_get_surrounds_and_fins():
-    w = dict(name="Window, Bedroom 2, En-suite, hot", u0=4.89, u1=4.95, v0=14.67, v1=16.47,
+    w = dict(name="Window, Family Lounge, hot", u0=4.00, u1=4.06, v0=26.5, v1=28.3,
              z0=5.9, z1=7.7)
     bx, notes = facade.boxes([w], SPEC, facade.inside_from_layouts())
     kinds = [b.kind for b in bx if w["name"] in b.name]
     assert kinds.count("surround") == 4 and kinds.count("fin") >= 4 and not notes
-
-
-def test_the_facade_changes_reach_the_plan():
-    """R4, D-051: bedroom 4's balcony starts behind the garden frame, and the
-    plan's GFA leaves out the first floor wall the porch cut removes."""
-    lay = yaml.safe_load((REPO_ROOT / "brief" / "layouts.yaml").read_text(encoding="utf-8"))
-    bal = next(r for r in lay["floors"]["first"]["outdoor"] if r["key"] == "balcony_bedroom_4")
-    trim = next(t for t in SPEC["balcony_trims"] if t["key"] == "balcony_bedroom_4")
-    assert abs(bal["v"][0] - trim["v0"]) < 1e-3
-    leg = next(e for e in SPEC["elements"] if e["name"] == "Garden frame, north leg")
-    assert bal["v"][0] >= leg["v"][1] - 1e-3
-    m = lay["gfa_measured"]
-    assert m["total"] <= m["cap"]

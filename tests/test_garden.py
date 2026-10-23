@@ -1,4 +1,5 @@
-"""The garden, brief/garden.yaml through src/model/landscape.py (G1 to G4, D-055).
+"""The garden, brief/garden.yaml through src/model/landscape.py (G1 to G4, D-055,
+redesigned for the courtyard villa, D-060).
 
 CONCEPT DESIGN, NOT FOR CONSTRUCTION.
 """
@@ -28,30 +29,31 @@ G = landscape.build(SPEC, PLOT, HOUSE, CARPORT, [])
 
 
 def test_the_bbq_pergola_sits_in_the_south_corner_inside_the_setback():
-    """G1: by the Arabic kitchen door G21, inside the 3 m setback line."""
+    """G1: by the show kitchen's garden door G09, inside the 3 m setback line."""
     p = SPEC["bbq"]["pergola"]
     assert ENV.buffer(0.01).contains(box(p["u"][0], p["v"][0], p["u"][1], p["v"][1]))
-    g21 = next(d for d in LAY["doors"] if d["no"] == "G21")
-    assert abs(g21["v"] - p["v"][1]) < 2.0 and p["u"][0] > g21["u"]
+    g09 = next(d for d in LAY["doors"] if d["no"] == "G09")
+    assert p["v"][0] - 2.0 < g09["v"] < p["v"][1] + 2.0 and p["u"][0] > g09["u"]
 
 
 def test_every_garden_door_opens_onto_paving():
-    """G2: the terrace links G20, G21 and G22; the front door's porch meets the court."""
+    """G2: the terraces meet the kitchen, dining and family living garden doors."""
     paving = [poly for s, poly in G.surfaces if s["kind"] == "paving"]
-    for no in ("G20", "G21", "G22"):
+    for no in ("G09", "G14", "G15"):
         d = next(d for d in LAY["doors"] if d["no"] == no)
         out = Point(d["u"] + 0.4, d["v"])
         assert any(p.contains(out) for p in paving), no
 
 
-def test_the_boundary_wall_rings_the_plot_with_two_gates_on_the_road():
-    """G3, D-011: walls on every side; the car gate and the pedestrian gate on side 1."""
+def test_the_boundary_wall_leaves_the_road_side_open_with_no_gate():
+    """D-011 walls to the neighbours and the landscape plot (TO VERIFY, OI-14);
+    the handover: no vehicle gate and no pedestrian gate, so the road side is
+    an open planted edge."""
     walls = [it for it in G.items if it.object_type == "Landscape: boundary wall"]
-    assert {it.name.split(", ")[1] for it in walls} == {"road side", "landscape side", "south side", "north side"}
-    gates = [it for it in G.items if it.object_type == "Landscape: gate"]
-    assert len(gates) == 2 and all(p.bounds[0] < 0.2 for g in gates for p, _, _ in g.prisms)
+    assert {it.name.split(", ")[1] for it in walls} == {"landscape side", "south side", "north side"}
+    assert not [it for it in G.items if it.object_type == "Landscape: gate"]
     screens = [it for it in G.items if it.object_type == "Landscape: wall screen"]
-    assert {it.name.split(", ")[1] for it in screens} == {"road side", "landscape side"}
+    assert {it.name.split(", ")[1] for it in screens} == {"landscape side"}
 
 
 def test_surfaces_do_not_overlap_each_other_or_the_house():
@@ -64,8 +66,13 @@ def test_surfaces_do_not_overlap_each_other_or_the_house():
 
 def test_trees_stand_in_planting_beds_or_lawns_inside_the_plot():
     beds = [poly for s, poly in G.surfaces if s["kind"] in ("bed", "lawn")]
+    cr = next(r for r in LAY["floors"]["ground"]["rooms"] if r["key"] == "courtyard")
+    court = box(cr["u"][0], cr["v"][0], cr["u"][1], cr["v"][1])
     for tr, sp in G.trees:
         pt = Point(tr["u"], tr["v"])
+        if tr.get("courtyard"):
+            assert court.contains(pt), sp["name"]      # the statement tree, in its planter (S2)
+            continue
         assert PLOT.contains(pt) and any(b.contains(pt) for b in beds), sp["name"]
 
 

@@ -23,9 +23,9 @@ def _views() -> dict:
     raise AssertionError("VIEWS not found")
 
 
-def test_the_six_views_of_the_brief_are_defined_with_sun_positions_that_exist():
+def test_the_views_of_the_brief_are_defined_with_sun_positions_that_exist():
     views = _views()
-    assert set(views) == {"entrance", "living", "salon", "master", "garden_sunset", "aerial"}
+    assert set(views) == {"entrance", "foyer", "courtyard", "living", "master", "garden_sunset", "aerial"}
     for name, (pos, look, lens, sun_key, title) in views.items():
         assert sun_key in DATA["sun"], (name, sun_key)
         assert 14 <= lens <= 50 and len(pos) == 3 and len(look) == 3 and title
@@ -33,8 +33,9 @@ def test_the_six_views_of_the_brief_are_defined_with_sun_positions_that_exist():
 
 def test_interior_cameras_stand_inside_their_rooms_clear_of_furniture():
     views = _views()
-    rooms = {r["label"]: r for r in DATA["rooms"] if r.get("rect")}
-    for name, room in (("living", "Living"), ("salon", "Salon"), ("master", "Master suite")):
+    rooms = {r["key"]: r for r in DATA["rooms"] if r.get("rect")}
+    for name, room in (("living", "living"), ("foyer", "entrance_foyer"), ("courtyard", "dining"),
+                       ("master", "master_suite")):
         (u, v, z), *_ = views[name]
         r = rooms[room]
         assert r["rect"][0] < u < r["rect"][1] and r["rect"][2] < v < r["rect"][3], name

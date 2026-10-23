@@ -4,48 +4,48 @@ CONCEPT DESIGN, NOT FOR CONSTRUCTION
 1. GFA check: PASS (output/reports/VJH-RPT-001_GFA_Check.txt)
 
 2. IFC generated: output/ifc/VJH-ARCH-001_Villa_5130272.ifc
-   Schema IFC4. Stair and lift core: reference stair: 28 risers of 179 mm, going 253 mm, two flights 1.47 m wide, half landing 1.47 m, in a 4.80 x 2.98 m stair room; the reference's 300 mm treads and 1.5 m landing need 5.45 m (OI-23, TO VERIFY); lift in its own shaft 1.80 x 2.15 m
-   IfcBuildingElementProxy       2
-   IfcColumn                     3
-   IfcCovering                  28
-   IfcDoor                      32
-   IfcFurniture                 57
-   IfcGeographicElement         42
-   IfcLightFixture               7
-   IfcOpeningElement            68
-   IfcRailing                    4
-   IfcSanitaryTerminal          26
+   Schema IFC4. Stair and lift core: straight stair: 28 risers of 179 mm, going 270 mm, two flights 1.20 m wide in one lane, landing 1.20 m at +2.50 with 2.20 m headroom under the gallery (OI-23, TO VERIFY); lift shaft 1.60 x 2.15 m
+   IfcBuildingElementProxy       1
+   IfcColumn                     2
+   IfcCovering                  20
+   IfcDoor                      29
+   IfcFurniture                 47
+   IfcGeographicElement         32
+   IfcLightFixture               5
+   IfcOpeningElement            56
+   IfcRailing                    2
+   IfcSanitaryTerminal          18
    IfcShadingDevice              4
-   IfcSlab                      22
-   IfcSpace                     50
+   IfcSlab                      27
+   IfcSpace                     35
    IfcStair                      1
    IfcTransportElement           1
-   IfcWall                      27
-   IfcWindow                    36
+   IfcWall                      19
+   IfcWindow                    27
 
 3. Schema validation: PASS, 0 issue(s)
 
-4. Geometry: 342 elements tessellated, 0 failed
-   IfcBuildingElementProxy       2        5.55 m3
-   IfcColumn                     3        1.58 m3
-   IfcCovering                  28      143.41 m3
-   IfcDoor                      32        6.92 m3
-   IfcFurniture                 57       60.57 m3
-   IfcGeographicElement         42      750.77 m3
-   IfcLightFixture               7        0.14 m3
-   IfcRailing                    4        1.91 m3
-   IfcSanitaryTerminal          26        5.40 m3
-   IfcShadingDevice              4        0.43 m3
-   IfcSlab                      22      429.90 m3
-   IfcSpace                     50     3057.17 m3
-   IfcStair                      1       12.92 m3
-   IfcTransportElement           1       27.14 m3
-   IfcWall                      27      364.21 m3
-   IfcWindow                    36        7.44 m3
+4. Geometry: 270 elements tessellated, 0 failed
+   IfcBuildingElementProxy       1        1.08 m3
+   IfcColumn                     2        1.06 m3
+   IfcCovering                  20       21.97 m3
+   IfcDoor                      29        8.41 m3
+   IfcFurniture                 47       44.46 m3
+   IfcGeographicElement         32      639.24 m3
+   IfcLightFixture               5        0.06 m3
+   IfcRailing                    2        1.02 m3
+   IfcSanitaryTerminal          18        3.98 m3
+   IfcShadingDevice              4        0.86 m3
+   IfcSlab                      27      312.45 m3
+   IfcSpace                     35     2115.91 m3
+   IfcStair                      1        1.16 m3
+   IfcTransportElement           1       23.75 m3
+   IfcWall                      19      313.49 m3
+   IfcWindow                    27        6.36 m3
 
 5. Floor area, IFC against the plan (walls and spaces in plan; tolerance 0.10 m2)
-   Ground Floor   IFC   355.56   plan   355.58   PASS
-   First Floor    IFC   304.38   plan   304.40   PASS
-   Total          IFC   659.95   plan   659.98   cap 662.99
+   Ground Floor   IFC   295.81   plan   295.81   PASS
+   First Floor    IFC   208.41   plan   208.41   PASS
+   Total          IFC   504.22   plan   504.22   cap 662.99
 
 RESULT: PASS

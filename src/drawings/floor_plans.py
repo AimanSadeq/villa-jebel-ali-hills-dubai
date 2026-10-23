@@ -92,12 +92,17 @@ SHORT = {
     "lift_first": "LIFT", "family_sitting": "FAMILY\nSITTING",
     "show_kitchen": "ISLAND KITCHEN", "arabic_kitchen": "ARABIC KITCHEN",
     "family_living": "FAMILY ROOM", "arabic_kitchen_bay": "ARABIC KIT.", "laundry_bay": "LAUNDRY",
+    "courtyard": "COURTYARD\nopen to the sky", "workspace": "WORKSPACE", "plant_room": "PLANT",
+    "garage": "CARPORT, 2 CARS",
 }
 CIRC_NAMES = {"corridor": "GALLERY", "corridor_first": "CORRIDOR", "gallery": "GALLERY",
+              "gallery_west": "GALLERY", "hall": "HALL, STAIR", "service_corridor": "SERVICE",
+              "salon_lobby": "LOBBY", "guest_lobby": "LOBBY", "north_lobby": "LOBBY",
               "stair_hall": "STAIR HALL", "service_lobby": "SERVICE LOBBY",
               "service_steps": "STEPS", "service_passage": "PASSAGE", "landing": "LANDING",
               "lift_lobby": "LIFT LOBBY"}
 VOID_NAMES = {"void_over_foyer": "VOID OVER FOYER", "void_over_entrance": "VOID OVER PORCH",
+              "void_over_courtyard": "COURTYARD\nopen to the sky",
               "void_over_living": "VOID OVER LIVING\nAND KITCHEN"}
 
 
@@ -377,8 +382,8 @@ def build() -> Path:
              color=MUTED)
     fig.text(0.025, 0.910, "FLOOR PLANS", fontsize=15, color=INK)
     fig.text(0.025, 0.893,
-             "The owner's reference villa, mirrored, carport south (D-038 to D-044), with "
-             "ground floor answer 12 (D-046). Plot up, not north up.",
+             "The courtyard villa of the redesign (D-060, the owner's handover and answers S1 "
+             "to S7). Plot up, not north up.",
              fontsize=8, color=MUTED)
     if not over:
         fig.text(0.60, 0.950, f"INSIDE THE GFA CAP BY {g['margin']:.2f} m2",
@@ -497,26 +502,26 @@ def build() -> Path:
     x1 = 0.255
     fig.text(x1, y, "NOTES", fontsize=9, color=INK)
     notes = [
-        "Ground floor, owner answer 12 (D-046): the salon takes the old lawn court's "
-        "place, open to the foyer, the living room and the dining (12c, 12h).",
-        "Island kitchen, double height living room and dining along the backyard (12a B); "
-        "a solid TV wall between the living room and the dining (12g).",
-        "Arabic kitchen walled, entered from the island kitchen by an opening with no "
-        "door (12m). Front door a 2.40 x 4.50 m pivot door, glass above (12i).",
-        "Doors numbered G01 to G23 and F01 to F15 as on the door schedule, sketch VJH-SK-013 "
-        "page 2 (G06, F10, F11, F13 retired by 12h, 12l, FF5). Every room is reached; the build checks it.",
-        "First floor, answers FF1 to FF8 (D-050): the reference's, adjusted. Family room open "
-        "to the gallery, about 33.7 m2 (363 sq ft), h 3.55 m (FF5).",
-        "No separate linen store, linen in built-in cupboards (FF4). Wall over the TV wall "
-        "lined up; bedroom 4 4.35 x 5.50 m (FF7). Master suite as VJH-SK-015 (FF3).",
-        "Facade (R4, D-051): as sketch VJH-SK-017; the first floor wall over the porch is "
-        "removed, the porch opens to the road over its full double height.",
-        "Heights indicative, brief/massing.yaml (D-030): h is clear height, floor to floor "
-        "less 0.30 m slab and 0.15 m ceiling services zone.",
-        "Carport, porch, balconies and terraces outside GFA by owner decision D-039, TO VERIFY "
-        "with DDA (OI-01). The D-005 reserve below the cap is not held.",
-        "Walls: external 0.25 m, internal 0.10 to 0.25 m as the reference draws them, "
-        "indicative. Structure by a licensed structural engineer, not in scope.",
+        "The courtyard villa (D-060): the owner's handover of 2026-10-23 and answers S1 to S7. "
+        "An open courtyard of about 22 m2 with a tree in the middle of the house (S2).",
+        "Ground floor: double height foyer with the straight floating stair rising into it, "
+        "hall, salon off its own lobby, guest suite off its own lobby, dining and family living "
+        "along the garden.",
+        "Service row behind the open two car carport: service corridor, maid's room and shower "
+        "room, laundry, prep kitchen, show kitchen with the door to the BBQ terrace; plant room beside the carport.",
+        "First floor: exactly three bedrooms, each with its own bathroom; the master over the dining "
+        "with its walk-in wardrobe, shower bathroom and covered terrace; family lounge and workspace "
+        "over the salon; gallery bridge over the foyer.",
+        "The first floor is enclosed over the guest suite and the powder room (bedroom 2 and its "
+        "lobby above). No fourth bedroom, no linen room, no gates (the handover).",
+        "Doors numbered G01 to G21 and F01 to F12 as on the door schedule; fixed glass G12, G13, "
+        "F11, F12 onto the courtyard. Every room is reached; the build checks it.",
+        "Heights indicative, brief/massing.yaml (D-030, S6): h is clear height, floor to floor "
+        "less 0.30 m slab and 0.15 m ceiling services zone. Stair headroom 2.20 m, OI-23.",
+        "Carport and the master terrace outside GFA by owner decision D-039, TO VERIFY with DDA "
+        "(OI-01). The courtyard, open to the sky, is not floor area.",
+        "Walls: external 0.25 m, internal 0.15 m, indicative. Structure by a licensed structural "
+        "engineer, not in scope.",
     ]
     if clash:
         notes.append("The pool deck from the Phase 1 massing clashes with the "

@@ -68,6 +68,10 @@ LABEL = {
     "master_toilet": "Bath", "bedroom_2_dress": "Dress", "bedroom_2_toilet": "Bath",
     "bedroom_3_dress": "Dress", "bedroom_3_toilet": "Bath", "bedroom_4_dress": "Dress",
     "bedroom_4_toilet": "Bath", "pantry_first": "Pantry", "garage": "Carport",
+    "courtyard": "Courtyard", "hall": "Hall", "gallery": "Gallery", "gallery_west": "Gallery",
+    "north_lobby": "Lobby", "guest_lobby": "Lobby", "salon_lobby": "Lobby",
+    "service_corridor": "Service", "workspace": "Workspace", "lift_first": "Lift",
+    "family_living": "Family lounge", "plant_room": "Plant",
 }
 AREA_TOLERANCE_M2 = 0.10
 

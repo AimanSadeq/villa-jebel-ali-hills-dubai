@@ -1,459 +1,225 @@
 # program.yaml: Single source of truth for the room program.
-# Source: CLAUDE.md section 4. Scripts read this file.
-# Never hard-code room sizes in scripts.
+# Redesign of 2026-10-23 (D-060): the owner's handover
+# reference/owner/Owner_handover_2026-10-23.md and his answers S1 to S7
+# (docs/redesign-decisions.md) replace CLAUDE.md section 4. The earlier
+# program is in Git history (brief/program.yaml before D-060) and in
+# docs/decisions.md; nothing here is a regulatory value.
 #
-# Areas are NET and indicative. Gross floor area is derived by applying
-# targets.net_to_gross_factor from site.yaml. See src/analysis/gfa_check.py.
+# Areas are NET room areas as designed in src/model/layout_court.py: clear
+# room sizes, walls excluded. The GFA check turns them into a gross estimate
+# with targets.net_to_gross_factor from site.yaml; once the plan exists the
+# measured figure in brief/layouts.yaml is the binding one (D-025).
 #
 # gfa field values:
-#   counts    the area counts toward the DDA GFA limit
+#   counts      the area counts toward the DDA GFA limit
 #   unverified  whether it counts is not confirmed. TO VERIFY. See docs/open-items.md
-#   excluded  does not count (voids only, per CLAUDE.md section 3)
+#   excluded    does not count (voids and the open courtyard, CLAUDE.md section 3)
 
 meta:
   stamp: "CONCEPT DESIGN, NOT FOR CONSTRUCTION"
-  source: "CLAUDE.md section 4"
+  source: "Owner handover 2026-10-23 (D-060) and answers S1 to S7"
   area_units: m2
+  target_enclosed_m2: [450, 500]     # the handover's range, G+1 enclosed, optimise rather than fill
+  character: "White minimalist: white volumes, flat roofs, charcoal accents (S1: A)"
 
 ground:
   - key: entrance_foyer
     name: "Entrance Foyer"
-    target_m2: 35.2
-    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
-    target_before_restart_m2: 19
-    brief_target_m2: 20
-    trim_superseded: "route_b, replaced by owner answer 6 (reference sizes), 2026-10-02"
-    trim_note: >
-      Trimmed from the CLAUDE.md section 4 target of 20 m2 to 19 m2. Owner
-      approved trim route B, 2026-10-01. Still double height.
+    target_m2: 21.9
     gfa: counts
     double_height: true
-    notes: "Double height."
-  - key: living
-    name: "Living Room"
-    target_m2: 42.6
-    brief_target_m2: 45
-    gfa: counts
-    double_height: true
-    added_by_owner: "2026-10-02"
+    notes: "Double height, the floating stair rises into it (handover). Glass wall to the courtyard (S2)."
+  - key: courtyard
+    name: "Courtyard, open to the sky"
+    target_m2: 20.7
+    gfa: excluded
+    open_to_sky: true
     notes: >
-      Owner answers 12, 12a B and 12g, 2026-10-02 (D-046): the living room
-      returns, 6.00 x 7.10 m, double height, along the backyard between the
-      island kitchen and the dining. A solid TV wall separates it from the
-      dining; it stays open to the kitchen, the foyer and the salon.
+      About 22 m2 with a statement tree, in the middle of the house between the
+      foyer and the dining (S2: A). Open to the sky: not floor area. It also
+      gives the closed Arabic kitchen a window for light and air (OI-15, TO VERIFY).
   - key: salon
     name: "Salon"
-    target_m2: 44.6
-    reference_size: "owner answers 12d and 12e, 2026-10-02: 5.95 x 7.50 m in the lawn court's place"
-    target_before_restart_m2: 35
+    target_m2: 20.9
     gfa: counts
-    notes: >
-      Formal reception, close to entrance, with its own guest powder room.
-      Owner confirmed 2026-10-01 that this formal reception room is the salon, and on
-      2026-10-02 that it is always called the salon (D-047).
-      Answers 12, 12c and 12h (D-046): it takes the lawn court's place and is
-      open to the foyer, the living room and the dining, by the owner's
-      decision (it was a closed room under D-042).
+    notes: "Formal reception off the hall through its own lobby, for privacy (handover). Always the salon, never majlis (D-047, S3)."
   - key: guest_powder
     name: "Guest Powder Room"
-    target_m2: 3.4
-    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
-    target_before_restart_m2: 4
+    target_m2: 3.1
     gfa: counts
-    notes: "Next to the salon."
+    notes: "Off the salon lobby."
   - key: guest_bedroom
     name: "Guest Bedroom, En-suite"
-    target_m2: 24.7
-    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
-    target_before_restart_m2: 32
+    target_m2: 19.8
     gfa: counts
-    notes: "Only bedroom on the ground floor."
+    notes: "The only bedroom on the ground floor, entered from the hall through its own lobby (handover). Bathroom beside it, accessible: TO VERIFY with the Dubai Universal Design Code."
   - key: dining
-    name: "Dining"
-    target_m2: 21.9
-    reference_size: "owner answers 12a B, 12e and 12g, 2026-10-02: 3.75 x 5.85 m in the north corner"
-    target_before_restart_m2: 22
+    name: "Dining and Garden Room"
+    target_m2: 39.9
     gfa: counts
-    notes: >
-      Owner confirmed 2026-10-01 that dining is on the ground floor. Placed
-      by answers 12a B, 12e and 12g (D-046): north corner on the backyard,
-      open to the salon, a TV wall to the living room.
+    notes: "Between the courtyard and the garden, open to the show kitchen, the hall and the family living."
+  - key: living
+    name: "Family Living"
+    target_m2: 33.2
+    gfa: counts
+    notes: "Garden side, direct shaded door to the private garden (handover)."
   - key: show_kitchen
     name: "Show Kitchen"
-    target_m2: 24.6
-    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
-    target_before_restart_m2: 25
+    target_m2: 24.0
     gfa: counts
-    notes: "Open to dining or living."
+    notes: "Island kitchen open to the dining; door to the BBQ terrace."
   - key: arabic_kitchen
-    name: "Arabic (Dirty) Kitchen"
-    target_m2: 14.8
-    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
-    target_before_restart_m2: 15
+    name: "Arabic (Prep) Kitchen"
+    target_m2: 8.8
     gfa: counts
-    notes: "Behind the show kitchen, service access."
-  - key: pantry
-    name: "Pantry / Storage"
-    target_m2: 4.8
-    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
-    target_before_restart_m2: 5
-    brief_target_m2: 6
-    trim_superseded: "route_b, replaced by owner answer 6 (reference sizes), 2026-10-02"
-    trim_note: >
-      Trimmed from the CLAUDE.md section 4 target of 6 m2 to 5 m2. Owner
-      approved trim route B, 2026-10-01.
-    gfa: counts
+    notes: "Enclosed, behind the show kitchen, from the service corridor. Pantry as tall cupboards along its wall (handover: pantry)."
   - key: laundry
     name: "Laundry"
-    target_m2: 6.0
-    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
-    target_before_restart_m2: 7
-    brief_target_m2: 8
-    trim_superseded: "route_b, replaced by owner answer 6 (reference sizes), 2026-10-02"
-    trim_note: >
-      Trimmed from the CLAUDE.md section 4 target of 8 m2 to 7 m2. Owner
-      approved trim route B, 2026-10-01.
+    target_m2: 6.7
     gfa: counts
-    notes: "Near the staff and service zone."
-  - key: home_office
-    name: "Home Office"
-    target_m2: 14.8
-    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
-    target_before_restart_m2: 14
-    gfa: counts
-    notes: "Quiet, near entrance."
   - key: maids_room
     name: "Maid's Room with Bathroom"
-    target_m2: 8.8
-    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
-    target_before_restart_m2: 11
-    brief_target_m2: 12
-    trim_superseded: "route_b, replaced by owner answer 6 (reference sizes), 2026-10-02"
-    trim_note: >
-      Trimmed from the CLAUDE.md section 4 target of 12 m2 to 11 m2. Owner
-      approved trim route B, 2026-10-01.
+    target_m2: 8.3
     gfa: counts
-    notes: "In the staff zone with a separate entrance."
-  - key: outdoor_bathroom
-    name: "Outdoor Bathroom, WC and Shower"
-    target_m2: 3.6
-    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
-    target_before_restart_m2: 4.5
-    gfa: counts
-    added_by_owner: "2026-10-02"
-    placement: >
-      Owner answers 11 and 11a, 2026-10-02 (replacing answer 9's garden side):
-      attached to the carport, in the reference villa's driver's toilet slot
-      (about 1.5 x 2.4 m), its door opening onto the carport, no door into the
-      house.
-    notes: >
-      Owner decision 2026-10-02, D-028. Its own external door and no internal
-      connection to the villa. Opens onto the carport (answers 11 and 11a,
-      D-043), for garden use and a non-resident driver or outdoor staff.
   - key: plant_room
     name: "MEP Plant Room"
-    target_m2: 6.7
-    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
-    target_before_restart_m2: 7
-    brief_target_m2: 8
-    trim_superseded: "route_b, replaced by owner answer 6 (reference sizes), 2026-10-02"
-    trim_note: >
-      Trimmed from the CLAUDE.md section 4 target of 8 m2 to 7 m2. Owner
-      approved trim route B, 2026-10-01.
+    target_m2: 7.0
     gfa: counts
-    placement: >
-      Owner answers 9 and 11a, 2026-10-02: in the reference villa's driver's
-      room beside the carport (about 2.8 x 2.4 m, 6.7 m2, 0.3 m2 under the
-      7 m2 target), with its own outside door. The driver's toilet beside it is
-      the outdoor bathroom.
-    notes: "Water tanks, filtration, controls, low-current rack."
-  - key: stair_lift_ground
-    name: "Staircase + Home Elevator"
-    target_m2: 6.9
-    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
-    target_before_restart_m2: 18
-    brief_target_m2: 20
-    trim_superseded: "route_b, replaced by owner answer 6 (reference sizes), 2026-10-02"
-    trim_note: >
-      Trimmed from the CLAUDE.md section 4 target of 20 m2 to 18 m2. Owner
-      approved trim route B, 2026-10-01. Tightened with the first floor
-      core.
+    notes: "Single storey block beside the carport, from the service corridor. Size to confirm in Phase 5."
+  - key: lift
+    name: "Home Lift"
+    target_m2: 3.4
     gfa: counts
-    notes: >
-      Elevator serves ground and first. The roof stop was removed by owner
-      decision on 2026-10-01.
+    notes: "Shaft 1.60 x 2.15 m, TO VERIFY with the lift supplier (OI-23)."
   - key: garage
-    name: "Carport, Open, 3 Cars"
-    target_m2: 77.3
-    reference_size: "owner answer 6, 2026-10-02: the reference villa's size"
-    target_before_restart_m2: 78
-    brief_target_m2: 55
-    cars: 3
+    name: "Carport, Open, 2 Cars"
+    target_m2: 38.9
     gfa: unverified
-    gfa_note: >
-      D-039, owner decision 2026-10-02: designed as OUTSIDE GFA, as the
-      owner's reference set shows for the same community (car parking as a
-      service area, not GFA). Reverses D-026 / D-018. TO VERIFY with DDA
-      before Phase 6, OI-01.
-    track_separately: true
+    outside_the_house: true
     notes: >
-      Owner decision 2026-10-02, D-040: three cars again, as an open carport
-      like the reference villa's (8.94 x 8.73 m, 78 m2 gross, sheet A-07-001
-      of reference/owner/). Reverses the two car decision of D-026. CLAUDE.md
-      section 4 asked for an enclosed three car garage at 55 m2; DDA FAQs
-      Building Q5 gives a bay as 2.5 x 5.5 m.
+      Open side by side carport for one large SUV and one standard car,
+      provisional 6.5 x 6.0 m (handover); exact SUV size to follow. Built as a
+      roofed plate outside the house, not a room. Whether DDA counts an open
+      carport toward GFA is TO VERIFY (OI-01).
 
-# Ancillary spaces that the owner's reference villa draws as rooms of their
-# own (D-040, 2026-10-02). They count toward GFA and are placed with the room
-# they serve. Sizes are the reference's internal dimensions.
+# Rooms that belong to another room: drawn by the plan and counted with it.
 ancillary:
-  # Ground floor, decided (D-038 to D-043). Internal sizes from the reference.
-  - {floor: ground, key: guest_dress, name: "Guest Bedroom, Dress", serves: guest_bedroom, target_m2: 6.0, gfa: counts}
-  - {floor: ground, key: guest_toilet, name: "Guest Bedroom, Toilet", serves: guest_bedroom, target_m2: 7.2, gfa: counts}
-  - {floor: ground, key: office_toilet, name: "Office, Toilet", serves: home_office, target_m2: 7.0, gfa: counts}
-  - {floor: ground, key: maids_toilet, name: "Maid's Room, Toilet", serves: maids_room, target_m2: 4.2, gfa: counts}
-  - {floor: ground, key: wash, name: "Wash", serves: guest_powder, target_m2: 4.4, gfa: counts, notes: "The powder room's basin room, entered from the stair hall."}
-  - {floor: ground, key: lift, name: "Home Lift", serves: stair_lift_ground, target_m2: 3.9, gfa: counts}
-  - {floor: ground, key: main_entrance, name: "Main Entrance Porch", serves: entrance_foyer, target_m2: 11.2, gfa: unverified, notes: "Open, recessed, double height porch. Designed outside GFA with the carport (D-039), TO VERIFY."}
-  - {floor: ground, key: arabic_kitchen_bay, name: "Arabic Kitchen, front bay", serves: arabic_kitchen, target_m2: 2.2, gfa: counts}
-  - {floor: ground, key: laundry_bay, name: "Laundry, bay", serves: laundry, target_m2: 1.9, gfa: counts}
-  # First floor PLACEHOLDER from the reference, until the owner decides that floor.
-  - {floor: first, key: master_dress, name: "Master Dress", serves: master_suite, target_m2: 18.0, gfa: counts, placeholder: true}
-  - {floor: first, key: master_toilet, name: "Master Bathroom", serves: master_dress, target_m2: 16.0, gfa: counts, placeholder: true}
-  - {floor: first, key: bedroom_2_dress, name: "Bedroom 2, Dress", serves: bedroom_2, target_m2: 7.3, gfa: counts, placeholder: true}
-  - {floor: first, key: bedroom_2_toilet, name: "Bedroom 2, Bathroom", serves: bedroom_2_dress, target_m2: 7.5, gfa: counts, placeholder: true}
-  - {floor: first, key: bedroom_3_dress, name: "Bedroom 3, Dress", serves: bedroom_3, target_m2: 6.0, gfa: counts, placeholder: true}
-  - {floor: first, key: bedroom_3_toilet, name: "Bedroom 3, Bathroom", serves: bedroom_3_dress, target_m2: 7.2, gfa: counts, placeholder: true}
-  - {floor: first, key: bedroom_4_dress, name: "Bedroom 4, Dress", serves: bedroom_4, target_m2: 6.0, gfa: counts, placeholder: true}
-  - {floor: first, key: bedroom_4_toilet, name: "Bedroom 4, Bathroom", serves: bedroom_4_dress, target_m2: 7.2, gfa: counts, placeholder: true}
-  - {floor: first, key: lift_first, name: "Home Lift, first floor", serves: stair_lift_first, target_m2: 3.9, gfa: counts, placeholder: true}
+  - {key: maids_toilet, name: "Maid's Shower Room", serves: maids_room, target_m2: 4.8, gfa: counts}
+  - {key: guest_toilet, name: "Guest Bathroom", serves: guest_bedroom, target_m2: 6.1, gfa: counts}
+  - {key: master_dress, name: "Master Walk-in Wardrobe", serves: master_suite, target_m2: 11.6, gfa: counts}
+  - {key: master_toilet, name: "Master Bathroom, shower only", serves: master_suite, target_m2: 11.6, gfa: counts}
+  - {key: bedroom_2_toilet, name: "Bedroom 2 En-suite", serves: bedroom_2, target_m2: 5.1, gfa: counts}
+  - {key: bedroom_3_dress, name: "Bedroom 3 Dressing Room", serves: bedroom_3, target_m2: 5.2, gfa: counts}
+  - {key: bedroom_3_toilet, name: "Bedroom 3 En-suite", serves: bedroom_3, target_m2: 5.2, gfa: counts}
+  - {key: lift_first, name: "Home Lift, first floor", serves: lift, target_m2: 3.4, gfa: counts}
 
 first:
   - key: master_suite
-    name: "Master Suite"
-    target_min_m2: 68
-    brief_target_min_m2: 70
-    trimmed: trim_t2
-    trim_note: >
-      Trimmed by owner decision 2026-10-02, D-027, to bring the measured plan inside the GFA cap. Cut upstairs because in massing option C a ground floor cut in the two storey wing only turns into padding under the bedrooms.
-    target_max_m2: 80
+    name: "Master Bedroom"
+    target_m2: 22.8
     gfa: counts
     notes: >
-      Excludes balcony. Must be 2.2 to 2.5 times the other bedrooms. Contains
-      bedroom, private sitting area, his and hers walk-in wardrobes, large
-      bathroom with bathtub and separate shower, coffee / kitchenette station,
-      private balcony. The balcony is a terrace on the kitchen roof, D-035; see
-      interiors.master_suite. Best upstairs orientation, ideally toward the east
-      landscape plot if the sun study supports it.
+      Over the dining, garden facing, with its covered terrace (handover).
+      Walk-in wardrobe and shower bathroom integrated: the wardrobe opens from
+      the bedroom and the bathroom from the wardrobe (handover: shower only,
+      no bathtub). Window onto the courtyard.
   - key: bedroom_2
     name: "Bedroom 2, En-suite"
-    target_min_m2: 30
-    target_max_m2: 35
+    target_m2: 19.8
     gfa: counts
+    notes: "Over the guest suite: the first floor is enclosed there (handover acceptance test)."
   - key: bedroom_3
     name: "Bedroom 3, En-suite"
-    target_min_m2: 30
-    target_max_m2: 35
+    target_m2: 21.8
     gfa: counts
-  - key: bedroom_4
-    name: "Bedroom 4, En-suite"
-    target_min_m2: 30
-    target_max_m2: 35
-    gfa: counts
+    notes: "Over the family living, garden facing, through its dressing room."
   - key: family_living
-    name: "Family Living Room"
-    target_m2: 26.2
-    with_gallery_m2: 33.7
-    first_floor_answers: >
-      Owner answers 12b and FF5, 2026-10-02 (D-046, D-050): above the salon,
-      4.99 x 5.25 m, 26.2 m2 (282 sq ft), open to the 1.49 x 5.04 m gallery,
-      about 33.7 m2 (363 sq ft) together, clear height 3.55 m, looking over the
-      foyer void.
-    target_before_first_floor_m2: 33
-    brief_target_m2: 35
-    trimmed: trim_t2
-    trim_note: >
-      Trimmed by owner decision 2026-10-02, D-027, to bring the measured plan inside the GFA cap. Cut upstairs because in massing option C a ground floor cut in the two storey wing only turns into padding under the bedrooms.
+    name: "Family Lounge"
+    target_m2: 20.9
     gfa: counts
-    notes: "Acoustically separated from the master suite."
-  - key: stair_lift_first
-    name: "Staircase + Home Elevator"
-    target_m2: 15
-    brief_target_m2: 20
-    trimmed: route_b
-    trim_note: >
-      Trimmed from the CLAUDE.md section 4 target of 20 m2 to 15 m2. Owner
-      approved trim route B, 2026-10-01. Now the top landing. The roof
-      stop was removed, so there is no further flight to accommodate.
+    notes: "Over the salon, open to the workspace and the gallery bridge over the foyer (handover)."
+  - key: workspace
+    name: "Workspace"
+    target_m2: 6.5
     gfa: counts
-    notes: >
-      Not itemised in CLAUDE.md section 4 but required: the stair and elevator
-      must land on the first floor. Added by Claude, flagged for owner review.
-      Now the top landing, since the roof stop was removed on 2026-10-01.
-    added_by_claude: true
+    notes: "Flexible workspace in the family lounge, by the road window (S5: A, no ground floor office)."
 
-# Roof. Owner decision 2026-10-01: no roof terrace and no roof enclosure.
-#
-# This removes the roof stair and elevator enclosure that CLAUDE.md section 4
-# asked for, and with it the risk flagged in OI-05 that DDA might count a roof
-# enclosure as an additional floor and breach the G+1 cap outright.
-#
-# Consequences carried forward:
-#  - The elevator now serves ground and first only, not three levels.
-#  - The flat roof still exists and still needs a 1.20 m parapet, DDA FAQ Q34.
-#  - The VRF outdoor units still need a home. They can sit on the flat roof
-#    behind a low screen, which needs no enclosure and adds no floor, or at
-#    ground level in the service zone. Decided in Phase 5. See OI-17.
 roof: []
 
-# Room interiors, drawn in Phase 3 by owner decision 2026-10-02 (D-034, D-035).
-# src/model/interiors.py plans them from these figures, and both the IFC model
-# and the floor plans read that plan. Sizes are Claude proposals for owner
-# review, not regulatory values. Room areas above include their interiors.
+# Interiors: every bathroom and dressing room is drawn as its own room above,
+# so the en-suite planner has nothing to add (ensuite.rooms and
+# staff_ensuite.rooms are empty). The master block stays for the furniture.
 interiors:
-  partition_m: 0.10            # internal subdivision, indicative
+  partition_m: 0.10
   ensuite:
-    decision: "D-034"
-    rooms: [guest_bedroom, bedroom_2, bedroom_3, bedroom_4]
-    layout: >
-      Owner choice 2026-10-02: bathroom and built-in wardrobe beside the door,
-      forming an entry lobby, so the bedroom keeps the facade and its windows.
-      The bathroom goes in the corner away from the facade, back to back with
-      the next en-suite where possible.
-    bathroom:
-      width_m: 2.40            # along the door wall
-      depth_m: 2.40
-      fittings: [walk-in shower, WC, basin]
-      ventilation: "Internal, mechanical extract. Rate TO VERIFY, OI-25."
-    entry_m: 1.00              # clear entry beside the bathroom, holds the door
-    wardrobe:
-      depth_m: 0.65
-      min_length_m: 1.80
-      max_length_m: 3.00
-      height_m: 2.40
-    bedroom_min_m2: 18.0       # left for the bed area, wardrobe included
+    decision: "D-060"
+    rooms: []
+    bathroom: {width_m: 2.40, depth_m: 2.40, fittings: [walk-in shower, WC, basin],
+               ventilation: "Internal bathrooms, mechanical extract. Rate TO VERIFY, OI-25."}
+    entry_m: 1.00
+    wardrobe: {depth_m: 0.65, min_length_m: 1.80, max_length_m: 3.00, height_m: 2.40}
+    bedroom_min_m2: 14.0
   staff_ensuite:
-    decision: "D-034"
-    rooms: [maids_room]
-    door_from: laundry         # the maid's internal door, see ROOM_LINKS
-    layout: >
-      CLAUDE.md section 4 asks for a maid's room with bathroom. A compact
-      shower room across the end of the room away from its door, beside the
-      outdoor bathroom so the two share drainage. Claude proposal, for review.
-    bathroom:
-      width_m: 1.20            # across the full depth of the room
-      fittings: [shower, WC, basin]
+    decision: "D-060"
+    rooms: []
+    door_from: service_corridor
+    bathroom: {width_m: 1.50, fittings: [shower, WC, basin]}
     bedroom_min_m2: 7.0
   master_suite:
-    decision: "D-035"
-    layout: >
-      Service zone on the road side (bathroom, his and hers walk-in wardrobes),
-      reached along a dressing gallery from the landing door. Bedroom and
-      sitting area on the terrace side, with the coffee station by the terrace.
-    service_zone_width_m: 5.00
-    gallery_depth_m: 1.40
-    bathroom:
-      min_m2: 12.0
-      fittings: [bathtub, separate shower, double basin, WC]
+    decision: "D-060"
+    layout: "Bedroom with the terrace east; walk-in wardrobe and shower bathroom south, over the show kitchen."
+    service_zone_width_m: 4.95
+    gallery_depth_m: 0.0
+    bathroom: {min_m2: 10.0, fittings: [walk-in shower, double basin, WC]}
     walk_in_wardrobes:
-      - {key: wir_hers, name: "Walk-in Wardrobe, Hers", target_m2: 5.0}
-      - {key: wir_his, name: "Walk-in Wardrobe, His", target_m2: 5.0}
-    coffee_station: {length_m: 1.80, depth_m: 0.60, height_m: 0.90}
+      - {key: wir, name: "Walk-in Wardrobe", target_m2: 11.6}
+    coffee_station: {length_m: 0.0, depth_m: 0.0, height_m: 0.0}
     terrace:
-      on: "roof of the single storey kitchen and dining block"
-      door_width_m: 3.00       # glazed sliding door from the master
-      door_height_m: 2.40
-      gfa: excluded            # DDA FAQs Building Q25: balconies excluded from GFA, included in BUA
+      on: "covered terrace off the master bedroom, over the dining's garden edge"
+      door_width_m: 3.00
+      door_height_m: 2.70
+      gfa: excluded
 
-# Rooms removed from the CLAUDE.md section 4 program, kept on record so the
-# removal is visible and reversible rather than silent.
+# Rooms of the earlier briefs that the redesign does not have, kept on record
+# so the change is visible and reversible rather than silent.
 removed:
-  - key: linen_storage
-    name: "Linen and General Storage"
-    brief_target_m2: 6
-    removed_on: "2026-10-02"
-    decision: "D-050"
-    reason: >
-      Owner answer FF4: no separate linen store; linen goes into the built-in
-      wardrobes of the dressing rooms. The reference's store became void over
-      the island kitchen by answer 12l.
-  - key: family_sitting
-    name: "Family Sitting"
-    brief_target_m2: null
-    removed_on: "2026-10-02"
-    decision: "D-046"
-    reason: >
-      Owner answer 12: the garden room is rearranged; its sitting area becomes
-      the double height living room.
-  - key: lawn_court
-    name: "Internal Lawn Court, open to the sky"
-    brief_target_m2: null
-    removed_on: "2026-10-02"
-    decision: "D-046"
-    reason: >
-      Owner answer 12: "Remove the lawn, and replace it with salon." Enclosing
-      it adds its area to the GFA.
-  - key: pantry_first
-    name: "First Floor Pantry"
-    brief_target_m2: null
-    removed_on: "2026-10-02"
-    decision: "D-046"
-    reason: >
-      Owner answer 12l: became void over the island kitchen to bring answer 12
-      inside the GFA cap. Its coffee station belongs in the master suite (brief).
-  - key: pool
-    name: "Swimming Pool"
-    brief_target_m2: 40
-    size_m: [10, 4]
-    removed_on: "2026-10-02"
-    decision: "D-041"
-    reason: >
-      Owner decision 2026-10-02, ground floor answer 8 superseded: "I don't
-      need a pool." Not GFA, so no area effect. Pool MEP (CLAUDE.md section 6)
-      falls away with it.
-  - key: drivers_room
-    name: "Driver's Room with Bathroom"
-    brief_target_m2: 12
-    removed_on: "2026-10-02"
-    decision: "D-028"
-    reason: >
-      Owner decision: no driver's room. Replaced by an outdoor bathroom with
-      its own external door.
-  - key: sunroom
-    name: "Sunroom"
-    brief_target_m2: 20
-    removed_on: "2026-10-02"
-    decision: "D-024, trim package 2"
-    reason: >
-      Owner chose trim package 2 to make plan 2 fit at DDA's 1.80 m corridor
-      width (FAQ Q12). Of the four costed packages it was the only one that
-      left every other room at its brief size. The courtyard in massing option
-      C, and the glazed double height living room facing it, already give the
-      house its garden room.
+  - {key: bedroom_4, name: "Bedroom 4, En-suite", decision: "D-060", reason: "Handover: exactly three bedrooms upstairs."}
+  - {key: linen_storage, name: "Linen and General Storage", decision: "D-050", reason: "FF4, and the handover: no linen room."}
+  - {key: home_office, name: "Home Office", decision: "D-060", reason: "S5: A, the workspace is in the family lounge."}
+  - {key: office_toilet, name: "Office WC", decision: "D-060", reason: "With the office."}
+  - {key: outdoor_bathroom, name: "Outdoor Bathroom", decision: "D-060", reason: "Not in the handover program."}
+  - {key: wash, name: "Wash", decision: "D-060", reason: "Not in the handover program."}
+  - {key: pantry, name: "Pantry room", decision: "D-060", reason: "Pantry as cupboards in the Arabic kitchen."}
+  - {key: drivers_room, name: "Driver's Room with Bathroom", decision: "D-028", reason: "No driver's room, owner 2026-10-01."}
+  - {key: sunroom, name: "Sunroom", decision: "D-024", reason: "Trim package 2, owner 2026-10-01."}
+  - {key: pool, name: "Swimming Pool", decision: "D-041", reason: "No pool; the handover agrees."}
+  - {key: roof_enclosure, name: "Roof stair and elevator enclosure", decision: "D-017", reason: "No roof terrace or enclosure."}
 
-# Double-height voids. Per CLAUDE.md section 3 these do not add upper-floor
-# area. Listed so they appear in reports and are never double counted.
 voids:
   - key: void_over_foyer
-    name: "Void over Entrance Foyer"
+    name: "Void over the Entrance Foyer"
     over: entrance_foyer
-    target_m2: 20
+    target_m2: 29.7
     gfa: excluded
-  - key: void_over_living
-    name: "Void over Living Room and Island Kitchen"
-    over: living
-    target_m2: 40.8
+    notes: "The foyer and the stair's upper flight, which floats in the void."
+  - key: void_over_courtyard
+    name: "Void over the Courtyard"
+    over: courtyard
+    target_m2: 20.7
     gfa: excluded
-    notes: "Answers 12 and 12l (D-046): over the living room and most of the island kitchen."
+    notes: "Open to the sky."
 
-# Outdoor scope. Not GFA. Sized and positioned in Phase 1 and Phase 4.
+# Outdoor scope. Not GFA.
 outdoor:
+  - key: master_terrace
+    name: "Master Terrace, covered"
+    notes: "2.0 x 4.6 m off the master bedroom, toward the garden, under the main roof. Outside GFA by DDA FAQ Q25 reading, TO VERIFY (OI-01)."
   - key: bbq_pergola
     name: "BBQ Area with Pergola"
-    notes: "South corner of the back garden by the Arabic kitchen door, open timber pergola, counter and table for six (G1, D-055)."
+    notes: "By the show kitchen's garden door, south-east corner of the garden (G1 kept)."
   - key: landscape
     name: "Landscape and Softscape"
-    notes: "Trees, palms, lawn, planting beds, hardscape paving, driveway."
+    notes: "Private garden east of the house, measured from the plan in output/reports; front garden with palms; no vehicle or pedestrian gate (handover)."
   - key: boundary_walls
-    name: "Boundary Walls and Gates"
-    notes: "D-011 wall approved by the owner (G3), TO VERIFY with Meraas (OI-14); car gate into the carport and a pedestrian gate on the portal line (G4, D-055)."
+    name: "Boundary Walls"
+    notes: "Walls to the neighbours and a screen to the landscape plot (D-011, TO VERIFY OI-14); the road side is open, with planting (handover: no gates). TO VERIFY with Meraas."

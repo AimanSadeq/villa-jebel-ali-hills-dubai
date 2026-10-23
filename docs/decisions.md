@@ -8,6 +8,20 @@ Columns: date, decision, reason, approved by Aiman.
 
 ## 2026-10-23, Redesign from the owner's handover
 
+### D-061 The courtyard villa: first design of the redesign built end to end
+
+**Date.** 2026-10-23.
+
+**Decision.** The redesign is built from the handover (D-060) and answers S1 to S7 as one geometric model, src/model/layout_court.py, through the existing pipeline: brief/layouts.yaml, the IFC model, the walkthrough data, the floor plans, the Twinmotion export and the Blender renders all come from it. The plan: an open courtyard of 4.50 x 4.60 m (20.7 m2) in the middle of the house between the double height foyer and the dining (S2); a straight floating stair in two flights along the courtyard's north glass, the upper flight in the foyer void, landing on a gallery bridge; the salon and the guest suite along the north, each off its own lobby; dining, family living and show kitchen along the garden with a continuous 20 m glazed face under deep eaves; the service row (corridor, maid's room and shower room, laundry, prep kitchen) behind the open two car carport in the south corner (S4), the plant room beside the carport; upstairs exactly three bedrooms with their own bathrooms, the master over the dining with its walk-in wardrobe, shower bathroom and covered terrace, bedroom 2 over the guest suite, bedroom 3 over the family living, the family lounge and workspace over the salon (S5). White minimalist facade (S1): white render, a charcoal stone box around the entrance, timber soffits under the eaves and the carport, timber fins on the hot windows, LED lines. No gates; walls to the neighbours and the landscape side stay (D-011, OI-14). Heights 5.00 and 4.00 m (S6). The full program is docs/current-approved-brief.md.
+- Measured: 295.81 m2 ground and 208.41 m2 first, 504.22 m2 enclosed, 158.77 m2 inside the cap; the courtyard (20.70) and the voids (50.39) excluded; carport 38.91 and terrace 9.20 m2 outside GFA (D-039, TO VERIFY OI-01). The private garden east of the house measures 367.6 m2, 11.3 m deep and 23.1 m along the house, by polygon from the plan, in place of the earlier boards' unmeasured 12 x 20 m.
+- The handover's acceptance tests are geometric assertions in src/model/layout_court.py, tests/test_layout.py and src/analysis/geometry_validation.py (output/reports/geometry_validation.md, output/plans/floor_overlay.pdf): the first floor covers 100% of the guest suite and the powder room with nothing open above them; three bedrooms and three bathrooms; no linen room; the courtyard and the foyer void kept; no gates; the living's garden door; both floors in one grid; everything behind the setbacks.
+- Pipeline changes: the IFC generator builds a straight stair from the layout's stair block, fixed glass from the door schedule, courtyard paving with a planter, and windows for the halls that look out; the landscape builder takes open boundary sides and a courtyard tree; the facade spec no longer needs a pergola; the walkthrough's flood fill test keyed by height so a flight over a floor is not merged with it. The furniture leaves the desk out of bedrooms under 21 m2, which had sealed the guest bathroom's door.
+- Known limits of this first design, for the owner: the salon does not see the courtyard; the guest bedroom and bedroom 2 are 19.8 m2; the stair's landing has 2.20 m headroom under the gallery (OI-23); the lift shaft 1.60 x 2.15 m is TO VERIFY with the supplier; the enclosed total is 4 m2 over the handover's 500 m2 figure.
+
+**Reason.** The owner asked for the look and feel first (2026-10-23) and chose to wait for his images (S7: B), which arrived the same day; the design follows them as a built model rather than as pictures, so every later change is a change to one model.
+
+**Approved by Aiman.** Pending: the first design is for his review.
+
 ### D-060 The owner's handover brief replaces the current design (answer H1: A)
 
 **Date.** 2026-10-23.

@@ -72,13 +72,17 @@ T_INT = 0.15
 
 PRINCIPAL = {"living", "dining", "show_kitchen", "salon", "master_suite", "family_hall",
              "family_living", "bedroom_2", "bedroom_3", "bedroom_4",
-             "guest_bedroom"}
+             "guest_bedroom", "gallery"}
+# Halls that get windows like rooms (the redesign, D-060): the stair hall and
+# the gallery look at the garden and the road.
+CIRC_WINDOWS = {"hall", "gallery", "gallery_west"}
 SERVICE_WINDOWS = {"home_office", "arabic_kitchen", "maids_room", "laundry",
                    "stair_lift_ground", "stair_lift_first"}
 HIGH_WINDOWS = {"guest_powder", "outdoor_bathroom", "guest_toilet", "office_toilet",
                 "maids_toilet", "powder_toilet", "wash", "master_toilet", "bedroom_2_toilet",
                 "bedroom_3_toilet", "bedroom_4_toilet"}
-NO_WINDOWS = {"garage", "pantry", "plant_room", "linen_storage", "lift", "main_entrance",
+NO_WINDOWS = {"garage", "pantry", "plant_room", "linen_storage", "lift", "lift_first",
+              "courtyard", "main_entrance",
               "lawn_court", "guest_dress", "master_dress", "bedroom_2_dress", "bedroom_3_dress",
               "bedroom_4_dress", "pantry_first", "stair_lift_ground", "stair_lift_first"}
 
@@ -91,12 +95,12 @@ DOOR_WIDTH = {"salon": 1.20, "master_suite": 1.00, "family_living": 1.20,
 
 # key, name, RGB, transparency. Neutral concept colours, not finishes.
 STYLES = [
-    ("ext", "Beige render", (0.86, 0.80, 0.69), 0.0),        # D-048, brief/facade.yaml
-    ("stone", "Warm split face stone", (0.78, 0.68, 0.50), 0.0),
-    ("timber", "Timber, soffits, fins and pergola", (0.60, 0.39, 0.23), 0.0),
+    ("ext", "White render", (0.95, 0.95, 0.93), 0.0),         # S1: A, brief/facade.yaml (D-060)
+    ("stone", "Charcoal stone cladding", (0.23, 0.23, 0.24), 0.0),
+    ("timber", "Timber, soffits, fins and screens", (0.62, 0.44, 0.27), 0.0),
     ("led", "Linear LED line, warm white", (1.00, 0.86, 0.60), 0.0),
     ("int", "Partition, painted", (0.90, 0.89, 0.86), 0.0),
-    ("slab", "Slab, rendered edge", (0.93, 0.92, 0.89), 0.0),
+    ("slab", "Slab, rendered edge", (0.95, 0.95, 0.93), 0.0),     # reads as one white volume (S1)
     ("roof", "Roof finish", (0.86, 0.85, 0.82), 0.0),
     ("glass", "Glazing", (0.52, 0.70, 0.80), 0.55),
     ("door", "Timber", (0.58, 0.43, 0.30), 0.0),
@@ -241,6 +245,8 @@ class Model:
         self.window_boxes: list[dict] = []
         self.facade_obstacles: list[Polygon] = []
         self.opening_boxes: list[tuple] = []      # (storey, 2D cut, z0, z1), for finishes
+        self.courtyard_planters: list[Polygon] = []
+        self.stair_head_railing = True
 
     # Setup -----------------------------------------------------------------
 
@@ -609,7 +615,7 @@ class Model:
             self.low_road = self.low_road.difference(balconies.buffer(0.01, join_style=2))
         roofs = [
             ("Main roof", "roof", main_roof, 0.0, [self.living_block]),
-            ("Roof over the garage and service end", "first",
+            ("Roof over the single storey wing", "first",
              self.low_road, 0.0, [self.first_fp]),
             ("Roof terrace over the kitchen, master suite terrace",
              "first", self.kitchen_block, 0.0,
@@ -697,6 +703,10 @@ class Model:
     # Stair and lift core ---------------------------------------------------
 
     def build_core(self):
+        spec = self.lay.get("stair") or {}
+        if spec.get("kind") == "straight":
+            self._build_straight_stair(spec)
+            return
         g = next(r for r in self.g_rooms if r.key == "stair_lift_ground")
         lift_room = next((r for r in self.g_rooms if r.key == "lift"), None)
         u0, u1, v0 = g.u0, g.u1, g.v0
@@ -751,6 +761,98 @@ class Model:
         for room in (g, first_core):
             if not room.poly.buffer(0.01).contains(self.stairwell.union(self.shaft)):
                 raise ValueError(f"stair and lift do not fit {room.key}")
+        self.element("IfcTransportElement", "Home lift", "ground",
+                     [self._prism(self.shaft, 0.0, self.HG + self.HF - self.SLAB)],
+                     predefined="ELEVATOR", style="lift")
+
+    def _build_straight_stair(self, spec: dict):
+        """The redesign's stair (D-060, the owner's handover): a straight
+        floating stair of two flights in one lane along the courtyard's north
+        glass. The lower flight rises from the dining end under the gallery,
+        a landing, then the upper flight floats in the double height foyer and
+        lands on the gallery bridge. Treads are thin slabs on a concealed
+        spine (indicative), with glass balustrades both sides. Headroom over
+        the landing under the gallery slab is reported (OI-23, TO VERIFY)."""
+        hall = next(r for r in self.g_circ + self.g_rooms if r.key == spec["hall"])
+        lift_room = next(r for r in self.g_rooms if r.key == spec["lift"])
+        v0, v1 = float(spec["v"][0]), float(spec["v"][1])
+        going, land = float(spec["going_m"]), float(spec["landing_m"])
+        t, rail_h = float(spec.get("tread_m", 0.08)), float(spec.get("rail_m", 1.10))
+        d = 1 if int(spec.get("direction", -1)) > 0 else -1
+        risers = math.ceil(self.HG / 0.18)
+        if risers % 2:
+            risers += 1
+        riser = self.HG / risers
+        per = risers // 2
+        run = (per - 1) * going
+        u_foot = float(spec["u_foot"])
+        u_land0 = u_foot + d * run
+        u_land1 = u_land0 + d * land
+        u_top = u_land1 + d * run
+        u_end = hall.u0 if d < 0 else hall.u1
+        z_land = riser * per
+        vm = (v0 + v1) / 2
+
+        def seg(a, b):
+            lo, hi = min(a, b), max(a, b)
+            return box(lo, v0, hi, v1)
+
+        steps, rails = [], []
+
+        def rail(a, b, z, north=True):
+            lo, hi = min(a, b), max(a, b)
+            rails.append(self._prism(box(lo, v0, hi, v0 + 0.03), z, rail_h))
+            if north:
+                rails.append(self._prism(box(lo, v1 - 0.03, hi, v1), z, rail_h))
+
+        for i in range(per - 1):                      # lower flight
+            a = u_foot + d * i * going
+            b = a + d * going
+            z = riser * (i + 1)
+            steps.append(self._prism(seg(a, b), z - t, t))
+            rail(a, b, z)
+        steps.append(self._prism(seg(u_land0, u_land1), z_land - 0.20, 0.20))
+        rail(u_land0, u_land1, z_land)
+        for i in range(per - 1):                      # upper flight, in the void
+            a = u_land1 + d * i * going
+            b = a + d * going
+            z = z_land + riser * (i + 1)
+            steps.append(self._prism(seg(a, b), z - t, t))
+            rail(a, b, z)
+        steps.append(self._prism(seg(u_top, u_end), self.HG - 0.20, 0.20))
+        rail(u_top, u_end, self.HG, north=False)       # the north edge joins the bridge
+        stair = self.element("IfcStair", "Main stair, straight, floating", "ground", steps,
+                             predefined="TWO_STRAIGHT_RUN_STAIR", material="slab", style="stair")
+        ifcopenshell.api.pset.edit_pset(
+            self.f, pset=ifcopenshell.api.pset.add_pset(self.f, product=stair,
+                                                        name="Pset_StairCommon"),
+            properties={"NumberOfRiser": risers, "RiserHeight": riser, "TreadLength": going})
+        self.element("IfcRailing", "Balustrade, main stair, glass", "ground", rails,
+                     predefined="BALUSTRADE", material="glass")
+        headroom = self.HG - self.SLAB - z_land
+        self.core_note = (f"straight stair: {risers} risers of {riser * 1000:.0f} mm, going "
+                          f"{going * 1000:.0f} mm, two flights {v1 - v0:.2f} m wide in one lane, "
+                          f"landing {land:.2f} m at +{z_land:.2f} with {headroom:.2f} m headroom "
+                          f"under the gallery (OI-23, TO VERIFY); lift shaft "
+                          f"{lift_room.u1 - lift_room.u0:.2f} x {lift_room.v1 - lift_room.v0:.2f} m")
+
+        def pt(u):
+            return (u, vm)
+        # Under the lower flight a person stands only where it is 2.0 m up.
+        u_solid = u_foot + d * (2.0 / riser) * going
+        self.walk_stair_solid = seg(u_foot, u_solid)
+        self.walk_stair_arrival = box(min(u_top, u_end), v1 - 0.05, max(u_top, u_end), v1 + 0.05)
+        self.walk_stair = [
+            {"name": "stair flight 1", "kind": "ramp", "poly": seg(u_foot, u_land0),
+             "p0": pt(u_foot), "z0": 0.0, "p1": pt(u_land0), "z1": z_land},
+            {"name": "stair landing", "kind": "flat", "poly": seg(u_land0, u_land1), "z": z_land},
+            {"name": "stair flight 2", "kind": "ramp", "poly": seg(u_land1, u_top),
+             "p0": pt(u_land1), "z0": z_land, "p1": pt(u_top), "z1": self.HG},
+            {"name": "stair head", "kind": "flat", "poly": seg(u_top, u_end), "z": self.HG},
+        ]
+        self.stairwell = seg(u_land1, u_end)
+        self.stair_head_railing = False               # the void balustrade guards the bridge
+        self.shaft = lift_room.poly.buffer(-0.10, join_style=2)
         self.element("IfcTransportElement", "Home lift", "ground",
                      [self._prism(self.shaft, 0.0, self.HG + self.HF - self.SLAB)],
                      predefined="ELEVATOR", style="lift")
@@ -879,6 +981,16 @@ class Model:
                         self.f, products=[sp], relating_object=self.storeys[storey][0])
                     continue
                 if r.key in self.open_sky_keys:
+                    cu, cv = r.poly.centroid.x, r.poly.centroid.y
+                    planter = box(cu - 0.80, cv - 0.80, cu + 0.80, cv + 0.80)
+                    self.element("IfcSlab", f"Paving, {self.names.get(r.key, r.key)}", storey,
+                                 [self._prism(q, -0.15, 0.15) for q in clean(r.poly.difference(planter))],
+                                 predefined="USERDEFINED", object_type="Courtyard paving",
+                                 material="deck")
+                    self.element("IfcGeographicElement", f"Planter, {self.names.get(r.key, r.key)}",
+                                 storey, [self._prism(planter, -0.15, 0.12)], predefined="USERDEFINED",
+                                 object_type="Courtyard planter", material="soil")
+                    self.courtyard_planters.append(planter)
                     sp = self.element("IfcSpace", self.names.get(r.key, r.key), storey,
                                       [self._prism(r.poly, -0.15, 0.10)],
                                       predefined="EXTERNAL", container=False, style="terrain")
@@ -1001,6 +1113,8 @@ class Model:
         a = self.names.get(d["a"], d["a"])
         if d["b"] != "outside":
             return f"Door {d['no']}, {a} to {self.names.get(d['b'], d['b'])}"
+        if d["kind"] == "fixed":
+            return f"Fixed glass {d['no']}, {a}"
         if d["a"] == "entrance_foyer":
             return f"Front door {d['no']}"
         if d["kind"] == "sliding":
@@ -1018,13 +1132,14 @@ class Model:
             st = d["storey"]
             if d["kind"] == "open" and frozenset((d["a"], d["b"])) in open_pairs[st]:
                 continue
-            kind = "opening" if d["kind"] == "open" else "door"
+            kind = {"open": "opening", "fixed": "window"}.get(d["kind"], "door")
             # An opening with no height given runs the full storey height.
             height = d["height_m"] or ((self.HG if st == "ground" else self.HF) - self.SLAB)
+            sill = float(d.get("sill_m", 0.0) or 0.0)
             fill = self.opening(st, kind, self._door_name(d), d["u"], d["v"], d["along_u"],
-                                d["width_m"], 0.0, height, d["wall_t"],
+                                d["width_m"], sill, height, d["wall_t"],
                                 material="glass" if d["kind"] == "sliding" else None)
-            if fill is None or kind == "opening":
+            if fill is None or kind != "door":
                 continue
             fill.OperationType = self.OPERATION[d["kind"]]
             if fill.OperationType == "USERDEFINED":
@@ -1229,9 +1344,10 @@ class Model:
         return sorted(out)
 
     def build_windows_and_external_doors(self):
-        lived_in = [c for c in self.f_circ if c.key == "family_hall"]
+        lived_in = [c for c in self.f_circ if c.key == "family_hall" or c.key in CIRC_WINDOWS]
+        g_halls = [c for c in self.g_circ if c.key in CIRC_WINDOWS]
         glazed_voids = [v for v in self.voids if v.key in VOID_GLAZING]
-        for storey, rooms, ring in (("ground", self.g_rooms, self.ext_ring_g),
+        for storey, rooms, ring in (("ground", self.g_rooms + g_halls, self.ext_ring_g),
                                     ("first", self.f_rooms + lived_in + glazed_voids,
                                      self.ext_ring_f)):
             ground = storey == "ground"
@@ -1454,7 +1570,8 @@ class Model:
                             for c in self.cuts if c["z"][1] > self.HG + 0.5] or [Polygon()])
         h = float(self.PAR)
         for v in self.voids:
-            edge = v.poly.exterior.difference(walls).difference(cuts)
+            others = unary_union([o.poly for o in self.voids if o is not v] or [Polygon()])
+            edge = v.poly.exterior.difference(walls).difference(cuts).difference(others.buffer(0.02))
             lines = [edge] if edge.geom_type == "LineString" else list(getattr(edge, "geoms", []))
             for ln in lines:
                 if ln.length < 0.30:
@@ -1465,6 +1582,8 @@ class Model:
                              material="glass")
         # The stair head: the stairwell's open edges on the first floor, where
         # no wall stands and the flights do not arrive (review 2026-10-03).
+        if not self.stair_head_railing:
+            return
         arrive = getattr(self, "walk_stair_arrival", None)
         edge = self.stairwell.exterior.difference(walls)
         if arrive is not None:
@@ -1490,12 +1609,15 @@ class Model:
 
         def interior(storey, rooms, circ):
             parts = [r.poly for r in rooms + circ] + [g for _, g in self.bridges[storey]]
-            parts += [door_rect(d) for d in self.lay_doors if d["storey"] == storey]
+            parts += [door_rect(d) for d in self.lay_doors
+                      if d["storey"] == storey and d["kind"] != "fixed"]
             return unary_union(parts)
 
         stair = getattr(self, "walk_stair", [])
         solid = getattr(self, "walk_stair_solid", Polygon())
         ground = interior("ground", self.g_rooms, self.g_circ).difference(solid)
+        for pl in self.courtyard_planters:
+            ground = ground.difference(pl.buffer(0.05))
         # The carport floor is below the house floor: its own zone at that level.
         carport_zone = None
         if self.carport is not None:

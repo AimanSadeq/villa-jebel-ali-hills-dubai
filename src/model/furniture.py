@@ -307,6 +307,11 @@ def furnish_bedroom(room: Room, w):
     opp = {"S": "N", "N": "S", "W": "E", "E": "W"}[side]
     _try(room, "TV unit", [(opp, c, 0.0, False) for c in _along(room, opp, 1.8)], lambda: tv_unit(1.8))
     others = [sd for sd in SIDES if sd not in (side, opp)]
+    # A desk only where the room has space for it: in a room under 21 m2 the
+    # desk and the bed can meet and seal off the bathroom door (redesign
+    # review, 2026-10-23).
+    if room.poly.area < 21.0:
+        return
     _any(room, "Desk and chair", others, lambda sd: [(sd, c, 0.0, False) for c in _along(room, sd, 1.2)],
          lambda: table(1.2, 0.55, 0.75, J) + [(TX, -0.23, 0.23, 0.65, 1.13, 0.0, 0.9)])
 
@@ -647,7 +652,7 @@ def layout(m) -> tuple[list[Piece], list[str]]:
             furnish_pantry(room)
         elif key == "laundry":
             furnish_laundry(room)
-        elif key == "home_office":
+        elif key in ("home_office", "workspace"):
             furnish_office(room)
         elif key == "entrance_foyer":
             furnish_foyer(room)

@@ -1,45 +1,42 @@
-# garden.yaml: the landscape, from the owner's answers G1 to G4 (2026-10-03).
-# Single source of truth: src/model/landscape.py builds the IFC landscape,
-# the walkthrough zones and the sketch VJH-SK-019 from this file. Never
-# hard-code garden geometry in scripts.
+# garden.yaml: the landscape of the redesign (D-060), from the owner's
+# handover of 2026-10-23: a landscaped front arrival with no vehicle gate and
+# no pedestrian gate, an open two car carport in the south corner (S4: A), a
+# meaningful contiguous private garden east of the house with direct access
+# from the family living, the BBQ pergola by the kitchen door (G1 kept), and
+# the statement tree in the courtyard (S2: A). Single source of truth:
+# src/model/landscape.py builds the IFC landscape, the walkthrough zones and
+# the sketch from this file. Never hard-code garden geometry in scripts.
 #
-# Coordinates: the plot building grid of brief/massing.yaml, metres.
-#   u 0 is the road boundary (side 1, WNW); u about 30.5 the landscape plot
-#   (side 3, ESE). v 0 is the SSW neighbour (side 2); v about 33.6 the NNE
-#   neighbour (side 4). The house back wall stands at u 21.29, its front at
-#   u 3.79 (u 5.59 at the office, u 9.54 at the north end); the carport takes
-#   u 0.31 to 9.04, v 3.26 to 12.12 (D-044, TO VERIFY).
-#   Levels, from the house ground floor finish (0.00): gate level and garden
-#   ground -0.45 (brief/layouts.yaml levels, reference sheet A-09-001),
-#   carport floor -0.30, porch 0.00.
+# Coordinates: the plot building grid of brief/massing.yaml, metres. u 0 is
+# the road boundary (side 1, WNW); u about 30.5 the landscape plot (side 3).
+# v 0 is the SSW neighbour (side 2); v about 33.6 the NNE neighbour (side 4).
+# The house stands at u 4.00 to 19.00, v 9.90 to 30.40; the carport at u 4.00
+# to 10.50, v 3.90 to 9.90; the plant block at u 10.50 to 13.90, v 7.25 to 9.90.
+# Levels, from the house ground floor finish (0.00): garden ground -0.45,
+# carport floor -0.30, terraces -0.15, courtyard 0.00.
 #
-# Answers: G1 BBQ pergola in the south corner by the Arabic kitchen door;
-# G2 balanced garden (terrace, central lawn, planting beds, paths); G3 the
-# D-011 boundary wall, TO VERIFY (OI-14); G4 a car gate into the carport and
-# a pedestrian gate on the portal line, path to the front door, planted
-# front garden with palms.
-#
-# Plants are indicative species common in UAE residential landscaping, for
-# the landscape architect to confirm, with the irrigation design (Phase 5).
+# Plants are indicative species common in UAE residential landscaping, for the
+# landscape architect to confirm, with the irrigation design (Phase 5).
 # No regulatory value is assumed. CONCEPT DESIGN, NOT FOR CONSTRUCTION.
 
 meta:
   stamp: "CONCEPT DESIGN, NOT FOR CONSTRUCTION"
-  status: "Built from answers G1 to G4 (D-055); layout for the owner's review."
-  ground_z: -0.45                # garden ground below the house floor finish
+  status: "First design of the redesign (D-060), for the owner's review."
+  ground_z: -0.45
 
-# Boundary wall, D-011 (G3). Thickness and heights indicative, TO VERIFY (OI-14).
+# Boundary: solid 2.40 m walls to the two neighbours and a 1.20 m wall with a
+# timber screen above toward the landscape plot (D-011, G3, TO VERIFY with
+# Meraas, OI-14). The road side is OPEN, with no wall and no gate (handover):
+# a planted edge instead. Whether the master developer requires a wall or a
+# gate on the road side is TO VERIFY (OI-14).
 wall:
   thickness_m: 0.25
-  solid_m: 1.20                  # solid part on the road and landscape sides
+  solid_m: 1.20
   overall_m: 2.40
-  screen_sides: [road, landscape]   # lighter timber screen from solid_m to overall_m
-  solid_sides: [south, north]       # solid full height against the neighbours
-  gates:
-    - {name: "Car gate, sliding, into the carport", side: road, v: [3.31, 12.07], height_m: 2.20,
-       note: "The carport reaches the road boundary (D-044, TO VERIFY): the gate is its road edge."}
-    - {name: "Pedestrian gate", side: road, v: [19.45, 20.65], height_m: 2.20,
-       note: "On the line of the stone portal (G4)."}
+  screen_sides: [landscape]
+  solid_sides: [south, north]
+  open_sides: [road]
+  gates: []
 
 # Surfaces: u, v boxes, with the top level (z) from the house floor finish.
 # The house, the carport and the wall are taken out of every surface, and
@@ -47,55 +44,56 @@ wall:
 surfaces:
   # Planting beds first: the paths, lawns and terraces listed after them cut them.
   - {key: east_bed, name: "Planting bed, landscape side", kind: bed, z: -0.45,
-     u: [27.70, 30.60], v: [0.00, 34.00]}
+     u: [28.20, 30.60], v: [0.00, 34.00]}
   - {key: north_bed, name: "Planting bed, north", kind: bed, z: -0.45,
-     u: [3.79, 28.20], v: [31.40, 34.00]}
-  - {key: front_bed_corner, name: "Planting bed, north west corner", kind: bed, z: -0.45,
-     u: [0.00, 9.54], v: [29.46, 34.00]}
+     u: [0.00, 28.20], v: [31.60, 34.00]}
   - {key: south_bed, name: "Planting strip, south", kind: bed, z: -0.45,
-     u: [0.00, 28.20], v: [0.00, 3.00]}
-  - {key: front_bed_south, name: "Planting bed, by the carport", kind: bed, z: -0.45,
-     u: [0.00, 3.10], v: [18.12, 19.30]}
-  - {key: front_bed_path, name: "Planting bed, by the path", kind: bed, z: -0.45,
-     u: [0.00, 3.10], v: [20.80, 21.97]}
+     u: [0.00, 28.20], v: [0.00, 3.40]}
+  - {key: road_bed, name: "Planting edge along the road", kind: bed, z: -0.45,
+     u: [0.00, 1.20], v: [0.00, 34.00]}
+  - {key: front_bed_south, name: "Planting bed between the drive and the entrance", kind: bed, z: -0.45,
+     u: [1.20, 4.00], v: [9.90, 16.20]}
+  - {key: front_bed_north, name: "Planting bed north of the entrance", kind: bed, z: -0.45,
+     u: [1.20, 4.00], v: [19.00, 31.60]}
+  - {key: front_lawn, name: "Front lawn", kind: lawn, z: -0.45,
+     u: [1.20, 4.00], v: [21.00, 29.50]}
   - {key: lawn, name: "Lawn", kind: lawn, z: -0.45,
-     u: [24.60, 28.20], v: [10.00, 30.17],
-     note: "In front of the living room and the dining (G2)."}
-  - {key: front_lawn_south, name: "Front garden lawn, south of the path", kind: lawn, z: -0.45,
-     u: [0.00, 5.59], v: [12.12, 18.12]}
-  - {key: front_lawn_north, name: "Front garden lawn, north of the path", kind: lawn, z: -0.45,
-     u: [0.00, 3.79], v: [21.97, 30.17]}
+     u: [21.90, 28.20], v: [14.30, 31.60],
+     note: "The private garden's lawn, in front of the dining, the master terrace and the family living."}
   - {key: north_path, name: "Side path, north", kind: path, z: -0.40,
-     u: [0.00, 28.20], v: [30.17, 31.40],
-     note: "From the garden terrace round the north end of the house to the front lawn."}
+     u: [0.00, 21.90], v: [30.40, 31.60],
+     note: "From the front garden round the north end of the house to the garden terrace."}
   - {key: service_yard, name: "Service yard", kind: path, z: -0.40,
-     u: [9.04, 21.29], v: [3.00, 6.07],
-     note: "Paved, from the carport to the laundry (G15), plant room (G16) and the BBQ terrace."}
+     u: [13.90, 21.90], v: [3.40, 9.90],
+     note: "Paved, behind the plant block, to the kitchen's BBQ terrace."}
+  - {key: driveway, name: "Driveway", kind: path, z: -0.40,
+     u: [0.00, 4.00], v: [3.90, 9.90],
+     note: "Open from the road into the carport, no gate (handover)."}
   - {key: entrance_path, name: "Entrance path", kind: path, z: -0.40,
-     u: [0.00, 2.20], v: [19.30, 20.80],
-     note: "From the pedestrian gate to the portal (G4)."}
+     u: [0.00, 2.20], v: [16.20, 19.00],
+     note: "From the road to the entrance steps, no gate (handover)."}
   - {key: garden_terrace, name: "Garden terrace", kind: paving, z: -0.15,
-     u: [21.29, 24.30], v: [6.07, 30.17],
-     note: "3.00 m deep along the back of the house, linking the three garden doors (G20, G21, G22)."}
+     u: [19.00, 21.90], v: [14.30, 30.40],
+     note: "Along the back of the house, linking the dining and family living garden doors."}
   - {key: bbq_terrace, name: "BBQ terrace", kind: paving, z: -0.15,
-     u: [21.29, 27.40], v: [3.31, 10.00],
-     note: "South corner, by the Arabic kitchen door G21 (G1). Inside the 3 m setback line."}
+     u: [19.00, 24.00], v: [9.90, 14.30],
+     note: "By the show kitchen's garden door (G1)."}
   - {key: terrace_step, name: "Terrace step", kind: step, z: -0.30,
-     u: [24.30, 24.60], v: [10.00, 30.17]}
+     u: [21.90, 22.20], v: [14.30, 30.40]}
   - {key: bbq_step, name: "BBQ terrace step", kind: step, z: -0.30,
-     u: [27.40, 27.70], v: [3.31, 10.00]}
+     u: [24.00, 24.30], v: [9.90, 14.30]}
   - {key: entrance_court, name: "Entrance court", kind: paving, z: 0.00,
-     u: [3.10, 6.19], v: [18.57, 21.52],
-     note: "Inside the stone portal, at the porch level; three steps down to the path."}
+     u: [3.10, 4.00], v: [16.20, 19.00],
+     note: "Under the entrance canopy, at the house level; three steps down to the path."}
   - {key: entrance_steps, name: "Entrance steps", kind: steps, z: 0.00, z_low: -0.45,
-     u: [2.20, 3.10], v: [18.57, 21.52], risers: 3}
+     u: [2.20, 3.10], v: [16.20, 19.00], risers: 3}
 
 # Hedges: a continuous clipped hedge, as a box with a height.
 hedges:
   - {name: "Hedge, north wall", u: [4.5, 27.5], v: [33.0, 33.5], height_m: 1.50}
   - {name: "Hedge, south strip", u: [1.0, 27.5], v: [0.60, 1.10], height_m: 1.50}
-  - {name: "Hedge, front wall", u: [0.35, 0.85], v: [12.4, 19.2], height_m: 0.90}
-  - {name: "Hedge, front wall north", u: [0.35, 0.85], v: [21.0, 29.3], height_m: 0.90}
+  - {name: "Hedge along the road, south", u: [0.35, 0.85], v: [10.5, 15.9], height_m: 0.90}
+  - {name: "Hedge along the road, north", u: [0.35, 0.85], v: [19.3, 30.5], height_m: 0.90}
 
 # Trees and palms: species indicative, for the landscape architect.
 #   crown_m: crown diameter; height_m: overall height; trunk_m: clear trunk.
@@ -104,30 +102,36 @@ species:
   ghaf:       {name: "Ghaf, Prosopis cineraria (native, low water)", kind: tree, height_m: 7.0, trunk_m: 2.2, crown_m: 6.0}
   sidr:       {name: "Sidr, Ziziphus spina-christi (native)", kind: tree, height_m: 6.0, trunk_m: 2.0, crown_m: 5.0}
   frangipani: {name: "Frangipani, Plumeria obtusa", kind: tree, height_m: 4.0, trunk_m: 1.6, crown_m: 3.5}
+  olive:      {name: "Olive, Olea europaea, ornamental (the courtyard tree)", kind: tree, height_m: 4.5, trunk_m: 2.0, crown_m: 3.6}
 trees:
+  # The statement tree in the courtyard (S2: A), in its planter at the house level.
+  - {species: olive, u: 11.40, v: 17.55, courtyard: true, z: 0.00}
+  # The private garden, east.
   - {species: date_palm, u: 29.3, v: 6.0}
   - {species: date_palm, u: 29.3, v: 12.5}
   - {species: ghaf, u: 29.1, v: 18.5}
   - {species: date_palm, u: 29.3, v: 23.5}
   - {species: sidr, u: 29.1, v: 28.5}
-  - {species: frangipani, u: 29.1, v: 32.2}
-  - {species: frangipani, u: 12.0, v: 32.3}
-  - {species: frangipani, u: 22.0, v: 32.3}
-  - {species: date_palm, u: 1.4, v: 14.6}
-  - {species: date_palm, u: 1.4, v: 17.0}
-  # North of the path the front lawn is only 3.8 m deep, too shallow for a
-  # 5 m palm crown: frangipani there, the palms in the deeper corner bed.
-  - {species: frangipani, u: 1.5, v: 24.0}
-  - {species: date_palm, u: 1.6, v: 32.0}
-  - {species: date_palm, u: 6.5, v: 33.2}
-  - {species: frangipani, u: 4.2, v: 33.0}
+  - {species: frangipani, u: 25.0, v: 32.6}
+  - {species: frangipani, u: 16.0, v: 32.6}
+  - {species: frangipani, u: 25.0, v: 15.5}
+  # The front arrival, road side: the beds are 2.8 m deep, so small flowering
+  # trees stand there and the palms take the two corners, where their crowns
+  # clear the house (the landscape builder refuses a crown over the house).
+  - {species: frangipani, u: 1.8, v: 11.5}
+  - {species: frangipani, u: 1.8, v: 14.2}
+  - {species: frangipani, u: 1.8, v: 20.5}
+  - {species: frangipani, u: 1.8, v: 27.5}
+  - {species: date_palm, u: 1.5, v: 32.8}
+  - {species: date_palm, u: 7.0, v: 33.3}
+  - {species: date_palm, u: 1.5, v: 1.6}
+  - {species: date_palm, u: 25.0, v: 1.6}
 
-# BBQ area (G1): an open timber pergola over the BBQ terrace, a BBQ counter
-# and a table for six. Inside the buildable envelope; the pergola height is
-# indicative (open structure, TO VERIFY with the boundary wall, OI-14).
+# BBQ area (G1): an open timber pergola over the BBQ terrace by the kitchen
+# door, a BBQ counter and a table for six. Inside the buildable envelope.
 bbq:
-  pergola: {u: [22.60, 26.60], v: [3.60, 7.20], z_base: -0.15, z_top: 2.70, post_m: 0.15,
+  pergola: {u: [20.00, 23.60], v: [10.20, 13.80], z_base: -0.15, z_top: 2.70, post_m: 0.15,
             beam_depth_m: 0.25, louvre_spacing_m: 0.25, louvre_depth_m: 0.15, louvre_thickness_m: 0.04}
-  counter: {u: [22.60, 25.60], v: [3.60, 4.25], height_m: 0.90,
-            grill: {u: [23.80, 24.60], v: [3.65, 4.20]}}
-  table:   {u: [23.00, 24.80], v: [5.10, 6.00], height_m: 0.74, seats: 6}
+  counter: {u: [20.60, 23.40], v: [10.25, 10.90], height_m: 0.90,
+            grill: {u: [21.60, 22.40], v: [10.30, 10.85]}}
+  table:   {u: [20.80, 22.60], v: [11.90, 12.80], height_m: 0.74, seats: 6}
