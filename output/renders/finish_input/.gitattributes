@@ -1,0 +1,2 @@
+# Small JPG inputs for the AI finishing pass (D-063): kept out of Git LFS so the cloud session can push them.
+*.jpg !filter !diff !merge
