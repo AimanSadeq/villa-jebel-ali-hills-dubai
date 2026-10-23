@@ -8,6 +8,16 @@ Columns: date, decision, reason, approved by Aiman.
 
 ## 2026-10-23, Redesign from the owner's handover
 
+### D-062 Image upgrades: the Twinmotion step list and the laptop render upgrade (answers U1, U2)
+
+**Date.** 2026-10-23.
+
+**Decision.** The owner found the first renders of the courtyard villa very basic. Two upgrades, both his choice: (1) docs/twinmotion-steps-courtyard-villa.md, the exact Twinmotion steps for this house (import, location and north, every material name with its library match and scale, 17 tree positions, the furniture that matters, the seven cameras with sun times), the photorealistic route he chose in D-059; (2) renders/render_villa.py upgraded for his laptop: quality presets with adaptive sampling and the OpenImageDenoise denoiser, the fetched Poly Haven sky as the visible dome with the physical sky lighting the scene, light portals at the garden glass and the courtyard, translucent foliage, depth of field indoors. The cloud sessions cannot reach the texture library, so the realistic renders are made on the laptop: `python assets/fetch_assets.py`, then `python renders/render_villa.py --all --device GPU --quality high`. The third option, an AI finishing prompt over the renders, stays available.
+
+**Reason.** The owner's answers U1 (A, the Twinmotion list) and his instruction to do the render upgrade as well.
+
+**Approved by Aiman.** Yes (U1: A; "now do the laptop render upgrade too").
+
 ### D-061 The courtyard villa: first design of the redesign built end to end
 
 **Date.** 2026-10-23.

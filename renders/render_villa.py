@@ -14,9 +14,14 @@ Builds the Blender scene from the project's own outputs, nothing by hand:
   * the six views of CLAUDE.md deliverable 5, each a camera in the plot grid.
 
 Runs with Blender's Python module (pip install bpy) or inside Blender:
-    python renders/render_villa.py --view living --samples 128 --size 1920x1080
-    python renders/render_villa.py --all --device GPU            (laptop, Intel Arc)
+    python renders/render_villa.py --view living --quality preview
+    python renders/render_villa.py --all --device GPU --quality high   (laptop, Intel Arc)
     blender -b -P renders/render_villa.py -- --view aerial
+Quality presets (U2, 2026-10-23): preview 32 samples at 960 x 540; medium 256
+at 1920 x 1080; high 768 at 2560 x 1440, all with adaptive sampling and the
+OpenImageDenoise denoiser. With the photographic textures and skies fetched
+by assets/fetch_assets.py the materials and the sky dome are real; interior
+views get depth of field and light portals at the big glass.
 Output: output/renders/VJH-R-00n_<view>.png, stamped CONCEPT DESIGN, NOT FOR CONSTRUCTION.
 
 Coordinates: Blender x = plot grid u, y = v, z = height, metres.
@@ -83,6 +88,12 @@ VIEWS = {
     "aerial": ((-12.0, -8.0, 24.0), (13.0, 19.0, 3.0), 35, "spring_15h", "Aerial view"),
 }
 PALETTE_DEFAULT = 0
+INTERIOR_VIEWS = {"foyer", "courtyard", "living", "master"}
+QUALITY = {   # samples, size, adaptive noise threshold
+    "preview": (32, "960x540", 0.05),
+    "medium": (256, "1920x1080", 0.02),
+    "high": (768, "2560x1440", 0.01),
+}
 
 
 def hexrgb(h: str) -> tuple[float, float, float, float]:
@@ -299,7 +310,7 @@ def add_garden(data: dict, mats: Materials, col) -> None:
             pts = [p for ring in polys for p in ring]
             verts = [(p.x, p.y, s["z"] + 0.006) for p in pts]
             mesh_object(f"garden {s['key']}", verts, tris, mat, col)
-    leaf = mats.get(None, "#3f6b2e", 0.75, "leaf")
+    leaf = leaf_material(mats, "#3f6b2e", "leaf")
     for h in ext.get("hedges", []):
         u0, u1, v0, v1, z0, z1 = h["b"]
         ob = box_object("hedge", u0, u1, v0, v1, z0, z1, leaf, col, bevel=0.12, smooth=True)
@@ -310,9 +321,26 @@ def add_garden(data: dict, mats: Materials, col) -> None:
         d.strength = 0.08
     add_surroundings(mats, col, float(ext.get("ground_z", -0.45)))
     trunk = mats.get("timber", "#5a4332", 0.9, "trunk")
-    palm_leaf = mats.get(None, "#4f7a2e", 0.65, "palm leaf")
+    palm_leaf = leaf_material(mats, "#4f7a2e", "palm leaf")
     for t in ext.get("trees", []):
         add_tree(t, trunk, leaf if t["kind"] == "tree" else palm_leaf, col, ground=float(ext.get("ground_z", -0.45)))
+
+
+def leaf_material(mats: Materials, tint: str, name: str) -> bpy.types.Material:
+    """Foliage: a diffuse leaf colour mixed with translucency, so sunlit crowns
+    light up from behind and shadows inside them stay green, not black."""
+    m = mats.get(None, tint, 0.7, name)
+    nt = m.node_tree
+    bsdf = nt.nodes["Principled BSDF"]
+    out = nt.nodes["Material Output"]
+    tr = nt.nodes.new("ShaderNodeBsdfTranslucent")
+    tr.inputs["Color"].default_value = tuple(min(1.0, c * 1.6) for c in hexrgb(tint)[:3]) + (1.0,)
+    mix = nt.nodes.new("ShaderNodeMixShader")
+    mix.inputs["Fac"].default_value = 0.35
+    nt.links.new(bsdf.outputs["BSDF"], mix.inputs[1])
+    nt.links.new(tr.outputs["BSDF"], mix.inputs[2])
+    nt.links.new(mix.outputs["Shader"], out.inputs["Surface"])
+    return m
 
 
 def add_surroundings(mats: Materials, col, ground: float) -> None:
@@ -425,7 +453,12 @@ def add_tree(t: dict, trunk_mat, leaf_mat, col, ground: float) -> None:
                 col.objects.link(sp)
 
 
-def add_sky(sun: dict, bearing_deg: float) -> None:
+def add_sky(sun: dict, bearing_deg: float, index: dict | None = None) -> None:
+    """The physical sky (Nishita) with the sun at the study's position lights
+    the scene. Where the fetched skies exist (assets/manifest.yaml, hdri
+    sky_day and sky_sunset), the camera sees the photographed sky dome with
+    its clouds and horizon instead of the plain gradient; the light still
+    comes from the physical sky, so shadows stay the site's own."""
     world = bpy.data.worlds.new("Sky")
     bpy.context.scene.world = world
     world.use_nodes = True
@@ -446,6 +479,26 @@ def add_sky(sun: dict, bearing_deg: float) -> None:
     bg.inputs["Strength"].default_value = 1.0
     out = nt.nodes.new("ShaderNodeOutputWorld")
     nt.links.new(sky.outputs["Color"], bg.inputs["Color"])
+    hdri = ((index or {}).get("hdri") or {}).get("sky_dusk" if float(sun.get("elevation_deg", 40)) < 12 else "sky_day")
+    if hdri and (ASSET_ROOT / hdri["path"]).exists() and not (index or {}).get("standin"):
+        env = nt.nodes.new("ShaderNodeTexEnvironment")
+        env.image = bpy.data.images.load(str(ASSET_ROOT / hdri["path"]), check_existing=True)
+        coord = nt.nodes.new("ShaderNodeTexCoord")
+        mapping = nt.nodes.new("ShaderNodeMapping")
+        # Turn the photograph so its brightest patch sits where the sun is.
+        mapping.inputs["Rotation"].default_value = (0.0, 0.0, sky.sun_rotation)
+        nt.links.new(coord.outputs["Generated"], mapping.inputs["Vector"])
+        nt.links.new(mapping.outputs["Vector"], env.inputs["Vector"])
+        seen = nt.nodes.new("ShaderNodeBackground")
+        seen.inputs["Strength"].default_value = 1.0
+        nt.links.new(env.outputs["Color"], seen.inputs["Color"])
+        lp = nt.nodes.new("ShaderNodeLightPath")
+        mix = nt.nodes.new("ShaderNodeMixShader")
+        nt.links.new(lp.outputs["Is Camera Ray"], mix.inputs["Fac"])
+        nt.links.new(bg.outputs["Background"], mix.inputs[1])
+        nt.links.new(seen.outputs["Background"], mix.inputs[2])
+        nt.links.new(mix.outputs["Shader"], out.inputs["Surface"])
+        return
     nt.links.new(bg.outputs["Background"], out.inputs["Surface"])
 
 
@@ -460,16 +513,57 @@ def add_camera(view: str, size: tuple[int, int]) -> bpy.types.Object:
     cam.location = Vector(pos)
     direction = Vector(look) - Vector(pos)
     cam.rotation_euler = direction.to_track_quat("-Z", "Y").to_euler()
+    if view in INTERIOR_VIEWS:
+        cam_data.dof.use_dof = True
+        cam_data.dof.focus_distance = direction.length
+        cam_data.dof.aperture_fstop = 4.0
     bpy.context.scene.camera = cam
     bpy.context.scene.render.resolution_x, bpy.context.scene.render.resolution_y = size
     return cam
 
 
-def setup_render(samples: int, device: str) -> None:
+def add_portals(col) -> None:
+    """Light portals (invisible area lights that only guide the sampling) in
+    the garden glass and around the courtyard, so the interiors converge
+    without noise. Positions from brief/layouts.yaml, the same plan the
+    model is built from."""
+    lay = yaml.safe_load((REPO_ROOT / "brief" / "layouts.yaml").read_text(encoding="utf-8"))
+    outline = lay["outlines"]["ground"]
+    x_east = max(p[0] for p in outline)
+    ys = [p[1] for p in outline if abs(p[0] - x_east) < 0.01]
+    first_top = 9.0
+    def portal(name, size_x, size_y, loc, rot):
+        ld = bpy.data.lights.new(name, "AREA")
+        ld.shape = "RECTANGLE"
+        ld.size, ld.size_y = size_x, size_y
+        ld.cycles.is_portal = True
+        ob = bpy.data.objects.new(name, ld)
+        ob.location = loc
+        ob.rotation_euler = rot
+        col.objects.link(ob)
+    # The garden face: one portal per storey, facing in (the lamp's -Z is its normal).
+    y0, y1 = min(ys), max(ys)
+    portal("portal garden ground", y1 - y0, 4.5, (x_east + 0.05, (y0 + y1) / 2, 2.3), (0, math.radians(-90), 0))
+    portal("portal garden first", y1 - y0, 3.6, (x_east + 0.05, (y0 + y1) / 2, 5.0 + 1.9), (0, math.radians(-90), 0))
+    court = next((r for r in lay["floors"]["ground"]["rooms"] if r["key"] in (lay.get("open_to_sky") or [])), None)
+    if court:
+        (u0, u1), (v0, v1) = court["u"], court["v"]
+        portal("portal courtyard", u1 - u0, v1 - v0, ((u0 + u1) / 2, (v0 + v1) / 2, first_top + 0.3), (math.radians(180), 0, 0))
+    del first_top
+
+
+def setup_render(samples: int, device: str, noise: float = 0.02) -> None:
     sc = bpy.context.scene
     sc.render.engine = "CYCLES"
     sc.cycles.samples = samples
+    sc.cycles.use_adaptive_sampling = True
+    sc.cycles.adaptive_threshold = noise
     sc.cycles.use_denoising = True
+    sc.cycles.denoiser = "OPENIMAGEDENOISE"
+    sc.cycles.denoising_input_passes = "RGB_ALBEDO_NORMAL"
+    sc.cycles.denoising_prefilter = "ACCURATE"
+    sc.cycles.use_light_tree = True
+    sc.cycles.sample_clamp_indirect = 10.0
     sc.cycles.device = device
     if device == "GPU":
         prefs = bpy.context.preferences.addons.get("cycles")
@@ -553,10 +647,11 @@ def render_view(view: str, data: dict, mats: Materials, args) -> Path:
     pos, look, lens, sun_key, title = VIEWS[view]
     sun = (data.get("sun") or {}).get(sun_key) or {"azimuth_deg": 242.0, "elevation_deg": 45.0}
     bearing = float(yaml.safe_load(MASSING.read_text(encoding="utf-8"))["grid"]["bearing_deg"])
-    add_sky(sun, bearing)
+    add_sky(sun, bearing, mats.index)
+    add_portals(col)
     w, h = (int(x) for x in args.size.lower().split("x"))
     add_camera(view, (w, h))
-    setup_render(args.samples, args.device)
+    setup_render(args.samples, args.device, args.noise)
     OUT.mkdir(parents=True, exist_ok=True)
     ev = calibrate_exposure()
     n = list(VIEWS).index(view) + 1
@@ -572,11 +667,16 @@ def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description="Cycles renders of Villa 5130272.")
     ap.add_argument("--view", choices=list(VIEWS), help="One view.")
     ap.add_argument("--all", action="store_true", help="All six views.")
-    ap.add_argument("--samples", type=int, default=128)
-    ap.add_argument("--size", default="1920x1080")
+    ap.add_argument("--quality", choices=list(QUALITY), default="medium",
+                    help="Preset for samples and size; --samples and --size override it.")
+    ap.add_argument("--samples", type=int, default=None)
+    ap.add_argument("--size", default=None)
     ap.add_argument("--device", choices=["CPU", "GPU"], default="CPU")
     ap.add_argument("--palette", type=int, default=PALETTE_DEFAULT, help="0, 1 or 2 (brief/palettes.yaml order).")
     args = ap.parse_args(argv)
+    q_samples, q_size, args.noise = QUALITY[args.quality]
+    args.samples = args.samples or q_samples
+    args.size = args.size or q_size
     if not IFC.exists():
         print(f"Missing {IFC}: run src/model/build_model.py first.")
         return 1
@@ -590,6 +690,7 @@ def main(argv: list[str]) -> int:
     views = list(VIEWS) if args.all else [args.view or "living"]
     for v in views:
         render_view(v, data, Materials(index), args)
+    print(f"quality {args.quality}: {args.samples} samples at {args.size}, device {args.device}")
     return 0
 
 
