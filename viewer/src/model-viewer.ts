@@ -471,6 +471,47 @@ async function boot() {
   const liftBtn = h('button', { class: 'chip', type: 'button' }, icon('lift', 'icon tiny'), 'Ride the lift');
   liftBtn.addEventListener('click', () => walker?.rideLift());
 
+  // Go to a room: the walker is set down at the room's centre, or the nearest
+  // point where it can stand, facing along the room's longer side.
+  async function goToRoom(room: RoomLabel) {
+    if (!walker || !room.rect) return;
+    if (!walkState.on) await setWalking(true);
+    const lv = walker.data.levels;
+    const z0 = room.storey === 'first' ? (lv.first ?? 5) : (lv.ground ?? 0);
+    const [a, b, c, d] = room.rect;
+    const cu = (a + b) / 2;
+    const cv = (c + d) / 2;
+    let best: [number, number, number] | null = null;
+    outer: for (let r = 0; r <= 3.0; r += 0.3) {
+      const n = r === 0 ? 1 : Math.max(8, Math.round((2 * Math.PI * r) / 0.3));
+      for (let i = 0; i < n; i++) {
+        const u = cu + r * Math.cos((2 * Math.PI * i) / n);
+        const v = cv + r * Math.sin((2 * Math.PI * i) / n);
+        if (u < a || u > b || v < c || v > d) continue;
+        const z = walker.standAt(u, v, z0);
+        if (z !== null) { best = [u, v, z]; break outer; }
+      }
+    }
+    const [u, v, z] = best ?? [cu, cv, z0];
+    const yaw = b - a >= d - c ? (u <= cu ? -Math.PI / 2 : Math.PI / 2) : (v <= cv ? 0 : Math.PI);
+    walker.teleport(u, v, z, yaw);
+    await fragments.core.update(true);
+  }
+  const roomSel = h('select', { class: 'chip wide', 'aria-label': 'Go to a room' });
+  roomSel.append(h('option', { value: '' }, 'Go to a room'));
+  for (const storey of ['ground', 'first'] as const) {
+    const grp = h('optgroup', { label: storey === 'ground' ? 'Ground floor' : 'First floor' });
+    const rooms = roomRects.map((r) => r.room).filter((r) => r.storey === storey)
+      .sort((x, y) => x.name.localeCompare(y.name));
+    for (const r of rooms) grp.append(h('option', { value: `${r.storey}:${r.key}` }, r.name));
+    roomSel.append(grp);
+  }
+  roomSel.addEventListener('change', () => {
+    const [storey, key] = roomSel.value.split(':');
+    const room = roomRects.map((r) => r.room).find((r) => r.storey === storey && r.key === key);
+    if (room) void goToRoom(room);
+  });
+
   // Panel -------------------------------------------------------------------------
 
   panel.append(h('header', {},
@@ -511,8 +552,16 @@ async function boot() {
   panel.append(section('walk', 'Walkthrough',
     h('div', { class: 'chips' }, walkBtn),
     h('div', { class: 'chips', style: 'margin-top:8px' }, dayBtn, nightBtn, liftBtn),
+    h('div', { class: 'chips', style: 'margin-top:8px' }, roomSel),
     h('p', { class: 'note' }, icon('warn', 'icon tiny'),
       'Walls and the balustrades stop you, the stair carries you up and down, the lift rides between floors. Doors are shown open. Night lights are interim, one per room, until the ceiling plans place the fixtures (Phase 6).')));
+
+  // ?at=<room key> opens the page walking in that room (links in the notes).
+  const atKey = new URLSearchParams(window.location.search).get('at');
+  if (atKey) {
+    const room = roomRects.map((r) => r.room).find((r) => r.key === atKey);
+    if (room) void goToRoom(room);
+  }
 
   if (finishes) {
     const palBtns: HTMLButtonElement[] = [];

@@ -58,7 +58,7 @@ pip install -r requirements.txt
 | `python src/model/build_model.py` | GFA check, then the IFC model, validation, and the viewer's model data. The IFC and the plan PDF are generated, not committed: run this before the viewer |
 | `python src/analysis/shade_check.py` | Afternoon shade on the garden from the planned footprint, VJH-RPT-008 (written when the pool was in scope) |
 | `npm run dev --prefix viewer` | Massing viewer at http://localhost:5173 |
-| (same server) | IFC model viewer and walkthrough at http://localhost:5173/model.html: walk, day and night, three palettes, real materials and sky |
+| (same server) | IFC model viewer and walkthrough at http://localhost:5173/model.html: walk, day and night, three palettes, real materials and sky. "Go to a room" in the Walkthrough panel sets you down in any room; `model.html?at=courtyard` (any room key of brief/layouts.yaml) opens the page already walking there |
 | `python src/model/assemble_reference.py` | The owner's reference villa with his answers, writes brief/reference_plan.yaml (run before layout_gen) |
 | `python src/drawings/sketch_12_floors.py` | Decision sketch VJH-SK-013, answer 12 on both floors with the door schedule (also sketch_12a.py, sketch_12_trims.py) |
 | `python src/drawings/sketch_facade.py` | Facade elevations VJH-SK-017 from the IFC and brief/facade.yaml |
