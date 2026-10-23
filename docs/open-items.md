@@ -6,7 +6,7 @@ names the document that must answer it.
 
 Status key: OPEN, ASKED (sent to a third party), CLOSED.
 
-Last updated: 2026-10-23 (the courtyard villa of the redesign, D-061; 504.22 m2, inside the cap by 158.77 m2)
+Last updated: 2026-10-23 (D-063, the AI-finished images, OI-30)
 
 ## Critical. Blocks Phase 2 room layouts
 
@@ -586,6 +586,25 @@ cladding and the entrance portal may project toward the setback line or into
 it, and by how much; and whether a parapet is required on the 0.49 m ledge in
 front of the living room's tall glass, which nobody can reach (removed inside
 the garden frame in the model, D-051). No value is assumed.
+
+### OI-30 The AI-finished images live only in the owner's Canva account
+
+| | |
+|---|---|
+| Status | OPEN, owner's action |
+| Raised | 2026-10-23, D-063 |
+
+The five finished views (entrance, foyer, courtyard, living, master bedroom)
+were generated in the owner's Canva account from output/renders/finish_input/.
+The cloud session's network policy blocks canva.com, so it can neither upload
+to Canva directly (the renders went in through the public repository) nor
+download the results. To close: the owner downloads the images he keeps into
+output/renders/ai/ (they are LFS files, so from the laptop), or allows
+canva.com in the environment's network settings so a session can do it. The
+garden at sunset and the aerial still need generating once the account's
+image credits renew. Every finished image carries the label "AI impression
+over the concept model. CONCEPT DESIGN, NOT FOR CONSTRUCTION" when it is
+filed.
 
 ## Owner decisions outstanding
 

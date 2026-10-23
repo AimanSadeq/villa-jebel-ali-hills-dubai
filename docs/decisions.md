@@ -8,6 +8,37 @@ Columns: date, decision, reason, approved by Aiman.
 
 ## 2026-10-23, Redesign from the owner's handover
 
+### D-063 Realistic images by an AI finishing pass over the concept renders (answer U3: A)
+
+**Decision.** The owner's verdict on the browser walkthrough, 2026-10-23: "Not
+like Twinmotion at all. It does not render any real images. Very hard to use."
+The walkthrough stays what it is, a checking tool for rooms, sizes, routes, the
+stair and the lift. It got a "Go to a room" list in the Walkthrough panel, a
+`?at=<room>` start parameter, and a hosted private copy so it needs no setup.
+For the realistic images the owner chose, from four routes (AI finish over the
+renders, Twinmotion on the laptop, Blender on the laptop GPU, Blender in the
+cloud), the AI finishing pass: each concept render, stored without its caption
+strip in output/renders/finish_input/, is restyled photorealistically by the
+image generator in the owner's Canva account, with a prompt that names the
+design's materials (white render, charcoal basalt entrance box, teak soffits,
+slim dark frames, limestone, travertine, oak) and asks to keep the composition,
+massing, openings and furniture positions of the reference. Five views are
+finished: entrance, foyer, courtyard, living, master bedroom. The garden at
+sunset and the aerial stopped on the account's image credit quota and follow
+when it renews. The finished images live in the owner's Canva uploads; the
+cloud session cannot download them (its network policy blocks canva.com), so
+the owner downloads the ones he keeps into output/renders/ai/.
+
+**Reason.** The owner's priority is the look and feel (D-060). Twinmotion and
+the laptop renders need his time at the laptop; the finishing pass needs none
+and keeps the model's geometry closely, though not exactly. The images are
+impressions over the model, not renders of it, and carry that label: "AI
+impression over the concept model. CONCEPT DESIGN, NOT FOR CONSTRUCTION."
+They do not replace the IFC model, the drawings or the Twinmotion route
+(D-059) for the final presentation.
+
+**Approved by Aiman: yes.** Chosen from the four options, 2026-10-23.
+
 ### D-062 Image upgrades: the Twinmotion step list and the laptop render upgrade (answers U1, U2)
 
 **Date.** 2026-10-23.
