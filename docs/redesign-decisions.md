@@ -16,3 +16,4 @@ set is complete.
 | S3 | The formal reception room: salon, or majlis as the handover calls it | **A: salon.** | D-047 stands: salon everywhere, never majlis, in the new design too. |
 | S4 | Which side of the road frontage the open two car carport sits on | **A: the south corner,** as in the current design; kitchens and staff rooms stay south, the entrance in the middle of the frontage. | Service side fixed south. |
 | S5 | Home office: upstairs workspace only (handover), ground floor office only, or both | **A: upstairs workspace only,** in the family lounge. | No ground floor office or office WC in the new program. |
+| S6 | Floor heights: 4.5 m ground and 3.6 m first, 5.0 and 4.0 as now, or 4.0 and 3.4 | **B: 5.0 m ground, 4.0 m first,** as the current design: the grandest foyer and living room, 10.2 m overall with the 1.20 m parapet. | D-030 stands for the new design. Stair of 28 risers over 5.0 m, as now (OI-23 TO VERIFY). |
