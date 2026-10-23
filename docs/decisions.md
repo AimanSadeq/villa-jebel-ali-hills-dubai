@@ -23,9 +23,10 @@ image generator in the owner's Canva account, with a prompt that names the
 design's materials (white render, charcoal basalt entrance box, teak soffits,
 slim dark frames, limestone, travertine, oak) and asks to keep the composition,
 massing, openings and furniture positions of the reference. Five views are
-finished: entrance, foyer, courtyard, living, master bedroom. The garden at
-sunset and the aerial stopped on the account's image credit quota and follow
-when it renews. The finished images live in the owner's Canva uploads; the
+finished first: entrance, foyer, courtyard, living, master bedroom. The garden
+at sunset and the aerial stopped on the account's image credit quota and were
+generated later the same day on the owner's instruction, so all seven views
+exist. The finished images live in the owner's Canva uploads; the
 cloud session cannot download them (its network policy blocks canva.com), so
 the owner downloads the ones he keeps into output/renders/ai/.
 

@@ -594,15 +594,15 @@ the garden frame in the model, D-051). No value is assumed.
 | Status | OPEN, owner's action |
 | Raised | 2026-10-23, D-063 |
 
-The five finished views (entrance, foyer, courtyard, living, master bedroom)
-were generated in the owner's Canva account from output/renders/finish_input/.
+The seven finished views (entrance, foyer, courtyard, living, master bedroom,
+garden at sunset, aerial) were generated in the owner's Canva account from output/renders/finish_input/.
 The cloud session's network policy blocks canva.com, so it can neither upload
 to Canva directly (the renders went in through the public repository) nor
 download the results. To close: the owner downloads the images he keeps into
 output/renders/ai/ (they are LFS files, so from the laptop), or allows
 canva.com in the environment's network settings so a session can do it. The
-garden at sunset and the aerial still need generating once the account's
-image credits renew. Every finished image carries the label "AI impression
+garden at sunset and the aerial were generated later the same day, so all
+seven views exist in Canva. Every finished image carries the label "AI impression
 over the concept model. CONCEPT DESIGN, NOT FOR CONSTRUCTION" when it is
 filed.
 
