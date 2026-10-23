@@ -496,13 +496,13 @@ doors:
   kind: single
   width_m: 1.0
   height_m: 2.4
-  u: 16.275
+  u: 17.3
   v: 19.925
   along_u: true
   wall_t: 0.15
   swing: 1
   sill_m: 0.0
-  source: master suite from the gallery
+  source: master suite from the gallery, at the terrace end so the bed wall stays clear
 - 'no': F08
   storey: first
   a: master_suite

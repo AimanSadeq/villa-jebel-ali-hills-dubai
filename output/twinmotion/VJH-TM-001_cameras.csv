@@ -1,8 +1,8 @@
 view,title,camera_x,camera_y,camera_z,target_x,target_y,target_z,lens_mm,sun,sun_when,sun_azimuth_deg,sun_elevation_deg
 entrance,Entrance and carport from the road,-13.0,1.5,1.7,9.5,18.5,4.5,26,spring_15h,2026-03-21 15:00,242.2,45.7
 foyer,Double height foyer and the floating stair,5.0,16.0,1.6,9.5,20.5,3.2,20,morning_9h,2026-03-21 09:00,108.1,34.2
-courtyard,Courtyard from the dining,17.5,17.5,1.5,10.0,17.5,2.6,22,spring_15h,2026-03-21 15:00,242.2,45.7
-living,Family living toward the garden,14.5,29.0,1.5,19.0,20.0,1.8,22,morning_9h,2026-03-21 09:00,108.1,34.2
-master,Master bedroom and terrace,14.3,16.0,6.4,20.0,18.5,6.2,24,morning_9h,2026-03-21 09:00,108.1,34.2
+courtyard,Courtyard from the dining,18.3,16.3,1.5,9.5,18.8,2.4,18,spring_15h,2026-03-21 15:00,242.2,45.7
+living,Family living and the garden glass,18.2,29.6,1.5,14.2,23.8,1.5,20,morning_9h,2026-03-21 09:00,108.1,34.2
+master,"Master bedroom, the courtyard window",18.3,15.7,6.4,14.2,19.4,6.0,20,morning_9h,2026-03-21 09:00,108.1,34.2
 garden_sunset,Garden at sunset,27.5,29.5,1.6,17.0,18.5,3.5,22,sunset,2026-03-21 18:05,268.0,5.4
 aerial,Aerial view,-12.0,-8.0,24.0,13.0,19.0,3.0,35,spring_15h,2026-03-21 15:00,242.2,45.7

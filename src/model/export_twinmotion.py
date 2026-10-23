@@ -83,9 +83,9 @@ VIEWS = {
     # name: (camera position u, v, z; look-at u, v, z; lens mm; sun key; title)
     "entrance": ((-13.0, 1.5, 1.7), (9.5, 18.5, 4.5), 26, "spring_15h", "Entrance and carport from the road"),
     "foyer": ((5.0, 16.0, 1.6), (9.5, 20.5, 3.2), 20, "morning_9h", "Double height foyer and the floating stair"),
-    "courtyard": ((17.5, 17.5, 1.5), (10.0, 17.5, 2.6), 22, "spring_15h", "Courtyard from the dining"),
-    "living": ((14.5, 29.0, 1.5), (19.0, 20.0, 1.8), 22, "morning_9h", "Family living toward the garden"),
-    "master": ((14.3, 16.0, 6.4), (20.0, 18.5, 6.2), 24, "morning_9h", "Master bedroom and terrace"),
+    "courtyard": ((18.3, 16.3, 1.5), (9.5, 18.8, 2.4), 18, "spring_15h", "Courtyard from the dining"),
+    "living": ((18.2, 29.6, 1.5), (14.2, 23.8, 1.5), 20, "morning_9h", "Family living and the garden glass"),
+    "master": ((18.3, 15.7, 6.4), (14.2, 19.4, 6.0), 20, "morning_9h", "Master bedroom, the courtyard window"),
     "garden_sunset": ((27.5, 29.5, 1.6), (17.0, 18.5, 3.5), 22, "sunset", "Garden at sunset"),
     "aerial": ((-12.0, -8.0, 24.0), (13.0, 19.0, 3.0), 35, "spring_15h", "Aerial view"),
 }

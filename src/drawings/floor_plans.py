@@ -421,6 +421,11 @@ def build() -> Path:
         _rect_outline(axg, lay["plates"]["living"])
     if "carport" in lay["plates"]:
         _rect_outline(axg, lay["plates"]["carport"], lw=1.2)
+        cp = lay["plates"]["carport"]
+        axg.text((cp["u"][0] + cp["u"][1]) / 2, (cp["v"][0] + cp["v"][1]) / 2,
+                 f"CARPORT, 2 CARS\nopen, outside GFA\n{cp['u'][1] - cp['u'][0]:.2f} x {cp['v'][1] - cp['v'][0]:.2f} m\n"
+                 f"{(cp['u'][1] - cp['u'][0]) * (cp['v'][1] - cp['v'][0]):.1f} m2 ({(cp['u'][1] - cp['u'][0]) * (cp['v'][1] - cp['v'][0]) * 10.7639:.0f} sq ft)\nh 3.00 m",
+                 ha="center", va="center", fontsize=4.2, color=MUTED)
     _badges(axg)
     axg.text(0.0, 1.005, f"GROUND FLOOR   clear height {H['ground']:.2f} m, double height "
              f"{H['double']:.2f} m", transform=axg.transAxes, fontsize=12, color=INK)
@@ -531,7 +536,7 @@ def build() -> Path:
 
     fig.text(0.975, 0.030, "CONCEPT DESIGN, NOT FOR CONSTRUCTION", fontsize=9,
              color=BAD, ha="right")
-    fig.text(0.975, 0.016, "Drawing VJH-GA-001   Ground floor answer 12, first floor FF1 to FF8, facade R4   Rev D   A1 landscape   "
+    fig.text(0.975, 0.016, "Drawing VJH-GA-001   The courtyard villa, D-061, handover and answers S1 to S7   Rev E   A1 landscape   "
              "true 1:100", fontsize=6.5, color=MUTED, ha="right")
 
     OUT.parent.mkdir(parents=True, exist_ok=True)

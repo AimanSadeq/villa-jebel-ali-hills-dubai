@@ -94,11 +94,14 @@ class Room:
     def s_of(self, side, u, v):
         return {"S": u - self.u0, "N": self.u1 - u, "W": self.v1 - v, "E": v - self.v0}[side]
 
-    def free_wall(self, side):
-        """Stretches of this side with wall and no door, opening or window."""
+    def free_wall(self, side, allow_high_windows=False):
+        """Stretches of this side with wall and no door, opening or window.
+        With allow_high_windows, a window whose sill is 0.85 m or higher does
+        not break the stretch (a bed head can stand under it)."""
         L = self.length(side)
         cuts = [(a, b) for sd, a, b in self.wall_openings if sd == side]
-        cuts += [(a, b) for sd, a, b, _ in self.windows if sd == side]
+        cuts += [(a, b) for sd, a, b, sill in self.windows
+                 if sd == side and not (allow_high_windows and sill >= 0.85)]
         out, s = [], 0.0
         for a, b in sorted(cuts):
             if a > s + 0.05:
@@ -140,10 +143,13 @@ def _fits(room: Room, piece: Piece, others: list[Piece] | None = None) -> bool:
         if fp.intersection(b).area > 1e-4:
             return False
     # Nothing taller than a window sill in front of the glass, within 0.6 m.
+    # Under a high window (sill 0.85 m or more) a bed head or a lamp may rise
+    # 0.45 m above the sill; a wardrobe still may not.
     for side, s0, s1, sill in room.windows:
         zone = box(*_xy(room.to_grid(side, s0, s1, 0.0, 0.6)))
+        allow = 0.45 if sill >= 0.85 else 0.02
         for p in piece.parts:
-            if p[6] > sill + 0.02 and box(p[1], p[3], p[2], p[4]).intersection(zone).area > 1e-4:
+            if p[6] > sill + allow and box(p[1], p[3], p[2], p[4]).intersection(zone).area > 1e-4:
                 return False
     for o in (others if others is not None else room.pieces):
         ofp = o.footprint()
@@ -289,16 +295,20 @@ def rug(L, d):
 
 # Rooms ---------------------------------------------------------------------
 
-def furnish_bedroom(room: Room, w):
+def furnish_bedroom(room: Room, w, desk=True):
     """Bed against the best free wall, a TV unit or desk opposite."""
     cands = []
-    walls = sorted(SIDES, key=lambda sd: -max([b - a for a, b in room.free_wall(sd)] or [0]))
-    for sd in walls:
-        for a, b in room.free_wall(sd):
-            if b - a >= w + 1.1:
-                for c in _along(room, sd, w + 1.1, prefer=(a + b) / 2):
-                    if a + (w + 1.1) / 2 - 1e-6 <= c <= b - (w + 1.1) / 2 + 1e-6:
-                        cands.append((sd, c, 0.0, False))
+    # Blank walls first; if none is long enough, a wall under a high window.
+    for allow in (False, True):
+        walls = sorted(SIDES, key=lambda sd: -max([b - a for a, b in room.free_wall(sd, allow)] or [0]))
+        for sd in walls:
+            for a, b in room.free_wall(sd, allow):
+                if b - a >= w + 1.1:
+                    for c in _along(room, sd, w + 1.1, prefer=(a + b) / 2):
+                        if a + (w + 1.1) / 2 - 1e-6 <= c <= b - (w + 1.1) / 2 + 1e-6:
+                            cand = (sd, c, 0.0, False)
+                            if cand not in cands:
+                                cands.append(cand)
     bedp = _try(room, f"Bed, {w:.2f} m", cands, lambda: bed(w),
                 clear=[(-w / 2, w / 2, 2.2, 2.85)])
     if bedp is None:
@@ -310,14 +320,20 @@ def furnish_bedroom(room: Room, w):
     # A desk only where the room has space for it: in a room under 21 m2 the
     # desk and the bed can meet and seal off the bathroom door (redesign
     # review, 2026-10-23).
-    if room.poly.area < 21.0:
+    if not desk or room.poly.area < 21.0:
         return
     _any(room, "Desk and chair", others, lambda sd: [(sd, c, 0.0, False) for c in _along(room, sd, 1.2)],
          lambda: table(1.2, 0.55, 0.75, J) + [(TX, -0.23, 0.23, 0.65, 1.13, 0.0, 0.9)])
 
 
 def furnish_master(room: Room, balcony_side="E"):
-    furnish_bedroom(room, 1.93)
+    # In a compact master the desk would stand between the doors (the
+    # redesign review, 2026-10-23); the workspace is in the family lounge.
+    furnish_bedroom(room, 1.93, desk=room.poly.area >= 30.0)
+    # The redesign's master (D-060) is a bedroom with its wardrobe and
+    # bathroom as rooms of their own: no sitting group or coffee station.
+    if room.poly.area < 35.0:
+        return
     # Private sitting area (FF3): a sofa and two armchairs facing it, by the
     # balcony where it fits.
     for sd in [balcony_side] + [x for x in SIDES if x != balcony_side]:
@@ -570,6 +586,9 @@ def layout(m) -> tuple[list[Piece], list[str]]:
             w = d["width_m"]
             side = room.side_of_point(d["u"], d["v"])
             s = room.s_of(side, d["u"], d["v"])
+            if d["kind"] == "fixed":              # fixed glass is a window, not a way through
+                room.windows.append((side, s - w / 2, s + w / 2, float(d.get("sill_m", 0.0) or 0.0)))
+                continue
             depth = {"single": max(w, 0.9), "double": max(w / 2, 0.9), "lift": 1.5}.get(d["kind"], 1.0)
             room.blocked.append(box(*_xy(room.to_grid(side, s - w / 2 - 0.05, s + w / 2 + 0.05, 0, depth))))
             room.wall_openings.append((side, s - w / 2 - 0.05, s + w / 2 + 0.05))
