@@ -157,14 +157,29 @@ from `VJH-TM-001_cameras.csv`.
 Blender Cycles renders of the six views, from the model and the fetched
 assets, on the laptop's Intel Arc GPU:
 
+Blender's Python module (bpy) is published for Python 3.11 only, and the
+project's own environment is Python 3.12 (IfcOpenShell). So the renders run
+in a second environment, `.venv-render`, made once:
+
+```
+winget install -e --id Python.Python.3.11     # once, if "py -3.11" is not found
+py -3.11 -m venv .venv-render
+.\.venv-render\Scripts\Activate.ps1
+pip install bpy==4.5.14 pillow ifcopenshell==0.9.0 numpy pyyaml
+```
+
+Then, with the model built and the assets fetched (either environment):
+
 ```
 .\.venv\Scripts\Activate.ps1
 python assets/fetch_assets.py                  # once: textures and skies
 python src/model/build_model.py
-pip install bpy pillow                         # Blender as a Python module (large) and the stamp writer, once
-python renders/render_villa.py --all --device GPU --samples 256 --size 1920x1080
+.\.venv-render\Scripts\Activate.ps1
+python renders/render_villa.py --view living --quality preview --device GPU   # one minute, checks it runs
+python renders/render_villa.py --all --device GPU --quality high
 ```
 
-One view at test quality: `python renders/render_villa.py --view living --samples 32 --size 960x540`.
+Quality presets (D-062): preview 32 samples at 960 x 540, medium 256 at
+1920 x 1080, high 768 at 2560 x 1440; `--samples` and `--size` override them.
 Output: `output/renders/VJH-R-00n_<view>.png`. The render script also runs inside
 Blender: `blender -b -P renders/render_villa.py -- --view aerial`.

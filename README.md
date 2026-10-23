@@ -44,7 +44,7 @@ pip install -r requirements.txt
 | `python src/analysis/plan_feasibility.py` | Can the program be laid out inside the massing |
 | `python src/analysis/trim_packages.py` | Cost trim packages against the plan geometry |
 | `python src/model/layout_court.py` | The courtyard villa's plan (D-061), writes brief/layouts.yaml. The earlier generators (layout_gen.py, assemble_reference.py) stay for the record |
-| `python assets/fetch_assets.py` then `python renders/render_villa.py --all --device GPU --quality high` | The seven Blender renders with the real textures and skies, on the laptop's GPU (D-062). `--quality preview` for a quick check |
+| `python assets/fetch_assets.py` then, in the Python 3.11 render environment of SETUP.md, `python renders/render_villa.py --all --device GPU --quality high` | The seven Blender renders with the real textures and skies, on the laptop's GPU (D-062). `--quality preview` for a quick check |
 | `python src/analysis/geometry_validation.py` | The handover's acceptance tests as geometry, the areas and the measured garden: output/reports/geometry_validation.md and output/plans/floor_overlay.pdf |
 | `python src/drawings/floor_plans.py` | Ground and first floor plans, A1 at 1:100 |
 | `python src/drawings/site_plan.py` | Site plan DXF and PDF |
