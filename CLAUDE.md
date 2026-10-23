@@ -61,6 +61,10 @@ Rules for the boundary:
 - Build the buildable envelope as the plot polygon offset inward by 3 m on every side.
 - Location for sun studies: Jebel Ali Hills, Dubai, approx. 25.0 N, 55.1 E, timezone Asia/Dubai. Mark exact coordinates `TO VERIFY`.
 
+## Redesign under way (2026-10-23, D-060)
+
+The owner's handover `reference/owner/Owner_handover_2026-10-23.md` replaces the area target (section 3), the room program (section 4) and, pending his style images, the architectural style (section 5) below. Sections 3 to 5 stay as the record of the earlier design until the new brief is confirmed and written in. The owner's priority now is the look and feel; technical detail comes later. The hard GFA limit of 662.99 m² and every working rule in section 1 still apply.
+
 ## 3. Area targets and GFA control
 
 - Target gross area: about 650 m² (7,000 sq ft). Hard limit: 662.99 m². Never exceed it.

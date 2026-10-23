@@ -29,3 +29,18 @@ Facts taken from the set, for the record (sheet numbers in brackets):
 | First floor rooms | master ensuite 7.5 x 5.5 with master dress and toilet, bedrooms 1 to 3 each with dress and toilet, family lounge, pantry, store, three covered balconies, open terrace over the garage, void over the foyer (A-07-002) |
 | Roof | open terrace, BBQ, outdoor sitting, terrace gardens, MEP service areas, lift and stair tower (A-07-003, A-07-004) |
 | Rear garden | lawn, pool deck, future swimming pool 10.0 x 4.5 m, kids' pool (A-06-001) |
+
+## Owner_handover_2026-10-23.md
+
+Supplied by Aiman on 2026-10-23, kept exactly as received. A handover written
+during his work with another assistant (ChatGPT), describing a revised brief:
+three bedrooms upstairs, about 450 to 500 m2 enclosed, an open courtyard, a two
+car carport, no gates, a white minimalist character. Aiman chose to make it the
+brief for a redesign (answer H1: A, D-060). The active brief, with every change
+from the earlier design and the confirmations still open, is
+docs/current-approved-brief.md.
+
+Its claim of an open planted roof over the guest suite and powder room came
+from the other assistant's images, not from this project's model: checked on
+2026-10-23 by polygon test, those rooms were 100% covered by enclosed first
+floor rooms, with no terrace, balcony or void above them.

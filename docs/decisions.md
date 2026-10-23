@@ -6,6 +6,24 @@ Columns: date, decision, reason, approved by Aiman.
 
 ---
 
+## 2026-10-23, Redesign from the owner's handover
+
+### D-060 The owner's handover brief replaces the current design (answer H1: A)
+
+**Date.** 2026-10-23.
+
+**Decision.** The handover Aiman brought from his work with another assistant, kept as reference/owner/Owner_handover_2026-10-23.md, becomes the brief for a redesign. In short: about 450 to 500 m2 enclosed over G+1; exactly three bedrooms upstairs, each with its own bathroom, the master with an integrated walk-in wardrobe and a shower only; a family lounge with a workspace and a gallery over a double height foyer; a straight statement stair and a lift; an open courtyard of about 22 m2 with a tree; an open two car carport; no vehicle or pedestrian gate; no pool; enclosed rooms, not a roof garden, over the ground floor guest suite and powder room.
+- Everything recorded before this entry stays as history: nothing is deleted, and the current model and drawings remain until the new design replaces them.
+- Items that reverse rules Aiman gave earlier are confirmed with him before they are built: the name of the formal room (D-047, salon), and the facade character (D-048, D-051, his reference renders).
+- Aiman's priority on 2026-10-23: the look and feel first, the technical detail later. He is sending the images he liked as the style reference.
+- Checked the same day: the handover's roof garden over the guest suite and powder room was in the other assistant's images, not in this project's model. Polygon test: the 41.29 m2 of those rooms was 100% covered by enclosed first floor rooms, with 0.00 m2 under any terrace, balcony or void.
+
+**Reason.** Owner's answer H1: A, 2026-10-23.
+
+**Approved by Aiman.** Yes (H1: A).
+
+---
+
 ## 2026-10-03, Phase 4: facade, palettes, furniture, garden, renders
 
 ### D-059 The realistic walkthrough in Twinmotion, from the project's IFC (answer W1: A)
