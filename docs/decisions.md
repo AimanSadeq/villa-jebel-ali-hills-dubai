@@ -8,6 +8,26 @@ Columns: date, decision, reason, approved by Aiman.
 
 ## 2026-10-23, Redesign from the owner's handover
 
+### D-064 The design board is the review page (answer U4)
+
+**Decision.** The owner, 2026-10-23: "open everything on the right side so I
+can see as I make changes on the left side." One page, the design board,
+shows the current design: the seven views (the concept render and a button to
+the AI-finished image), the two floor plans from VJH-GA-001, the room schedule
+with width x length, m2, sq ft and clear height, the GFA figures and the open
+question. src/drawings/design_board.py generates it from model.json,
+brief/layouts.yaml, output/renders/finish_input/ and
+output/renders/ai_links.yaml into output/board/ (index.html for the laptop,
+artifact.html for the hosted copy). After every change the owner asks for,
+the model is rebuilt, the board regenerated and the hosted copy republished,
+so the page on the right updates while the conversation continues on the left.
+
+**Reason.** The owner reviews visually and wants the result beside the
+conversation, not in files. The board carries the stamp and the measured
+figures, so what he sees is what the model holds.
+
+**Approved by Aiman: yes.** His instruction, 2026-10-23.
+
 ### D-063 Realistic images by an AI finishing pass over the concept renders (answer U3: A)
 
 **Decision.** The owner's verdict on the browser walkthrough, 2026-10-23: "Not

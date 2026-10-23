@@ -1,0 +1,48 @@
+# The AI-finished views (D-063): links into the owner's Canva account, where the
+# image generator made them from output/renders/finish_input/. The links open
+# only for the account's owner. Each image is an AI impression over the concept
+# model, CONCEPT DESIGN, NOT FOR CONSTRUCTION.
+generated: 2026-10-23
+views:
+  entrance:
+    title: Entrance and carport from the road
+    sun: 21 March, 15:00
+    source: VJH-R-001_entrance.jpg
+    canva_media_id: MAHY3Z3OHUc
+    url: https://www.canva.com/M/MAHY3Z3OHUc
+  foyer:
+    title: Double height foyer and the floating stair
+    sun: 21 March, 09:00
+    source: VJH-R-002_foyer.jpg
+    canva_media_id: MAHY3exBq-w
+    url: https://www.canva.com/M/MAHY3exBq-w
+  courtyard:
+    title: Courtyard from the dining
+    sun: 21 March, 15:00
+    source: VJH-R-003_courtyard.jpg
+    canva_media_id: MAHY3dgJsDM
+    url: https://www.canva.com/M/MAHY3dgJsDM
+  living:
+    title: Family living and the garden glass
+    sun: 21 March, 09:00
+    source: VJH-R-004_living.jpg
+    canva_media_id: MAHY3XUJfSE
+    url: https://www.canva.com/M/MAHY3XUJfSE
+  master:
+    title: Master bedroom, the courtyard window
+    sun: 21 March, 09:00
+    source: VJH-R-005_master.jpg
+    canva_media_id: MAHY3Rlf0ko
+    url: https://www.canva.com/M/MAHY3Rlf0ko
+  garden_sunset:
+    title: Garden at sunset
+    sun: 21 March, 18:05
+    source: VJH-R-006_garden_sunset.jpg
+    canva_media_id: MAHY3QtbRo4
+    url: https://www.canva.com/M/MAHY3QtbRo4
+  aerial:
+    title: Aerial from the south-west
+    sun: 21 March, 15:00
+    source: VJH-R-007_aerial.jpg
+    canva_media_id: MAHY3duaxTk
+    url: https://www.canva.com/M/MAHY3duaxTk

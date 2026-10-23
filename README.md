@@ -57,6 +57,7 @@ pip install -r requirements.txt
 | `python src/model/layout_gen.py` | Generates the room layout, brief/layouts.yaml |
 | `python src/model/build_model.py` | GFA check, then the IFC model, validation, and the viewer's model data. The IFC and the plan PDF are generated, not committed: run this before the viewer |
 | `python src/analysis/shade_check.py` | Afternoon shade on the garden from the planned footprint, VJH-RPT-008 (written when the pool was in scope) |
+| `python src/drawings/design_board.py` | The design board, output/board/index.html: the seven views with the AI-finished links, the plans, the room schedule and the GFA on one page (D-064). The hosted copy is republished from output/board/artifact.html |
 | `npm run dev --prefix viewer` | Massing viewer at http://localhost:5173 |
 | (same server) | IFC model viewer and walkthrough at http://localhost:5173/model.html: walk, day and night, three palettes, real materials and sky. "Go to a room" in the Walkthrough panel sets you down in any room; `model.html?at=courtyard` (any room key of brief/layouts.yaml) opens the page already walking there |
 | `python src/model/assemble_reference.py` | The owner's reference villa with his answers, writes brief/reference_plan.yaml (run before layout_gen) |
